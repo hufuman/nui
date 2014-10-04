@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "../NDataReader.h"
-#include "JsonDataReader.h"
 #include "XmlDataReader.h"
 
 namespace NUI

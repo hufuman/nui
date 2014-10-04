@@ -10,7 +10,7 @@ namespace NUI
 {
     namespace Data
     {
-        NModule NModule::_instance;
+        NModule NModule::instance_;
 
         NModule::NModule()
         {
@@ -20,6 +20,11 @@ namespace NUI
         NModule::~NModule()
         {
             nuiModule_ = NULL;
+        }
+
+        NModule& NModule::GetInst()
+        {
+            return instance_;
         }
 
         bool NModule::Init(HMODULE nuiModule)

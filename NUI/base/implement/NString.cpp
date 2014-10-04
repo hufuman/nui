@@ -307,7 +307,7 @@ namespace NUI
                     pBuffer[nCount] = 0;
                     data_ = szBuffer;
                 }
-                NFreeArray(pBuffer);
+                NDeleteArray(pBuffer);
             }
             return (*this);
         }

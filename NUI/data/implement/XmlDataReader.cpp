@@ -115,7 +115,7 @@ bool XmlDataReader::ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value
 void XmlDataReader::Clear()
 {
     NSafeRelease(parent_);
-    NFree(document_);
+    NDelete(document_);
     root_ = NULL;
 }
 

@@ -42,6 +42,7 @@
 
 #include "./data/NIconv.h"
 #include "./data/NDataReader.h"
+#include "./data/NModule.h"
 
 #include "./util/NFileUtil.h"
 

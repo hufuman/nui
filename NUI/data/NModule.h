@@ -9,7 +9,7 @@ namespace NUI
         {
             NModule();
 
-            static NModule _instance;
+            static NModule instance_;
         public:
             ~NModule();
             static NModule& GetInst();

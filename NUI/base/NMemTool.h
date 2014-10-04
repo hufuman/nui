@@ -5,6 +5,17 @@ namespace NUI
 {
     namespace Base
     {
+        __inline void* NMalloc(int size)
+        {
+            return malloc(size);
+        }
+
+        __inline void NFree(void*& ptr)
+        {
+            free(ptr);
+            ptr = NULL;
+        }
+
         template <typename T>
         T* NNew()
         {
@@ -18,20 +29,20 @@ namespace NUI
         }
 
         template <typename T>
-        void NFreeThis(T* ptr)
+        void NDeleteThis(T* ptr)
         {
             delete ptr;
         }
 
         template <typename T>
-        void NFree(T*& ptr)
+        void NDelete(T*& ptr)
         {
             delete ptr;
             ptr = NULL;
         }
 
         template <typename T>
-        void NFreeArray(T*& ptr)
+        void NDeleteArray(T*& ptr)
         {
             delete[] ptr;
             ptr = NULL;

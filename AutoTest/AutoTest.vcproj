@@ -235,6 +235,10 @@
 			Name="data"
 			>
 			<File
+				RelativePath=".\TestModule.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestXmlDataReader.h"
 				>
 			</File>

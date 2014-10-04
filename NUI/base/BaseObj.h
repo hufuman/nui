@@ -25,7 +25,7 @@ namespace NUI
             {
                 if((--refCount_) == 0)
                 {
-                    Base::NFreeThis(this);
+                    Base::NDeleteThis(this);
                     return 0;
                 }
                 return refCount_;

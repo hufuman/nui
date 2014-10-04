@@ -239,6 +239,10 @@
 			Name="data"
 			>
 			<File
+				RelativePath=".\data\NBuffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\data\NDataReader.h"
 				>
 			</File>
@@ -254,11 +258,11 @@
 				Name="implement"
 				>
 				<File
-					RelativePath=".\data\implement\JsonDataReader.cpp"
+					RelativePath=".\data\implement\NBufferImpl.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\data\implement\JsonDataReader.h"
+					RelativePath=".\data\implement\NBufferImpl.h"
 					>
 				</File>
 				<File

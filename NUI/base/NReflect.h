@@ -35,7 +35,7 @@ namespace NUI
         public:                                             \
         ReflectClass(){ NUI::Base::NReflect::GetInstance().AddReflect<implementClass>(); }      \
         ~ReflectClass(){ NUI::Base::NReflect::GetInstance().RemoveReflect<implementClass>(); }  \
-        } g_ReflectClassObj;}
+        } MERGE_MACRO(g_ReflectClassObj, implementClass);}
 
         class NUI_CLASS NReflect : protected Noncopyable
         {

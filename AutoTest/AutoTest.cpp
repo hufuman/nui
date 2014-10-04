@@ -5,11 +5,17 @@
 #include "TestUtil.h"
 
 
+// Base
 #include "TestDataTypes.h"
-#include "TestString.h"
-#include "TestXmlDataReader.h"
 #include "TestReflect.h"
 #include "TestCore.h"
+
+// Data
+#include "TestString.h"
+#include "TestXmlDataReader.h"
+#include "TestModule.h"
+
+// Util
 #include "TestFileUtil.h"
 
 int _tmain(int argc, _TCHAR* argv[])

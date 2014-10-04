@@ -25,7 +25,7 @@ namespace
                 wstrResult = pBuffer;
             }
             if(pBuffer != szStackBuffer)
-                NFreeArray(pBuffer);
+                NDeleteArray(pBuffer);
         }
         return wstrResult;
     }
@@ -47,7 +47,7 @@ namespace
                 strResult = pBuffer;
             }
             if(pBuffer != szStackBuffer)
-                NFreeArray(pBuffer);
+                NDeleteArray(pBuffer);
         }
 
         return strResult;
