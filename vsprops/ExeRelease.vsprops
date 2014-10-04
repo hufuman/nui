@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="ExeRelease"
+	OutputDirectory="$(SolutionDir)Bin\$(ConfigurationName)"
+	IntermediateDirectory="$(SolutionDir)Bin\Obj\$(ConfigurationName)\$(ProjectName)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories=".;&quot;$(SolutionDir)\thirdparty\json&quot;;&quot;$(SolutionDir)\thirdparty\gtest\include&quot;;&quot;$(SolutionDir)\thirdparty\tinyxml&quot;"
+		PreprocessorDefinitions="_BIND_TO_CURRENT_VCLIBS_VERSION=1"
+		RuntimeLibrary="2"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(SolutionDir)\thirdparty\Bin\Release&quot;"
+		GenerateDebugInformation="true"
+		TargetMachine="1"
+	/>
+</VisualStudioPropertySheet>
