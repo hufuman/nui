@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "jsoncpp\jsoncpp.vcproj", "{4F31F719-8F9F-481A-AB9B-E11E69202B16}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gtest", "gtest\msvc\gtest.vcproj", "{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcproj", "{BB998CF8-C832-46B2-9088-4A0CC44F0264}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F31F719-8F9F-481A-AB9B-E11E69202B16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4F31F719-8F9F-481A-AB9B-E11E69202B16}.Debug|Win32.Build.0 = Debug|Win32
+		{4F31F719-8F9F-481A-AB9B-E11E69202B16}.Release|Win32.ActiveCfg = Release|Win32
+		{4F31F719-8F9F-481A-AB9B-E11E69202B16}.Release|Win32.Build.0 = Release|Win32
+		{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}.Debug|Win32.Build.0 = Debug|Win32
+		{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}.Release|Win32.ActiveCfg = Release|Win32
+		{C8F6C172-56F2-4E76-B5FA-C3B423B31BE7}.Release|Win32.Build.0 = Release|Win32
+		{BB998CF8-C832-46B2-9088-4A0CC44F0264}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BB998CF8-C832-46B2-9088-4A0CC44F0264}.Debug|Win32.Build.0 = Debug|Win32
+		{BB998CF8-C832-46B2-9088-4A0CC44F0264}.Release|Win32.ActiveCfg = Release|Win32
+		{BB998CF8-C832-46B2-9088-4A0CC44F0264}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
