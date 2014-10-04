@@ -201,27 +201,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TestCore.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestDataTypes.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestFileUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestReflect.h"
-				>
-			</File>
-			<File
 				RelativePath=".\TestUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestXmlDataReader.h"
 				>
 			</File>
 		</Filter>
@@ -230,6 +210,42 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="base"
+			>
+			<File
+				RelativePath=".\TestCore.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestDataTypes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestReflect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestString.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="data"
+			>
+			<File
+				RelativePath=".\TestXmlDataReader.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="util"
+			>
+			<File
+				RelativePath=".\TestFileUtil.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

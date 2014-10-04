@@ -10,18 +10,18 @@ namespace NUI
 
         NString::NString()
         {
-            argPos_ = 0;
+            argPos_ = 1;
         }
 
         NString::NString(const NString& arg)
         {
-            argPos_ = 0;
+            argPos_ = arg.argPos_;
             data_ = arg.data_;
         }
 
         NString::NString(LPCTSTR arg)
         {
-            argPos_ = 0;
+            argPos_ = 1;
             data_ = arg;
         }
 
@@ -40,12 +40,17 @@ namespace NUI
             ;
         }
 
-        NString& NString::operator = (LPCTSTR arg)
+        NString& NString::operator = (TCHAR arg)
         {
             data_ = arg;
             return (*this);
         }
 
+        NString& NString::operator = (LPCTSTR arg)
+        {
+            data_ = arg;
+            return (*this);
+        }
 
         NString NString::operator + (TCHAR arg) const
         {
@@ -108,7 +113,7 @@ namespace NUI
 
         NString& NString::Assign(LPCTSTR arg, size_t length)
         {
-            argPos_ = 0;
+            argPos_ = 1;
             data_.assign(arg, length);
             return (*this);
         }
@@ -134,7 +139,7 @@ namespace NUI
 
             // Right
             LPCTSTR end = data_.c_str() + data_.length() - 1;
-            while(end > start && _istspace(*start))
+            while(end > start && _istspace(*end))
             {
                 -- end;
             }
@@ -167,7 +172,7 @@ namespace NUI
                 data_.replace(pos, nSrcLength, szDes);
                 if(nDesLength > nSrcLength)
                     pos += (nDesLength - nSrcLength) + 1;
-                else if(nDesLength < nSrcLength)
+                else
                     pos += nDesLength;
             }
             return (*this);
@@ -175,6 +180,8 @@ namespace NUI
 
         NString NString::SubString(size_t startPos)
         {
+            if(startPos < 0 || startPos >= data_.length())
+                return _T("");
             NString result;
             result.data_ = data_.substr(startPos);
             return result;
@@ -182,6 +189,8 @@ namespace NUI
 
         NString NString::SubString(size_t startPos, size_t count)
         {
+            if(startPos + count < 0 || startPos + count >= data_.length())
+                return _T("");
             NString result;
             result.data_ = data_.substr(startPos, count);
             return result;
@@ -219,7 +228,7 @@ namespace NUI
 
         size_t NString::LastIndexOf(LPCTSTR arg) const
         {
-            size_t pos = data_.find_last_of(arg);
+            size_t pos = data_.rfind(arg);
             if(pos == tstring::npos)
                 return -1;
             return pos;
@@ -227,7 +236,7 @@ namespace NUI
 
         size_t NString::LastIndexOf(LPCTSTR arg, size_t startPos) const
         {
-            size_t pos = data_.find_last_of(arg, startPos);
+            size_t pos = data_.rfind(arg, startPos);
             if(pos == tstring::npos)
                 return -1;
             return pos;
@@ -251,7 +260,7 @@ namespace NUI
 
         size_t NString::LastIndexOf(TCHAR arg) const
         {
-            size_t pos = data_.find_last_of(arg);
+            size_t pos = data_.rfind(arg);
             if(pos == tstring::npos)
                 return -1;
             return pos;
@@ -259,7 +268,7 @@ namespace NUI
 
         size_t NString::LastIndexOf(TCHAR arg, size_t startPos) const
         {
-            size_t pos = data_.find_last_of(arg, startPos);
+            size_t pos = data_.rfind(arg, startPos);
             if(pos == tstring::npos)
                 return -1;
             return pos;
@@ -307,6 +316,22 @@ namespace NUI
         {
             if(position == -1)
                 return false;
+
+            if(szSplitter == NULL || szSplitter[0] == 0)
+            {
+                if(position < data_.length())
+                {
+                    token = data_[position];
+                    ++ position;
+                    return true;
+                }
+                else
+                {
+                    token = _T("");
+                    position = -1;
+                    return false;
+                }
+            }
 
             size_t last = position;
             position = data_.find(szSplitter, position);
@@ -445,7 +470,7 @@ namespace NUI
             strResult.data_ = data_.substr(0, pos);
             strResult.data_ += str;
             strResult.data_ += data_.substr(pos + strTemp.length());
-            strResult.argPos_ = argPos_;
+            strResult.argPos_ = argPos_ + 1;
             return strResult;
         }
 

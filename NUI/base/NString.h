@@ -16,6 +16,7 @@ namespace NUI
             ~NString();
 
         public:
+            NString& operator = (TCHAR arg);
             NString& operator = (LPCTSTR arg);
 
             NString operator + (TCHAR arg) const;

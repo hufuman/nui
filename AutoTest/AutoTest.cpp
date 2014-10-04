@@ -6,6 +6,7 @@
 
 
 #include "TestDataTypes.h"
+#include "TestString.h"
 #include "TestXmlDataReader.h"
 #include "TestReflect.h"
 #include "TestCore.h"
