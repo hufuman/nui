@@ -182,7 +182,7 @@ TEST_F(TestString, Tokenize)
 {
     NString s1(_T(""));
     NString token;
-    size_t pos = 0;
+    int pos = 0;
     EXPECT_FALSE(s1.Tokenize(pos, _T(""), false, token));
 
     pos = 0;

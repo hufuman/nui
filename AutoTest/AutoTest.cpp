@@ -14,6 +14,9 @@
 #include "TestString.h"
 #include "TestXmlDataReader.h"
 #include "TestModule.h"
+#include "TestBuffer.h"
+#include "TestFileMapping.h"
+#include "TestZip.h"
 
 // Util
 #include "TestFileUtil.h"

@@ -235,11 +235,23 @@
 			Name="data"
 			>
 			<File
+				RelativePath=".\TestBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestFileMapping.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestModule.h"
 				>
 			</File>
 			<File
 				RelativePath=".\TestXmlDataReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestZip.h"
 				>
 			</File>
 		</Filter>
