@@ -23,8 +23,10 @@ namespace
     }
 }
 
-NUI_API void NAssertImpl(LPCTSTR filePath, int line, LPCTSTR format, ...)
+NUI_API void NAssertImpl(bool exp, LPCTSTR filePath, int line, LPCTSTR format, ...)
 {
+    if(exp)
+        return;
     if(!g_AssertEnabled)
         return;
 
@@ -81,7 +83,7 @@ NUI_API void NAssertImpl(LPCTSTR filePath, int line, LPCTSTR format, ...)
         {
             for(int i=0; i<10; ++ i)
             {
-                MessageBeep(-1);
+                MessageBeep(static_cast<UINT>(-1));
                 Sleep(10);
             }
             DebugBreak();

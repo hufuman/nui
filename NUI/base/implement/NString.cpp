@@ -111,7 +111,17 @@ namespace NUI
             return data_ != arg.data_;
         }
 
-        NString& NString::Assign(LPCTSTR arg, size_t length)
+        bool NString::operator < (const NString& arg) const
+        {
+            return data_.compare(arg.data_.c_str()) < 0;
+        }
+
+        bool NString::operator < (LPCTSTR arg) const
+        {
+            return data_.compare(arg) < 0;
+        }
+
+        NString& NString::Assign(LPCTSTR arg, int length)
         {
             argPos_ = 1;
             data_.assign(arg, length);
@@ -163,8 +173,8 @@ namespace NUI
             if(szSrc == NULL || szSrc[0] == 0 || szDes == NULL)
                 return (*this);
 
-            size_t nSrcLength = _tcslen(szSrc);
-            size_t nDesLength = _tcslen(szDes);
+            int nSrcLength = _tcslen(szSrc);
+            int nDesLength = _tcslen(szDes);
 
             size_t pos = 0;
             while( (pos = data_.find(szSrc, pos)) != tstring::npos)
@@ -178,22 +188,28 @@ namespace NUI
             return (*this);
         }
 
-        NString NString::SubString(size_t startPos)
+        NString NString::SubString(int startPos)
         {
-            if(startPos < 0 || startPos >= data_.length())
+            if(startPos < 0 || startPos >= static_cast<int>(data_.length()))
                 return _T("");
             NString result;
             result.data_ = data_.substr(startPos);
             return result;
         }
 
-        NString NString::SubString(size_t startPos, size_t count)
+        NString NString::SubString(int startPos, int count)
         {
-            if(startPos + count < 0 || startPos + count >= data_.length())
+            if(startPos + count < 0 || startPos + count >= static_cast<int>(data_.length()))
                 return _T("");
             NString result;
             result.data_ = data_.substr(startPos, count);
             return result;
+        }
+
+        NString& NString::Resize(int size)
+        {
+            data_.resize(size);
+            return (*this);
         }
 
         bool NString::CompareNoCases(LPCTSTR arg) const
@@ -210,7 +226,7 @@ namespace NUI
             return data_.empty();
         }
 
-        size_t NString::IndexOf(LPCTSTR arg) const
+        int NString::IndexOf(LPCTSTR arg) const
         {
             size_t pos = data_.find(arg);
             if(pos == tstring::npos)
@@ -218,7 +234,7 @@ namespace NUI
             return pos;
         }
 
-        size_t NString::IndexOf(LPCTSTR arg, size_t startPos) const
+        int NString::IndexOf(LPCTSTR arg, int startPos) const
         {
             size_t pos = data_.find(arg, startPos);
             if(pos == tstring::npos)
@@ -226,7 +242,7 @@ namespace NUI
             return pos;
         }
 
-        size_t NString::LastIndexOf(LPCTSTR arg) const
+        int NString::LastIndexOf(LPCTSTR arg) const
         {
             size_t pos = data_.rfind(arg);
             if(pos == tstring::npos)
@@ -234,7 +250,7 @@ namespace NUI
             return pos;
         }
 
-        size_t NString::LastIndexOf(LPCTSTR arg, size_t startPos) const
+        int NString::LastIndexOf(LPCTSTR arg, int startPos) const
         {
             size_t pos = data_.rfind(arg, startPos);
             if(pos == tstring::npos)
@@ -242,7 +258,7 @@ namespace NUI
             return pos;
         }
 
-        size_t NString::IndexOf(TCHAR arg) const
+        int NString::IndexOf(TCHAR arg) const
         {
             size_t pos = data_.find(arg);
             if(pos == tstring::npos)
@@ -250,7 +266,7 @@ namespace NUI
             return pos;
         }
 
-        size_t NString::IndexOf(TCHAR arg, size_t startPos) const
+        int NString::IndexOf(TCHAR arg, int startPos) const
         {
             size_t pos = data_.find(arg, startPos);
             if(pos == tstring::npos)
@@ -258,7 +274,7 @@ namespace NUI
             return pos;
         }
 
-        size_t NString::LastIndexOf(TCHAR arg) const
+        int NString::LastIndexOf(TCHAR arg) const
         {
             size_t pos = data_.rfind(arg);
             if(pos == tstring::npos)
@@ -266,7 +282,7 @@ namespace NUI
             return pos;
         }
 
-        size_t NString::LastIndexOf(TCHAR arg, size_t startPos) const
+        int NString::LastIndexOf(TCHAR arg, int startPos) const
         {
             size_t pos = data_.rfind(arg, startPos);
             if(pos == tstring::npos)
@@ -279,7 +295,7 @@ namespace NUI
             return data_.c_str();
         }
 
-        size_t NString::GetLength() const
+        int NString::GetLength() const
         {
             return data_.length();
         }
@@ -312,14 +328,14 @@ namespace NUI
             return (*this);
         }
 
-        bool NString::Tokenize(size_t& position, LPCTSTR szSplitter, bool includeEmpty, NString& token) const
+        bool NString::Tokenize(int& position, LPCTSTR szSplitter, bool includeEmpty, NString& token) const
         {
             if(position == -1)
                 return false;
 
             if(szSplitter == NULL || szSplitter[0] == 0)
             {
-                if(position < data_.length())
+                if(position < static_cast<int>(data_.length()))
                 {
                     token = data_[position];
                     ++ position;
@@ -333,11 +349,11 @@ namespace NUI
                 }
             }
 
-            size_t last = position;
+            int last = position;
             position = data_.find(szSplitter, position);
-            if(position == tstring::npos)
+            if(position == static_cast<int>(tstring::npos))
             {
-                if(last > 0 && last < data_.length())
+                if(last > 0 && last < static_cast<int>(data_.length()))
                 {
                     position = -1;
                     token = data_.substr(last).c_str();
@@ -347,7 +363,7 @@ namespace NUI
                 return false;
             }
 
-            size_t splitterLen = _tcslen(szSplitter);
+            int splitterLen = _tcslen(szSplitter);
             if(position == last)
             {
                 position += splitterLen;
@@ -449,7 +465,7 @@ namespace NUI
             return ArgImpl(str.GetData());
         }
 
-        TCHAR& NString::operator [] (size_t index)
+        TCHAR& NString::operator [] (int index)
         {
             return data_[index];
         }

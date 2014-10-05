@@ -26,7 +26,7 @@ namespace NUI
 
         bool NReflect::AddReflect(LPCTSTR szNamespace, LPCTSTR szClassName, ObjectCreator objCreator)
         {
-#ifdef _DEUBG
+#ifdef _DEBUG
             NAssertError(!IsClassExists(szNamespace, szClassName), TEXT("Class has been added already"));
 #endif
 
@@ -87,7 +87,8 @@ namespace NUI
             if(iteInfo == m_mapNamespaceInfo.end())
                 return false;
 
-            ObjCreatorMap::const_iterator iteCreator = iteInfo->second.find(szClassName);
+            const ObjCreatorMap& creatorMap = iteInfo->second;
+            ObjCreatorMap::const_iterator iteCreator = creatorMap.find(szClassName);
             if(iteCreator == iteInfo->second.end())
                 return false;
 

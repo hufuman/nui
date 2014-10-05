@@ -16,4 +16,5 @@
 #include "NUI.h"
 
 
+#pragma comment(lib, "zip.lib")
 #pragma comment(lib, "tinyxml.lib")

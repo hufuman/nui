@@ -18,6 +18,9 @@ NCoreImpl::~NCoreImpl(void)
 
 bool NCoreImpl::InitCore(LPCTSTR szUIData, LPCTSTR szLang)
 {
+    UNREFERENCED_PARAMETER(szUIData);
+    UNREFERENCED_PARAMETER(szLang);
+
     Gdiplus::GdiplusStartupInput input;
     Gdiplus::Status status = Gdiplus::GdiplusStartup(&m_uGdiplusToken, &input, NULL);
     NAssertError(status == Gdiplus::Ok, _T("Failed to init Gdiplus"));

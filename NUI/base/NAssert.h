@@ -4,11 +4,11 @@
 
 #if defined(_DEBUG) || defined(_ENABLE_NASSERT_)
 
-NUI_API void NAssertImpl(LPCTSTR filePath, int line, LPCTSTR format, ...);
+NUI_API void NAssertImpl(bool exp, LPCTSTR filePath, int line, LPCTSTR format, ...);
 NUI_API bool NAssertEnableImpl(bool enable);
 
 #define NAssertEnable(enable)           NAssertEnableImpl(enable)
-#define NAssertError(exp, format, ...)  for(;!(exp);){NAssertImpl(__TFILE__, __LINE__, format, __VA_ARGS__);break;}
+#define NAssertError(exp, format, ...)  NAssertImpl((exp), __TFILE__, __LINE__, format, __VA_ARGS__)
 
 class NTempDisableAssert : protected NUI::Base::Noncopyable
 {

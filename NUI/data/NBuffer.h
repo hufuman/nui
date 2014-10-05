@@ -15,6 +15,7 @@ namespace NUI
             virtual DWORD GetSize() const = 0;
             virtual LPVOID GetBuffer() = 0;
             virtual LPVOID GetBuffer(DWORD size) = 0;
+            virtual void ReleaseBuffer() = 0;
         };
     }
 }

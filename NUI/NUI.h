@@ -40,9 +40,12 @@
 #include "./base/NReflect.h"
 #include "./base/NCore.h"
 
-#include "./data/NIconv.h"
+#include "./data/NBuffer.h"
 #include "./data/NDataReader.h"
+#include "./data/NFileMapping.h"
+#include "./data/NIconv.h"
 #include "./data/NModule.h"
+#include "./data/NZip.h"
 
 #include "./util/NFileUtil.h"
 

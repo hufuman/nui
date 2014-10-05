@@ -9,6 +9,7 @@ BOOL _stdcall DllMain( HMODULE hModule,
                        LPVOID lpReserved
 					 )
 {
+    UNREFERENCED_PARAMETER(lpReserved);
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:

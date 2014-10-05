@@ -19,7 +19,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\vsprops\ExeDebug.vsprops"
+			InheritedPropertySheets="..\vsprops\DLLDebug.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -39,13 +39,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NUI_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				DebugInformationFormat="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -86,7 +83,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\vsprops\ExeRelease.vsprops"
+			InheritedPropertySheets="..\vsprops\DLLRelease.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -107,13 +104,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NUI_EXPORTS;_CRT_SECURE_NO_WARNINGS"
-				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -247,11 +240,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\data\NFileMapping.h"
+				>
+			</File>
+			<File
 				RelativePath=".\data\NIconv.h"
 				>
 			</File>
 			<File
 				RelativePath=".\data\NModule.h"
+				>
+			</File>
+			<File
+				RelativePath=".\data\NZip.h"
 				>
 			</File>
 			<Filter
@@ -270,11 +271,27 @@
 					>
 				</File>
 				<File
+					RelativePath=".\data\implement\NFileMappingImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NFileMappingImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\data\implement\NIconv.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\data\implement\NModule.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NZipImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NZipImpl.h"
 					>
 				</File>
 				<File

@@ -67,7 +67,7 @@ bool XmlDataReader::ReadNode(LPCTSTR nodeName, NDataReader*& value)
 bool XmlDataReader::ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, NString& value)
 {
     NString token;
-    size_t position = 0;
+    int position = 0;
     NString strPath(path);
     TiXmlElement* element = root_;
     std::string nodeName;
@@ -123,7 +123,6 @@ bool XmlDataReader::ElementToString(TiXmlElement* element, LPCTSTR valueName, NS
 {
     std::string strValueName = t2utf8(valueName);
     const char* data = element->Attribute(strValueName.c_str());
-    const char* p = element->Value();
     if(data == NULL)
         return false;
     value = utf82t(data).c_str();

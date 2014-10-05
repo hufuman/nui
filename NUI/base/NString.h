@@ -32,35 +32,40 @@ namespace NUI
             bool operator == (NString arg) const;
             bool operator != (NString arg) const;
 
+            bool operator < (const NString& arg) const;
+            bool operator < (LPCTSTR arg) const;
+
         public:
-            NString& Assign(LPCTSTR arg, size_t length);
+            NString& Assign(LPCTSTR arg, int length);
 
             NString& MakeLower();
             NString& MakeUpper();
             NString& Trim();
             NString& Replace(LPCTSTR szSrc, LPCTSTR szDes);
-            NString SubString(size_t startPos);
-            NString SubString(size_t startPos, size_t count);
+            NString SubString(int startPos);
+            NString SubString(int startPos, int count);
+
+            NString& Resize(int size);
 
             bool CompareNoCases(LPCTSTR arg) const;
             bool IsEmpty() const;
 
-            size_t IndexOf(LPCTSTR arg) const;
-            size_t IndexOf(LPCTSTR arg, size_t startPos) const;
-            size_t LastIndexOf(LPCTSTR arg) const;
-            size_t LastIndexOf(LPCTSTR arg, size_t startPos) const;
+            int IndexOf(LPCTSTR arg) const;
+            int IndexOf(LPCTSTR arg, int startPos) const;
+            int LastIndexOf(LPCTSTR arg) const;
+            int LastIndexOf(LPCTSTR arg, int startPos) const;
 
-            size_t IndexOf(TCHAR arg) const;
-            size_t IndexOf(TCHAR arg, size_t startPos) const;
-            size_t LastIndexOf(TCHAR arg) const;
-            size_t LastIndexOf(TCHAR arg, size_t startPos) const;
+            int IndexOf(TCHAR arg) const;
+            int IndexOf(TCHAR arg, int startPos) const;
+            int LastIndexOf(TCHAR arg) const;
+            int LastIndexOf(TCHAR arg, int startPos) const;
 
             LPCTSTR GetData() const;
-            size_t GetLength() const;
+            int GetLength() const;
 
             NString& Format(LPCTSTR szFormat, ...);
 
-            bool Tokenize(size_t& position, LPCTSTR szSplitter, bool includeEmpty, NString& token) const;
+            bool Tokenize(int& position, LPCTSTR szSplitter, bool includeEmpty, NString& token) const;
 
         public:
             NString arg(LPCTSTR wstr) const;
@@ -77,13 +82,13 @@ namespace NUI
             NString arg(const NString& str) const;
 
         public:
-            TCHAR& operator [] (size_t index);
+            TCHAR& operator [] (int index);
 
         protected:
             NString ArgImpl(LPCTSTR str) const;
 
         private:
-            size_t argPos_;
+            int argPos_;
             tstring data_;
         };
 

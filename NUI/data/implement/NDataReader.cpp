@@ -93,8 +93,8 @@ namespace NUI
             if(!ReadValue(name, data))
                 return false;
 
-            size_t pos = 0;
-            size_t last = 0;
+            int pos = 0;
+            int last = 0;
             NUI::Base::NString rect[4];
             for(int i=0; i<3 && last < data.GetLength(); ++ i)
             {

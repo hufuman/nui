@@ -21,15 +21,15 @@ namespace NUI
             return NNew<T>();
         }
 
-#define DECLARE_REFLECTION(namespaceName, className)    \
-    public:                                             \
-    static LPCTSTR GetNamespace()                       \
+#define DECLARE_REFLECTION(namespaceName, className)        \
+    public:                                                 \
+    static LPCTSTR GetNamespace()                           \
         { return namespaceName; }                           \
         static LPCTSTR GetClassName()                       \
         { return className; }
 
-#define IMPLEMENT_REFLECTION(implementClass)            \
-    namespace   ReflectReg{                             \
+#define IMPLEMENT_REFLECTION(implementClass)                \
+    namespace   {                                           \
         class ReflectClass                                  \
         {                                                   \
         public:                                             \

@@ -14,9 +14,7 @@ public:
     virtual DWORD GetSize() const;
     virtual LPVOID GetBuffer();
     virtual LPVOID GetBuffer(DWORD size);
-
-private:
-    void ReleaseBuffer();
+    virtual void ReleaseBuffer();
 
 protected:
     LPVOID buffer_;
