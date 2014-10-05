@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gtest", "gtest\msvc\gtest.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcproj", "{BB998CF8-C832-46B2-9088-4A0CC44F0264}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zip", "zip\zip.vcproj", "{0C7F0AA9-C72D-4684-83F3-FE7520755F68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{BB998CF8-C832-46B2-9088-4A0CC44F0264}.Debug|Win32.Build.0 = Debug|Win32
 		{BB998CF8-C832-46B2-9088-4A0CC44F0264}.Release|Win32.ActiveCfg = Release|Win32
 		{BB998CF8-C832-46B2-9088-4A0CC44F0264}.Release|Win32.Build.0 = Release|Win32
+		{0C7F0AA9-C72D-4684-83F3-FE7520755F68}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0C7F0AA9-C72D-4684-83F3-FE7520755F68}.Debug|Win32.Build.0 = Debug|Win32
+		{0C7F0AA9-C72D-4684-83F3-FE7520755F68}.Release|Win32.ActiveCfg = Release|Win32
+		{0C7F0AA9-C72D-4684-83F3-FE7520755F68}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
