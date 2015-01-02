@@ -8,28 +8,28 @@ namespace NUI
 
         typedef std::basic_string<TCHAR> tstring;
 
-        class TPoint
+        class NPoint
         {
         public:
-            TPoint() : X(0), Y(0)
+            NPoint() : X(0), Y(0)
             {}
-            TPoint(INT x, INT y) : X(x), Y(y)
+            NPoint(INT x, INT y) : X(x), Y(y)
             {}
-            TPoint(const TPoint& p) : X(p.X), Y(p.Y)
+            NPoint(const NPoint& p) : X(p.X), Y(p.Y)
             {}
-            TPoint& operator = (const TPoint& p)
+            NPoint& operator = (const NPoint& p)
             {
                 X = p.X;
                 Y = p.Y;
                 return (*this);
             }
-            TPoint& SetPoint(INT x, INT y)
+            NPoint& SeNPoint(INT x, INT y)
             {
                 X = x;
                 Y = y;
                 return (*this);
             }
-            bool operator == (const TPoint& point) const
+            bool operator == (const NPoint& point) const
             {
                 return X == point.X && Y == point.Y;
             }
@@ -38,28 +38,28 @@ namespace NUI
             INT Y;
         };
 
-        class TSize
+        class NSize
         {
         public:
-            TSize() : Width(0), Height(0)
+            NSize() : Width(0), Height(0)
             {}
-            TSize(INT width, INT height) : Width(width), Height(height)
+            NSize(INT width, INT height) : Width(width), Height(height)
             {}
-            TSize(const TSize& p) : Width(p.Width), Height(p.Height)
+            NSize(const NSize& p) : Width(p.Width), Height(p.Height)
             {}
-            TSize& operator = (const TSize& p)
+            NSize& operator = (const NSize& p)
             {
                 Width = p.Width;
                 Height = p.Height;
                 return (*this);
             }
-            TSize& SetSize(INT width, INT height)
+            NSize& SeNSize(INT width, INT height)
             {
                 Width = width;
                 Height = height;
                 return (*this);
             }
-            bool operator == (const TSize& size) const
+            bool operator == (const NSize& size) const
             {
                 return Width == size.Width && Height == size.Height;
             }
@@ -68,21 +68,21 @@ namespace NUI
             INT Height;
         };
 
-        class TRect
+        class NRect
         {
         public:
-            TRect()
+            NRect()
             {
                 Left = Top = Right = Bottom = 0;
             }
-            TRect(const TRect& rect)
+            NRect(const NRect& rect)
             {
                 Left = rect.Left;
                 Top = rect.Top;
                 Right = rect.Right;
                 Bottom = rect.Bottom;
             }
-            TRect& operator = (const TRect& rect)
+            NRect& operator = (const NRect& rect)
             {
                 if(this != &rect)
                 {
@@ -93,21 +93,21 @@ namespace NUI
                 }
                 return (*this);
             }
-            TRect(INT left, INT top, INT right, INT bottom)
+            NRect(INT left, INT top, INT right, INT bottom)
             {
                 Left = left;
                 Top = top;
                 Right = right;
                 Bottom = bottom;
             }
-            TRect(const TPoint& topLeft, const TPoint& rightBottom)
+            NRect(const NPoint& topLeft, const NPoint& rightBottom)
             {
                 Left = topLeft.X;
                 Top = topLeft.Y;
                 Right = rightBottom.X;
                 Bottom = rightBottom.Y;
             }
-            TRect(const TPoint& topLeft, const TSize& size)
+            NRect(const NPoint& topLeft, const NSize& size)
             {
                 Left = topLeft.X;
                 Top = topLeft.Y;
@@ -124,7 +124,7 @@ namespace NUI
                 return Bottom - Top;
             }
 
-            TRect& SetRect(INT left, INT top, INT right, INT bottom)
+            NRect& SetRect(INT left, INT top, INT right, INT bottom)
             {
                 Left = left;
                 Top = top;
@@ -132,24 +132,24 @@ namespace NUI
                 Bottom = bottom;
                 return (*this);
             }
-            TRect& SetWidth(INT width)
+            NRect& SetWidth(INT width)
             {
                 Right = Left + width;
                 return (*this);
             }
-            TRect& SetHeight(INT height)
+            NRect& SetHeight(INT height)
             {
                 Bottom = Top + height;
                 return (*this);
             }
-            TRect& SetSize(INT width, INT height)
+            NRect& SeNSize(INT width, INT height)
             {
                 Right = Left + width;
                 Bottom = Top + height;
                 return (*this);
             }
 
-            bool operator == (const TRect& rect) const
+            bool operator == (const NRect& rect) const
             {
                 return Left == rect.Left
                     && Top == rect.Top

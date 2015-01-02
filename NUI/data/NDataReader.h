@@ -36,9 +36,9 @@ namespace NUI
             virtual bool ReadValue(LPCTSTR name, DWORD& value);
             virtual bool ReadValue(LPCTSTR name, INT64& value);
             virtual bool ReadValue(LPCTSTR name, bool& value);
-            virtual bool ReadValue(LPCTSTR name, NUI::Base::TPoint& value);
-            virtual bool ReadValue(LPCTSTR name, NUI::Base::TSize& value);
-            virtual bool ReadValue(LPCTSTR name, NUI::Base::TRect& value);
+            virtual bool ReadValue(LPCTSTR name, NUI::Base::NPoint& value);
+            virtual bool ReadValue(LPCTSTR name, NUI::Base::NSize& value);
+            virtual bool ReadValue(LPCTSTR name, NUI::Base::NRect& value);
         };
 
         NUI_API NDataReader* CreateDataReader(DataReaderType type);

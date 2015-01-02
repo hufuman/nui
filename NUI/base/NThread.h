@@ -5,10 +5,8 @@ namespace NUI
 {
     namespace Base
     {
-#pragma warning(push)
-#pragma warning(disable: 4251)
-
-        typedef std::tr1::function<unsigned int (void*)> ThreadImpl;
+        BEGIN_USE_UNEXPORT_TEMPLATE()
+        typedef FastDelegate1<void*, unsigned int> ThreadImpl;
 
         class NUI_CLASS NThread : public Noncopyable
         {
@@ -28,8 +26,6 @@ namespace NUI
             HANDLE threadHandle_;
             ThreadImpl threadImpl_;
         };
-
-#pragma warning(pop)
-
+        END_USE_UNEXPORT_TEMPLATE()
     }
 }

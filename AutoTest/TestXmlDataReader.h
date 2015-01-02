@@ -155,15 +155,15 @@ TEST_F(TestXmlDataReader, MultipleAllTypes)
     EXPECT_TRUE(reader_->ReadValue(TEXT("bool2"), bool2Data));
     EXPECT_EQ(bool2Data, false);
 
-    TPoint pt;
+    NPoint pt;
     EXPECT_TRUE(reader_->ReadValue(TEXT("tpoint"), pt));
     EXPECT_TRUE(pt.X == 234 && pt.Y == 8897);
 
-    TSize size;
+    NSize size;
     EXPECT_TRUE(reader_->ReadValue(TEXT("tsize"), size));
     EXPECT_TRUE(size.Width == 378 && size.Height == 234);
 
-    TRect rect;
+    NRect rect;
     EXPECT_TRUE(reader_->ReadValue(TEXT("trect"), rect));
     EXPECT_TRUE(rect.Left == 356 && rect.Top == 325
         && rect.Right == 23 && rect.Bottom == 123);

@@ -27,8 +27,8 @@ public:
     void TestUnZip(LPCTSTR filePath1, LPCTSTR filePath2)
     {
         NZip *zip1, *zip2;
-        ASSERT_TRUE(NReflect::GetInstance().Create(zip1));
-        ASSERT_TRUE(NReflect::GetInstance().Create(zip2));
+        ASSERT_TRUE(NReflectCreate(zip1));
+        ASSERT_TRUE(NReflectCreate(zip2));
 
         ASSERT_TRUE(zip1->LoadFile(filePath1));
         ASSERT_TRUE(zip2->LoadFile(filePath2));
@@ -74,8 +74,8 @@ public:
                 break;
             }
 
-            if(!NReflect::GetInstance().Create(buffer1)
-                || !NReflect::GetInstance().Create(buffer2))
+            if(!NReflectCreate(buffer1)
+                || !NReflectCreate(buffer2))
             {
                 break;
             }
@@ -164,7 +164,7 @@ TEST_F(TestZip, Zip)
     ASSERT_TRUE(!NUI::Util::File::IsFileExists(zip1File.GetData()) || ::DeleteFile(zip1File.GetData()));
     ASSERT_TRUE(!NUI::Util::File::IsFileExists(zip2File.GetData()) || ::DeleteFile(zip2File.GetData()));
 
-    ASSERT_TRUE(NReflect::GetInstance().Create(zip_));
+    ASSERT_TRUE(NReflectCreate(zip_));
     ASSERT_TRUE(zip_->ZipFolder(folderPath.GetData(), zip1File.GetData()));
     ASSERT_TRUE(zip_->ZipFolder((folderPath + _T("\\")).GetData(), zip2File.GetData()));
     zip_->Release();

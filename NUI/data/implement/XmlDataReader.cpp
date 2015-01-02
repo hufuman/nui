@@ -23,7 +23,7 @@ bool XmlDataReader::ParseUtf8(const char* data, size_t length)
 
     std::string utf8Data;
     utf8Data.assign(data, length);
-    document_ = new TiXmlDocument();
+    document_ = NNew(TiXmlDocument);
     document_->Parse(utf8Data.c_str());
     if(!document_->Error()
         && (root_ = document_->RootElement()) != NULL)
@@ -53,7 +53,7 @@ bool XmlDataReader::ReadNode(LPCTSTR nodeName, NDataReader*& value)
     if(element == NULL)
         return false;
 
-    XmlDataReader* reader = new XmlDataReader();
+    XmlDataReader* reader = NNew(XmlDataReader);
     reader->parent_ = this;
     reader->root_ = element;
     this->AddRef();
@@ -101,7 +101,7 @@ bool XmlDataReader::ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value
     if(element == NULL)
         return false;
 
-    XmlDataReader* reader = new XmlDataReader();
+    XmlDataReader* reader = NNew(XmlDataReader);
     reader->parent_ = this;
     reader->root_ = element;
     this->AddRef();

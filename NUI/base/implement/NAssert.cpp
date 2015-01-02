@@ -18,7 +18,7 @@ namespace
     DWORD CALLBACK AssertThreadProc(void* pParam)
     {
         stAssertProcData* pData = (stAssertProcData*)pParam;
-        pData->nResult = ::MessageBox(NULL, pData->szMsg, pData->szTitle, MB_ICONERROR | MB_ABORTRETRYIGNORE);
+        pData->nResult = ::MessageBox(NULL, pData->szMsg, pData->szTitle, MB_ICONERROR | MB_ABORTRETRYIGNORE | MB_SYSTEMMODAL);
         return 0;
     }
 }

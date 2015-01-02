@@ -17,7 +17,7 @@ namespace
         {
             const size_t nStackBufferSize = 4096;
             wchar_t szStackBuffer[nStackBufferSize];
-            wchar_t* pBuffer = (nBufferSize >= nStackBufferSize) ? NNewArray<wchar_t>(nBufferSize + 1) : szStackBuffer;
+            wchar_t* pBuffer = (nBufferSize >= nStackBufferSize) ? NNewArray(wchar_t, nBufferSize + 1) : szStackBuffer;
             nBufferSize = ::MultiByteToWideChar(uCodePage, 0, pString, length, pBuffer, nBufferSize);
             if(nBufferSize > 0)
             {
@@ -39,7 +39,7 @@ namespace
         {
             const size_t nStackBufferSize = 4096;
             char szStackBuffer[nStackBufferSize];
-            char* pBuffer = (nBufferSize >= nStackBufferSize) ? NNewArray<char>(nBufferSize + 1) : szStackBuffer;
+            char* pBuffer = (nBufferSize >= nStackBufferSize) ? NNewArray(char, nBufferSize + 1) : szStackBuffer;
             nBufferSize = ::WideCharToMultiByte(uCodePage, 0, pString, length, pBuffer, nBufferSize, 0, 0);
             if(nBufferSize > 0)
             {

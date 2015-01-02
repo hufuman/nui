@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "NCoreImpl.h"
 
+#include "../NMemTool.h"
 
 IMPLEMENT_REFLECTION(NCoreImpl);
 
@@ -46,6 +47,9 @@ bool NCoreImpl::InitCore(LPCTSTR szUIData, LPCTSTR szLang)
 
 void NCoreImpl::DestroyCore()
 {
+    NUI::Base::CheckMemLeak();
+    NUI::Base::ReleaseMemChecker();
+
     if(m_uGdiplusToken != 0)
     {
         Gdiplus::GdiplusShutdown(m_uGdiplusToken);

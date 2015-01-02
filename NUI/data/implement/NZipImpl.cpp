@@ -72,7 +72,7 @@ bool NZipImpl::LoadFile(LPCTSTR zipFilePath)
     bool result = false;
     for (;;)
     {
-        if(!NReflect::GetInstance().Create(zipBuffer_))
+        if(!NReflectCreate(zipBuffer_))
             break;
 
         if(!zipBuffer_->OpenForRead(zipFilePath))
@@ -89,7 +89,7 @@ bool NZipImpl::LoadFile(LPCTSTR zipFilePath)
 
         ZRESULT zResult = ZR_OK;
         NString strName;
-        stCacheData* pCacheData = NNew<stCacheData>();
+        stCacheData* pCacheData = NNew(stCacheData);
         for(int i=0;  ; ++ i)
         {
             zResult = GetZipItem(zipFile_, i, &pCacheData->entry);
@@ -100,7 +100,7 @@ bool NZipImpl::LoadFile(LPCTSTR zipFilePath)
             strName.MakeLower();
             pCacheData->buffer = NULL;
             m_mapCacheData.insert(std::make_pair(strName, pCacheData));
-            pCacheData = new stCacheData;
+            pCacheData = NNew(stCacheData);
         }
         NDelete(pCacheData);
         result = true;
@@ -144,7 +144,7 @@ bool NZipImpl::GetFileContent(LPCTSTR relativePath, int& index, LPBYTE& data, DW
     if(pCacheData->buffer == NULL || pCacheData->buffer->GetBuffer() == NULL)
     {
         if(pCacheData->buffer != NULL
-            || NReflect::GetInstance().Create(pCacheData->buffer))
+            || NReflectCreate(pCacheData->buffer))
         {
             LPVOID pBuffer = pCacheData->buffer->GetBuffer(size + 1);
             result = (pBuffer != NULL);
@@ -208,7 +208,7 @@ void NZipImpl::Close()
             {}
         }
 
-        delete ite->second;
+        NDelete(ite->second);
     }
     m_mapCacheData.clear();
 }

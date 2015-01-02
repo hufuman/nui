@@ -17,9 +17,17 @@
 #include "TestBuffer.h"
 #include "TestFileMapping.h"
 #include "TestZip.h"
+#include "TestListT.h"
+#include "TestArrayT.h"
 
 // Util
 #include "TestFileUtil.h"
+
+// UI
+#include "TestMsgLoop.h"
+#include "TestWindowBase.h"
+#include "TestTimerSrv.h"
+
 
 int _tmain(int argc, _TCHAR* argv[])
 {

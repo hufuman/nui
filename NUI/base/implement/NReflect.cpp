@@ -4,7 +4,6 @@
 
 
 namespace NUI
-
 {
     namespace Base
     {
@@ -24,22 +23,26 @@ namespace NUI
             return instance;
         }
 
-        bool NReflect::AddReflect(LPCTSTR szNamespace, LPCTSTR szClassName, ObjectCreator objCreator)
+        bool NReflect::AddReflect(LPCTSTR szNamespace, LPCTSTR szClassName, ObjectCreator objCreator, ReflectFlag flag)
         {
 #ifdef _DEBUG
             NAssertError(!IsClassExists(szNamespace, szClassName), TEXT("Class has been added already"));
 #endif
 
             NamespaceInfoMap::iterator iteInfo = m_mapNamespaceInfo.find(szNamespace);
+            ClassData classData;
+            classData.creator = objCreator;
+            classData.flag = flag;
+            classData.existObj = NULL;
             if(iteInfo == m_mapNamespaceInfo.end())
             {
-                ObjCreatorMap objCreatorMap;
-                objCreatorMap.insert(std::make_pair(szClassName, objCreator));
-                m_mapNamespaceInfo.insert(std::make_pair(szNamespace, objCreatorMap));
+                ClassDataMap classDataMap;
+                classDataMap.insert(std::make_pair(szClassName, classData));
+                m_mapNamespaceInfo.insert(std::make_pair(szNamespace, classDataMap));
             }
             else
             {
-                iteInfo->second.insert(std::make_pair(szClassName, objCreator));
+                iteInfo->second.insert(std::make_pair(szClassName, classData));
             }
             return true;
         }
@@ -50,7 +53,7 @@ namespace NUI
             if(iteInfo == m_mapNamespaceInfo.end())
                 return false;
 
-            ObjCreatorMap::iterator iteCreator = iteInfo->second.find(szClassName);
+            ClassDataMap::iterator iteCreator = iteInfo->second.find(szClassName);
             if(iteCreator == iteInfo->second.end())
                 return false;
 
@@ -67,32 +70,64 @@ namespace NUI
             return true;
         }
 
-        bool NReflect::IsClassExists(LPCTSTR szNamespace, LPCTSTR szClassName) const
+        bool NReflect::IsClassExists(LPCTSTR szNamespace, LPCTSTR szClassName)
         {
-            ObjectCreator creator;
-            return GetClassCreator(szNamespace, szClassName, creator);
+            ClassData* pClassData;
+            return GetClassData(szNamespace, szClassName, pClassData);
         }
 
-        NBaseObj* NReflect::Create(LPCTSTR szNamespace, LPCTSTR szClassName) const
+        NBaseObj* NReflect::Create(LPCTSTR szNamespace, LPCTSTR szClassName, LPCSTR filePath, int line)
         {
-            ObjectCreator creator;
-            if(!GetClassCreator(szNamespace, szClassName, creator))
+            ClassData* pClassData;
+            if(!GetClassData(szNamespace, szClassName, pClassData))
                 return NULL;
-            return creator();
+            if(pClassData->flag == None)
+                return pClassData->creator(filePath, line);
+            if(pClassData->flag == Singleton)
+            {
+                if(pClassData->existObj == NULL)
+                {
+                    pClassData->existObj = pClassData->creator(filePath, line);
+                }
+                if(pClassData->existObj != NULL)
+                    pClassData->existObj->AddRef();
+                return pClassData->existObj;
+            }
+            NAssertError(false, _T("Invalid data in NReflect::Create"));
+            return NULL;
         }
 
-        bool NReflect::GetClassCreator(LPCTSTR szNamespace, LPCTSTR szClassName, ObjectCreator& creator) const
+        void NReflect::ReleaseData()
         {
-            NamespaceInfoMap::const_iterator iteInfo = m_mapNamespaceInfo.find(szNamespace);
+            NamespaceInfoMap::iterator iteNamespace = m_mapNamespaceInfo.begin();
+            for(; iteNamespace != m_mapNamespaceInfo.end(); ++ iteNamespace)
+            {
+                ClassDataMap::iterator iteClass = iteNamespace->second.begin();
+                ClassDataMap::iterator iteClassEnd = iteNamespace->second.end();
+                for(; iteClass != iteClassEnd; ++ iteClass)
+                {
+                    ClassData& data = iteClass->second;
+                    if(data.existObj != NULL)
+                    {
+                        int refCount = data.existObj->Release();
+                        NAssertError(refCount == 0, _T("Singleton Object Leak"));
+                    }
+                }
+            }
+        }
+
+        bool NReflect::GetClassData(LPCTSTR szNamespace, LPCTSTR szClassName, ClassData*& pClassData)
+        {
+            NamespaceInfoMap::iterator iteInfo = m_mapNamespaceInfo.find(szNamespace);
             if(iteInfo == m_mapNamespaceInfo.end())
                 return false;
 
-            const ObjCreatorMap& creatorMap = iteInfo->second;
-            ObjCreatorMap::const_iterator iteCreator = creatorMap.find(szClassName);
+            ClassDataMap& creatorMap = iteInfo->second;
+            ClassDataMap::iterator iteCreator = creatorMap.find(szClassName);
             if(iteCreator == iteInfo->second.end())
                 return false;
 
-            creator = iteCreator->second;
+            pClassData = &iteCreator->second;
             return true;
         }
     }

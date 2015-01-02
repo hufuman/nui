@@ -26,7 +26,7 @@ protected:
 
 TEST_F(TestBuffer, Basic)
 {
-    ASSERT_TRUE(NReflect::GetInstance().Create(buffer_));
+    ASSERT_TRUE(NReflectCreate(buffer_));
     ASSERT_TRUE(buffer_ != NULL);
 
     DWORD size = rand() % 65535;

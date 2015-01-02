@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="AutoTest"
+	Name="autotest"
 	ProjectGUID="{7BA70EEB-C1FF-4172-B719-34C12AE5A289}"
 	RootNamespace="AutoTest"
 	Keyword="Win32Proj"
@@ -235,11 +235,19 @@
 			Name="data"
 			>
 			<File
+				RelativePath=".\TestArrayT.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestBuffer.h"
 				>
 			</File>
 			<File
 				RelativePath=".\TestFileMapping.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestListT.h"
 				>
 			</File>
 			<File
@@ -260,6 +268,22 @@
 			>
 			<File
 				RelativePath=".\TestFileUtil.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="ui"
+			>
+			<File
+				RelativePath=".\TestMsgLoop.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestTimerSrv.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestWindowBase.h"
 				>
 			</File>
 		</Filter>

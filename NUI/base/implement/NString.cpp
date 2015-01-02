@@ -316,7 +316,7 @@ namespace NUI
             }
             else
             {
-                TCHAR* pBuffer = NNewArray<TCHAR>(nCount + 1);
+                TCHAR* pBuffer = NUI::Base::NNewArray(TCHAR, nCount + 1);
                 nCount = _vsntprintf(pBuffer, nCount, szFormat, args);
                 if(nCount > 0)
                 {

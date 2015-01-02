@@ -90,4 +90,14 @@ namespace TestUtil
             ::free(data2);
         return result;
     }
+
+    __inline void EatQuitMsg()
+    {
+        MSG msg;
+        while(::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)
+            && msg.message == WM_QUIT)
+        {
+            ::GetMessage(&msg, NULL, 0, 0);
+        }
+    }
 }

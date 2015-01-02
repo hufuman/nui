@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <windows.h>
+#include <process.h>
 
 #include "gtest/gtest.h"
 #pragma comment(lib, "gtest.lib")

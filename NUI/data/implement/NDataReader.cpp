@@ -55,7 +55,7 @@ namespace NUI
             return true;
         }
 
-        bool NDataReader::ReadValue(LPCTSTR name, NUI::Base::TPoint& value)
+        bool NDataReader::ReadValue(LPCTSTR name, NUI::Base::NPoint& value)
         {
             NUI::Base::NString data;
             if(!ReadValue(name, data))
@@ -70,7 +70,7 @@ namespace NUI
             return true;
         }
 
-        bool NDataReader::ReadValue(LPCTSTR name, NUI::Base::TSize& value)
+        bool NDataReader::ReadValue(LPCTSTR name, NUI::Base::NSize& value)
         {
             NUI::Base::NString data;
             if(!ReadValue(name, data))
@@ -87,7 +87,7 @@ namespace NUI
             return true;
         }
 
-        bool NDataReader::ReadValue(LPCTSTR name, NUI::Base::TRect& value)
+        bool NDataReader::ReadValue(LPCTSTR name, NUI::Base::NRect& value)
         {
             NUI::Base::NString data;
             if(!ReadValue(name, data))
@@ -119,7 +119,7 @@ namespace NUI
             }
             else if(type == ReaderXml)
             {
-                reader = dynamic_cast<NDataReader*>(new XmlDataReader());
+                reader = dynamic_cast<NDataReader*>(NUI::Base::NNew(XmlDataReader));
             }
             NAssertError(reader != NULL, TEXT("unknown type of DataReader: %d"), type);
             return reader;

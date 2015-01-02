@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="NUI"
+	Name="nui"
 	ProjectGUID="{5196231A-50E6-4E92-AAEB-0C20725CD387}"
 	RootNamespace="NUI"
 	Keyword="Win32Proj"
@@ -168,11 +168,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\base\FastDelegate.h"
+				>
+			</File>
+			<File
 				RelativePath=".\base\NAssert.h"
 				>
 			</File>
 			<File
 				RelativePath=".\base\NCore.h"
+				>
+			</File>
+			<File
+				RelativePath=".\base\NHolder.h"
 				>
 			</File>
 			<File
@@ -192,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\base\NSingleton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\base\NString.h"
 				>
 			</File>
@@ -203,6 +215,14 @@
 				Name="implement"
 				>
 				<File
+					RelativePath=".\base\implement\MemRecorder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\base\implement\MemRecorder.h"
+					>
+				</File>
+				<File
 					RelativePath=".\base\implement\NAssert.cpp"
 					>
 				</File>
@@ -212,6 +232,10 @@
 				</File>
 				<File
 					RelativePath=".\base\implement\NCoreImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\base\implement\NHolder.cpp"
 					>
 				</File>
 				<File
@@ -232,6 +256,10 @@
 			Name="data"
 			>
 			<File
+				RelativePath=".\data\NArrayT.h"
+				>
+			</File>
+			<File
 				RelativePath=".\data\NBuffer.h"
 				>
 			</File>
@@ -245,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\data\NIconv.h"
+				>
+			</File>
+			<File
+				RelativePath=".\data\NListT.h"
 				>
 			</File>
 			<File
@@ -374,6 +406,94 @@
 				>
 				<File
 					RelativePath=".\util\implement\NFileUtil.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="ui"
+			>
+			<File
+				RelativePath=".\ui\EventDef.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NEvent.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NMsgLoop.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NTimerSrv.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NWindowBase.h"
+				>
+			</File>
+			<Filter
+				Name="implement"
+				>
+				<File
+					RelativePath=".\ui\implement\NFrameImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NFrameImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NMsgLoop.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NTimerSrvImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NTimerSrvImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NWindowBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NWindowImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NWindowImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\WindowDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\WindowMap.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\WindowMap.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\WindowUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\WindowUtil.h"
 					>
 				</File>
 			</Filter>

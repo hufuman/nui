@@ -11,6 +11,7 @@ public:
     virtual ~NBufferImpl(void);
 
     virtual NBuffer& SetSize(DWORD size);
+    virtual DWORD GetCapacity() const;
     virtual DWORD GetSize() const;
     virtual LPVOID GetBuffer();
     virtual LPVOID GetBuffer(DWORD size);

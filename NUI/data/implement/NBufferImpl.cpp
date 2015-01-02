@@ -40,6 +40,11 @@ NUI::Data::NBuffer& NBufferImpl::SetSize(DWORD size)
     return (*this);
 }
 
+DWORD NBufferImpl::GetCapacity() const
+{
+    return capacity_;
+}
+
 DWORD NBufferImpl::GetSize() const
 {
     return size_;

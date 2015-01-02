@@ -27,7 +27,7 @@ protected:
 TEST_F(TestFileMapping, Basic)
 {
     NString filePath = TestUtil::GetTestFile(_T("FileMapping\\1.txt"));
-    ASSERT_TRUE(NReflect::GetInstance().Create(fileMapping_));
+    ASSERT_TRUE(NReflectCreate(fileMapping_));
     ASSERT_TRUE(fileMapping_->OpenForRead(filePath.GetData()));
     EXPECT_TRUE(fileMapping_->GetSize() == 10);
     EXPECT_TRUE(memcmp(fileMapping_->GetData(), "1234567890", 10) == 0);
