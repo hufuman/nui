@@ -3,7 +3,7 @@
 
 #include "../../data/NModule.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
@@ -15,7 +15,7 @@ namespace NUI
                 wce.cbSize = sizeof(wce);
                 wce.style = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW;
                 wce.lpfnWndProc = wndProc;
-                wce.hInstance = NUI::Data::NModule::GetInst().GetNUIModule();
+                wce.hInstance = nui::Data::NModule::GetInst().GetNUIModule();
                 wce.hCursor = ::LoadCursor(NULL, IDC_ARROW);
                 wce.lpszClassName = szClassName;
                 ATOM atom = ::RegisterClassEx(&wce);
@@ -25,7 +25,7 @@ namespace NUI
             bool EnsureWindowClass(LPCTSTR szClassName, WNDPROC wndProc)
             {
                 WNDCLASSEX wce = {sizeof(WNDCLASSEX)};
-                if(::GetClassInfoEx(NUI::Data::NModule::GetInst().GetNUIModule(), szClassName, &wce))
+                if(::GetClassInfoEx(nui::Data::NModule::GetInst().GetNUIModule(), szClassName, &wce))
                     return true;
                 return RegisterWindowClass(szClassName, wndProc);
             }

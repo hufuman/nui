@@ -4,13 +4,13 @@
 #include "../NBuffer.h"
 
 
-class NBufferImpl : public NUI::Data::NBuffer
+class NBufferImpl : public nui::Data::NBuffer
 {
 public:
     NBufferImpl(void);
     virtual ~NBufferImpl(void);
 
-    virtual NBuffer& SetSize(DWORD size);
+    virtual bool SetSize(DWORD size);
     virtual DWORD GetCapacity() const;
     virtual DWORD GetSize() const;
     virtual LPVOID GetBuffer();

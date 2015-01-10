@@ -6,7 +6,7 @@
 #include "../../Util/NFileUtil.h"
 
 
-namespace NUI
+namespace nui
 {
     namespace Data
     {

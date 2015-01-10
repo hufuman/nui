@@ -3,7 +3,7 @@
 
 #include "../base/BaseObj.h"
 
-namespace NUI
+namespace nui
 {
     namespace Data
     {

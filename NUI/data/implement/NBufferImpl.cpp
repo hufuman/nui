@@ -18,14 +18,14 @@ NBufferImpl::~NBufferImpl()
         ReleaseBuffer();
 }
 
-NUI::Data::NBuffer& NBufferImpl::SetSize(DWORD size)
+bool NBufferImpl::SetSize(DWORD size)
 {
     if(capacity_ < size)
     {
         ReleaseBuffer();
         if(size > 0)
         {
-            buffer_ = NUI::Base::NMalloc(size);
+            buffer_ = nui::Base::NMalloc(size);
             if(buffer_ != NULL)
             {
                 capacity_ = size;
@@ -37,7 +37,7 @@ NUI::Data::NBuffer& NBufferImpl::SetSize(DWORD size)
     {
         size_ = size;
     }
-    return (*this);
+    return (buffer_ != NULL);
 }
 
 DWORD NBufferImpl::GetCapacity() const
@@ -65,7 +65,7 @@ void NBufferImpl::ReleaseBuffer()
 {
     if(buffer_ != NULL)
     {
-        NUI::Base::NFree(buffer_);
+        nui::Base::NFree(buffer_);
         size_ = 0;
         capacity_ = 0;
     }

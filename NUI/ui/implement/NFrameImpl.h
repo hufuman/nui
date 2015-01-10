@@ -4,11 +4,11 @@
 #include "../NFrame.h"
 #include "../../data/NArrayT.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
-        class NFrameImpl : public NUI::UI::NFrame
+        class NFrameImpl : public nui::UI::NFrame
         {
         public:
             NFrameImpl();

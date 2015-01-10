@@ -2,7 +2,7 @@
 #include "../NMsgLoop.h"
 
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
@@ -64,12 +64,12 @@ namespace NUI
             ::PostThreadMessage(::GetCurrentThreadId(), WM_NULL, 0, 0);
         }
 
-        bool NMsgLoop::AddIdleHandler(NIdleHandler* handler)
+        bool NMsgLoop::AddIdleHandler(NIdleHandler handler)
         {
             return idleHandlers_.AddItem(handler);
         }
 
-        bool NMsgLoop::RemoveIdleHandler(NIdleHandler* handler)
+        bool NMsgLoop::RemoveIdleHandler(NIdleHandler handler)
         {
             int pos = idleHandlers_.Find(handler);
             if(pos < 0)
@@ -82,7 +82,7 @@ namespace NUI
             int count = idleHandlers_.Count();
             for(int i=0; i<count; ++ i)
             {
-                if(idleHandlers_[i]->OnIdle(idleCount))
+                if(idleHandlers_[i](idleCount))
                     return true;
             }
             return false;

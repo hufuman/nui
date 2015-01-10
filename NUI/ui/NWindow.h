@@ -3,8 +3,9 @@
 
 
 #include "../base/BaseObj.h"
+#include "NWindowBase.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
@@ -12,12 +13,22 @@ namespace NUI
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("window"))
         public:
-            virtual bool Create(HWND parentWindow) = 0;
-            virtual void Destroy() = 0;
-            virtual bool DoModal(HWND parentWindow) = 0;
-            virtual void SetVisible(bool visible) = 0;
-            virtual void SetPos(int left, int top) = 0;
-            virtual void SetSize(int width, int height) = 0;
+            NWindow();
+            ~NWindow();
+
+            virtual bool Create(HWND parentWindow);
+            virtual void Destroy();
+            virtual bool DoModal(HWND parentWindow);
+            virtual void SetVisible(bool visible);
+            virtual void SetPos(int left, int top);
+            virtual void SetSize(int width, int height);
+            virtual void SetIcon(LPCTSTR iconPath);
+
+        protected:
+            bool WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+
+        protected:
+            NWindowBase window_;
         };
     }
 }

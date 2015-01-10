@@ -23,14 +23,16 @@
 #include <CommCtrl.h>
 
 
+#include "./base/noncopyable.h"
+#include "./base/NMacro.h"
+#include "./base/NAssert.h"
+#include "./base/NAutoPtr.h"
+#include "./base/NInstPtr.h"
 #include "./base/FastDelegate.h"
 using namespace fastdelegate;
 #include "./base/DataTypes.h"
-#include "./base/noncopyable.h"
-#include "./base/NMacro.h"
 #include "./base/NMemTool.h"
 #include "./base/BaseObj.h"
-#include "./base/NAssert.h"
 #include "./base/NString.h"
 #include "./base/NThread.h"
 #include "./base/NReflect.h"
@@ -53,7 +55,7 @@ using namespace fastdelegate;
 #include "./ui/NTimerSrv.h"
 
 #ifdef _NOT_USE_NUI_NAMESPACE
-using namespace NUI;
+using namespace nui;
 using namespace Base;
 using namespace Data;
 using namespace Util;

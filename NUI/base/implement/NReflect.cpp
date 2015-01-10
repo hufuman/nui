@@ -3,7 +3,7 @@
 
 
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {
@@ -57,16 +57,33 @@ namespace NUI
             if(iteCreator == iteInfo->second.end())
                 return false;
 
+            ClassData& data = iteCreator->second;
+            if(data.existObj != NULL)
+            {
+                int refCount = data.existObj->Release();
+                NAssertError(refCount == 0, _T("Singleton Object Leak"));
+            }
             iteInfo->second.erase(iteCreator);
             return true;
         }
 
         bool NReflect::RemoveAllReflect(LPCTSTR szNamespace)
         {
-            NamespaceInfoMap::iterator iteInfo = m_mapNamespaceInfo.find(szNamespace);
-            if(iteInfo == m_mapNamespaceInfo.end())
+            NamespaceInfoMap::iterator iteNamespace = m_mapNamespaceInfo.find(szNamespace);
+            if(iteNamespace == m_mapNamespaceInfo.end())
                 return false;
-            m_mapNamespaceInfo.erase(iteInfo);
+            ClassDataMap::iterator iteClass = iteNamespace->second.begin();
+            ClassDataMap::iterator iteClassEnd = iteNamespace->second.end();
+            for(; iteClass != iteClassEnd; ++ iteClass)
+            {
+                ClassData& data = iteClass->second;
+                if(data.existObj != NULL)
+                {
+                    int refCount = data.existObj->Release();
+                    NAssertError(refCount == 0, _T("Singleton Object Leak"));
+                }
+            }
+            m_mapNamespaceInfo.erase(iteNamespace);
             return true;
         }
 
@@ -88,16 +105,16 @@ namespace NUI
                 if(pClassData->existObj == NULL)
                 {
                     pClassData->existObj = pClassData->creator(filePath, line);
+                    if(pClassData->existObj != NULL)
+                        pClassData->existObj->AddRef();
                 }
-                if(pClassData->existObj != NULL)
-                    pClassData->existObj->AddRef();
                 return pClassData->existObj;
             }
             NAssertError(false, _T("Invalid data in NReflect::Create"));
             return NULL;
         }
 
-        void NReflect::ReleaseData()
+        void NReflect::ReleaseData(NCore* core)
         {
             NamespaceInfoMap::iterator iteNamespace = m_mapNamespaceInfo.begin();
             for(; iteNamespace != m_mapNamespaceInfo.end(); ++ iteNamespace)
@@ -110,7 +127,7 @@ namespace NUI
                     if(data.existObj != NULL)
                     {
                         int refCount = data.existObj->Release();
-                        NAssertError(refCount == 0, _T("Singleton Object Leak"));
+                        NAssertError(core == data.existObj || refCount == 0, _T("Singleton Object Leak"));
                     }
                 }
             }

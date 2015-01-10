@@ -16,7 +16,7 @@ namespace
     }
 }
 
-namespace NUI
+namespace nui
 {
     namespace Util
     {
@@ -45,7 +45,7 @@ namespace NUI
                     && ((fileAttr & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY));
             }
 
-            bool IsDirectoryExists(LPCTSTR filePath)
+            bool IsFolderExists(LPCTSTR filePath)
             {
                 DWORD fileAttr = ::GetFileAttributes(filePath);
                 return (fileAttr != INVALID_FILE_ATTRIBUTES

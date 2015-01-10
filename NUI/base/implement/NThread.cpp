@@ -5,7 +5,7 @@
 #include <windows.h>
 
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {

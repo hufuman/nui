@@ -5,7 +5,7 @@
 #include <tinyxml.h>
 
 
-class XmlDataReader : public NUI::Data::NDataReader
+class XmlDataReader : public nui::Data::NDataReader
 {
     DECLARE_REFLECTION(TEXT("nui"), TEXT("xmlDataReader"))
 public:
@@ -14,12 +14,12 @@ public:
 
     virtual bool ParseUtf8(const char* data, size_t length);
 
-    virtual bool ReadValue(LPCTSTR valueName, NUI::Base::NString& value);
+    virtual bool ReadValue(LPCTSTR valueName, nui::Base::NString& value);
 
-    virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, NUI::Base::NString& value);
+    virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value);
     virtual bool ReadNode(LPCTSTR nodeName, NDataReader*& value);
 
-    virtual bool ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, NUI::Base::NString& value);
+    virtual bool ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value);
     virtual bool ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value);
 
 private:
@@ -30,7 +30,7 @@ private:
 
     void Clear();
 
-    static bool ElementToString(TiXmlElement* element, LPCTSTR valueName, NUI::Base::NString& value);
+    static bool ElementToString(TiXmlElement* element, LPCTSTR valueName, nui::Base::NString& value);
 
 private:
     XmlDataReader* parent_;

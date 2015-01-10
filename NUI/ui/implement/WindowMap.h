@@ -6,13 +6,13 @@
 #include "../NWindowBase.h"
 
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
         namespace Util
         {
-            class WindowMap : protected NUI::Base::Noncopyable
+            class WindowMap : protected nui::Base::Noncopyable
             {
                 static WindowMap instance_;
             public:

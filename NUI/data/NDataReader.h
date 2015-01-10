@@ -3,7 +3,7 @@
 
 #include "../base/BaseObj.h"
 
-namespace NUI
+namespace nui
 {
     namespace Data
     {
@@ -14,7 +14,7 @@ namespace NUI
             ReaderXml,
         };
 
-        class NUI_CLASS NDataReader : public NUI::Base::NBaseObj
+        class NUI_CLASS NDataReader : public nui::Base::NBaseObj
         {
         public:
             NDataReader(void){}
@@ -22,12 +22,12 @@ namespace NUI
 
             virtual bool ParseUtf8(const char* data, size_t length) = 0;
 
-            virtual bool ReadValue(LPCTSTR valueName, NUI::Base::NString& value) = 0;
+            virtual bool ReadValue(LPCTSTR valueName, nui::Base::NString& value) = 0;
 
-            virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, NUI::Base::NString& value) = 0;
+            virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value) = 0;
             virtual bool ReadNode(LPCTSTR nodeName, NDataReader*& value) = 0;
 
-            virtual bool ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, NUI::Base::NString& value) = 0;
+            virtual bool ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value) = 0;
             virtual bool ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value) = 0;
 
             virtual bool ParseUtf8(const char* data);
@@ -36,9 +36,9 @@ namespace NUI
             virtual bool ReadValue(LPCTSTR name, DWORD& value);
             virtual bool ReadValue(LPCTSTR name, INT64& value);
             virtual bool ReadValue(LPCTSTR name, bool& value);
-            virtual bool ReadValue(LPCTSTR name, NUI::Base::NPoint& value);
-            virtual bool ReadValue(LPCTSTR name, NUI::Base::NSize& value);
-            virtual bool ReadValue(LPCTSTR name, NUI::Base::NRect& value);
+            virtual bool ReadValue(LPCTSTR name, nui::Base::NPoint& value);
+            virtual bool ReadValue(LPCTSTR name, nui::Base::NSize& value);
+            virtual bool ReadValue(LPCTSTR name, nui::Base::NRect& value);
         };
 
         NUI_API NDataReader* CreateDataReader(DataReaderType type);

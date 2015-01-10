@@ -2,7 +2,7 @@
 #include "NFrameImpl.h"
 
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {

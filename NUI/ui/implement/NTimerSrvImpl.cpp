@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "NTimerSrvImpl.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
@@ -38,10 +38,10 @@ namespace NUI
             UINT_PTR timerId = reinterpret_cast<UINT_PTR>(data);
             if(timerId <= 0)
                 return;
-            NTimerSrv *timerSrv = NULL;
-            if(!NReflectCreate(timerSrv))
+            nui::Base::NInstPtr<NTimerSrv> timerSrv(InstPtrParam);
+            if(timerSrv == NULL)
                 return;
-            NTimerSrvImpl* impl = dynamic_cast<NTimerSrvImpl*>(timerSrv);
+            NTimerSrvImpl* impl = dynamic_cast<NTimerSrvImpl*>((NTimerSrv*)timerSrv);
             impl->stopTimer(timerId);
         }
 

@@ -4,7 +4,7 @@
 #include "../NTimerSrv.h"
 #include "../NWindowBase.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {

@@ -17,7 +17,7 @@
 #include <GdiPlus.h>
 
 
-#include "NUI.h"
+#include "nui.h"
 
 
 #pragma comment(lib, "zip.lib")

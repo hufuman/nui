@@ -1,58 +1,63 @@
 #include "stdafx.h"
-#include "NWindowImpl.h"
+#include "../NWindow.h"
 
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
-        NWindowImpl::NWindowImpl()
+        NWindow::NWindow()
         {
             ;
         }
 
-        NWindowImpl::~NWindowImpl()
+        NWindow::~NWindow()
         {
             ;
         }
 
         // NWindow
-        bool NWindowImpl::Create(HWND parentWindow)
+        bool NWindow::Create(HWND parentWindow)
         {
             UNREFERENCED_PARAMETER(parentWindow);
             return false;
         }
 
-        void NWindowImpl::Destroy()
+        void NWindow::Destroy()
         {
             ;
         }
 
-        bool NWindowImpl::DoModal(HWND parentWindow)
+        bool NWindow::DoModal(HWND parentWindow)
         {
             UNREFERENCED_PARAMETER(parentWindow);
             return false;
         }
 
-        void NWindowImpl::SetVisible(bool visible)
+        void NWindow::SetVisible(bool visible)
         {
             UNREFERENCED_PARAMETER(visible);
         }
 
-        void NWindowImpl::SetPos(int left, int top)
+        void NWindow::SetPos(int left, int top)
         {
             UNREFERENCED_PARAMETER(left);
             UNREFERENCED_PARAMETER(top);
         }
 
-        void NWindowImpl::SetSize(int width, int height)
+        void NWindow::SetSize(int width, int height)
         {
             UNREFERENCED_PARAMETER(width);
             UNREFERENCED_PARAMETER(height);
         }
 
+        void NWindow::SetIcon(LPCTSTR iconPath)
+        {
+            UNREFERENCED_PARAMETER(iconPath);
+        }
+
         // WindowMsgFilter
-        bool NWindowImpl::OnMessage(HWND window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+        bool NWindow::WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
         {
             UNREFERENCED_PARAMETER(window);
             UNREFERENCED_PARAMETER(message);

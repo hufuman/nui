@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {
@@ -12,7 +12,7 @@ namespace NUI
         public:
             NBaseObj()
             {
-                refCount_ = 1;
+                refCount_ = 0;
             }
             virtual ~NBaseObj(){}
 

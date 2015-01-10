@@ -2,8 +2,9 @@
 #include "NCoreImpl.h"
 
 #include "../NMemTool.h"
+#include "../../data/NFileSystem.h"
 
-IMPLEMENT_REFLECTION(NCoreImpl);
+IMPLEMENT_REFLECTION_EX(NCoreImpl, nui::Base::NReflect::Singleton);
 
 
 NCoreImpl::NCoreImpl(void)
@@ -17,10 +18,10 @@ NCoreImpl::~NCoreImpl(void)
     ;
 }
 
-bool NCoreImpl::InitCore(LPCTSTR szUIData, LPCTSTR szLang)
+bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang)
 {
-    UNREFERENCED_PARAMETER(szUIData);
-    UNREFERENCED_PARAMETER(szLang);
+    UNREFERENCED_PARAMETER(packFilePath);
+    UNREFERENCED_PARAMETER(lang);
 
     Gdiplus::GdiplusStartupInput input;
     Gdiplus::Status status = Gdiplus::GdiplusStartup(&m_uGdiplusToken, &input, NULL);
@@ -42,14 +43,15 @@ bool NCoreImpl::InitCore(LPCTSTR szUIData, LPCTSTR szLang)
         return false;
     }
 
-    return true;
+    nui::Base::NInstPtr<nui::Data::NFileSystem> fileSystem(InstPtrParam);
+    if(!fileSystem)
+        return false;
+
+    return fileSystem->Init(packFilePath);
 }
 
 void NCoreImpl::DestroyCore()
 {
-    NUI::Base::CheckMemLeak();
-    NUI::Base::ReleaseMemChecker();
-
     if(m_uGdiplusToken != 0)
     {
         Gdiplus::GdiplusShutdown(m_uGdiplusToken);
@@ -60,4 +62,9 @@ void NCoreImpl::DestroyCore()
         OleUninitialize();
         m_hOleInitResult = E_NOTIMPL;
     }
+
+    nui::Base::NReflect::GetInstance().ReleaseData(this);
+    nui::Base::RemoveMemLog(nui::Base::MemTypeNew, this);
+    nui::Base::CheckMemLeak();
+    nui::Base::ReleaseMemChecker();
 }

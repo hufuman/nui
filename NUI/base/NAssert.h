@@ -10,7 +10,7 @@ NUI_API bool NAssertEnableImpl(bool enable);
 #define NAssertEnable(enable)           NAssertEnableImpl(enable)
 #define NAssertError(exp, format, ...)  NAssertImpl((exp), __TFILE__, __LINE__, format, __VA_ARGS__)
 
-class NTempDisableAssert : protected NUI::Base::Noncopyable
+class NTempDisableAssert : protected nui::Base::Noncopyable
 {
 public:
     NTempDisableAssert()

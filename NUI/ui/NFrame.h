@@ -3,7 +3,7 @@
 
 #include "../base/BaseObj.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
@@ -12,7 +12,7 @@ namespace NUI
         typedef FastDelegate2<NFrame*, LPARAM, bool> UiContainerEnumCallback;
         END_USE_UNEXPORT_TEMPLATE()
 
-        class NUI_CLASS NFrame : public NUI::Base::NBaseObj
+        class NUI_CLASS NFrame : public nui::Base::NBaseObj
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("NFrame"))
         public:

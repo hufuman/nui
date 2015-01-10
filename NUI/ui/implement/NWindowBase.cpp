@@ -8,7 +8,7 @@
 
 #include "../NMsgLoop.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
@@ -27,7 +27,7 @@ namespace NUI
             msgFilterCallback_ = callback;
         }
 
-        bool NWindowBase::Create(HWND parentWindow, LPCTSTR szText, NUI::Base::NRect& rect)
+        bool NWindowBase::Create(HWND parentWindow, LPCTSTR szText, nui::Base::NRect& rect)
         {
             NAssertError(window_ == NULL, _T("Window already exists"));
 
@@ -42,14 +42,14 @@ namespace NUI
                 rect.Width(), rect.Height(),
                 parentWindow,
                 NULL,
-                NUI::Data::NModule::GetInst().GetNUIModule(),
+                nui::Data::NModule::GetInst().GetNUIModule(),
                 static_cast<LPVOID>(this));
             NAssertError(window_ != NULL, _T("Failed to create window"));
 
             return (window_ != NULL);
         }
 
-        bool NWindowBase::DoModal(HWND parentWindow, LPCTSTR szText, NUI::Base::NRect& rect)
+        bool NWindowBase::DoModal(HWND parentWindow, LPCTSTR szText, nui::Base::NRect& rect)
         {
             NAssertError(window_ == NULL, _T("window_ isn't Null in DoModal"));
             if(parentWindow != NULL)
@@ -60,7 +60,7 @@ namespace NUI
             bool result = Create(parentWindow, szText, rect);
             if(result)
             {
-                NUI::UI::NMsgLoop loop;
+                nui::UI::NMsgLoop loop;
                 result = loop.Loop(window_);
             }
 
@@ -96,13 +96,13 @@ namespace NUI
 
         LRESULT NWindowBase::_staticWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
         {
-            NWindowBase* pThis = NUI::UI::Util::WindowMap::GetInst().GetWindow(window);
+            NWindowBase* pThis = nui::UI::Util::WindowMap::GetInst().GetWindow(window);
             if(message == WM_NCCREATE)
             {
                 CREATESTRUCT *cs = reinterpret_cast<CREATESTRUCT*>(lParam);
                 pThis = static_cast<NWindowBase*>(cs->lpCreateParams);
                 pThis->window_ = window;
-                NUI::UI::Util::WindowMap::GetInst().AddWindow(window, pThis);
+                nui::UI::Util::WindowMap::GetInst().AddWindow(window, pThis);
             }
 
             LRESULT lResult = 0;
@@ -112,7 +112,7 @@ namespace NUI
             {
                 if(pThis != NULL)
                     pThis->window_ = NULL;
-                NUI::UI::Util::WindowMap::GetInst().RemoveWindow(window);
+                nui::UI::Util::WindowMap::GetInst().RemoveWindow(window);
             }
             return lResult;
         }

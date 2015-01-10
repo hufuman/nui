@@ -3,7 +3,7 @@
 
 
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {
@@ -25,21 +25,21 @@ namespace NUI
                 ::LeaveCriticalSection(&ms_Section);
         }
 
-        void AddMemLog(NUI::Base::NuiMemType memType, void* p, LPCSTR szFilePath, int nLine, LPCSTR szTypeName, int size, int count)
+        void AddMemLog(nui::Base::NuiMemType memType, void* p, LPCSTR szFilePath, int nLine, LPCSTR szTypeName, int size, int count)
         {
-            NUI::Implement::NMemRecorder::GetInstance().AddMemLog(memType, p, szFilePath, nLine, szTypeName, size, count);
+            nui::Implement::NMemRecorder::GetInstance().AddMemLog(memType, p, szFilePath, nLine, szTypeName, size, count);
         }
-        void RemoveMemLog(NUI::Base::NuiMemType memType, void* p)
+        void RemoveMemLog(nui::Base::NuiMemType memType, void* p)
         {
-            NUI::Implement::NMemRecorder::GetInstance().RemoveMemLog(memType, p);
+            nui::Implement::NMemRecorder::GetInstance().RemoveMemLog(memType, p);
         }
         void CheckMemLeak()
         {
-            NUI::Implement::NMemRecorder::GetInstance().CheckMemLeak();
+            nui::Implement::NMemRecorder::GetInstance().CheckMemLeak();
         }
         void ReleaseMemChecker()
         {
-            NUI::Implement::NMemRecorder::GetInstance().ReleaseMemChecker();
+            nui::Implement::NMemRecorder::GetInstance().ReleaseMemChecker();
         }
     }
 
@@ -62,7 +62,7 @@ namespace NUI
             return *memRecorder_;
         }
 
-        void NMemRecorder::AddMemLog(NUI::Base::NuiMemType memType, void* p, LPCSTR szFilePath, int nLine, LPCSTR szTypeName, int size, int count)
+        void NMemRecorder::AddMemLog(nui::Base::NuiMemType memType, void* p, LPCSTR szFilePath, int nLine, LPCSTR szTypeName, int size, int count)
         {
             stAllocLog log;
             log.filePath = szFilePath;
@@ -74,8 +74,10 @@ namespace NUI
             mapAllocLog_.insert(std::make_pair(p, log));
         }
 
-        void NMemRecorder::RemoveMemLog(NUI::Base::NuiMemType memType, void* p)
+        void NMemRecorder::RemoveMemLog(nui::Base::NuiMemType memType, void* p)
         {
+            if(this == 0)
+                return;
             AllocLogIter iter = FindMemLog(p);
             NAssertError(iter != mapAllocLog_.end(), _T("Ptr Not Found in NMemRecorder::RemoveMemLog"));
             if(iter == mapAllocLog_.end())
@@ -102,11 +104,11 @@ namespace NUI
                 const void* const & pData = iter->first;
                 const stAllocLog& log = iter->second;
                 const char* memTypeName = "unknown";
-                if(log.memType == NUI::Base::MemTypeMalloc)
+                if(log.memType == nui::Base::MemTypeMalloc)
                     memTypeName = "malloc";
-                else if(log.memType == NUI::Base::MemTypeNew)
+                else if(log.memType == nui::Base::MemTypeNew)
                     memTypeName = "new";
-                else if(log.memType == NUI::Base::MemTypeNewArray)
+                else if(log.memType == nui::Base::MemTypeNewArray)
                     memTypeName = "newArray";
                 _snprintf(logBuffer,
                     _countof(logBuffer),

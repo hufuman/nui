@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {
@@ -47,8 +47,8 @@ namespace NUI
             ptr = NULL;
         }
 
-#define NNew(type, ...) NNewImpl<type>(NUI::Base::MemTypeNew, new type(__VA_ARGS__), 1, __FILE__, __LINE__)
-#define NNewArray(type, count) NNewImpl<type>(NUI::Base::MemTypeNewArray, new type[count], count, __FILE__, __LINE__)
+#define NNew(type, ...) NNewImpl<type>(nui::Base::MemTypeNew, new type(__VA_ARGS__), 1, __FILE__, __LINE__)
+#define NNewArray(type, count) NNewImpl<type>(nui::Base::MemTypeNewArray, new type[count], count, __FILE__, __LINE__)
         template <typename T>
         T* NNewImpl(NuiMemType memType, T* p, int count, LPCSTR szFilePath, int nLine)
         {

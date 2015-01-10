@@ -2,11 +2,11 @@
 
 #include "../NMemTool.h"
 
-namespace NUI
+namespace nui
 {
     namespace Implement
     {
-        class NMemRecorder : NUI::Base::Noncopyable
+        class NMemRecorder : nui::Base::Noncopyable
         {
             struct stAllocLog
             {
@@ -15,7 +15,7 @@ namespace NUI
                 std::string typeName;
                 int         size;
                 int         count;
-                NUI::Base::NuiMemType  memType;
+                nui::Base::NuiMemType  memType;
             };
             typedef std::map<void*, stAllocLog>     AllocLogMap;
             typedef AllocLogMap::iterator AllocLogIter;
@@ -26,8 +26,8 @@ namespace NUI
 
             static NMemRecorder& GetInstance();
 
-            void AddMemLog(NUI::Base::NuiMemType memType, void* p, LPCSTR szFilePath, int nLine, LPCSTR szTypeName, int size, int count);
-            void RemoveMemLog(NUI::Base::NuiMemType memType, void* p);
+            void AddMemLog(nui::Base::NuiMemType memType, void* p, LPCSTR szFilePath, int nLine, LPCSTR szTypeName, int size, int count);
+            void RemoveMemLog(nui::Base::NuiMemType memType, void* p);
             void CheckMemLeak();
             void ReleaseMemChecker();
 

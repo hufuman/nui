@@ -176,11 +176,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\base\NAutoPtr.h"
+				>
+			</File>
+			<File
 				RelativePath=".\base\NCore.h"
 				>
 			</File>
 			<File
 				RelativePath=".\base\NHolder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\base\NInstPtr.h"
 				>
 			</File>
 			<File
@@ -197,10 +205,6 @@
 			</File>
 			<File
 				RelativePath=".\base\NReflect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\base\NSingleton.h"
 				>
 			</File>
 			<File
@@ -272,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\data\NFileSystem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\data\NIconv.h"
 				>
 			</File>
@@ -311,11 +319,35 @@
 					>
 				</File>
 				<File
+					RelativePath=".\data\implement\NFileSystemImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NFileSystemImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\data\implement\NIconv.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\data\implement\NModule.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NPackFileSystemImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NPackFileSystemImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NRealFileSystemImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NRealFileSystemImpl.h"
 					>
 				</File>
 				<File
@@ -362,7 +394,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\NUI.h"
+				RelativePath=".\nui.h"
 				>
 			</File>
 			<File
@@ -470,10 +502,6 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NWindowImpl.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ui\implement\NWindowImpl.h"
 					>
 				</File>
 				<File

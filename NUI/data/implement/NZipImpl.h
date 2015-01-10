@@ -8,7 +8,7 @@
 #include <XUnzip.h>
 
 
-class NZipImpl : public NUI::Data::NZip
+class NZipImpl : public nui::Data::NZip
 {
 public:
     NZipImpl(void);
@@ -19,19 +19,17 @@ public:
 
     // UnZip
     virtual bool LoadFile(LPCTSTR zipFilePath);
-    virtual bool GetFileContent(LPCTSTR relativePath, int& index, LPBYTE& data, DWORD& size);
-    virtual void ReleaseFileContent(int index);
+    virtual bool GetFileContent(LPCTSTR relativePath, nui::Data::NBuffer* buffer);
+    virtual bool IsFileExists(LPCTSTR relativePath);
     virtual void Close();
 
+protected:
+    ZIPENTRYW* GetZipEntry(LPCTSTR relativePath);
+
 private:
-    NUI::Data::NFileMapping* zipBuffer_;
+    nui::Base::NInstPtr<nui::Data::NFileMapping> zipBuffer_;
     HZIP          zipFile_;
 
-    struct stCacheData
-    {
-        ZIPENTRYW   entry;
-        NUI::Data::NBuffer*  buffer;
-    };
-    typedef std::map<NUI::Base::NString, stCacheData*> CacheDataMap;
+    typedef std::map<nui::Base::NString, ZIPENTRYW> CacheDataMap;
     CacheDataMap    m_mapCacheData;
 };

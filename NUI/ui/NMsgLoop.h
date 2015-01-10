@@ -4,28 +4,23 @@
 #include "../base/noncopyable.h"
 #include "../data/NArrayT.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
-        class NUI_CLASS NIdleHandler
-        {
-        public:
-            // return false to continue idle
-            virtual bool OnIdle(int idleCount) = 0;
-        };
+        typedef FastDelegate1<int, bool> NIdleHandler;
 
-        NUI_TEMPLATE template class NUI_CLASS Data::NArrayT<NIdleHandler*>;
+        NUI_TEMPLATE template class NUI_CLASS Data::NArrayT<NIdleHandler>;
 
-        class NUI_CLASS NMsgLoop : protected NUI::Base::Noncopyable
+        class NUI_CLASS NMsgLoop : protected nui::Base::Noncopyable
         {
         public:
             bool Loop();
             bool Loop(HWND window);
             void Stop();
 
-            bool AddIdleHandler(NIdleHandler* handler);
-            bool RemoveIdleHandler(NIdleHandler* handler);
+            bool AddIdleHandler(NIdleHandler handler);
+            bool RemoveIdleHandler(NIdleHandler handler);
 
         private:
             bool Loop(HWND window, bool useWindow);
@@ -34,7 +29,7 @@ namespace NUI
         private:
             MSG msg_;
             bool looping_;
-            Data::NArrayT<NIdleHandler*> idleHandlers_;
+            Data::NArrayT<NIdleHandler> idleHandlers_;
         };
     }
 }

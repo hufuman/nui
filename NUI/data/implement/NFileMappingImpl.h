@@ -4,7 +4,7 @@
 #include "../NFileMapping.h"
 
 
-class NFileMappingImpl : public NUI::Data::NFileMapping
+class NFileMappingImpl : public nui::Data::NFileMapping
 {
 public:
     NFileMappingImpl(void);

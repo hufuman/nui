@@ -4,16 +4,15 @@
 #include "../../base/NMemTool.h"
 
 
-using namespace NUI;
+using namespace nui;
 using namespace Data;
 using namespace Base;
 
 IMPLEMENT_REFLECTION(NZipImpl);
 
 
-NZipImpl::NZipImpl()
+NZipImpl::NZipImpl() : zipBuffer_(InstPtrParam)
 {
-    zipBuffer_ = NULL;
     zipFile_ = NULL;
 }
 
@@ -72,7 +71,7 @@ bool NZipImpl::LoadFile(LPCTSTR zipFilePath)
     bool result = false;
     for (;;)
     {
-        if(!NReflectCreate(zipBuffer_))
+        if(zipBuffer_.Create(InstPtrParam) == NULL)
             break;
 
         if(!zipBuffer_->OpenForRead(zipFilePath))
@@ -89,20 +88,17 @@ bool NZipImpl::LoadFile(LPCTSTR zipFilePath)
 
         ZRESULT zResult = ZR_OK;
         NString strName;
-        stCacheData* pCacheData = NNew(stCacheData);
         for(int i=0;  ; ++ i)
         {
-            zResult = GetZipItem(zipFile_, i, &pCacheData->entry);
+            ZIPENTRYW entry;
+            zResult = GetZipItem(zipFile_, i, &entry);
             if(zResult != ZR_OK)
                 break;
 
-            strName = pCacheData->entry.name;
+            strName = entry.name;
             strName.MakeLower();
-            pCacheData->buffer = NULL;
-            m_mapCacheData.insert(std::make_pair(strName, pCacheData));
-            pCacheData = NNew(stCacheData);
+            m_mapCacheData.insert(std::make_pair(strName, entry));
         }
-        NDelete(pCacheData);
         result = true;
         break;
     }
@@ -115,13 +111,52 @@ bool NZipImpl::LoadFile(LPCTSTR zipFilePath)
     return result;
 }
 
-bool NZipImpl::GetFileContent(LPCTSTR relativePath, int& index, LPBYTE& data, DWORD& size)
+bool NZipImpl::GetFileContent(LPCTSTR relativePath, nui::Data::NBuffer* buffer)
+{
+    if(buffer == NULL)
+        return false;
+
+    ZIPENTRYW* entry = GetZipEntry(relativePath);
+    if(!entry)
+        return false;
+
+    bool result = false;
+    LPVOID pBuffer = buffer->GetBuffer(entry->unc_size + 1);
+    result = (pBuffer != NULL);
+    if(result)
+    {
+        ZRESULT zResult = UnzipItem(zipFile_, entry->index, pBuffer, entry->unc_size, ZIP_MEMORY);
+        result = (zResult == ZR_OK || zResult == ZR_MORE);
+        static_cast<LPBYTE>(pBuffer)[entry->unc_size] = 0;
+    }
+    return result;
+}
+
+bool NZipImpl::IsFileExists(LPCTSTR relativePath)
+{
+    ZIPENTRYW* entry = GetZipEntry(relativePath);
+    return entry != NULL;
+}
+
+void NZipImpl::Close()
+{
+    zipBuffer_ = NULL;
+    if(zipFile_ != NULL)
+    {
+        CloseZip(zipFile_);
+        zipFile_ = NULL;
+    }
+    m_mapCacheData.clear();
+}
+
+
+ZIPENTRYW* NZipImpl::GetZipEntry(LPCTSTR relativePath)
 {
     if(relativePath == NULL || relativePath[0] == 0)
-        return FALSE;
+        return NULL;
 
     if(zipFile_ == NULL)
-        return FALSE;
+        return NULL;
 
     NString strRelativePath(relativePath);
     strRelativePath.MakeLower();
@@ -135,81 +170,6 @@ bool NZipImpl::GetFileContent(LPCTSTR relativePath, int& index, LPBYTE& data, DW
     }
 
     if(ite == m_mapCacheData.end())
-        return FALSE;
-
-    stCacheData* pCacheData = ite->second;
-    index = pCacheData->entry.index;
-    size = pCacheData->entry.unc_size;
-    bool result = false;
-    if(pCacheData->buffer == NULL || pCacheData->buffer->GetBuffer() == NULL)
-    {
-        if(pCacheData->buffer != NULL
-            || NReflectCreate(pCacheData->buffer))
-        {
-            LPVOID pBuffer = pCacheData->buffer->GetBuffer(size + 1);
-            result = (pBuffer != NULL);
-            if(result)
-            {
-                ZRESULT zResult = UnzipItem(zipFile_, index, pBuffer, size, ZIP_MEMORY);
-                result = (zResult == ZR_OK || zResult == ZR_MORE);
-                static_cast<LPBYTE>(pBuffer)[size] = 0;
-            }
-        }
-    }
-    else
-    {
-        result = true;
-    }
-    if(result)
-    {
-        data = static_cast<LPBYTE>(pCacheData->buffer->GetBuffer());
-        pCacheData->buffer->AddRef();
-    }
-    return result;
+        return NULL;
+    return &ite->second;
 }
-
-void NZipImpl::ReleaseFileContent(int index)
-{
-    CacheDataMap::iterator ite = m_mapCacheData.begin();
-    for(; ite != m_mapCacheData.end(); ++ ite)
-    {
-        if(ite->second->entry.index == index)
-            break;
-    }
-
-    if(ite == m_mapCacheData.end())
-        return;
-
-    if(ite->second->buffer->Release() == 1)
-    {
-        ite->second->buffer->Release();
-        ite->second->buffer = NULL;
-    }
-}
-
-void NZipImpl::Close()
-{
-    if(zipBuffer_ != NULL)
-    {
-        zipBuffer_->Release();
-        zipBuffer_ = NULL;
-    }
-    if(zipFile_ != NULL)
-    {
-        CloseZip(zipFile_);
-        zipFile_ = NULL;
-    }
-    CacheDataMap::iterator ite = m_mapCacheData.begin();
-    for(; ite != m_mapCacheData.end(); ++ ite)
-    {
-        if(ite->second->buffer != NULL)
-        {
-            while(ite->second->buffer->Release() > 0)
-            {}
-        }
-
-        NDelete(ite->second);
-    }
-    m_mapCacheData.clear();
-}
-

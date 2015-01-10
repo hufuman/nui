@@ -3,7 +3,7 @@
 
 #include "../base/BaseObj.h"
 
-namespace NUI
+namespace nui
 {
     namespace Data
     {
@@ -11,7 +11,7 @@ namespace NUI
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("buffer"))
         public:
-            virtual NBuffer& SetSize(DWORD size) = 0;
+            virtual bool SetSize(DWORD size) = 0;
             virtual DWORD GetCapacity() const = 0;
             virtual DWORD GetSize() const = 0;
             virtual LPVOID GetBuffer() = 0;

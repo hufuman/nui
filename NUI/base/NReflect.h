@@ -4,18 +4,20 @@
 #include "BaseObj.h"
 #include "NMemTool.h"
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {
+        class NCore;
+
         template < typename T >
         NBaseObj* BasicObjectCreator(LPCSTR filePath, int line)
         {
             // return NNew(T);
-            return NUI::Base::NNewImpl<T>(NUI::Base::MemTypeNew, new T(), 1, filePath, line);
+            return nui::Base::NNewImpl<T>(nui::Base::MemTypeNew, new T(), 1, filePath, line);
         }
 
-#define NReflectCreate(ptr) NUI::Base::NReflect::GetInstance().Create(ptr, __FILE__, __LINE__)
+#define NReflectCreate(ptr) nui::Base::NReflect::GetInstance().Create(ptr, __FILE__, __LINE__)
 
 #define DECLARE_REFLECTION(namespaceName, className)        \
     public:                                                 \
@@ -31,11 +33,11 @@ namespace NUI
         class ReflectClass                                  \
         {                                                   \
         public:                                             \
-        ReflectClass(){ NUI::Base::NReflect::GetInstance().AddReflect<implementClass>(flag); }      \
-        ~ReflectClass(){ NUI::Base::NReflect::GetInstance().RemoveReflect<implementClass>(); }  \
+        ReflectClass(){ nui::Base::NReflect::GetInstance().AddReflect<implementClass>(flag); }      \
+        ~ReflectClass(){ nui::Base::NReflect::GetInstance().RemoveReflect<implementClass>(); }  \
         } MERGE_MACRO(g_ReflectClassObj, implementClass);}
 
-#define IMPLEMENT_REFLECTION(implementClass)    IMPLEMENT_REFLECTION_EX(implementClass, (NUI::Base::NReflect::None))
+#define IMPLEMENT_REFLECTION(implementClass)    IMPLEMENT_REFLECTION_EX(implementClass, (nui::Base::NReflect::None))
 
 
         BEGIN_USE_UNEXPORT_TEMPLATE()
@@ -93,6 +95,16 @@ namespace NUI
             }
 
             template < typename T>
+            bool Create(NAutoPtr<T>& ptr, LPCSTR filePath, int line)
+            {
+                T* p = ptr;
+                NAssertError(p == NULL, _T("Not Null AutoPtr"));
+                bool result = Create<T>(p, filePath, line);
+                ptr = p;
+                return result;
+            }
+
+            template < typename T>
             bool Create(T*& data, LPCSTR filePath, int line)
             {
                 NBaseObj* obj = Create(T::GetNamespace(), T::GetClassName(), filePath, line);
@@ -101,14 +113,15 @@ namespace NUI
                 data = dynamic_cast<T*>(obj);
                 if(data)
                     return true;
+                obj->AddRef();
                 obj->Release();
                 return false;
             }
 
             NBaseObj* Create(LPCTSTR szNamespace, LPCTSTR szClassName, LPCSTR filePath, int line);
 
+            void ReleaseData(NCore* core);
         private:
-            void ReleaseData();
             bool GetClassData(LPCTSTR szNamespace, LPCTSTR szClassName, ClassData*& pClassData);
 
         private:

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {

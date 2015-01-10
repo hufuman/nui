@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../NAssert.h"
 
-using namespace NUI;
+using namespace nui;
 using namespace Base;
 
 #if defined(_DEBUG) || defined(_ENABLE_NASSERT_)

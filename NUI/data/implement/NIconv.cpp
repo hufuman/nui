@@ -2,7 +2,7 @@
 #include "../NIconv.h"
 
 
-using namespace NUI;
+using namespace nui;
 using namespace Base;
 
 namespace
@@ -56,7 +56,7 @@ namespace
 
 
 
-namespace NUI
+namespace nui
 {
     namespace Data
     {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "XmlDataReader.h"
 
-using namespace NUI;
+using namespace nui;
 using namespace Base;
 using namespace Data;
 

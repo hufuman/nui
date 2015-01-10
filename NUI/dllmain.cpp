@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include "./data/NModule.h"
+#include "./base/NReflect.h"
 
 BOOL _stdcall DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -14,12 +15,12 @@ BOOL _stdcall DllMain( HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH:
         {
-            NUI::Data::NModule::GetInst().Init(hModule);
+            nui::Data::NModule::GetInst().Init(hModule);
             break;
         }
+    case DLL_PROCESS_DETACH:
 	case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
 		break;
 	}
 	return TRUE;

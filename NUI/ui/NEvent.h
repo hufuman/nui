@@ -6,7 +6,7 @@
 #include "../base/DataTypes.h"
 #include "EventDef.h"
 
-namespace NUI
+namespace nui
 {
     namespace UI
     {
@@ -14,7 +14,7 @@ namespace NUI
         {
         public:
             EventType::Event    eventType;
-            NUI::Base::NPoint   eventPos;
+            nui::Base::NPoint   eventPos;
             DWORD               eventTime;
         };
 

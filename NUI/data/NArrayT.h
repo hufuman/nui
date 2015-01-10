@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace NUI
+namespace nui
 {
     namespace Data
     {
@@ -25,7 +25,7 @@ namespace NUI
             {
                 if(buffer_ != NULL)
                 {
-                    NUI::Base::NDeleteArray(buffer_);
+                    nui::Base::NDeleteArray(buffer_);
                     buffer_ = NULL;
                 }
             }
@@ -34,7 +34,7 @@ namespace NUI
             {
                 if(buffer_ == NULL)
                 {
-                    buffer_ = NUI::Base::NNewArray(Elem, InitCount);
+                    buffer_ = nui::Base::NNewArray(Elem, InitCount);
                     if(buffer_ == NULL)
                         return false;
                     capacity_ = InitCount;
@@ -48,7 +48,7 @@ namespace NUI
                 }
                 else
                 {
-                    Elem* data = NUI::Base::NNewArray(Elem, capacity_ + GrowCount);
+                    Elem* data = nui::Base::NNewArray(Elem, capacity_ + GrowCount);
                     if(data == NULL)
                         return false;
                     for(int i=0; i<count_; ++ i)
@@ -58,7 +58,7 @@ namespace NUI
                     data[count_] = value;
                     ++ count_;
                     capacity_ += GrowCount;
-                    NUI::Base::NDeleteArray(buffer_);
+                    nui::Base::NDeleteArray(buffer_);
                     buffer_ = data;
                 }
                 return true;
@@ -123,7 +123,7 @@ namespace NUI
                 }
                 else
                 {
-                    Elem* data = NUI::Base::NNewArray(Elem, capacity_ + GrowCount);
+                    Elem* data = nui::Base::NNewArray(Elem, capacity_ + GrowCount);
                     if(data == NULL)
                         return false;
                     for(int i=0; i<count_; ++ i)

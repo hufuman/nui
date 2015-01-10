@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-namespace NUI
+namespace nui
 {
     namespace Base
     {
@@ -316,7 +316,7 @@ namespace NUI
             }
             else
             {
-                TCHAR* pBuffer = NUI::Base::NNewArray(TCHAR, nCount + 1);
+                TCHAR* pBuffer = nui::Base::NNewArray(TCHAR, nCount + 1);
                 nCount = _vsntprintf(pBuffer, nCount, szFormat, args);
                 if(nCount > 0)
                 {
