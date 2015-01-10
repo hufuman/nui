@@ -13,22 +13,14 @@ public:
     }
     virtual void SetUp()
     {
-        zip_ = NULL;
     }
     virtual void TearDown()
     {
-        if(zip_ != NULL)
-        {
-            zip_->Release();
-            zip_ = NULL;
-        }
     }
 
     void TestUnZip(LPCTSTR filePath1, LPCTSTR filePath2)
     {
-        NZip *zip1, *zip2;
-        ASSERT_TRUE(NReflectCreate(zip1));
-        ASSERT_TRUE(NReflectCreate(zip2));
+        NInstPtr<NZip> zip1(InstPtrParam), zip2(InstPtrParam);
 
         ASSERT_TRUE(zip1->LoadFile(filePath1));
         ASSERT_TRUE(zip2->LoadFile(filePath2));
@@ -41,18 +33,30 @@ public:
             _T("Data/2/22.txt"),
         };
 
+        ASSERT_FALSE(zip1->IsFileExists(_T("asdfasfd")));
+        ASSERT_FALSE(zip2->IsFileExists(_T("asdfasfd")));
+
+        NInstPtr<NBuffer> buffer1(InstPtrParam);
         for(int i=0; i<_countof(relativePath); ++ i)
         {
-            int index1, index2;
-            LPBYTE data1, data2;
+            LPVOID data1, data2;
             DWORD size1, size2;
-            ASSERT_TRUE(zip1->GetFileContent(relativePath[i], index1, data1, size1));
-            ASSERT_TRUE(zip2->GetFileContent(relativePath[i], index2, data2, size2));
+
+            NInstPtr<NBuffer> buffer2(InstPtrParam);
+            ASSERT_TRUE(zip1->GetFileContent(relativePath[i], buffer1));
+            ASSERT_TRUE(zip2->GetFileContent(relativePath[i], buffer2));
+
+            data1 = buffer1->GetBuffer();
+            size1 = buffer1->GetSize();
+            data2 = buffer2->GetBuffer();
+            size2 = buffer2->GetSize();
+
+            ASSERT_TRUE(zip1->IsFileExists(relativePath[i]));
+            ASSERT_TRUE(zip2->IsFileExists(relativePath[i]));
+
             EXPECT_TRUE(size1 == size2
                 && data1 != NULL && data2 != NULL
                 && memcmp(data1, data2, size1) == 0);
-            zip1->ReleaseFileContent(index1);
-            zip2->ReleaseFileContent(index2);
         }
         zip1->Close();
         zip2->Close();
@@ -64,8 +68,6 @@ public:
         HZIP zipFile2 = OpenZip(static_cast<void*>(const_cast<LPTSTR>(filePath2)), 0, ZIP_FILENAME);
 
         bool result = false;
-        NBuffer *buffer1 = NULL;
-        NBuffer *buffer2 = NULL;
         for(;;)
         {
             if(zipFile1 == NULL
@@ -74,11 +76,8 @@ public:
                 break;
             }
 
-            if(!NReflectCreate(buffer1)
-                || !NReflectCreate(buffer2))
-            {
-                break;
-            }
+            NInstPtr<NBuffer> buffer1(InstPtrParam);
+            NInstPtr<NBuffer> buffer2(InstPtrParam);
 
             ZIPENTRYW entry1, entry2;
 
@@ -138,19 +137,12 @@ public:
             result = (zResult1 == ZR_ARGS);
             break;
         }
-        if(buffer1 != NULL)
-            buffer1->Release();
-        if(buffer2 != NULL)
-            buffer2->Release();
         if(zipFile1 != NULL)
             CloseZip(zipFile1);
         if(zipFile2 != NULL)
             CloseZip(zipFile2);
         return result;
     }
-
-protected:
-    NZip* zip_;
 };
 
 TEST_F(TestZip, Zip)
@@ -161,14 +153,12 @@ TEST_F(TestZip, Zip)
     NString zip1File = TestUtil::GetTestFile(_T("Temp\\Zip1.zip"));
     NString zip2File = TestUtil::GetTestFile(_T("Temp\\Zip2.zip"));
 
-    ASSERT_TRUE(!NUI::Util::File::IsFileExists(zip1File.GetData()) || ::DeleteFile(zip1File.GetData()));
-    ASSERT_TRUE(!NUI::Util::File::IsFileExists(zip2File.GetData()) || ::DeleteFile(zip2File.GetData()));
+    ASSERT_TRUE(!nui::Util::File::IsFileExists(zip1File.GetData()) || ::DeleteFile(zip1File.GetData()));
+    ASSERT_TRUE(!nui::Util::File::IsFileExists(zip2File.GetData()) || ::DeleteFile(zip2File.GetData()));
 
-    ASSERT_TRUE(NReflectCreate(zip_));
-    ASSERT_TRUE(zip_->ZipFolder(folderPath.GetData(), zip1File.GetData()));
-    ASSERT_TRUE(zip_->ZipFolder((folderPath + _T("\\")).GetData(), zip2File.GetData()));
-    zip_->Release();
-    zip_ = NULL;
+    NInstPtr<NZip> zip(InstPtrParam);
+    ASSERT_TRUE(zip->ZipFolder(folderPath.GetData(), zip1File.GetData()));
+    ASSERT_TRUE(zip->ZipFolder((folderPath + _T("\\")).GetData(), zip2File.GetData()));
 
     EXPECT_TRUE(CompareZipFile(correctFile.GetData(), zip1File.GetData()));
     EXPECT_TRUE(CompareZipFile(zip1File.GetData(), correctFile.GetData()));

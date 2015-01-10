@@ -19,6 +19,7 @@
 #include "TestZip.h"
 #include "TestListT.h"
 #include "TestArrayT.h"
+#include "TestFileSystem.h"
 
 // Util
 #include "TestFileUtil.h"
@@ -32,6 +33,9 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    int result = RUN_ALL_TESTS();
+    NInstPtr<NCore> core(InstPtrParam);
+    core->DestroyCore();
+    return result;
 }
 

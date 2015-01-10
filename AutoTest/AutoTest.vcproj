@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestFileSystem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestListT.h"
 				>
 			</File>

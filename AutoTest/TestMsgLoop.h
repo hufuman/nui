@@ -1,7 +1,7 @@
 #pragma once
 
 
-class TestMsgLoop : public testing::Test, public NUI::UI::NIdleHandler
+class TestMsgLoop : public testing::Test
 {
 public:
     virtual void SetUp()
@@ -9,7 +9,7 @@ public:
         count_ = 0;
     }
 
-    virtual bool OnIdle(int idleCount)
+    bool OnIdle(int idleCount)
     {
         ++ count_;
         return count_ != 2;
@@ -48,8 +48,8 @@ protected:
 TEST_F(TestMsgLoop, NoWindow)
 {
     TestUtil::EatQuitMsg();
-    NUI::UI::NMsgLoop loop;
-    loop.AddIdleHandler(this);
+    nui::UI::NMsgLoop loop;
+    loop.AddIdleHandler(MakeDelegate(this, &TestMsgLoop::OnIdle));
 
     ::CloseHandle(reinterpret_cast<HANDLE>(::_beginthreadex(0, 0, &TestMsgLoop::TestThreadProc, reinterpret_cast<void*>(::GetCurrentThreadId()),0, 0)));
     ASSERT_TRUE(loop.Loop());
@@ -60,11 +60,11 @@ TEST_F(TestMsgLoop, NoWindow)
 TEST_F(TestMsgLoop, Window)
 {
     TestUtil::EatQuitMsg();
-    NUI::UI::NMsgLoop loop;
-    loop.AddIdleHandler(this);
+    nui::UI::NMsgLoop loop;
+    loop.AddIdleHandler(MakeDelegate(this, &TestMsgLoop::OnIdle));
 
-    NUI::UI::NWindowBase window;
-    NUI::Base::NRect rect(0, 0, 20, 20);
+    nui::UI::NWindowBase window;
+    nui::Base::NRect rect(0, 0, 20, 20);
     window.SetMsgFilterCallback(MakeDelegate(this, &TestMsgLoop::TestWndProc));
     ASSERT_TRUE(window.Create(NULL, _T("TestText"), rect));
 

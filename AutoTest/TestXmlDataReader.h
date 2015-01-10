@@ -24,6 +24,7 @@ public:
     virtual void SetUp()
     {
         reader_ = CreateDataReader(ReaderXml);
+        reader_->AddRef();
     }
     virtual void TearDown()
     {
@@ -73,15 +74,16 @@ TEST_F(TestXmlDataReader, ReadPath)
     EXPECT_STREQ(value, TEXT("name9"));
 
     ASSERT_TRUE(reader_->ParseUtf8(g_Node));
-    NDataReader* data = NULL;
-    ASSERT_TRUE(reader_->ReadNode(TEXT("node"), data));
+    NAutoPtr<NDataReader> data = NULL;
+    NDataReader* tmpData = NULL;
+    ASSERT_TRUE(reader_->ReadNode(TEXT("node"), tmpData));
+    data = tmpData;
 
     EXPECT_TRUE(data->ReadValue(TEXT("id"), value));
     EXPECT_STREQ(value, TEXT("id10"));
 
     EXPECT_TRUE(data->ReadValue(TEXT("name"), value));
     EXPECT_STREQ(value, TEXT("name11"));
-    NSafeRelease(data);
 }
 
 TEST_F(TestXmlDataReader, MultipleReadPath)
@@ -109,11 +111,13 @@ TEST_F(TestXmlDataReader, MultipleReadNode)
     using namespace TestXmlDataReaderData;
     ASSERT_TRUE(reader_->ParseUtf8(g_MultipleNode));
 
-    NDataReader* node = NULL;
-
+    NDataReader* tmpData = NULL;
     for(int i=0; i<3; ++ i)
     {
-        ASSERT_TRUE(reader_->ReadNode(i, TEXT("node"), node));
+        tmpData = NULL;
+        NAutoPtr<NDataReader> node;
+        ASSERT_TRUE(reader_->ReadNode(i, TEXT("node"), tmpData));
+        node = tmpData;
 
         tmp1.Format(TEXT("id%d"), 2 + i);
         EXPECT_TRUE(node->ReadValue(TEXT("id"), value));
@@ -122,8 +126,6 @@ TEST_F(TestXmlDataReader, MultipleReadNode)
         tmp2.Format(TEXT("name%d"), 4 + i);
         EXPECT_TRUE(node->ReadValue(TEXT("name"), value));
         EXPECT_STREQ(value, tmp2);
-
-        NSafeRelease(node);
     }
 }
 

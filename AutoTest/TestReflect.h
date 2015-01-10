@@ -14,40 +14,39 @@ class TestReflect : public testing::Test
 public:
     virtual void SetUp()
     {
+        ASSERT_TRUE(NReflect::GetInstance().AddReflect<TestReflectData::ReflectClass>(NReflect::Singleton));
     }
 
     virtual void TearDown()
     {
+        ASSERT_TRUE(NReflect::GetInstance().RemoveReflect<TestReflectData::ReflectClass>());
     }
 };
 
 TEST_F(TestReflect, Basic)
 {
-    ASSERT_TRUE(NReflect::GetInstance().AddReflect<TestReflectData::ReflectClass>(NReflect::None));
-
-    TestReflectData::ReflectClass* pData = NULL;
-    EXPECT_TRUE(NReflectCreate(pData));
-    EXPECT_EQ(pData->Release(), 0);
-
-    ASSERT_TRUE(NReflect::GetInstance().RemoveReflect<TestReflectData::ReflectClass>());
+    nui::Base::NInstPtr<TestReflectData::ReflectClass> pData(InstPtrParam);
+    EXPECT_TRUE(pData != NULL);
+    EXPECT_EQ(pData->RefCount(), 2);
 }
 
 TEST_F(TestReflect, Singleton)
 {
-    ASSERT_TRUE(NReflect::GetInstance().AddReflect<TestReflectData::ReflectClass>(NReflect::Singleton));
+    nui::Base::NInstPtr<TestReflectData::ReflectClass> pData1(InstPtrParam);
+    EXPECT_TRUE(pData1 != NULL);
+    EXPECT_EQ(pData1->RefCount(), 2);
 
-    TestReflectData::ReflectClass* pData1 = NULL;
-    TestReflectData::ReflectClass* pData2 = NULL;
-    TestReflectData::ReflectClass* pData3 = NULL;
-    TestReflectData::ReflectClass* pData4 = NULL;
-    EXPECT_TRUE(NReflectCreate(pData1));
-    EXPECT_EQ(pData1->Release(), 1);
-    EXPECT_TRUE(NReflectCreate(pData2));
-    EXPECT_TRUE(NReflectCreate(pData3));
-    EXPECT_EQ(pData2->Release(), 2);
-    EXPECT_EQ(pData3->Release(), 1);
-    EXPECT_TRUE(NReflectCreate(pData4));
-    EXPECT_EQ(pData4->Release(), 1);
+    {
+        nui::Base::NInstPtr<TestReflectData::ReflectClass> pData2(InstPtrParam);
+        EXPECT_TRUE(pData2 != NULL);
+        EXPECT_EQ(pData2->RefCount(), 3);
+    }
+    EXPECT_EQ(pData1->RefCount(), 2);
 
-    ASSERT_TRUE(NReflect::GetInstance().RemoveReflect<TestReflectData::ReflectClass>());
+    {
+        nui::Base::NInstPtr<TestReflectData::ReflectClass> pData2(InstPtrParam);
+        EXPECT_TRUE(pData2 != NULL);
+        EXPECT_EQ(pData2->RefCount(), 3);
+    }
+    EXPECT_EQ(pData1->RefCount(), 2);
 }

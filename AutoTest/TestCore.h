@@ -11,15 +11,12 @@ public:
     virtual void TearDown()
     {
     }
-
-protected:
-    NCore* core_;
 };
 
 TEST_F(TestCore, Basic)
 {
-    ASSERT_TRUE(NReflectCreate(core_));
-    ASSERT_NE(core_, static_cast<NCore*>(0));
-    EXPECT_EQ(core_->Release(), 0);
-    core_ = NULL;
+    NInstPtr<NCore> core(InstPtrParam);
+    ASSERT_NE(core, static_cast<NCore*>(0));
+    NString filePath = TestUtil::GetTestFile(_T("resource"));
+    core->InitCore(filePath.GetData(), _T("2052"));
 }
