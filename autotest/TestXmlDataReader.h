@@ -74,10 +74,8 @@ TEST_F(TestXmlDataReader, ReadPath)
     EXPECT_STREQ(value, TEXT("name9"));
 
     ASSERT_TRUE(reader_->ParseUtf8(g_Node));
-    NAutoPtr<NDataReader> data = NULL;
-    NDataReader* tmpData = NULL;
-    ASSERT_TRUE(reader_->ReadNode(TEXT("node"), tmpData));
-    data = tmpData;
+    NAutoPtr<NDataReader> data;
+    ASSERT_TRUE(reader_->ReadNode(TEXT("node"), data));
 
     EXPECT_TRUE(data->ReadValue(TEXT("id"), value));
     EXPECT_STREQ(value, TEXT("id10"));
@@ -111,13 +109,10 @@ TEST_F(TestXmlDataReader, MultipleReadNode)
     using namespace TestXmlDataReaderData;
     ASSERT_TRUE(reader_->ParseUtf8(g_MultipleNode));
 
-    NDataReader* tmpData = NULL;
     for(int i=0; i<3; ++ i)
     {
-        tmpData = NULL;
         NAutoPtr<NDataReader> node;
-        ASSERT_TRUE(reader_->ReadNode(i, TEXT("node"), tmpData));
-        node = tmpData;
+        ASSERT_TRUE(reader_->ReadNode(i, TEXT("node"), node));
 
         tmp1.Format(TEXT("id%d"), 2 + i);
         EXPECT_TRUE(node->ReadValue(TEXT("id"), value));

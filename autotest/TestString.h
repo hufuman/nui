@@ -6,6 +6,14 @@
 class TestString : public testing::Test
 {
 public:
+    TestString()
+    {
+        ;
+    }
+    ~TestString()
+    {
+        ;
+    }
 };
 
 TEST_F(TestString, Constructor)
@@ -190,7 +198,18 @@ TEST_F(TestString, Tokenize)
     EXPECT_TRUE(s1.Tokenize(pos, _T(""), false, token) && token == _T("a"));
     EXPECT_TRUE(s1.Tokenize(pos, _T(""), false, token) && token == _T("b"));
     EXPECT_TRUE(s1.Tokenize(pos, _T(""), false, token) && token == _T("c"));
-    EXPECT_FALSE(s1.Tokenize(pos, _T(""), false, token));
+    EXPECT_FALSE(s1.Tokenize(pos, _T(""), false, token));;
+
+    pos = 0;
+    s1 = _T("abc");
+    EXPECT_TRUE(s1.Tokenize(pos, _T("\\"), false, token) && token == _T("abc"));
+
+    pos = 0;
+    s1 = _T("a2b2c");
+    EXPECT_TRUE(s1.Tokenize(pos, _T("2"), false, token) && token == _T("a"));
+    EXPECT_TRUE(s1.Tokenize(pos, _T("2"), false, token) && token == _T("b"));
+    EXPECT_TRUE(s1.Tokenize(pos, _T("2"), false, token) && token == _T("c"));
+    EXPECT_TRUE(!s1.Tokenize(pos, _T("2"), false, token));
 
     pos = 0;
     s1= _T("a\t\tb\t\tc\t\t");
