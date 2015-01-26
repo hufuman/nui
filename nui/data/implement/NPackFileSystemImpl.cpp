@@ -4,7 +4,7 @@
 #include "../../util/NFileUtil.h"
 
 
-NPackFileSystemImpl::NPackFileSystemImpl()
+NPackFileSystemImpl::NPackFileSystemImpl() : zipFile_(InstPtrParam)
 {
 }
 
@@ -16,10 +16,10 @@ bool NPackFileSystemImpl::Init(LPCTSTR packFilePath)
 {
     if(!nui::Util::File::IsFileExists(packFilePath))
         return false;
+
     if(zipFile_)
-    {
-        Destroy();
-    }
+        zipFile_->Close();
+
     if(!zipFile_->LoadFile(packFilePath))
         return false;
     return true;
@@ -27,8 +27,7 @@ bool NPackFileSystemImpl::Init(LPCTSTR packFilePath)
 
 void NPackFileSystemImpl::Destroy()
 {
-    NAssertError(zipFile_->RefCount() == 1, _T("Some Files Referenced"));
-    NSafeRelease(zipFile_);
+    zipFile_ = NULL;
 }
 
 bool NPackFileSystemImpl::IsFileExists(LPCTSTR filePath)
@@ -36,8 +35,7 @@ bool NPackFileSystemImpl::IsFileExists(LPCTSTR filePath)
     NAssertError(zipFile_ != NULL, _T("Invalid Zip File"));
     if(!zipFile_)
         return false;
-    nui::Base::NString packPath = GetPackPath(filePath);
-    return zipFile_->IsFileExists(packPath.GetData());
+    return zipFile_->IsFileExists(filePath);
 }
 
 bool NPackFileSystemImpl::LoadFile(LPCTSTR filePath, nui::Data::NBuffer* buffer)
@@ -47,12 +45,5 @@ bool NPackFileSystemImpl::LoadFile(LPCTSTR filePath, nui::Data::NBuffer* buffer)
         return false;
     if(!buffer)
         return false;
-    nui::Base::NString packPath = GetPackPath(filePath);
-    return zipFile_->GetFileContent(packPath.GetData(), buffer);
-}
-
-nui::Base::NString NPackFileSystemImpl::GetPackPath(LPCTSTR filePath)
-{
-    UNREFERENCED_PARAMETER(filePath);
-    throw "Not Implement";
+    return zipFile_->GetFileContent(filePath, buffer);
 }

@@ -66,6 +66,17 @@ namespace nui
             {
                 return TestFileRight(filePath, true, true);
             }
+
+            Base::NString CombinePath(const Base::NString& path, const Base::NString& pathAfter)
+            {
+                if(path.GetLength() == 0)
+                    return pathAfter;
+                if(pathAfter.GetLength() == 0)
+                    return path;
+                Base::NString result = path + _T("\\") + pathAfter;
+                result.Replace(_T("/"), _T("\\")).Replace(_T("\\\\"), _T("\\"));
+                return result;
+            }
         }
     }
 }

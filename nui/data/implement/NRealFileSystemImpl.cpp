@@ -37,7 +37,7 @@ bool NRealFileSystemImpl::LoadFile(LPCTSTR filePath, nui::Data::NBuffer* pBuffer
     {
         if(pBuffer->SetSize(mapping->GetSize()))
         {
-            memcmp(pBuffer->GetBuffer(), mapping->GetData(), mapping->GetSize());
+            memcpy(pBuffer->GetBuffer(), mapping->GetData(), mapping->GetSize());
             return true;
         }
     }

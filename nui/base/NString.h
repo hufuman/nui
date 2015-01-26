@@ -40,10 +40,14 @@ namespace nui
 
             NString& MakeLower();
             NString& MakeUpper();
+
+            NString ToLower() const;
+            NString ToUpper() const;
+
             NString& Trim();
             NString& Replace(LPCTSTR szSrc, LPCTSTR szDes);
-            NString SubString(int startPos);
-            NString SubString(int startPos, int count);
+            NString SubString(int startPos) const;
+            NString SubString(int startPos, int count) const;
 
             NString& Resize(int size);
 
@@ -54,6 +58,8 @@ namespace nui
             int IndexOf(LPCTSTR arg, int startPos) const;
             int LastIndexOf(LPCTSTR arg) const;
             int LastIndexOf(LPCTSTR arg, int startPos) const;
+            int IndexOfAny(LPCTSTR arg) const;
+            int IndexOfAny(LPCTSTR arg, int startPos) const;
 
             int IndexOf(TCHAR arg) const;
             int IndexOf(TCHAR arg, int startPos) const;
@@ -83,6 +89,7 @@ namespace nui
 
         public:
             TCHAR& operator [] (int index);
+            const TCHAR& operator [] (int index) const;
 
         protected:
             NString ArgImpl(LPCTSTR str) const;

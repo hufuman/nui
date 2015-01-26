@@ -18,6 +18,7 @@ public:
 
     virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value);
     virtual bool ReadNode(LPCTSTR nodeName, NDataReader*& value);
+    virtual bool ReadNodeByPath(LPCTSTR path, NDataReader*& value);
 
     virtual bool ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value);
     virtual bool ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value);

@@ -47,6 +47,7 @@ using namespace fastdelegate;
 #include "./data/NZip.h"
 #include "./data/NListT.h"
 #include "./data/NArrayT.h"
+#include "./data/NFileSystem.h"
 
 #include "./util/NFileUtil.h"
 

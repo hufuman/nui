@@ -19,7 +19,9 @@ namespace nui
 
             NInstPtr(NInstPtr& p)
             {
-                ptr_ = p.Detach();
+                ptr_ = p.ptr_;
+                if(ptr_)
+                    ptr_->AddRef();
             }
 
             NInstPtr(T* p)
@@ -44,7 +46,11 @@ namespace nui
             {
                 NSafeRelease(ptr_);
                 if(&p != this)
-                    ptr_ = p.Detach();
+                {
+                    ptr_ = p.ptr_;
+                    if(ptr_)
+                        ptr_->AddRef();
+                }
                 return (*this);
             }
 
@@ -89,6 +95,12 @@ namespace nui
                 T* p = ptr_;
                 ptr_ = NULL;
                 return p;
+            }
+
+            operator NAutoPtr<T>()
+            {
+                NAutoPtr<T> ptr(ptr_);
+                return ptr;
             }
 
         protected:

@@ -14,6 +14,7 @@ namespace nui
             NUI_API bool CanWrite(LPCTSTR filePath);
             NUI_API bool CanRead(LPCTSTR filePath);
             NUI_API bool CanReadWrite(LPCTSTR filePath);
+            NUI_API Base::NString CombinePath(const Base::NString& path, const Base::NString& pathAfter);
         }
     }
 }

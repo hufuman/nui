@@ -14,7 +14,9 @@ namespace nui
 
             NAutoPtr(NAutoPtr& p)
             {
-                ptr_ = p.Detach();
+                ptr_ = p.ptr_;
+                if(ptr_)
+                    ptr_->AddRef();
             }
 
             NAutoPtr(T* p)
@@ -39,7 +41,11 @@ namespace nui
             {
                 NSafeRelease(ptr_);
                 if(&p != this)
-                    ptr_ = p.Detach();
+                {
+                    ptr_ = p.ptr_;
+                    if(ptr_)
+                        ptr_->AddRef();
+                }
                 return (*this);
             }
 
@@ -61,6 +67,11 @@ namespace nui
             }
 
             operator T*() const
+            {
+                return ptr_;
+            }
+
+            operator T*&()
             {
                 return ptr_;
             }

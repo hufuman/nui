@@ -335,6 +335,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\data\implement\NPackageFile.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NPackageFile.h"
+					>
+				</File>
+				<File
 					RelativePath=".\data\implement\NPackFileSystemImpl.cpp"
 					>
 				</File>

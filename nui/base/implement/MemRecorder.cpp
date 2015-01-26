@@ -115,7 +115,7 @@ namespace nui
                     "  %4d  Ptr: 0x%p\r\n"
                     "        TypeName: %s, Size: %d, Count: %d\r\n"
                     "        FilePath: %s, Line: %d\r\n"
-                    "        Type: %s\r\n",
+                    "        Type: %s\r\n\r\n",
                     nIndex,
                     pData,
                     log.typeName.c_str(),

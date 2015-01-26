@@ -140,6 +140,18 @@ namespace nui
             return (*this);
         }
 
+        NString NString::ToLower() const
+        {
+            NString result(*this);
+            return result.MakeLower();
+        }
+
+        NString NString::ToUpper() const
+        {
+            NString result(*this);
+            return result.MakeUpper();
+        }
+
         NString& NString::Trim()
         {
             if(IsEmpty())
@@ -188,7 +200,7 @@ namespace nui
             return (*this);
         }
 
-        NString NString::SubString(int startPos)
+        NString NString::SubString(int startPos) const
         {
             if(startPos < 0 || startPos >= static_cast<int>(data_.length()))
                 return _T("");
@@ -197,7 +209,7 @@ namespace nui
             return result;
         }
 
-        NString NString::SubString(int startPos, int count)
+        NString NString::SubString(int startPos, int count) const
         {
             if(startPos + count < 0 || startPos + count >= static_cast<int>(data_.length()))
                 return _T("");
@@ -256,6 +268,18 @@ namespace nui
             if(pos == tstring::npos)
                 return -1;
             return pos;
+        }
+
+        int NString::IndexOfAny(LPCTSTR arg) const
+        {
+            size_t pos = data_.find_first_of(arg);
+            return (pos == tstring::npos) ? -1 : pos;
+        }
+
+        int NString::IndexOfAny(LPCTSTR arg, int startPos) const
+        {
+            size_t pos = data_.find_first_of(arg, startPos);
+            return (pos == tstring::npos) ? -1 : pos;
         }
 
         int NString::IndexOf(TCHAR arg) const
@@ -330,7 +354,7 @@ namespace nui
 
         bool NString::Tokenize(int& position, LPCTSTR szSplitter, bool includeEmpty, NString& token) const
         {
-            if(position == -1)
+            if(position >= static_cast<int>(data_.length()))
                 return false;
 
             if(szSplitter == NULL || szSplitter[0] == 0)
@@ -344,7 +368,6 @@ namespace nui
                 else
                 {
                     token = _T("");
-                    position = -1;
                     return false;
                 }
             }
@@ -353,14 +376,12 @@ namespace nui
             position = data_.find(szSplitter, position);
             if(position == static_cast<int>(tstring::npos))
             {
-                if(last > 0 && last < static_cast<int>(data_.length()))
-                {
-                    position = -1;
+                if(last > 0)
                     token = data_.substr(last).c_str();
-                    return true;
-                }
-                position = -1;
-                return false;
+                else
+                    token = data_.c_str();
+                position = data_.length();
+                return true;
             }
 
             int splitterLen = _tcslen(szSplitter);
@@ -466,6 +487,11 @@ namespace nui
         }
 
         TCHAR& NString::operator [] (int index)
+        {
+            return data_[index];
+        }
+
+        const TCHAR& NString::operator [] (int index) const
         {
             return data_[index];
         }

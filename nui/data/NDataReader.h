@@ -26,6 +26,7 @@ namespace nui
 
             virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value) = 0;
             virtual bool ReadNode(LPCTSTR nodeName, NDataReader*& value) = 0;
+            virtual bool ReadNodeByPath(LPCTSTR path, NDataReader*& value) = 0;
 
             virtual bool ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value) = 0;
             virtual bool ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value) = 0;

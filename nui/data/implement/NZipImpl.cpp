@@ -125,6 +125,7 @@ bool NZipImpl::GetFileContent(LPCTSTR relativePath, nui::Data::NBuffer* buffer)
     result = (pBuffer != NULL);
     if(result)
     {
+        buffer->SetSize(buffer->GetSize() - 1);
         ZRESULT zResult = UnzipItem(zipFile_, entry->index, pBuffer, entry->unc_size, ZIP_MEMORY);
         result = (zResult == ZR_OK || zResult == ZR_MORE);
         static_cast<LPBYTE>(pBuffer)[entry->unc_size] = 0;

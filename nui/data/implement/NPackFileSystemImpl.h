@@ -18,8 +18,5 @@ public:
     virtual bool LoadFile(LPCTSTR filePath, nui::Data::NBuffer* buffer);
 
 protected:
-    nui::Base::NString GetPackPath(LPCTSTR filePath);
-
-protected:
-    nui::Data::NZip* zipFile_;
+    nui::Base::NInstPtr<nui::Data::NZip> zipFile_;
 };

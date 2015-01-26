@@ -54,6 +54,35 @@ bool XmlDataReader::ReadNode(LPCTSTR nodeName, NDataReader*& value)
         return false;
 
     XmlDataReader* reader = NNew(XmlDataReader);
+    reader->AddRef();
+    reader->parent_ = this;
+    reader->root_ = element;
+    this->AddRef();
+
+    if(value != NULL)
+        NSafeRelease(value);
+    value = dynamic_cast<NDataReader*>(reader);
+    return true;
+}
+
+bool XmlDataReader::ReadNodeByPath(LPCTSTR path, NDataReader*& value)
+{
+    NString token;
+    int position = 0;
+    NString strPath(path);
+    TiXmlElement* element = root_;
+    std::string nodeName;
+
+    while(element != NULL && strPath.Tokenize(position, TEXT("\\"), false, token))
+    {
+        nodeName = t2utf8(token.GetData());
+        element = element->FirstChildElement(nodeName.c_str());
+    }
+    if(element == NULL)
+        return false;
+
+    XmlDataReader* reader = NNew(XmlDataReader);
+    reader->AddRef();
     reader->parent_ = this;
     reader->root_ = element;
     this->AddRef();
@@ -102,6 +131,7 @@ bool XmlDataReader::ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value
         return false;
 
     XmlDataReader* reader = NNew(XmlDataReader);
+    reader->AddRef();
     reader->parent_ = this;
     reader->root_ = element;
     this->AddRef();
