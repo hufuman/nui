@@ -121,6 +121,11 @@ namespace nui
             return data_.compare(arg) < 0;
         }
 
+        NString::operator LPCTSTR() const
+        {
+            return data_.c_str();
+        }
+
         NString& NString::Assign(LPCTSTR arg, int length)
         {
             argPos_ = 1;

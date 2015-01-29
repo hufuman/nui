@@ -82,11 +82,11 @@ namespace nui
             }
         }
 
-        void NWindowBase::ShowWindow(DWORD showFlag)
+        void NWindowBase::SetVisible(BOOL visible)
         {
             NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::ShowWindow"));
             if(window_ != NULL)
-                ::ShowWindow(window_, showFlag);
+                ::ShowWindow(window_, visible ? SW_SHOWNA : SW_HIDE);
         }
 
         HWND NWindowBase::GetNative() const

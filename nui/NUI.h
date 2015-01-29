@@ -60,5 +60,6 @@ using namespace nui;
 using namespace Base;
 using namespace Data;
 using namespace Util;
+using namespace UI;
 #endif  // _NOT_USE_NUI_NAMESPACE
 

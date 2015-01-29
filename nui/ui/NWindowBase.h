@@ -20,7 +20,7 @@ namespace nui
             bool Create(HWND parentWindow, LPCTSTR szText, nui::Base::NRect& rect);
             bool DoModal(HWND parentWindow, LPCTSTR szText, nui::Base::NRect& rect);
             void Destroy();
-            void ShowWindow(DWORD showFlag);
+            void SetVisible(BOOL visible);
 
             HWND GetNative() const;
 

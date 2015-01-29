@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<Root>
+    <Window name="TestWnd" pos="100, 100" size="500, 300" >
+        <Image path="@skin:ranking_bg.png" pos="50, 50" />
+        <Label text="@1:Test" pos="100, 100" layout="FLT_Left | FLT_Top" />
+    </Window>
+</Root>

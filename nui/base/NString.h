@@ -35,6 +35,8 @@ namespace nui
             bool operator < (const NString& arg) const;
             bool operator < (LPCTSTR arg) const;
 
+            operator LPCTSTR() const;
+
         public:
             NString& Assign(LPCTSTR arg, int length);
 
