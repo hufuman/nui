@@ -29,7 +29,6 @@ LANGUAGE 9, 1
 // remains consistent on all systems.
 
 IDI_UITEST       ICON         "uitest.ico"
-IDI_SMALL               ICON         "small.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

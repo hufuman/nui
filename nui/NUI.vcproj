@@ -466,11 +466,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ui\NImage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui\NMsgLoop.h"
 				>
 			</File>
 			<File
+				RelativePath=".\ui\NRender.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NRenderDef.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NResourceLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NShape.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui\NTimerSrv.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NUiBus.h"
 				>
 			</File>
 			<File
@@ -484,6 +508,14 @@
 			<Filter
 				Name="implement"
 				>
+				<File
+					RelativePath=".\ui\implement\BaseImage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\BaseImage.h"
+					>
+				</File>
 				<File
 					RelativePath=".\ui\implement\NFrameImpl.cpp"
 					>
@@ -502,6 +534,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NTimerSrvImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NUiBus.cpp"
 					>
 				</File>
 				<File
@@ -532,6 +568,78 @@
 					RelativePath=".\ui\implement\WindowUtil.h"
 					>
 				</File>
+				<Filter
+					Name="Gdi"
+					>
+					<File
+						RelativePath=".\ui\implement\Gdi\AlphaDC.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\AlphaDC.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiImage.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiImage.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiRender.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiRender.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiResourceLoader.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiResourceLoader.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiShape.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiShape.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiUtil.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\ImageDC.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\MemDC.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\SSE.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\SSE.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\StreamImpl.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\StreamImpl.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

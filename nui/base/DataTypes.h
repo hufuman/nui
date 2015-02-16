@@ -124,6 +124,15 @@ namespace nui
                 return Bottom - Top;
             }
 
+            NRect& Offset(int x, int y)
+            {
+                Left += x;
+                Right += x;
+                Top += y;
+                Bottom += y;
+                return *this;
+            }
+
             NRect& SetRect(INT left, INT top, INT right, INT bottom)
             {
                 Left = left;
@@ -142,11 +151,16 @@ namespace nui
                 Bottom = Top + height;
                 return (*this);
             }
-            NRect& SeNSize(INT width, INT height)
+            NRect& SetSize(INT width, INT height)
             {
                 Right = Left + width;
                 Bottom = Top + height;
                 return (*this);
+            }
+
+            operator RECT*()
+            {
+                return reinterpret_cast<RECT*>(this);
             }
 
             bool operator == (const NRect& rect) const

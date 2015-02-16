@@ -24,19 +24,6 @@ namespace nui
                     ptr_->AddRef();
             }
 
-            NInstPtr(T* p)
-            {
-                ptr_ = p;
-                if(ptr_)
-                    ptr_->AddRef();
-            }
-
-            NInstPtr(int nullPtr)
-            {
-                NAssertError(nullPtr == 0, _T("only null acceptable"));
-                ptr_ = NULL;
-            }
-
             ~NInstPtr()
             {
                 NSafeRelease(ptr_);
@@ -60,14 +47,6 @@ namespace nui
                 NSafeRelease(ptr_);
                 ptr_ = NULL;
                 return (*this);
-            }
-
-            NInstPtr& operator = (T* p)
-            {
-                NSafeRelease(ptr_);
-                ptr_ = p;
-                if(ptr_)
-                    ptr_->AddRef();
             }
 
             operator T*() const

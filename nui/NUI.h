@@ -14,6 +14,7 @@
 #endif
 
 #define NSafeRelease(ptr)   for(;;){if(ptr) ptr->Release(); ptr = NULL;break;}
+#define NEnsureRelease(ptr)   for(;ptr;){if(ptr->Release() == 0) {ptr = NULL;break;}}
 
 
 #include <map>
@@ -21,6 +22,7 @@
 #include <functional>
 
 #include <CommCtrl.h>
+#include <shellapi.h>
 
 
 #include "./base/noncopyable.h"
@@ -51,15 +53,23 @@ using namespace fastdelegate;
 
 #include "./util/NFileUtil.h"
 
+#include "./ui/NRenderDef.h"
 #include "./ui/NMsgLoop.h"
 #include "./ui/NWindowBase.h"
 #include "./ui/NTimerSrv.h"
+#include "./ui/NEvent.h"
+#include "./ui/NFrame.h"
+#include "./ui/NImage.h"
+#include "./ui/NResourceLoader.h"
+#include "./ui/NUiBus.h"
+#include "./ui/NRender.h"
+#include "./ui/NWindow.h"
 
 #ifdef _NOT_USE_NUI_NAMESPACE
 using namespace nui;
 using namespace Base;
 using namespace Data;
 using namespace Util;
-using namespace UI;
+using namespace Ui;
 #endif  // _NOT_USE_NUI_NAMESPACE
 

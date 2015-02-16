@@ -5,7 +5,7 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
         namespace Util
         {
@@ -18,6 +18,8 @@ namespace nui
                 wce.hInstance = nui::Data::NModule::GetInst().GetNUIModule();
                 wce.hCursor = ::LoadCursor(NULL, IDC_ARROW);
                 wce.lpszClassName = szClassName;
+                wce.hIcon = nui::Data::NModule::GetInst().GetBigIcon();
+                wce.hIconSm = nui::Data::NModule::GetInst().GetSmallIcon();
                 ATOM atom = ::RegisterClassEx(&wce);
                 return (atom > 0);
             }

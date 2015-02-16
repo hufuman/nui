@@ -28,7 +28,7 @@ namespace nui
             static CRITICAL_SECTION ms_Section;
         };
 
-#define NMalloc(size) NMallocImpl(size, __FILE__, __LINE__)
+#define NMalloc(size) nui::Base::NMallocImpl(size, __FILE__, __LINE__)
         __inline void* NMallocImpl(int size, LPCSTR szFilePath, int nLine)
         {
             NMemLocker locker;
@@ -37,18 +37,18 @@ namespace nui
             return p;
         }
 
-        __inline void NFree(void*& ptr)
+#define NFree(ptr)  for(;;){nui::Base::NFreeImpl(reinterpret_cast<void*>(ptr)); ptr=NULL;break;}
+        __inline void NFreeImpl(void* ptr)
         {
             if(ptr == NULL)
                 return;
             NMemLocker locker;
             RemoveMemLog(MemTypeMalloc, ptr);
             free(ptr);
-            ptr = NULL;
         }
 
-#define NNew(type, ...) NNewImpl<type>(nui::Base::MemTypeNew, new type(__VA_ARGS__), 1, __FILE__, __LINE__)
-#define NNewArray(type, count) NNewImpl<type>(nui::Base::MemTypeNewArray, new type[count], count, __FILE__, __LINE__)
+#define NNew(type, ...) nui::Base::NNewImpl<type>(nui::Base::MemTypeNew, new type(__VA_ARGS__), 1, __FILE__, __LINE__)
+#define NNewArray(type, count) nui::Base::NNewImpl<type>(nui::Base::MemTypeNewArray, new type[count], count, __FILE__, __LINE__)
         template <typename T>
         T* NNewImpl(NuiMemType memType, T* p, int count, LPCSTR szFilePath, int nLine)
         {
@@ -57,8 +57,9 @@ namespace nui
             return p;
         }
 
+#define NDeleteThis(ptr) nui::Base::NDeleteThisImpl(ptr)
         template <typename T>
-        void NDeleteThis(T* ptr)
+        void NDeleteThisImpl(T* ptr)
         {
             if(ptr == NULL)
                 return;
@@ -67,8 +68,9 @@ namespace nui
             delete ptr;
         }
 
+#define NDelete(ptr) nui::Base::NDeleteImpl(ptr)
         template <typename T>
-        void NDelete(T*& ptr)
+        void NDeleteImpl(T*& ptr)
         {
             if(ptr == NULL)
                 return;
@@ -78,8 +80,9 @@ namespace nui
             ptr = NULL;
         }
 
+#define NDeleteArray(ptr) nui::Base::NDeleteArrayImpl(ptr)
         template <typename T>
-        void NDeleteArray(T*& ptr)
+        void NDeleteArrayImpl(T*& ptr)
         {
             if(ptr == NULL)
                 return;

@@ -25,7 +25,7 @@ bool NBufferImpl::SetSize(DWORD size)
         ReleaseBuffer();
         if(size > 0)
         {
-            buffer_ = nui::Base::NMalloc(size);
+            buffer_ = NMalloc(size);
             if(buffer_ != NULL)
             {
                 capacity_ = size;
@@ -65,7 +65,7 @@ void NBufferImpl::ReleaseBuffer()
 {
     if(buffer_ != NULL)
     {
-        nui::Base::NFree(buffer_);
+        NFree(buffer_);
         size_ = 0;
         capacity_ = 0;
     }

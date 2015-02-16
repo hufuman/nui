@@ -5,7 +5,7 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
         BEGIN_USE_UNEXPORT_TEMPLATE()
             typedef FastDelegate5<HWND, UINT, WPARAM, LPARAM, LRESULT&, bool> MsgFilterCallback;
@@ -17,12 +17,20 @@ namespace nui
             ~NWindowBase();
 
             void SetMsgFilterCallback(MsgFilterCallback callback);
-            bool Create(HWND parentWindow, LPCTSTR szText, nui::Base::NRect& rect);
-            bool DoModal(HWND parentWindow, LPCTSTR szText, nui::Base::NRect& rect);
+            bool Create(HWND parentWindow);
+            bool DoModal(HWND parentWindow);
             void Destroy();
             void SetVisible(BOOL visible);
+            void SetText(LPCTSTR text);
+
+            bool GetRect(nui::Base::NRect& rect);
+            void SetSize(int width, int height);
+            void CenterWindow(HWND relativeWindow);
+            void SetRect(const Base::NRect& rect);
 
             HWND GetNative() const;
+
+            LRESULT DoDefault(UINT message, WPARAM wParam, LPARAM lParam);
 
         private:
             static LRESULT WINAPI _staticWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);

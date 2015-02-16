@@ -6,9 +6,9 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
-        class NFrameImpl : public nui::UI::NFrame
+        class NFrameImpl : public nui::Ui::NFrame
         {
         public:
             NFrameImpl();

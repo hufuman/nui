@@ -8,10 +8,20 @@ namespace nui
         template < typename Elem, int InitCount=8, int GrowCount=8 >
         class NArrayT
         {
-            NArrayT(const NArrayT&);
-            NArrayT& operator = (const NArrayT&);
-
         public:
+            NArrayT(const NArrayT& array)
+            {
+                CopyArray(array);
+            }
+
+            NArrayT& operator = (const NArrayT& array)
+            {
+                if(this == &array)
+                    return *this;
+                CopyArray(array);
+                return *this;
+            }
+
             typedef void* Position;
 
             NArrayT()
@@ -25,7 +35,7 @@ namespace nui
             {
                 if(buffer_ != NULL)
                 {
-                    nui::Base::NDeleteArray(buffer_);
+                    NDeleteArray(buffer_);
                     buffer_ = NULL;
                 }
             }
@@ -34,7 +44,7 @@ namespace nui
             {
                 if(buffer_ == NULL)
                 {
-                    buffer_ = nui::Base::NNewArray(Elem, InitCount);
+                    buffer_ = NNewArray(Elem, InitCount);
                     if(buffer_ == NULL)
                         return false;
                     capacity_ = InitCount;
@@ -48,7 +58,7 @@ namespace nui
                 }
                 else
                 {
-                    Elem* data = nui::Base::NNewArray(Elem, capacity_ + GrowCount);
+                    Elem* data = NNewArray(Elem, capacity_ + GrowCount);
                     if(data == NULL)
                         return false;
                     for(int i=0; i<count_; ++ i)
@@ -58,7 +68,7 @@ namespace nui
                     data[count_] = value;
                     ++ count_;
                     capacity_ += GrowCount;
-                    nui::Base::NDeleteArray(buffer_);
+                    NDeleteArray(buffer_);
                     buffer_ = data;
                 }
                 return true;
@@ -123,7 +133,7 @@ namespace nui
                 }
                 else
                 {
-                    Elem* data = nui::Base::NNewArray(Elem, capacity_ + GrowCount);
+                    Elem* data = NNewArray(Elem, capacity_ + GrowCount);
                     if(data == NULL)
                         return false;
                     for(int i=0; i<count_; ++ i)
@@ -212,9 +222,18 @@ namespace nui
                 capacity_ = 0;
                 if(buffer_ != NULL)
                 {
-                    Base::NDeleteArray(buffer_);
+                    NDeleteArray(buffer_);
                     buffer_ = NULL;
                 }
+            }
+
+        protected:
+            void CopyArray(const NArrayT<Elem>& array)
+            {
+                capacity_ = count_ = array.count_;
+                buffer_ = NNewArray(Elem, count_);
+                for(int i=0; i<count_; ++ i)
+                    buffer_[i] = array.buffer_[i];
             }
 
         private:

@@ -5,7 +5,7 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
         BEGIN_USE_UNEXPORT_TEMPLATE()
         class NFrame;

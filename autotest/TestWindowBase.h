@@ -41,7 +41,7 @@ protected:
 
 TEST_F(TestWindowBase, Modaless)
 {
-    nui::UI::NWindowBase window;
+    nui::Ui::NWindowBase window;
     window.SetMsgFilterCallback(MakeDelegate(this, &TestWindowBase::TestWndProc));
     NRect rect(0, 0, 100, 100);
     ASSERT_TRUE(window.Create(NULL, _T("TestWindowText"), rect));
@@ -59,7 +59,7 @@ TEST_F(TestWindowBase, Modaless)
 
 TEST_F(TestWindowBase, Modal)
 {
-    nui::UI::NWindowBase window;
+    nui::Ui::NWindowBase window;
     window.SetMsgFilterCallback(MakeDelegate(this, &TestWindowBase::TestWndProc));
     NRect rect(0, 0, 100, 100);
     ASSERT_TRUE(window.DoModal(NULL, _T("TestWindowText"), rect));

@@ -16,6 +16,8 @@ namespace nui
 
             bool Init(HMODULE nuiModule);
             bool IsValid() const;
+            HICON GetBigIcon();
+            HICON GetSmallIcon();
 
         public:
             HMODULE GetNUIModule() const;
@@ -24,6 +26,9 @@ namespace nui
         private:
             HMODULE nuiModule_;
             Base::NString appPath_;
+            Base::NString appFullName_;
+            HICON   bigIcon_;
+            HICON   smallIcon_;
         };
     }
 }

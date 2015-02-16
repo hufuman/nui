@@ -7,7 +7,7 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
         class NUI_INTF NWindow : public Base::NBaseObj
         {

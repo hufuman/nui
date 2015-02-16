@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseObj.h"
+#include "../ui/NRenderDef.h"
 
 namespace nui
 {
@@ -13,7 +14,7 @@ namespace nui
             NCore(){}
             virtual ~NCore(){}
 
-            virtual bool InitCore(LPCTSTR packFilePath, LPCTSTR lang) = 0;
+            virtual bool InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderType::Type type) = 0;
             virtual void DestroyCore() = 0;
         };
     }

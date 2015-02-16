@@ -6,7 +6,7 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
         typedef FastDelegate1<int, bool> NIdleHandler;
 

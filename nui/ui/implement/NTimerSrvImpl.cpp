@@ -3,7 +3,7 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
 
         IMPLEMENT_REFLECTION_EX(NTimerSrvImpl, Base::NReflect::Singleton);
@@ -11,8 +11,7 @@ namespace nui
         NTimerSrvImpl::NTimerSrvImpl()
         {
             baseTimerId_ = 1;
-            Base::NRect rect;
-            window_.Create(HWND_MESSAGE, _T(""), rect);
+            window_.Create(HWND_MESSAGE);
             NAssertError(window_.GetNative() != NULL, _T("Failed to create window"));
             window_.SetMsgFilterCallback(MakeDelegate(this, &NTimerSrvImpl::TimerWindowProc));
         }

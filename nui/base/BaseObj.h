@@ -25,7 +25,7 @@ namespace nui
             {
                 if((--refCount_) == 0)
                 {
-                    Base::NDeleteThis(this);
+                    NDeleteThis(this);
                     return 0;
                 }
                 return refCount_;

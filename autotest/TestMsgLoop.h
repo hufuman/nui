@@ -48,7 +48,7 @@ protected:
 TEST_F(TestMsgLoop, NoWindow)
 {
     TestUtil::EatQuitMsg();
-    nui::UI::NMsgLoop loop;
+    nui::Ui::NMsgLoop loop;
     loop.AddIdleHandler(MakeDelegate(this, &TestMsgLoop::OnIdle));
 
     ::CloseHandle(reinterpret_cast<HANDLE>(::_beginthreadex(0, 0, &TestMsgLoop::TestThreadProc, reinterpret_cast<void*>(::GetCurrentThreadId()),0, 0)));
@@ -60,10 +60,10 @@ TEST_F(TestMsgLoop, NoWindow)
 TEST_F(TestMsgLoop, Window)
 {
     TestUtil::EatQuitMsg();
-    nui::UI::NMsgLoop loop;
+    nui::Ui::NMsgLoop loop;
     loop.AddIdleHandler(MakeDelegate(this, &TestMsgLoop::OnIdle));
 
-    nui::UI::NWindowBase window;
+    nui::Ui::NWindowBase window;
     nui::Base::NRect rect(0, 0, 20, 20);
     window.SetMsgFilterCallback(MakeDelegate(this, &TestMsgLoop::TestWndProc));
     ASSERT_TRUE(window.Create(NULL, _T("TestText"), rect));

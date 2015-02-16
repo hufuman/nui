@@ -5,7 +5,7 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
         namespace Util
         {

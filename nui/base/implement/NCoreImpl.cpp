@@ -18,7 +18,7 @@ NCoreImpl::~NCoreImpl(void)
     ;
 }
 
-bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang)
+bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderType::Type type)
 {
     UNREFERENCED_PARAMETER(packFilePath);
     UNREFERENCED_PARAMETER(lang);
@@ -44,14 +44,23 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang)
     }
 
     nui::Base::NInstPtr<nui::Data::NFileSystem> fileSystem(InstPtrParam);
+    NAssertError(fileSystem != NULL, _T("Failed to create NFileSystem"));
     if(!fileSystem)
         return false;
 
-    return fileSystem->Init(packFilePath);
+    bool initResult = fileSystem->Init(packFilePath);
+    NAssertError(initResult, _T("Failed to init NFileSystem"));
+    if(!initResult)
+        return false;
+
+    nui::Ui::NUiBus::Instance().Init(type);
+
+    return true;
 }
 
 void NCoreImpl::DestroyCore()
 {
+    nui::Ui::NUiBus::Instance().Destroy();
     if(m_uGdiplusToken != 0)
     {
         Gdiplus::GdiplusShutdown(m_uGdiplusToken);

@@ -119,7 +119,7 @@ namespace nui
             }
             else if(type == ReaderXml)
             {
-                reader = dynamic_cast<NDataReader*>(nui::Base::NNew(XmlDataReader));
+                reader = dynamic_cast<NDataReader*>(NNew(XmlDataReader));
             }
             NAssertError(reader != NULL, TEXT("unknown type of DataReader: %d"), type);
             return reader;

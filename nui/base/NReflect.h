@@ -14,7 +14,7 @@ namespace nui
         NBaseObj* BasicObjectCreator(LPCSTR filePath, int line)
         {
             // return NNew(T);
-            return nui::Base::NNewImpl<T>(nui::Base::MemTypeNew, new T(), 1, filePath, line);
+            return NNewImpl<T>(nui::Base::MemTypeNew, new T(), 1, filePath, line);
         }
 
 #define NReflectCreate(ptr) nui::Base::NReflect::GetInstance().Create(ptr, __FILE__, __LINE__)
@@ -34,7 +34,7 @@ namespace nui
         {                                                   \
         public:                                             \
         ReflectClass(){ nui::Base::NReflect::GetInstance().AddReflect<implementClass>(flag); }      \
-        ~ReflectClass(){ nui::Base::NReflect::GetInstance().RemoveReflect<implementClass>(); }  \
+        ~ReflectClass(){}  \
         } MERGE_MACRO(g_ReflectClassObj, implementClass);}
 
 #define IMPLEMENT_REFLECTION(implementClass)    IMPLEMENT_REFLECTION_EX(implementClass, (nui::Base::NReflect::None))

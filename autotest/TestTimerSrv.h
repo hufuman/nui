@@ -28,13 +28,13 @@ public:
 protected:
     int count_;
     nui::Base::NHolder timer_;
-    nui::UI::NMsgLoop loop_;
+    nui::Ui::NMsgLoop loop_;
     bool onceTimer_;
 };
 
 TEST_F(TestTimerSrv, Timer)
 {
-    NInstPtr<nui::UI::NTimerSrv> timerSrv(InstPtrParam);
+    NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
     ASSERT_TRUE(timerSrv != NULL);
 
     onceTimer_ = false;
@@ -47,7 +47,7 @@ TEST_F(TestTimerSrv, Timer)
 
 TEST_F(TestTimerSrv, OnceTimer)
 {
-    NInstPtr<nui::UI::NTimerSrv> timerSrv(InstPtrParam);
+    NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
     ASSERT_TRUE(timerSrv != NULL);
 
     onceTimer_ = true;

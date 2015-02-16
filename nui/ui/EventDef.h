@@ -4,10 +4,11 @@
 
 namespace nui
 {
-    namespace UI
+    namespace Ui
     {
         class EventType
         {
+        public:
             enum Event
             {
                 // Key
