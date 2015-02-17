@@ -5,6 +5,7 @@
 #include "../base/BaseObj.h"
 #include "NImage.h"
 #include "NShape.h"
+#include "NText.h"
 
 namespace nui
 {
@@ -15,6 +16,7 @@ namespace nui
         public:
             virtual NImage* LoadImage(LPCTSTR filePath) = 0;
             virtual NShape* CreateShape() = 0;
+            virtual NText* CreateText(LPCTSTR text) = 0;
         };
     }
 }

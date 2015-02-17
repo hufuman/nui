@@ -14,7 +14,6 @@ namespace nui
 
         NReflect::~NReflect()
         {
-            ;
         }
 
         NReflect& NReflect::GetInstance()

@@ -490,6 +490,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ui\NText.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui\NTimerSrv.h"
 				>
 			</File>
@@ -609,6 +613,14 @@
 					</File>
 					<File
 						RelativePath=".\ui\implement\Gdi\GdiShape.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiText.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiText.h"
 						>
 					</File>
 					<File

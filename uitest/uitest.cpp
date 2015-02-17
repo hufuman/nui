@@ -8,6 +8,8 @@
 nui::Base::NString GetResourcePath();
 bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 NImage* g_Image;
+NAutoPtr<NText> g_SingleLineText;
+NAutoPtr<NText> g_MultipleLineText;
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -21,6 +23,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     nui::Base::NInstPtr<nui::Base::NCore> core(InstPtrParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);
 
+    g_SingleLineText = NUiBus::Instance().GetResourceLoader()->CreateText(_T("单行文字"));
+    g_SingleLineText->SetSingleLine(true).SetColor(MakeArgb(125, 0, 0, 0)).SetHorzCenter(true).SetVertCenter(true);
+
+    g_MultipleLineText = NUiBus::Instance().GetResourceLoader()->CreateText(_T("a\r\n第一行\r\n第二行文\r\n第三行文字"));
+    g_MultipleLineText->SetSingleLine(false).SetColor(MakeArgb(125, 255, 255, 0)).SetHorzCenter(true).SetVertCenter(true);
+
     NWnd window;
     window.SetMsgFilterCallback(PaintCallback);
     window.Create(NULL);
@@ -31,6 +39,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
     nui::Ui::NMsgLoop loop;
     loop.Loop(window.GetNative());
+
+    g_SingleLineText = NULL;
+    g_MultipleLineText = NULL;
 
     core->DestroyCore();
 	return 0;
@@ -51,6 +62,43 @@ nui::Base::NString GetResourcePath()
     return tmp;
 }
 
+bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+{
+    if(message != WM_PAINT)
+        return false;
+
+    NRect rect;
+    ::GetClientRect(hWnd, reinterpret_cast<RECT*>(&rect));
+
+    PAINTSTRUCT ps = {0};
+    HDC hDc = ::BeginPaint(hWnd, &ps);
+
+    nui::Base::NAutoPtr<nui::Ui::NRender> render = NUiBus::Instance().GetRender();
+    render->Init(hDc, rect);
+    render->DrawRectangle(rect, nui::Ui::MakeArgb(255, 255, 255, 255));
+
+    NRect textRect(rect);
+
+    g_SingleLineText->SetColor(MakeArgb(125, 0, 0, 0));
+    render->DrawText(g_SingleLineText, rect);
+    g_SingleLineText->SetColor(MakeArgb(80, 255, 255, 0));
+    render->DrawText(g_SingleLineText, rect);
+
+    textRect.Top += 40;
+    g_MultipleLineText->SetVertCenter(true).SetHorzCenter(true);
+    render->DrawText(g_MultipleLineText, rect);
+    g_MultipleLineText->SetVertCenter(false).SetHorzCenter(false);
+    render->DrawText(g_MultipleLineText, rect);
+
+    render->DrawBack();
+
+    ::EndPaint(hWnd, &ps);
+
+    return true;
+}
+
+/*
+// demonstrate DrawShape
 bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
 {
     if(message != WM_PAINT)
@@ -107,3 +155,4 @@ bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESUL
 
     return true;
 }
+*/

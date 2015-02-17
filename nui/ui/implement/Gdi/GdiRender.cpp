@@ -6,6 +6,8 @@
 #include "GdiUtil.h"
 #include "GdiShape.h"
 #include "GdiImage.h"
+#include "GdiText.h"
+#include "GdiUtil.h"
 
 namespace nui
 {
@@ -20,6 +22,7 @@ namespace nui
         bool GdiRender::Init(HDC hDc, const Base::NRect& rcPaint)
         {
             memDC_.Init(hDc, rcPaint, 255);
+            ::SetBkMode(memDC_, TRANSPARENT);
             return true;
         }
 
@@ -134,6 +137,40 @@ namespace nui
                 srcWidth, srcHeight,
                 BlendFunc);
             NAssertError(!!bResult, _T("AlphaBlend Failed in GdiRender::DrawImage"));
+        }
+
+        void GdiRender::DrawText(NText* text, const Base::NRect& rect)
+        {
+            GdiText* gdiText = dynamic_cast<GdiText*>(text);
+            NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
+            if(gdiText == NULL)
+                return;
+
+            Base::NRect textRect(rect);
+            if(gdiText->GetVertCenter())
+            {
+                Base::NRect tmpRect(rect);
+                tmpRect.Offset(-tmpRect.Left, -tmpRect.Top);
+                GetTextSize(text, tmpRect);
+                textRect.Inflate(-(rect.Width() - tmpRect.Width()) / 2, -(rect.Height() - tmpRect.Height()) / 2);
+            }
+
+            CAlphaDC alphaDc;
+            alphaDc.Init(memDC_, rect, true);
+            Gdi::CGdiSelector fontSelector(alphaDc, ::GetCurrentObject(memDC_, OBJ_FONT), false);
+            ::SetTextColor(alphaDc, text->GetColor() & 0x00FFFFFF);
+            ::DrawText(alphaDc, text->GetText(), text->GetText().GetLength(), textRect, gdiText->GetDrawFlags());
+            alphaDc.EndDraw(GetAlpha(text->GetColor()));
+        }
+
+        void GdiRender::GetTextSize(NText *text, nui::Base::NRect &rect)
+        {
+            GdiText* gdiText = dynamic_cast<GdiText*>(text);
+            NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
+            if(gdiText == NULL)
+                return;
+
+            ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rect, gdiText->GetDrawFlags() | DT_CALCRECT);
         }
     }
 }

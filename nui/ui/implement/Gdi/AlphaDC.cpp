@@ -56,9 +56,14 @@ bool CAlphaDC::Init(HDC hDc, const nui::Base::NRect& rcPaint, bool bCopyOrg)
 
     ::GetObject(memBmp_, sizeof(bmpInfo_), &bmpInfo_);
     if(bCopyOrg)
+    {
         CopyOrg();
+        CSSE::DoOr(0xFF000000, bmpInfo_.bmBits, bmpInfo_.bmWidthBytes * bmpInfo_.bmHeight);
+    }
     else
+    {
         CSSE::MemSetDWord(bmpInfo_.bmBits, 0xFF000000, bmpInfo_.bmWidthBytes * bmpInfo_.bmHeight);
+    }
 
     oldBmp_ = ::SelectObject(memDc_, memBmp_);
     ::SetViewportOrgEx(memDc_, -rcPaint_.Left, -rcPaint_.Top, NULL);

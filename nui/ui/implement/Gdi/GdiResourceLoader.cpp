@@ -4,6 +4,7 @@
 #include "../../../Data/NFileSystem.h"
 #include "GdiImage.h"
 #include "GdiShape.h"
+#include "GdiText.h"
 #include "StreamImpl.h"
 
 namespace nui
@@ -133,6 +134,13 @@ namespace nui
         {
             NShape* shape = dynamic_cast<NShape*>(NNew(GdiShape));
             return shape;
+        }
+
+        NText* GdiResourceLoader::CreateText(LPCTSTR text)
+        {
+            NText* result = dynamic_cast<NText*>(NNew(GdiText));
+            result->SetText(text);
+            return result;
         }
 
         void GdiResourceLoader::ReleaseImage(const Base::NString& path)

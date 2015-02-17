@@ -37,8 +37,19 @@ public:
         memDC_ = ::CreateCompatibleDC(dc_);
         bitmap_ = ::CreateCompatibleBitmap(dc_, viewport_.Width(), viewport_.Height());
         oldBitmap_ = ::SelectObject(memDC_, bitmap_);
-        ::SetStretchBltMode(memDC_, COLORONCOLOR);
         NAssertError(oldBitmap_ != NULL, _T("Error Encountered"));
+        ::SetStretchBltMode(memDC_, COLORONCOLOR);
+
+        HRGN rgn = ::CreateRectRgn(0, 0, 1, 1);
+        int rgnResult = ::GetClipRgn(hDc, rgn);
+        if(rgnResult == 1)
+        {
+            ::SelectClipRgn(memDC_, rgn);
+        }
+        else
+        {
+            ::DeleteObject(rgn);
+        }
     }
 
     void DrawBack()

@@ -11,7 +11,6 @@ namespace nui
     {
         class NUI_INTF NImage : public Base::NBaseObj
         {
-            DECLARE_REFLECTION(TEXT("nui"), TEXT("image"))
         public:
             virtual LPVOID LockBits() = 0;
             virtual void UnlockBits(LPVOID bits) = 0;

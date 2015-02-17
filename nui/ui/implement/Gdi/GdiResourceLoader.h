@@ -16,6 +16,7 @@ namespace nui
 
             virtual NImage* LoadImage(LPCTSTR filePath);
             virtual NShape* CreateShape();
+            virtual NText* CreateText(LPCTSTR text);
 
             void ReleaseImage(const Base::NString& path);
         private:

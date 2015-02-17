@@ -19,6 +19,8 @@ namespace nui
 
             virtual void DrawShape(const Base::NRect& rect, NShape* shape);
             virtual void DrawImage(NImage* image, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue);
+            virtual void DrawText(NText* text, const Base::NRect& rect);
+            virtual void GetTextSize(NText* text, Base::NRect& rect);
 
         private:
             MemDC memDC_;

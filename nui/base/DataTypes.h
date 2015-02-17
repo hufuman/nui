@@ -124,12 +124,21 @@ namespace nui
                 return Bottom - Top;
             }
 
-            NRect& Offset(int x, int y)
+            NRect& Offset(int cx, int cy)
             {
-                Left += x;
-                Right += x;
-                Top += y;
-                Bottom += y;
+                Left += cx;
+                Right += cx;
+                Top += cy;
+                Bottom += cy;
+                return *this;
+            }
+
+            NRect& Inflate(int cx, int cy)
+            {
+                Left -= cx;
+                Right += cx;
+                Top -= cy;
+                Bottom += cy;
                 return *this;
             }
 
