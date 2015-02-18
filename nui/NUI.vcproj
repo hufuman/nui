@@ -624,6 +624,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\ui\implement\Gdi\GdiUtil.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\ui\implement\Gdi\GdiUtil.h"
 						>
 					</File>

@@ -65,7 +65,7 @@ ULONG StreamImpl::AddRef(void)
 
 ULONG StreamImpl::Release(void)
 {
-    if((-- refCount_) == 0)
+    if((-- refCount_) <= 0)
     {
         NDeleteThis(this);
         return 0;

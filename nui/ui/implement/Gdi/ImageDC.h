@@ -10,9 +10,14 @@ class ImageDC
 public:
     ImageDC(HDC hDc, HBITMAP bitmap)
     {
+        bool nullDc = (hDc == NULL);
+        if(nullDc)
+            hDc = ::GetDC(NULL);
         memDC_ = ::CreateCompatibleDC(hDc);
         oldBitmap_ = ::SelectObject(memDC_, bitmap);
         ::SetStretchBltMode(memDC_, COLORONCOLOR);
+        if(nullDc)
+            ::ReleaseDC(NULL, hDc);
         NAssertError(oldBitmap_ != NULL, _T("Error in ImageDC::ImageDC"));
     }
     ~ImageDC()

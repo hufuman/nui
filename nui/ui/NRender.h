@@ -73,6 +73,12 @@ namespace nui
                 DrawImage(image, dstRect.Left, dstRect.Top, dstRect.Width(), dstRect.Height());
             }
 
+            __inline void DrawImage(NImage* image, int dstX, int dstY)
+            {
+                Base::NSize size = image->GetSize();
+                DrawImage(image, dstX, dstY, size.Width, size.Height);
+            }
+
             __inline void DrawImage(NImage* image, int dstX, int dstY, int dstWidth, int dstHeight)
             {
                 Base::NSize size = image->GetSize();

@@ -24,7 +24,7 @@ public:
 
     operator HDC()
     {
-        return dc_;
+        return memDC_;
     }
 
     void Init(HDC hDc, const nui::Base::NRect& rcPaint, BYTE alphaValue)

@@ -7,7 +7,7 @@
 
 nui::Base::NString GetResourcePath();
 bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
-NImage* g_Image;
+NAutoPtr<NImage> g_Image;
 NAutoPtr<NText> g_SingleLineText;
 NAutoPtr<NText> g_MultipleLineText;
 
@@ -23,11 +23,15 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     nui::Base::NInstPtr<nui::Base::NCore> core(InstPtrParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);
 
-    g_SingleLineText = NUiBus::Instance().GetResourceLoader()->CreateText(_T("单行文字"));
-    g_SingleLineText->SetSingleLine(true).SetColor(MakeArgb(125, 0, 0, 0)).SetHorzCenter(true).SetVertCenter(true);
+    NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
 
-    g_MultipleLineText = NUiBus::Instance().GetResourceLoader()->CreateText(_T("a\r\n第一行\r\n第二行文\r\n第三行文字"));
-    g_MultipleLineText->SetSingleLine(false).SetColor(MakeArgb(125, 255, 255, 0)).SetHorzCenter(true).SetVertCenter(true);
+    g_Image = loader->LoadImage(_T("@skin:images\\3.gif"));
+
+    g_SingleLineText = loader->CreateText(_T("single line"));
+    g_SingleLineText->SetSingleLine(true).SetColor(MakeArgb(255, 0, 0, 0)).SetHorzCenter(true).SetVertCenter(true);
+
+    g_MultipleLineText = loader->CreateText(_T("line\r\nfirst line\r\nsecond line\r\nthird line"));
+    g_MultipleLineText->SetSingleLine(false).SetColor(MakeArgb(255, 0, 255, 0)).SetHorzCenter(true).SetVertCenter(true);
 
     NWnd window;
     window.SetMsgFilterCallback(PaintCallback);
@@ -37,11 +41,18 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     window.SetText(_T("Test Window"));
     window.SetVisible(true);
 
-    nui::Ui::NMsgLoop loop;
-    loop.Loop(window.GetNative());
+    {
+        nui::Base::NHolder timer;
+        NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
+        timer = timerSrv->startTimer(200, MakeDelegate(&window, &NWnd::Invalidate));
 
-    g_SingleLineText = NULL;
-    g_MultipleLineText = NULL;
+        nui::Ui::NMsgLoop loop;
+        loop.Loop(window.GetNative());
+
+        g_Image = NULL;
+        g_SingleLineText = NULL;
+        g_MultipleLineText = NULL;
+    }
 
     core->DestroyCore();
 	return 0;
@@ -75,20 +86,27 @@ bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESUL
 
     nui::Base::NAutoPtr<nui::Ui::NRender> render = NUiBus::Instance().GetRender();
     render->Init(hDc, rect);
-    render->DrawRectangle(rect, nui::Ui::MakeArgb(255, 255, 255, 255));
+    render->DrawRectangle(rect, nui::Ui::MakeArgb(255, 0, 255, 255));
+
+    g_Image->NextFrame();
+    render->DrawImage(g_Image, 0, 0);
+    NSize size = g_Image->GetSize();
+    render->DrawImage(g_Image, rect.Width() - size.Width, rect.Height() - size.Height);
 
     NRect textRect(rect);
 
-    g_SingleLineText->SetColor(MakeArgb(125, 0, 0, 0));
-    render->DrawText(g_SingleLineText, rect);
-    g_SingleLineText->SetColor(MakeArgb(80, 255, 255, 0));
-    render->DrawText(g_SingleLineText, rect);
+    g_SingleLineText->SetColor(MakeArgb(255, 255, 0, 255));
+    render->DrawText(g_SingleLineText, textRect);
 
+    g_SingleLineText->SetColor(MakeArgb(255, 0, 0, 255));
     textRect.Top += 40;
+    render->DrawText(g_SingleLineText, textRect);
+
+    textRect.Top -= 40;
     g_MultipleLineText->SetVertCenter(true).SetHorzCenter(true);
-    render->DrawText(g_MultipleLineText, rect);
+    render->DrawText(g_MultipleLineText, textRect);
     g_MultipleLineText->SetVertCenter(false).SetHorzCenter(false);
-    render->DrawText(g_MultipleLineText, rect);
+    render->DrawText(g_MultipleLineText, textRect);
 
     render->DrawBack();
 

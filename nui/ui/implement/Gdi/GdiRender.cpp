@@ -147,19 +147,26 @@ namespace nui
                 return;
 
             Base::NRect textRect(rect);
+            Base::NRect tmpRect(rect);
+            tmpRect.Offset(-tmpRect.Left, -tmpRect.Top);
+            GetTextSize(text, tmpRect);
+
             if(gdiText->GetVertCenter())
             {
-                Base::NRect tmpRect(rect);
-                tmpRect.Offset(-tmpRect.Left, -tmpRect.Top);
-                GetTextSize(text, tmpRect);
                 textRect.Inflate(-(rect.Width() - tmpRect.Width()) / 2, -(rect.Height() - tmpRect.Height()) / 2);
+            }
+            else
+            {
+                textRect = tmpRect;
             }
 
             CAlphaDC alphaDc;
-            alphaDc.Init(memDC_, rect, true);
+            alphaDc.Init(memDC_, textRect, true);
+
             Gdi::CGdiSelector fontSelector(alphaDc, ::GetCurrentObject(memDC_, OBJ_FONT), false);
-            ::SetTextColor(alphaDc, text->GetColor() & 0x00FFFFFF);
+            ::SetTextColor(alphaDc, gdiText->GetColor() & 0x00FFFFFF);
             ::DrawText(alphaDc, text->GetText(), text->GetText().GetLength(), textRect, gdiText->GetDrawFlags());
+
             alphaDc.EndDraw(GetAlpha(text->GetColor()));
         }
 
@@ -170,7 +177,13 @@ namespace nui
             if(gdiText == NULL)
                 return;
 
-            ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rect, gdiText->GetDrawFlags() | DT_CALCRECT);
+            DWORD flags = gdiText->GetDrawFlags();
+            flags = (flags & (~DT_CENTER));
+            flags = (flags & (~DT_VCENTER));
+            flags = (flags & (~DT_END_ELLIPSIS));
+            flags = (flags & (~DT_PATH_ELLIPSIS));
+            flags = (flags & (~DT_WORD_ELLIPSIS));
+            ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rect, flags | DT_CALCRECT);
         }
     }
 }

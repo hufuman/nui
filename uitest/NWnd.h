@@ -14,6 +14,7 @@ public:
     virtual void Destroy();
     HWND GetNative() const;
     void SetMsgFilterCallback(nui::Ui::MsgFilterCallback callback);
+    void Invalidate();
 
 protected:
     void DoPaint();

@@ -52,20 +52,19 @@ bool CAlphaDC::Init(HDC hDc, const nui::Base::NRect& rcPaint, bool bCopyOrg)
     bih.biClrImportant = 0;
 
     memBmp_ = (HBITMAP)::CreateDIBSection(hScreenDC, &bi, DIB_RGB_COLORS, NULL, 0, 0);
+    oldBmp_ = ::SelectObject(memDc_, memBmp_);
     ::ReleaseDC(NULL, hScreenDC);
 
     ::GetObject(memBmp_, sizeof(bmpInfo_), &bmpInfo_);
     if(bCopyOrg)
     {
         CopyOrg();
-        CSSE::DoOr(0xFF000000, bmpInfo_.bmBits, bmpInfo_.bmWidthBytes * bmpInfo_.bmHeight);
     }
     else
     {
         CSSE::MemSetDWord(bmpInfo_.bmBits, 0xFF000000, bmpInfo_.bmWidthBytes * bmpInfo_.bmHeight);
     }
 
-    oldBmp_ = ::SelectObject(memDc_, memBmp_);
     ::SetViewportOrgEx(memDc_, -rcPaint_.Left, -rcPaint_.Top, NULL);
     return (oldBmp_ != NULL);
 }
@@ -126,5 +125,6 @@ void CAlphaDC::CopyOrg()
         rcPaint_.Width(), rcPaint_.Height(),
         BlendFunc);
     NAssertError(!!bResult, _T("AlphaBlend Failed"));
+    ::SetBkMode(memDc_, TRANSPARENT);
     CSSE::DoOr(0xFF000000, bmpInfo_.bmBits, bmpInfo_.bmWidthBytes * bmpInfo_.bmHeight);
 }

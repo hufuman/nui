@@ -167,15 +167,15 @@ namespace nui
             LPCVOID pData = buffer->GetBuffer();
             DWORD dwSize = buffer->GetSize();
 
-            StreamImpl stream;
+            Base::NAutoPtr<StreamImpl> stream = NNew(StreamImpl);
 
             ULONG uWritten = 0;
-            HRESULT hResult = stream.Write(pData, dwSize, &uWritten);
+            HRESULT hResult = stream->Write(pData, dwSize, &uWritten);
             if(FAILED(hResult))
                 return NULL;
 
             hResult = E_FAIL;
-            Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(&stream);
+            Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(stream);
             if(pBitmap != NULL && pBitmap->GetLastStatus() == Gdiplus::Ok)
             {
                 hResult = S_OK;

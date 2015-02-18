@@ -52,6 +52,11 @@ void NWnd::SetMsgFilterCallback(nui::Ui::MsgFilterCallback callback)
     callback_ = callback;
 }
 
+void NWnd::Invalidate()
+{
+    ::InvalidateRect(window_.GetNative(), NULL, TRUE);
+}
+
 void NWnd::DoPaint()
 {
     PAINTSTRUCT ps = {0};
