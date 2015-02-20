@@ -22,6 +22,11 @@ namespace nui
             virtual void DrawText(NText* text, const Base::NRect& rect);
             virtual void GetTextSize(NText* text, Base::NRect& rect);
 
+        protected:
+            void FillRectImpl(HDC hDc, const Base::NRect& rect, ArgbColor fillColor);
+            void DrawRectImpl(HDC hDc, const Base::NRect& rect, int width, ArgbColor borderColor);
+            void DrawAndFillRectImpl(HDC hDc, const Base::NRect& rect, int width, ArgbColor borderColor, ArgbColor fillColor);
+
         private:
             MemDC memDC_;
         };

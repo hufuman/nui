@@ -8,10 +8,9 @@ namespace nui
         GdiShape::GdiShape()
         {
             style_ = Rect;
-            borderAlpha_ = 0;
-            fillAlpha_ = 0;
-            roundRectWidth_ = 8;
-            roundRectHeight_ = 8;
+            borderWidth_ = 0;
+            borderColor_ = 0;
+            fillColor_ = 0;
         }
         GdiShape::~GdiShape()
         {
@@ -20,39 +19,26 @@ namespace nui
 
         NShape& GdiShape::SetStyle(GdiShape::Style style)
         {
-            style = style;
+            style_ = style;
             return *this;
         }
 
-        NShape& GdiShape::SetBorder(int borderWidth, ArgbColor borderColor)
+        NShape& GdiShape::SetBorderColor(ArgbColor borderColor)
         {
-            penHolder.Destroy();
-            borderAlpha_ = GetAlpha(borderColor);
-            if(borderWidth > 0 && borderAlpha_ != 0)
-                penHolder.Hold(::CreatePen(PS_SOLID, borderWidth, borderColor & 0x00FFFFFF), true);
+            borderColor_ = borderColor;
             return *this;
         }
 
-        NShape& GdiShape::SetFill(ArgbColor fillColor)
+        NShape& GdiShape::SetBorderWidth(int borderWidth)
         {
-            brushHolder.Destroy();
-            fillAlpha_ = GetAlpha(fillColor);
-            if(fillAlpha_ != 0)
-                brushHolder.Hold(::CreateSolidBrush(fillColor & 0x00FFFFFF), true);
+            borderWidth_ = borderWidth;
             return *this;
         }
 
-        NShape& GdiShape::SetRoundRectParam(int width, int height)
+        NShape& GdiShape::SetFillColor(ArgbColor fillColor)
         {
-            roundRectWidth_ = width;
-            roundRectHeight_ = height;
+            fillColor_ = fillColor;
             return *this;
-        }
-
-        void GdiShape::GetRoundRectParam(int& width, int& height) const
-        {
-            width = roundRectWidth_;
-            height = roundRectHeight_;
         }
 
         GdiShape::Style GdiShape::GetStyle() const
@@ -62,22 +48,27 @@ namespace nui
 
         BYTE GdiShape::GetBorderAlpha() const
         {
-            return borderAlpha_;
+            return GetAlpha(borderColor_);
+        }
+
+        ArgbColor GdiShape::GetBorderColor() const
+        {
+            return borderColor_;
+        }
+
+        int GdiShape::GetBorderWidth() const
+        {
+            return borderWidth_;
         }
 
         BYTE GdiShape::GetFillAlpha() const
         {
-            return fillAlpha_;
+            return GetAlpha(fillColor_);
         }
 
-        HPEN GdiShape::GetPen() const
+        ArgbColor GdiShape::GetFillColor() const
         {
-            return static_cast<HPEN>((HGDIOBJ)penHolder);
-        }
-
-        HBRUSH GdiShape::GetBrush() const
-        {
-            return static_cast<HBRUSH>((HGDIOBJ)brushHolder);
+            return fillColor_;
         }
     }
 }

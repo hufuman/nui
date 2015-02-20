@@ -17,26 +17,22 @@ namespace nui
 
         public:
             virtual NShape& SetStyle(Style style);
-            virtual NShape& SetBorder(int borderWidth, ArgbColor borderColor);
-            virtual NShape& SetFill(ArgbColor fillColor);
+            virtual NShape& SetBorderColor(ArgbColor borderColor);
+            virtual NShape& SetBorderWidth(int borderWidth);
+            virtual NShape& SetFillColor(ArgbColor fillColor);
             virtual Style GetStyle() const;
-            virtual NShape& SetRoundRectParam(int width, int height);
-            virtual void GetRoundRectParam(int& width, int& height) const;
 
             BYTE GetBorderAlpha() const;
+            ArgbColor GetBorderColor() const;
+            int GetBorderWidth() const;
             BYTE GetFillAlpha() const;
-
-            HPEN GetPen() const;
-            HBRUSH GetBrush() const;
+            ArgbColor GetFillColor() const;
 
         private:
             Style style_;
-            BYTE borderAlpha_;
-            BYTE fillAlpha_;
-            int roundRectWidth_;
-            int roundRectHeight_;
-            Gdi::CGdiHolder penHolder;
-            Gdi::CGdiHolder brushHolder;
+            int borderWidth_;
+            ArgbColor borderColor_;
+            ArgbColor fillColor_;
         };
     }
 }

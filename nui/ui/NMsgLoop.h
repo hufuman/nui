@@ -8,7 +8,7 @@ namespace nui
 {
     namespace Ui
     {
-        typedef FastDelegate1<int, bool> NIdleHandler;
+        typedef FastDelegate1<int, void> NIdleHandler;
 
         NUI_TEMPLATE template class NUI_CLASS Data::NArrayT<NIdleHandler>;
 

@@ -26,12 +26,9 @@ namespace nui
             for(;looping_;)
             {
                 // Idle Handle
-                int idleCount = 0;
-                while(!::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+                if(!::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
                 {
-                    if(DoIdleHandler(idleCount))
-                        break;
-                    ++ idleCount;
+                    DoIdleHandler(0);
                 }
 
                 bResult = ::GetMessage(&msg, NULL, 0, 0);
@@ -82,8 +79,7 @@ namespace nui
             int count = idleHandlers_.Count();
             for(int i=0; i<count; ++ i)
             {
-                if(idleHandlers_[i](idleCount))
-                    return true;
+                idleHandlers_[i](idleCount);
             }
             return false;
         }

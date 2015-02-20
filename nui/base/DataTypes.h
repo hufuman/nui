@@ -172,6 +172,11 @@ namespace nui
                 return reinterpret_cast<RECT*>(this);
             }
 
+            operator const RECT*() const
+            {
+                return reinterpret_cast<const RECT*>(this);
+            }
+
             bool operator == (const NRect& rect) const
             {
                 return Left == rect.Left

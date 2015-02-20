@@ -27,14 +27,7 @@ namespace nui
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape();
-                shape->SetStyle(NShape::Line).SetBorder(borderWidth, clrBorder);
-                DrawShape(rect, shape);
-            }
-            __inline void DrawLine(const Base::NRect& rect, const ArgbColor clrFill)
-            {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
-                shape->SetStyle(NShape::Line).SetFill(clrFill);
+                shape->SetStyle(NShape::Line).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
                 DrawShape(rect, shape);
             }
 
@@ -42,14 +35,23 @@ namespace nui
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape();
-                shape->SetStyle(NShape::RoundRect).SetBorder(borderWidth, clrBorder);
+                shape->SetStyle(NShape::RoundRect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
                 DrawShape(rect, shape);
             }
-            __inline void DrawRoundRectangle(const Base::NRect& rect, const ArgbColor clrFill)
+
+            __inline void DrawRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape();
-                shape->SetStyle(NShape::RoundRect).SetFill(clrFill);
+                shape->SetStyle(NShape::RoundRect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder).SetFillColor(clrFill);
+                DrawShape(rect, shape);
+            }
+
+            __inline void FillRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrFill)
+            {
+                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                shape->SetStyle(NShape::RoundRect).SetFillColor(clrFill).SetBorderWidth(borderWidth);
                 DrawShape(rect, shape);
             }
 
@@ -57,14 +59,23 @@ namespace nui
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape();
-                shape->SetStyle(NShape::Rect).SetBorder(borderWidth, clrBorder);
+                shape->SetStyle(NShape::Rect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
                 DrawShape(rect, shape);
             }
-            __inline void DrawRectangle(const Base::NRect& rect, const ArgbColor clrFill)
+
+            __inline void FillRectangle(const Base::NRect& rect, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape();
-                shape->SetStyle(NShape::Rect).SetFill(clrFill);
+                shape->SetStyle(NShape::Rect).SetFillColor(clrFill);
+                DrawShape(rect, shape);
+            }
+
+            __inline void DrawRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
+            {
+                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                shape->SetStyle(NShape::Rect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder).SetFillColor(clrFill);
                 DrawShape(rect, shape);
             }
 

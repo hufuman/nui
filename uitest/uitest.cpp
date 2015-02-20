@@ -10,6 +10,8 @@ bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESUL
 NAutoPtr<NImage> g_Image;
 NAutoPtr<NText> g_SingleLineText;
 NAutoPtr<NText> g_MultipleLineText;
+nui::Base::NAutoPtr<nui::Ui::NRender> g_Render;
+int g_BorderWidth = 1;
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -24,6 +26,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);
 
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+
+    g_Render = NUiBus::Instance().GetRender();
 
     g_Image = loader->LoadImage(_T("@skin:images\\3.gif"));
 
@@ -52,6 +56,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         g_Image = NULL;
         g_SingleLineText = NULL;
         g_MultipleLineText = NULL;
+        g_Render = NULL;
     }
 
     core->DestroyCore();
@@ -75,102 +80,40 @@ nui::Base::NString GetResourcePath()
 
 bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
 {
-    if(message != WM_PAINT)
-        return false;
-
-    NRect rect;
-    ::GetClientRect(hWnd, reinterpret_cast<RECT*>(&rect));
-
-    PAINTSTRUCT ps = {0};
-    HDC hDc = ::BeginPaint(hWnd, &ps);
-
-    nui::Base::NAutoPtr<nui::Ui::NRender> render = NUiBus::Instance().GetRender();
-    render->Init(hDc, rect);
-    render->DrawRectangle(rect, nui::Ui::MakeArgb(255, 0, 255, 255));
-
-    g_Image->NextFrame();
-    render->DrawImage(g_Image, 0, 0);
-    NSize size = g_Image->GetSize();
-    render->DrawImage(g_Image, rect.Width() - size.Width, rect.Height() - size.Height);
-
-    NRect textRect(rect);
-
-    g_SingleLineText->SetColor(MakeArgb(255, 255, 0, 255));
-    render->DrawText(g_SingleLineText, textRect);
-
-    g_SingleLineText->SetColor(MakeArgb(255, 0, 0, 255));
-    textRect.Top += 40;
-    render->DrawText(g_SingleLineText, textRect);
-
-    textRect.Top -= 40;
-    g_MultipleLineText->SetVertCenter(true).SetHorzCenter(true);
-    render->DrawText(g_MultipleLineText, textRect);
-    g_MultipleLineText->SetVertCenter(false).SetHorzCenter(false);
-    render->DrawText(g_MultipleLineText, textRect);
-
-    render->DrawBack();
-
-    ::EndPaint(hWnd, &ps);
-
-    return true;
-}
-
-/*
-// demonstrate DrawShape
-bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
-{
-    if(message != WM_PAINT)
-        return false;
-
-    NRect rect;
-    ::GetClientRect(hWnd, reinterpret_cast<RECT*>(&rect));
-
-    PAINTSTRUCT ps = {0};
-    HDC hDc = ::BeginPaint(hWnd, &ps);
-
-    nui::Base::NAutoPtr<nui::Ui::NRender> render = NUiBus::Instance().GetRender();
-    render->Init(hDc, rect);
-
-    render->DrawRectangle(rect, nui::Ui::MakeArgb(255, 255, 255, 255));
-
-    for(int i=0; i<3; ++ i)
+    if(message == WM_KEYDOWN)
     {
-        for(int j=0; j<3; ++ j)
-        {
-            NRect rc(rect);
-            rc.Left = rect.Width() * i / 3;
-            rc.Right = rc.Left + rect.Width() / 3;
-            rc.Top = rect.Height() * j / 3;
-            rc.Bottom = rc.Top + rect.Height() / 3;
-
-            int index = i * 3 + j;
-            BYTE red = (index & 0x04) == 0x04 ? 255 : 0;
-            BYTE green = (index & 0x02) == 0x02 ? 255 : 0;
-            BYTE blue = (index & 0x01) == 0x01 ? 255 : 0;
-
-            for(int m=0; m<3; ++ m)
-            {
-                for(int n=0; n<3; ++ n)
-                {
-                    NRect r(rc);
-                    r.Left = rc.Left + rc.Width() * m / 3;
-                    r.Right = r.Left + rc.Width() / 3;
-                    r.Top = rc.Top + rc.Height() * n / 3;
-                    r.Bottom = r.Top + rc.Height() / 3;
-
-                    BYTE alpha = (m * 3 + n) * 255 / 9;
-                    render->DrawRectangle(r, nui::Ui::MakeArgb(alpha, red, green, blue));
-                }
-            }
-        }
+        ++ g_BorderWidth;
+        ::InvalidateRect(hWnd, NULL, TRUE);
     }
+    if(message != WM_PAINT)
+        return false;
 
-    render->DrawRectangle(rect, 4, nui::Ui::MakeArgb(255, 255, 255, 0));
+    NRect rect;
+    ::GetClientRect(hWnd, reinterpret_cast<RECT*>(&rect));
 
-    render->DrawBack();
+    PAINTSTRUCT ps = {0};
+    HDC hDc = ::BeginPaint(hWnd, &ps);
+
+    g_Render->Init(hDc, rect);
+
+    g_Render->FillRectangle(rect, nui::Ui::MakeArgb(255, 255, 255, 0));
+
+    NRect tmpRect(rect);
+    tmpRect.SetRect(0, 0, 310, 310);
+    g_Render->DrawRectangle(tmpRect, g_BorderWidth, MakeArgb(255, 255, 0, 0));
+    // g_Render->DrawRoundRectangle(tmpRect, 10, MakeArgb(255, 0, 255, 0));
+    g_Render->DrawRoundRectangle(tmpRect, g_BorderWidth, MakeArgb(100, 0, 255, 0), MakeArgb(254, 0, 255, 255));
+
+    NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+    Base::NString msg;
+    msg.Format(_T("Border: %d"), g_BorderWidth);
+    NAutoPtr<NText> text = loader->CreateText(msg);
+    text->SetHorzCenter(true).SetVertCenter(true);
+    g_Render->DrawText(text, tmpRect);
+
+    g_Render->DrawBack();
 
     ::EndPaint(hWnd, &ps);
 
     return true;
 }
-*/

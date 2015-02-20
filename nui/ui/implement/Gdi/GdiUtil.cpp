@@ -26,6 +26,7 @@ namespace Gdi
 
     void CGdiHolder::Hold(HGDIOBJ obj, bool needDelete)
     {
+        Destroy();
         needDelete_ = needDelete;
         obj_ = obj;
     }
