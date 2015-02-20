@@ -1,6 +1,9 @@
 #pragma once
 
 
+#include "NRenderDef.h"
+
+
 namespace nui
 {
     namespace Ui
@@ -20,11 +23,11 @@ namespace nui
 
             static NUiBus& Instance();
 
-            NRender* GetRender();
+            NRender* CreateRender();
             NResourceLoader* GetResourceLoader();
 
         private:
-            NRender* render_;
+            NRenderType::Type renderType_;
             NResourceLoader* loader_;
         };
     }

@@ -28,11 +28,14 @@ namespace nui
             void CenterWindow(HWND relativeWindow);
             void SetRect(const Base::NRect& rect);
 
+            void Invalidate();
+            void InvalidateRect(const Base::NRect& rect);
+
             HWND GetNative() const;
 
             LRESULT DoDefault(UINT message, WPARAM wParam, LPARAM lParam);
 
-        private:
+        protected:
             static LRESULT WINAPI _staticWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 

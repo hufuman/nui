@@ -2,33 +2,31 @@
 
 
 
-#include "../base/BaseObj.h"
 #include "NWindowBase.h"
+#include "NRender.h"
+#include "../base/NAutoPtr.h"
 
 namespace nui
 {
     namespace Ui
     {
-        class NUI_INTF NWindow : public Base::NBaseObj
+        class NUI_CLASS NWindow : public Base::NBaseObj, public NWindowBase
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("window"))
         public:
             NWindow();
             ~NWindow();
 
-            virtual bool Create(HWND parentWindow);
-            virtual void Destroy();
-            virtual bool DoModal(HWND parentWindow);
-            virtual void SetVisible(bool visible);
-            virtual void SetPos(int left, int top);
-            virtual void SetSize(int width, int height);
-            virtual void SetIcon(LPCTSTR iconPath);
+        protected:
+            virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+
+            virtual void OnSize(int width, int height);
+            virtual void OnDraw(NRender* render, const Base::NRect& clipRect);
 
         protected:
-            bool WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
-
-        protected:
-            NWindowBase window_;
+BEGIN_USE_UNEXPORT_TEMPLATE()
+            Base::NAutoPtr<NRender> render_;
+END_USE_UNEXPORT_TEMPLATE()
         };
     }
 }

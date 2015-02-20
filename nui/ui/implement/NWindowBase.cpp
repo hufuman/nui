@@ -164,6 +164,20 @@ namespace nui
                 ::SetWindowPos(window_, NULL, rect.Left, rect.Top, rect.Width(), rect.Height(), SWP_NOACTIVATE | SWP_NOZORDER);
         }
 
+        void NWindowBase::Invalidate()
+        {
+            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
+            if(window_ != NULL)
+                ::InvalidateRect(window_, NULL, TRUE);
+        }
+
+        void NWindowBase::InvalidateRect(const Base::NRect& rect)
+        {
+            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
+            if(window_ != NULL)
+                ::InvalidateRect(window_, rect, TRUE);
+        }
+
         void NWindowBase::SetText(LPCTSTR text)
         {
             NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetText"));

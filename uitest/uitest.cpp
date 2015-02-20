@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "uitest.h"
-#include "NWnd.h"
 
 nui::Base::NString GetResourcePath();
 bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
@@ -27,7 +26,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
 
-    g_Render = NUiBus::Instance().GetRender();
+    g_Render = NUiBus::Instance().CreateRender();
 
     g_Image = loader->LoadImage(_T("@skin:images\\3.gif"));
 
@@ -37,7 +36,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     g_MultipleLineText = loader->CreateText(_T("line\r\nfirst line\r\nsecond line\r\nthird line"));
     g_MultipleLineText->SetSingleLine(false).SetColor(MakeArgb(255, 0, 255, 0)).SetHorzCenter(true).SetVertCenter(true);
 
-    NWnd window;
+    NWindow window;
     window.SetMsgFilterCallback(PaintCallback);
     window.Create(NULL);
     window.SetSize(500, 400);
@@ -48,7 +47,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     {
         nui::Base::NHolder timer;
         NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
-        timer = timerSrv->startTimer(200, MakeDelegate(&window, &NWnd::Invalidate));
+        timer = timerSrv->startTimer(200, MakeDelegate(&window, &NWindow::Invalidate));
 
         nui::Ui::NMsgLoop loop;
         loop.Loop(window.GetNative());
@@ -80,6 +79,7 @@ nui::Base::NString GetResourcePath()
 
 bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
 {
+    return false;
     if(message == WM_KEYDOWN)
     {
         ++ g_BorderWidth;

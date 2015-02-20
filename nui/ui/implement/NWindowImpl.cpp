@@ -16,56 +16,100 @@ namespace nui
             ;
         }
 
-        // NWindow
-        bool NWindow::Create(HWND parentWindow)
-        {
-            UNREFERENCED_PARAMETER(parentWindow);
-            return false;
-        }
-
-        void NWindow::Destroy()
-        {
-            ;
-        }
-
-        bool NWindow::DoModal(HWND parentWindow)
-        {
-            UNREFERENCED_PARAMETER(parentWindow);
-            return false;
-        }
-
-        void NWindow::SetVisible(bool visible)
-        {
-            UNREFERENCED_PARAMETER(visible);
-        }
-
-        void NWindow::SetPos(int left, int top)
-        {
-            UNREFERENCED_PARAMETER(left);
-            UNREFERENCED_PARAMETER(top);
-        }
-
-        void NWindow::SetSize(int width, int height)
-        {
-            UNREFERENCED_PARAMETER(width);
-            UNREFERENCED_PARAMETER(height);
-        }
-
-        void NWindow::SetIcon(LPCTSTR iconPath)
-        {
-            UNREFERENCED_PARAMETER(iconPath);
-        }
-
         // WindowMsgFilter
-        bool NWindow::WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+        bool NWindow::OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
         {
-            UNREFERENCED_PARAMETER(window);
-            UNREFERENCED_PARAMETER(message);
-            UNREFERENCED_PARAMETER(wParam);
-            UNREFERENCED_PARAMETER(lParam);
-            UNREFERENCED_PARAMETER(lResult);
+            if(NWindowBase::OnMessage(message, wParam, lParam, lResult))
+                return true;
+
+            switch(message)
+            {
+            case WM_CREATE:
+                render_ = NUiBus::Instance().CreateRender();
+                break;
+            case WM_DESTROY:
+                render_ = NULL;
+                break;
+            case WM_ERASEBKGND:
+                lResult = 1;
+                return true;
+            case WM_NCACTIVATE:
+                {
+                    if(::IsIconic(window_))
+                        return false;
+                    lResult = (wParam == 0) ? TRUE : FALSE;
+                    return true;
+                }
+            case WM_NCHITTEST:
+                {
+                    lResult = HTCAPTION;
+                    return true;
+                }
+            case WM_NCPAINT:
+            case WM_NCCALCSIZE:
+                {
+                    lResult = 0;
+                    return true;
+                }
+            case WM_PAINT:
+                {
+                    PAINTSTRUCT ps = {0};
+                    HDC hDC = ::BeginPaint(window_, &ps);
+
+                    Base::NRect clientRect;
+                    ::GetClientRect(window_, clientRect);
+                    render_->Init(hDC, clientRect);
+
+                    Base::NRect clipRect;
+                    int nResult = GetClipBox(hDC, clipRect);
+                    if(nResult == NULLREGION)
+                        ::GetClientRect(window_, clipRect);
+                    OnDraw(render_, clipRect);
+
+                    render_->DrawBack();
+                    ::EndPaint(window_, &ps);
+                }
+                break;
+            case WM_PRINT:
+                {
+                    HDC hDC = (HDC)wParam;
+
+                    Base::NRect clientRect;
+                    ::GetClientRect(window_, clientRect);
+                    render_->Init(hDC, clientRect);
+
+                    Base::NRect clipRect;
+                    int nResult = GetClipBox(hDC, clipRect);
+                    if(nResult == NULLREGION)
+                        ::GetClientRect(window_, clipRect);
+                    OnDraw(render_, clipRect);
+
+                    render_->DrawBack();
+                }
+                break;
+            case WM_SIZE:
+                if(wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED)
+                {
+                    lResult = DoDefault(message, wParam, lParam);
+                    OnSize(LOWORD(lParam), HIWORD(lParam));
+                    return true;
+                }
+                break;
+            }
             return false;
         }
 
+        void NWindow::OnSize(int width, int height)
+        {
+            HRGN rgn = ::CreateRectRgn(0, 0, width, height);
+            if(rgn != NULL)
+                ::SetWindowRgn(GetNative(), rgn, FALSE);
+        }
+
+        void NWindow::OnDraw(NRender* render, const Base::NRect& clipRect)
+        {
+            // test
+            render->FillRectangle(clipRect, Ui::MakeArgb(255, 255, 255, 0));
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace nui
     {
         NUiBus::NUiBus()
         {
-            render_ = NULL;
             loader_ = NULL;
         }
 
@@ -22,30 +21,25 @@ namespace nui
         {
             Destroy();
 
-            render_ = NULL;
+            renderType_ = type;
+
             loader_ = NULL;
 
-            switch(type)
+            switch(renderType_)
             {
             case NRenderType::GdiRender:
-                render_ = dynamic_cast<NRender*>(NNew(GdiRender));
-                render_ ->AddRef();
                 loader_ = dynamic_cast<NResourceLoader*>(NNew(GdiResourceLoader));
                 loader_->AddRef();
                 break;
             }
-            NAssertError(render_ != NULL, TEXT("unknown type of RenderType: %d"), type);
-            NAssertError(loader_ != NULL, TEXT("unknown type of LoaderType: %d"), type);
+            NAssertError(loader_ != NULL, TEXT("unknown type of LoaderType: %d"), renderType_);
         }
 
         void NUiBus::Destroy()
         {
-            if(render_)
-                render_->Release();
             if(loader_)
                 loader_->Release();
 
-            render_ = NULL;
             loader_ = NULL;
         }
 
@@ -56,10 +50,17 @@ namespace nui
         }
 
 
-        NRender* NUiBus::GetRender()
+        NRender* NUiBus::CreateRender()
         {
-            NAssertError(render_ != NULL, _T("render_ is NULL in NUiBus::GetRender"));
-            return render_;
+            NRender* render = NULL;
+            switch(renderType_)
+            {
+            case NRenderType::GdiRender:
+                render = dynamic_cast<GdiRender*>(NNew(GdiRender));
+                break;
+            }
+            NAssertError(render != NULL, TEXT("unknown type of RenderType: %d"), renderType_);
+            return render;
         }
 
         NResourceLoader* NUiBus::GetResourceLoader()
