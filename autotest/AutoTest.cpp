@@ -5,8 +5,7 @@
 #include "TestUtil.h"
 
 
-#include "TestFrame.h"
-/*
+
 // Base
 #include "TestDataTypes.h"
 #include "TestReflect.h"
@@ -27,10 +26,11 @@
 #include "TestFileUtil.h"
 
 // Ui
+#include "TestFrame.h"
 #include "TestMsgLoop.h"
 #include "TestWindowBase.h"
 #include "TestTimerSrv.h"
-*/
+
 
 int _tmain(int argc, _TCHAR* argv[])
 {

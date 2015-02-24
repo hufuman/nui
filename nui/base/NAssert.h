@@ -28,8 +28,8 @@ private:
 
 #else
 
-#define NAssertEnable(enable)           __noop
-#define NAssertError(exp, format, ...)  __noop
+#define NAssertEnable(enable)           (!!enable)
+#define NAssertError(exp, format, ...)  (!!(exp))
 #define NAssertTempDisable()            __noop
 
 #endif
