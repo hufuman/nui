@@ -18,7 +18,9 @@
 
 
 #include <map>
+#include <list>
 #include <string>
+#include <algorithm>
 #include <functional>
 
 #include <CommCtrl.h>

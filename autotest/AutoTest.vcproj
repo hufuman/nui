@@ -279,6 +279,10 @@
 			Name="ui"
 			>
 			<File
+				RelativePath=".\TestFrame.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestMsgLoop.h"
 				>
 			</File>
