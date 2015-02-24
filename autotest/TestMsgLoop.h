@@ -9,10 +9,9 @@ public:
         count_ = 0;
     }
 
-    bool OnIdle(int idleCount)
+    void OnIdle(int idleCount)
     {
         ++ count_;
-        return count_ != 2;
     }
 
     bool TestWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
@@ -54,7 +53,7 @@ TEST_F(TestMsgLoop, NoWindow)
     ::CloseHandle(reinterpret_cast<HANDLE>(::_beginthreadex(0, 0, &TestMsgLoop::TestThreadProc, reinterpret_cast<void*>(::GetCurrentThreadId()),0, 0)));
     ASSERT_TRUE(loop.Loop());
 
-    ASSERT_EQ(count_, 4);
+    ASSERT_TRUE(count_ >= 3);
 }
 
 TEST_F(TestMsgLoop, Window)
@@ -66,10 +65,10 @@ TEST_F(TestMsgLoop, Window)
     nui::Ui::NWindowBase window;
     nui::Base::NRect rect(0, 0, 20, 20);
     window.SetMsgFilterCallback(MakeDelegate(this, &TestMsgLoop::TestWndProc));
-    ASSERT_TRUE(window.Create(NULL, _T("TestText"), rect));
+    ASSERT_TRUE(window.Create(NULL));
 
     ::CloseHandle(reinterpret_cast<HANDLE>(::_beginthreadex(0, 0, &TestMsgLoop::TestThreadProc, reinterpret_cast<void*>(window.GetNative()),0, 0)));
     ASSERT_TRUE(loop.Loop(window.GetNative()));
 
-    ASSERT_EQ(count_, 4);
+    ASSERT_TRUE(count_ >= 3);
 }

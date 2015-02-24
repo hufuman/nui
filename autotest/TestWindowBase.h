@@ -27,6 +27,7 @@ public:
             {
                 ::KillTimer(hWnd, timerId_);
                 ::DestroyWindow(hWnd);
+                return true;
             }
             break;
         }
@@ -44,7 +45,7 @@ TEST_F(TestWindowBase, Modaless)
     nui::Ui::NWindowBase window;
     window.SetMsgFilterCallback(MakeDelegate(this, &TestWindowBase::TestWndProc));
     NRect rect(0, 0, 100, 100);
-    ASSERT_TRUE(window.Create(NULL, _T("TestWindowText"), rect));
+    ASSERT_TRUE(window.Create(NULL));
     MSG msg;
     while(::GetMessage(&msg, NULL, 0, 0))
     {
@@ -62,7 +63,7 @@ TEST_F(TestWindowBase, Modal)
     nui::Ui::NWindowBase window;
     window.SetMsgFilterCallback(MakeDelegate(this, &TestWindowBase::TestWndProc));
     NRect rect(0, 0, 100, 100);
-    ASSERT_TRUE(window.DoModal(NULL, _T("TestWindowText"), rect));
+    ASSERT_TRUE(window.DoModal(NULL));
     ASSERT_EQ(window.GetNative(), static_cast<HWND>(NULL));
     ASSERT_EQ(count_, 11);
     ASSERT_EQ(timerId_, 0);

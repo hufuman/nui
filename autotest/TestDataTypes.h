@@ -116,6 +116,6 @@ TEST_F(TestDataTypes, Rect)
     NRect rect8;
     rect8.Left = testX;
     rect8.Top = testY;
-    rect8.SeNSize(testWidth, testHeight);
+    rect8.SetSize(testWidth, testHeight);
     EXPECT_EQ(rect8, rect7);
 }
