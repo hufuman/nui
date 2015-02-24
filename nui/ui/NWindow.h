@@ -4,6 +4,8 @@
 
 #include "NWindowBase.h"
 #include "NRender.h"
+#include "NFrame.h"
+#include "../base/NInstPtr.h"
 #include "../base/NAutoPtr.h"
 
 namespace nui
@@ -17,6 +19,9 @@ namespace nui
             NWindow();
             ~NWindow();
 
+            NFrame* GetRootFrame() const;
+            NRender* GetRender() const;
+
         protected:
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
@@ -24,9 +29,11 @@ namespace nui
             virtual void OnDraw(NRender* render, const Base::NRect& clipRect);
 
         protected:
-BEGIN_USE_UNEXPORT_TEMPLATE()
+
+        BEGIN_USE_UNEXPORT_TEMPLATE()
+            Base::NInstPtr<NFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;
-END_USE_UNEXPORT_TEMPLATE()
+        END_USE_UNEXPORT_TEMPLATE()
         };
     }
 }

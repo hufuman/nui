@@ -22,6 +22,8 @@ namespace nui
             virtual void DrawText(NText* text, const Base::NRect& rect);
             virtual void GetTextSize(NText* text, Base::NRect& rect);
 
+            virtual bool IsRectVisible(const Base::NRect& rect);
+            virtual void OffsetRender(int xOffset, int yOffset);
         protected:
             void FillRectImpl(HDC hDc, const Base::NRect& rect, ArgbColor fillColor);
             void DrawRectImpl(HDC hDc, const Base::NRect& rect, int width, ArgbColor borderColor);

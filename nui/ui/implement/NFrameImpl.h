@@ -2,6 +2,7 @@
 
 
 #include "../NFrame.h"
+#include "../../base/NAutoPtr.h"
 #include "../../data/NArrayT.h"
 
 namespace nui
@@ -11,10 +12,21 @@ namespace nui
         class NFrameImpl : public nui::Ui::NFrame
         {
             typedef std::list<NFrameImpl*> FrameList;
+
+            enum Flag
+            {
+                FlagNone        = 0x0000,
+                FlagVisible     = 0x0001,
+                FlagEnabled     = 0x0002,
+                FlagAutoSize    = 0x0004,
+                FlagValid       = 0x0008,
+            };
+
         public:
             NFrameImpl();
             ~NFrameImpl();
 
+            // childs manipulations
             virtual bool AddChild(NFrame* child);
             virtual bool RemoveChild(NFrame* child);
             virtual void RemoveAllChilds();
@@ -26,15 +38,53 @@ namespace nui
 
             virtual NFrame* GetParent() const;
 
+            // flags
+            virtual void SetVisible(bool visible);
+            virtual bool IsVisible() const;
+            virtual void SetEnabled(bool enabled);
+            virtual bool IsEnabled() const;
+            virtual void SetAutoSize(bool autosize);
+            virtual bool IsAutoSize() const;
+            virtual void SetValid(bool valid);
+            virtual bool IsValid() const;
+
+            // data
+            virtual void SetText(const Base::NString& text);
+            virtual Base::NString GetText() const;
+
+            // pos / size
+            virtual const Base::NRect& GetRect() const;
+            virtual Base::NRect GetRootRect() const;
+            virtual void AutoSize();
+            virtual void SetPos(int left, int top);
+            virtual void SetSize(int width, int height);
+            virtual void SetMinSize(int minWidth, int minHeight);
+
+            // draw
+            virtual void Invalidate();
+            virtual void Draw(NRender* render, const Base::NRect& clipRect);
+
+        protected:
+            virtual void OnParentChanged();
+
         private:
-            static void SetParentHelper(NFrameImpl* childImpl, NFrame* newParent);
+            static void SetParentHelper(NFrameImpl* childImpl, NFrameImpl* newParent);
             FrameList::const_iterator GetChildHelper(NFrameImpl* childImpl, size_t& zorder) const;
 
         private:
             size_t topMostCount_;
             size_t bottomMostCount_;
-            NFrame* parentFrame_;
+            NFrameImpl* parentFrame_;
             FrameList childs_;
+
+            Base::NAutoPtr<NWindow> window_;
+
+            // NFrameImpl::Flag
+            DWORD frameFlags_;
+
+            Base::NAutoPtr<NText> text_;
+            Base::NRect frameRect_;
+            Base::NSize minSize_;
         };
     }
 }

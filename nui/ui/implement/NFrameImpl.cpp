@@ -13,6 +13,7 @@ namespace nui
             parentFrame_ = NULL;
             topMostCount_ = 0;
             bottomMostCount_ = 0;
+            frameFlags_ = FlagNone;
         }
 
         NFrameImpl::~NFrameImpl()
@@ -68,6 +69,7 @@ namespace nui
             {
                 NFrameImpl*& child = *ite;
                 NSafeRelease(child->parentFrame_);
+                child->OnParentChanged();
                 child->Release();
                 ++ ite;
             }
@@ -187,8 +189,168 @@ namespace nui
             return parentFrame_;
         }
 
-        void NFrameImpl::SetParentHelper(NFrameImpl* childImpl, NFrame* newParent)
+        void NFrameImpl::SetVisible(bool visible)
         {
+            if(visible == IsVisible())
+                return;
+            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagVisible, visible);
+            Invalidate();
+        }
+
+        bool NFrameImpl::IsVisible() const
+        {
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagVisible);
+        }
+
+        void NFrameImpl::SetEnabled(bool enabled)
+        {
+            if(enabled == IsEnabled())
+                return;
+            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagEnabled, enabled);
+            Invalidate();
+        }
+
+        bool NFrameImpl::IsEnabled() const
+        {
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagEnabled);
+        }
+
+        void NFrameImpl::SetAutoSize(bool autosize)
+        {
+            if(autosize == IsAutoSize())
+                return;
+            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagAutoSize, autosize);
+            if(autosize)
+                AutoSize();
+        }
+
+        bool NFrameImpl::IsAutoSize() const
+        {
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagAutoSize);
+        }
+
+        void NFrameImpl::SetValid(bool valid)
+        {
+            if(valid == IsValid())
+                return;
+            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagValid, valid);
+            Invalidate();
+        }
+
+        bool NFrameImpl::IsValid() const
+        {
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagValid);
+        }
+
+        void NFrameImpl::SetText(const Base::NString& text)
+        {
+            if(text_->GetText() == text)
+                return;
+            text_->SetText(text);
+            Invalidate();
+        }
+
+        Base::NString NFrameImpl::GetText() const
+        {
+            return text_->GetText();
+        }
+
+        const Base::NRect& NFrameImpl::GetRect() const
+        {
+            return frameRect_;
+        }
+
+        Base::NRect NFrameImpl::GetRootRect() const
+        {
+            Base::NRect result = frameRect_;
+            if(parentFrame_ != NULL)
+            {
+                Base::NRect parentRect = parentFrame_->GetRootRect();
+                result.Offset(parentRect.Left, parentRect.Top);
+            }
+            return result;
+        }
+
+        void NFrameImpl::AutoSize()
+        {
+            NAssertError(window_ != NULL, _T("window is null"));
+            if(!window_)
+                return;
+            Base::NRect txtRect;
+            window_->GetRender()->GetTextSize(text_, txtRect);
+            SetSize(txtRect.Width(), txtRect.Height());
+        }
+
+        void NFrameImpl::SetPos(int left, int top)
+        {
+            if(frameRect_.Left == left && frameRect_.Top == top)
+                return;
+            frameRect_.Left = left;
+            frameRect_.Top = top;
+            Invalidate();
+        }
+
+        void NFrameImpl::SetSize(int width, int height)
+        {
+            int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
+            int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
+            if(frameRect_.Width() == width && frameRect_.Height() == height)
+                return;
+
+            frameRect_.SetSize(frameWidth, frameHeight);
+            Invalidate();
+        }
+
+        void NFrameImpl::SetMinSize(int minWidth, int minHeight)
+        {
+            minSize_.Width = minWidth;
+            minSize_.Height = minHeight;
+        }
+
+        void NFrameImpl::Invalidate()
+        {
+            if(!window_)
+                return;
+            Base::NRect rootRect = GetRootRect();
+            window_->InvalidateRect(rootRect);
+        }
+
+        void NFrameImpl::Draw(NRender* render, const Base::NRect& clipRect)
+        {
+            if(!IsVisible() || !IsValid())
+                return;
+
+            if(!clipRect.Intersect(clipRect))
+                return;
+
+            Base::NRect newClipRect(clipRect);
+            newClipRect.Offset(frameRect_.Left, frameRect_.Top);
+
+            render->OffsetRender(frameRect_.Left, frameRect_.Top);
+            if(render->IsRectVisible(frameRect_))
+            {
+                FrameList::const_iterator ite = childs_.begin();
+                for(; ite != childs_.end(); ++ ite)
+                {
+                    NFrameImpl* const & childImpl = *ite;
+                    childImpl->Draw(render, clipRect);
+                }
+            }
+            render->OffsetRender(- frameRect_.Left, - frameRect_.Top);
+        }
+
+        void NFrameImpl::OnParentChanged()
+        {
+            if(window_)
+                window_ = NULL;
+            if(parentFrame_)
+                window_ = parentFrame_->window_;
+        }
+
+        void NFrameImpl::SetParentHelper(NFrameImpl* childImpl, NFrameImpl* newParent)
+        {
+            if(newParent == childImpl->parentFrame_)
+                return;
             NAssertError(childImpl != NULL, _T("wrong type"));
 
             if(childImpl->parentFrame_ != NULL)
@@ -206,6 +368,7 @@ namespace nui
                 newParent->AddRef();
                 childImpl->AddRef();
             }
+            childImpl->OnParentChanged();
         }
 
         NFrameImpl::FrameList::const_iterator NFrameImpl::GetChildHelper(NFrameImpl* childImpl, size_t& zorder) const

@@ -54,6 +54,7 @@ using namespace fastdelegate;
 #include "./data/NFileSystem.h"
 
 #include "./util/NFileUtil.h"
+#include "./util/NMisc.h"
 
 #include "./ui/NRenderDef.h"
 #include "./ui/NMsgLoop.h"

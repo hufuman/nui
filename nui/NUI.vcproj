@@ -441,6 +441,10 @@
 				RelativePath=".\util\NFileUtil.h"
 				>
 			</File>
+			<File
+				RelativePath=".\util\NMisc.h"
+				>
+			</File>
 			<Filter
 				Name="implement"
 				>

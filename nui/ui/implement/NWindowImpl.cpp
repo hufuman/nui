@@ -7,6 +7,7 @@ namespace nui
     namespace Ui
     {
         NWindow::NWindow()
+            : rootFrame_(InstPtrParam)
         {
             ;
         }
@@ -14,6 +15,16 @@ namespace nui
         NWindow::~NWindow()
         {
             ;
+        }
+
+        NFrame* NWindow::GetRootFrame() const
+        {
+            return rootFrame_;
+        }
+
+        NRender* NWindow::GetRender() const
+        {
+            return render_;
         }
 
         // WindowMsgFilter
@@ -108,8 +119,7 @@ namespace nui
 
         void NWindow::OnDraw(NRender* render, const Base::NRect& clipRect)
         {
-            // test
-            render->FillRectangle(clipRect, Ui::MakeArgb(255, 255, 255, 0));
+            rootFrame_->Draw(render, clipRect);
         }
     }
 }

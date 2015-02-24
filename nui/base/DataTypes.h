@@ -142,6 +142,21 @@ namespace nui
                 return *this;
             }
 
+            bool Intersect(const NRect& rect) const
+            {
+                // center to center
+                int w1 = (Left + Right);
+                int h1 = (Top + Bottom);
+                int w2 = (rect.Left + rect.Right);
+                int h2 = (rect.Top + rect.Bottom);
+                int x1 = w1 / 2 + Left;
+                int y1 = h1 / 2 + Top;
+                int x2 = w2 / 2 + rect.Left;
+                int y2 = h2 / 2 + rect.Top;
+                return (std::abs(x1 - x2) <= (w1 + w2) / 2)
+                    && (std::abs(y1 - y2) <= (h1 + h2) / 2);
+            }
+
             NRect& SetRect(INT left, INT top, INT right, INT bottom)
             {
                 Left = left;
