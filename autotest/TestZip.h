@@ -27,10 +27,10 @@ public:
 
         LPCTSTR relativePath[] =
         {
-            _T("Data/1/11/111.txt"),
-            _T("Data/1/11.txt"),
-            _T("Data/2/22/222.txt"),
-            _T("Data/2/22.txt"),
+            _T("1/11/111.txt"),
+            _T("1/11.txt"),
+            _T("2/22/222.txt"),
+            _T("2/22.txt"),
         };
 
         ASSERT_FALSE(zip1->IsFileExists(_T("asdfasfd")));
@@ -152,6 +152,8 @@ TEST_F(TestZip, Zip)
     NString correctFile = TestUtil::GetTestFile(_T("Zip\\Data.zip"));
     NString zip1File = TestUtil::GetTestFile(_T("Temp\\Zip1.zip"));
     NString zip2File = TestUtil::GetTestFile(_T("Temp\\Zip2.zip"));
+
+    ::CreateDirectory(TestUtil::GetTestFile(_T("Temp")), NULL);
 
     ASSERT_TRUE(!nui::Util::File::IsFileExists(zip1File.GetData()) || ::DeleteFile(zip1File.GetData()));
     ASSERT_TRUE(!nui::Util::File::IsFileExists(zip2File.GetData()) || ::DeleteFile(zip2File.GetData()));

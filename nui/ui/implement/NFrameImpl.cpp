@@ -184,6 +184,22 @@ namespace nui
             return true;
         }
 
+        NFrame* NFrameImpl::GetChildById(const Base::NString& id)
+        {
+            if(frameId_ == id)
+                return this;
+
+            FrameList::const_iterator ite = childs_.begin();
+            while(ite != childs_.end())
+            {
+                NFrameImpl* childImpl = *ite;
+                if(childImpl->GetChildById(id))
+                    return childImpl;
+                ++ ite;
+            }
+            return NULL;
+        }
+
         NFrame* NFrameImpl::GetParent() const
         {
             return parentFrame_;
@@ -253,6 +269,16 @@ namespace nui
         Base::NString NFrameImpl::GetText() const
         {
             return text_->GetText();
+        }
+
+        void NFrameImpl::SetId(const Base::NString& id)
+        {
+            frameId_ = id;
+        }
+
+        Base::NString NFrameImpl::GetId() const
+        {
+            return frameId_;
         }
 
         const Base::NRect& NFrameImpl::GetRect() const

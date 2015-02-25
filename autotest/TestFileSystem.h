@@ -78,8 +78,16 @@ TEST_F(TestFileSystem, RealFS)
 
 TEST_F(TestFileSystem, PackFS)
 {
+    NString xfPath = TestUtil::GetTestFile(_T("Temp\\pack.xf"));
+    if(File::IsFileExists(xfPath))
+        ASSERT_TRUE(!!::DeleteFile(xfPath));
+
+    NInstPtr<NZip> zip(InstPtrParam);
+    NString folderPath = TestUtil::GetTestFile(_T("Resource\\Package\\"));
+    ASSERT_TRUE(zip->ZipFolder(folderPath, xfPath));
+
     nui::Base::NInstPtr<nui::Data::NFileSystem> fs(InstPtrParam);
-    NString package = TestUtil::GetTestFile(_T("Resource\\pack"));
+    NString package = TestUtil::GetTestFile(_T("Temp\\pack"));
     ASSERT_TRUE(fs->Init(package.GetData()));
     TestImpl(fs);
 }

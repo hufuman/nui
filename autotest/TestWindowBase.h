@@ -12,6 +12,9 @@ public:
 
     bool TestWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
     {
+        UNREFERENCED_PARAMETER(lResult);
+        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wParam);
         switch(message)
         {
         case WM_CREATE:

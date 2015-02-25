@@ -12,10 +12,15 @@ public:
     void OnIdle(int idleCount)
     {
         ++ count_;
+        UNREFERENCED_PARAMETER(idleCount);
     }
 
     bool TestWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
     {
+        UNREFERENCED_PARAMETER(message);
+        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lResult);
         if(message == WM_NULL)
         {
             ::DestroyWindow(hWnd);
