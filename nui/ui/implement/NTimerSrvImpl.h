@@ -30,7 +30,7 @@ namespace nui
             Base::NHolder startTimerImpl(int elapse, NTimerCallback callback, bool isOnce);
             void stopTimer(UINT_PTR timerId);
 
-            bool TimerWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+            bool TimerWindowProc(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
         private:
             typedef std::map<UINT_PTR, TimerData> TimerMap;

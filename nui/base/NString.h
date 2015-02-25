@@ -72,6 +72,7 @@ namespace nui
             int GetLength() const;
 
             NString& Format(LPCTSTR szFormat, ...);
+            NString& FormatArgs(LPCTSTR szFormat, va_list& args);
 
             bool Tokenize(int& position, LPCTSTR szSplitter, bool includeEmpty, NString& token) const;
 

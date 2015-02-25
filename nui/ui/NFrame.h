@@ -28,7 +28,7 @@ namespace nui
             virtual void SetChildTopmost(NFrame* child) = 0;
             virtual void SetChildBottommost(NFrame* child) = 0;
             virtual bool EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const = 0;
-            virtual NFrame* GetChildById(const Base::NString& id) = 0;
+            virtual NFrame* GetChildById(const Base::NString& id, bool recursive) = 0;
 
             virtual NFrame* GetParent() const = 0;
 

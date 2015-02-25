@@ -7,7 +7,6 @@ namespace nui
     namespace Ui
     {
         NWindow::NWindow()
-            : rootFrame_(InstPtrParam)
         {
             ;
         }
@@ -17,8 +16,13 @@ namespace nui
             ;
         }
 
-        NFrame* NWindow::GetRootFrame() const
+        NFrame* NWindow::GetRootFrame()
         {
+            if(rootFrame_ == NULL)
+            {
+                Base::NInstPtr<NFrame> rootFrame(InstPtrParam);
+                rootFrame_ = (NFrame*)rootFrame;
+            }
             return rootFrame_;
         }
 
@@ -40,6 +44,7 @@ namespace nui
                 break;
             case WM_DESTROY:
                 render_ = NULL;
+                rootFrame_ = NULL;
                 break;
             case WM_ERASEBKGND:
                 lResult = 1;
@@ -119,7 +124,8 @@ namespace nui
 
         void NWindow::OnDraw(NRender* render, const Base::NRect& clipRect)
         {
-            rootFrame_->Draw(render, clipRect);
+            if(rootFrame_ != NULL)
+                rootFrame_->Draw(render, clipRect);
         }
     }
 }

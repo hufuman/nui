@@ -19,7 +19,7 @@ namespace nui
             NWindow();
             ~NWindow();
 
-            NFrame* GetRootFrame() const;
+            NFrame* GetRootFrame();
             NRender* GetRender() const;
 
         protected:
@@ -31,7 +31,7 @@ namespace nui
         protected:
 
         BEGIN_USE_UNEXPORT_TEMPLATE()
-            Base::NInstPtr<NFrame> rootFrame_;
+            Base::NAutoPtr<NFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;
         END_USE_UNEXPORT_TEMPLATE()
         };

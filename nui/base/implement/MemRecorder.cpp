@@ -92,30 +92,30 @@ namespace nui
             if(mapAllocLog_.size() <= 0)
                 return;
 
-            printf("\r\n\r\n//////////////////////////////////////////////////////////////////////////\r\n\r\n");
-            printf("Skin Memory Leak Detected: \r\n");
-            NAssertError(false, _T("Skin Memory Leak Detected: \r\n"));
+            wprintf(L"\r\n\r\n//////////////////////////////////////////////////////////////////////////\r\n\r\n");
+            wprintf(L"Skin Memory Leak Detected: \r\n");
 
             size_t nIndex = 0;
-            char logBuffer[4096];
+            wchar_t logBuffer[4096];
+            Base::NString msg(_T("Skin Memory Leak Detected:\r\n\r\n"));
             AllocLogIter iter = mapAllocLog_.begin();
             for(; iter != mapAllocLog_.end(); ++ iter)
             {
                 const void* const & pData = iter->first;
                 const stAllocLog& log = iter->second;
-                const char* memTypeName = "unknown";
+                const wchar_t* memTypeName = L"unknown";
                 if(log.memType == nui::Base::MemTypeMalloc)
-                    memTypeName = "malloc";
+                    memTypeName = L"malloc";
                 else if(log.memType == nui::Base::MemTypeNew)
-                    memTypeName = "new";
+                    memTypeName = L"new";
                 else if(log.memType == nui::Base::MemTypeNewArray)
-                    memTypeName = "newArray";
-                _snprintf(logBuffer,
+                    memTypeName = L"newArray";
+                _snwprintf(logBuffer,
                     _countof(logBuffer),
-                    "  %4d  Ptr: 0x%p\r\n"
-                    "        TypeName: %s, Size: %d, Count: %d\r\n"
-                    "        FilePath: %s, Line: %d\r\n"
-                    "        Type: %s\r\n\r\n",
+                    L"  %4d  Ptr: 0x%p\r\n"
+                    L"        TypeName: %S, Size: %d, Count: %d\r\n"
+                    L"        FilePath: %S, Line: %d\r\n"
+                    L"        Type: %s\r\n\r\n",
                     nIndex,
                     pData,
                     log.typeName.c_str(),
@@ -124,9 +124,12 @@ namespace nui
                     log.filePath.c_str(),
                     log.line,
                     memTypeName);
-                printf(logBuffer);
+                msg += logBuffer;
+                wprintf(logBuffer);
                 ++ nIndex;
             }
+            LPCTSTR msgContent = (LPCTSTR)msg;
+            NAssertError(false, _T("%s"), msgContent);
         }
 
         void NMemRecorder::ReleaseMemChecker()

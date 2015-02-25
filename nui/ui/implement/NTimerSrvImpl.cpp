@@ -72,7 +72,7 @@ namespace nui
             ::KillTimer(window_.GetNative(), timerId);
         }
 
-        bool NTimerSrvImpl::TimerWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+        bool NTimerSrvImpl::TimerWindowProc(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
         {
             UNREFERENCED_PARAMETER(lParam);
             UNREFERENCED_PARAMETER(lResult);
@@ -83,7 +83,7 @@ namespace nui
                 return false;
             TimerData& data = ite->second;
             if(data.isOnceTimer)
-                ::KillTimer(hWnd, wParam);
+                ::KillTimer(window->GetNative(), wParam);
             NTimerCallback callback = data.callback;
             if(data.isOnceTimer)
                 timerMap_.erase(ite);
