@@ -9,6 +9,16 @@ namespace nui
 {
     namespace Ui
     {
+        /**
+         *note: child don't increase refCount of parent
+         * consider such situation:
+         *  NInstPtr<NFrame> parent;
+         *  NInstPtr<NFrame> child;
+         *  parent->AddChild(child);
+         *  parent = NULL;
+         *  Expect: these two NFrames are released.
+         *  In fact, they are not, because refCount of them are 1 at last.
+         */
         class NFrameImpl : public nui::Ui::NFrame
         {
             typedef std::list<NFrameImpl*> FrameList;
@@ -35,6 +45,7 @@ namespace nui
             virtual void SetChildTopmost(NFrame* child);
             virtual void SetChildBottommost(NFrame* child);
             virtual bool EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const;
+            virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
 
             virtual NFrame* GetParent() const;
 
@@ -51,6 +62,8 @@ namespace nui
             // data
             virtual void SetText(const Base::NString& text);
             virtual Base::NString GetText() const;
+            virtual void SetId(const Base::NString& id);
+            virtual Base::NString GetId() const;
 
             // pos / size
             virtual const Base::NRect& GetRect() const;
@@ -82,6 +95,7 @@ namespace nui
             // NFrameImpl::Flag
             DWORD frameFlags_;
 
+            Base::NString frameId_;
             Base::NAutoPtr<NText> text_;
             Base::NRect frameRect_;
             Base::NSize minSize_;

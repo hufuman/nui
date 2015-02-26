@@ -25,6 +25,22 @@ public:
 protected:
 };
 
+TEST_F(TestFrame, FrameTree)
+{
+    NInstPtr<NFrame> level1(InstPtrParam);
+    NInstPtr<NFrame> level2(InstPtrParam);
+    NInstPtr<NFrame> level3(InstPtrParam);
+    NInstPtr<NFrame> level4(InstPtrParam);
+    NInstPtr<NFrame> level5(InstPtrParam);
+
+    level1->AddChild(level2);
+    level2->AddChild(level3);
+    level3->AddChild(level4);
+    level4->AddChild(level5);
+
+    level1 = NULL;
+}
+
 TEST_F(TestFrame, AddRemoveChilds)
 {
     NInstPtr<NFrame> parent1(InstPtrParam);
@@ -155,4 +171,50 @@ TEST_F(TestFrame, ZOrder)
 
     parent->RemoveAllChilds();
     EXPECT_EQ(0, GetChildCount(parent));
+}
+
+TEST_F(TestFrame, Id)
+{
+    NInstPtr<NFrame> parent(InstPtrParam);
+    NInstPtr<NFrame> child1(InstPtrParam);
+    NInstPtr<NFrame> child2(InstPtrParam);
+    NInstPtr<NFrame> grandson(InstPtrParam);
+
+    parent->AddChild(child1);
+    parent->AddChild(child2);
+    child1->AddChild(grandson);
+
+    NString parentId;
+    parentId.Format(_T("ParentId%d"), rand());
+    parent->SetId(parentId);
+    EXPECT_EQ(parentId, parent->GetId());
+
+    NString childId1;
+    childId1.Format(_T("ChildId1%d"), rand());
+    child1->SetId(childId1);
+    EXPECT_EQ(childId1, child1->GetId());
+
+    NString childId2;
+    childId2.Format(_T("ChildId2%d"), rand());
+    child2->SetId(childId2);
+    EXPECT_EQ(childId2, child2->GetId());
+
+    NString grandsonId;
+    grandsonId.Format(_T("grandsonId%d"), rand());
+    grandson->SetId(grandsonId);
+    EXPECT_EQ(grandsonId, grandson->GetId());
+
+    EXPECT_EQ(parent->GetChildById(parentId, false), parent);
+    EXPECT_EQ(parent->GetChildById(parentId, true), parent);
+
+    EXPECT_EQ(parent->GetChildById(childId1, false), child1);
+    EXPECT_EQ(parent->GetChildById(childId1, true), child1);
+
+    EXPECT_EQ(parent->GetChildById(childId2, false), child2);
+    EXPECT_EQ(parent->GetChildById(childId2, true), child2);
+
+    EXPECT_EQ(parent->GetChildById(grandsonId, false), static_cast<NFrame*>(NULL));
+    EXPECT_EQ(parent->GetChildById(grandsonId, true), grandson);
+
+    parent = NULL;
 }

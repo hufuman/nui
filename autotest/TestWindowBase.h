@@ -10,8 +10,12 @@ public:
         timerId_ = 2024;
     }
 
-    bool TestWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+    bool TestWndProc(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
     {
+        HWND hWnd = window->GetNative();
+        UNREFERENCED_PARAMETER(lResult);
+        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wParam);
         switch(message)
         {
         case WM_CREATE:

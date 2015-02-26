@@ -13,12 +13,12 @@ namespace nui
             parentFrame_ = NULL;
             topMostCount_ = 0;
             bottomMostCount_ = 0;
-            frameFlags_ = FlagNone;
+            frameFlags_ = FlagVisible | FlagValid;
         }
 
         NFrameImpl::~NFrameImpl()
         {
-            NSafeRelease(parentFrame_);
+            parentFrame_ = NULL;
             RemoveAllChilds();
         }
 
@@ -68,7 +68,7 @@ namespace nui
             while(ite != childs_.end())
             {
                 NFrameImpl*& child = *ite;
-                NSafeRelease(child->parentFrame_);
+                child->parentFrame_ = NULL;
                 child->OnParentChanged();
                 child->Release();
                 ++ ite;
@@ -184,6 +184,31 @@ namespace nui
             return true;
         }
 
+        NFrame* NFrameImpl::GetChildById(const Base::NString& id, bool recursive)
+        {
+            if(frameId_ == id)
+                return this;
+
+            FrameList::const_iterator ite = childs_.begin();
+            while(ite != childs_.end())
+            {
+                NFrameImpl* childImpl = *ite;
+                if(recursive)
+                {
+                    NFrame* result = childImpl->GetChildById(id, recursive);
+                    if(result != NULL)
+                        return result;
+                }
+                else
+                {
+                    if(childImpl->frameId_ == id)
+                        return childImpl;
+                }
+                ++ ite;
+            }
+            return NULL;
+        }
+
         NFrame* NFrameImpl::GetParent() const
         {
             return parentFrame_;
@@ -244,15 +269,34 @@ namespace nui
 
         void NFrameImpl::SetText(const Base::NString& text)
         {
-            if(text_->GetText() == text)
+            if(text.IsEmpty() && text_  == NULL)
                 return;
-            text_->SetText(text);
+            if(text_ == NULL)
+            {
+                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(text);
+            }
+            else
+            {
+                if(text_->GetText() == text)
+                    return;
+                text_->SetText(text);
+            }
             Invalidate();
         }
 
         Base::NString NFrameImpl::GetText() const
         {
-            return text_->GetText();
+            return text_ == NULL ? _T("") : text_->GetText();
+        }
+
+        void NFrameImpl::SetId(const Base::NString& id)
+        {
+            frameId_ = id;
+        }
+
+        Base::NString NFrameImpl::GetId() const
+        {
+            return frameId_;
         }
 
         const Base::NRect& NFrameImpl::GetRect() const
@@ -274,7 +318,7 @@ namespace nui
         void NFrameImpl::AutoSize()
         {
             NAssertError(window_ != NULL, _T("window is null"));
-            if(!window_)
+            if(!window_ || text_ == NULL)
                 return;
             Base::NRect txtRect;
             window_->GetRender()->GetTextSize(text_, txtRect);
@@ -323,6 +367,10 @@ namespace nui
             if(!clipRect.Intersect(clipRect))
                 return;
 
+            // test
+            if(text_ != NULL)
+                render->DrawText(text_, frameRect_);
+
             Base::NRect newClipRect(clipRect);
             newClipRect.Offset(frameRect_.Left, frameRect_.Top);
 
@@ -356,7 +404,7 @@ namespace nui
             if(childImpl->parentFrame_ != NULL)
             {
                 childImpl->parentFrame_->RemoveChild(childImpl);
-                NSafeRelease(childImpl->parentFrame_);
+                childImpl->parentFrame_ = NULL;
             }
             if(newParent == NULL)
             {
@@ -365,7 +413,6 @@ namespace nui
             else
             {
                 childImpl->parentFrame_ = newParent;
-                newParent->AddRef();
                 childImpl->AddRef();
             }
             childImpl->OnParentChanged();

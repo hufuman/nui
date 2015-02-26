@@ -5,7 +5,7 @@
 #include "uitest.h"
 
 nui::Base::NString GetResourcePath();
-bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+bool PaintCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 NAutoPtr<NImage> g_Image;
 NAutoPtr<NText> g_SingleLineText;
 NAutoPtr<NText> g_MultipleLineText;
@@ -77,13 +77,18 @@ nui::Base::NString GetResourcePath()
     return tmp;
 }
 
-bool PaintCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+bool PaintCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
 {
-    return false;
+    HWND hWnd = window->GetNative();
     if(message == WM_KEYDOWN)
     {
         ++ g_BorderWidth;
         ::InvalidateRect(hWnd, NULL, TRUE);
+    }
+    else if(message == WM_CREATE)
+    {
+        NWindow* wnd = dynamic_cast<NWindow*>(window);
+        wnd->GetRootFrame()->SetText(_T("Window Text"));
     }
     if(message != WM_PAINT)
         return false;

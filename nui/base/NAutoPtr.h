@@ -12,7 +12,7 @@ namespace nui
             NAutoPtr() : ptr_(0)
             {}
 
-            NAutoPtr(NAutoPtr& p)
+            NAutoPtr(const NAutoPtr& p)
             {
                 ptr_ = p.ptr_;
                 if(ptr_)

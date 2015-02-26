@@ -333,7 +333,11 @@ namespace nui
         {
             va_list args;
             va_start(args, szFormat);
+            return FormatArgs(szFormat, args);
+        }
 
+        NString& NString::FormatArgs(LPCTSTR szFormat, va_list& args)
+        {
             const int nDefaultBufferSize = 256;
             TCHAR szBuffer[nDefaultBufferSize] = {0};
             int nCount = _vsctprintf(szFormat, args);
@@ -350,7 +354,7 @@ namespace nui
                 if(nCount > 0)
                 {
                     pBuffer[nCount] = 0;
-                    data_ = szBuffer;
+                    data_ = pBuffer;
                 }
                 NDeleteArray(pBuffer);
             }

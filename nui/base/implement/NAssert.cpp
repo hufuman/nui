@@ -37,7 +37,7 @@ NUI_API void NAssertImpl(bool exp, LPCTSTR filePath, int line, LPCTSTR format, .
     va_list args;
     va_start(args, format);
 
-    strParams = strParams.Format(format, &args);
+    strParams = strParams.FormatArgs(format, args);
 
     strFormat =
         _T("Assertion Failed£¡\r\n\r\n")

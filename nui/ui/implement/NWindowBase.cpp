@@ -225,7 +225,7 @@ namespace nui
 
         bool NWindowBase::OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
         {
-            if(msgFilterCallback_ && msgFilterCallback_(window_, message, wParam, lParam, lResult))
+            if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
                 return true;
 
             lResult = 0;

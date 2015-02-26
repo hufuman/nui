@@ -8,7 +8,9 @@ namespace nui
     namespace Ui
     {
         BEGIN_USE_UNEXPORT_TEMPLATE()
-            typedef FastDelegate5<HWND, UINT, WPARAM, LPARAM, LRESULT&, bool> MsgFilterCallback;
+
+        class NWindowBase;
+        typedef FastDelegate5<NWindowBase*, UINT, WPARAM, LPARAM, LRESULT&, bool> MsgFilterCallback;
 
         class NUI_CLASS NWindowBase : public nui::Base::Noncopyable
         {

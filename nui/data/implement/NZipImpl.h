@@ -25,6 +25,8 @@ public:
 
 protected:
     ZIPENTRYW* GetZipEntry(LPCTSTR relativePath);
+    // rootPath & srcFolder should be ended by '\\'
+    bool ZipFolderHelper(HZIP zipFile, const nui::Base::NString& srcFolder, const nui::Base::NString& rootPath);
 
 private:
     nui::Base::NInstPtr<nui::Data::NFileMapping> zipBuffer_;

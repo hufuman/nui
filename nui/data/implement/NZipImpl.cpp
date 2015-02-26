@@ -2,11 +2,13 @@
 #include "NZipImpl.h"
 
 #include "../../base/NMemTool.h"
+#include "../../util/NFileUtil.h"
 
 
 using namespace nui;
 using namespace Data;
 using namespace Base;
+using namespace Util;
 
 IMPLEMENT_REFLECTION(NZipImpl);
 
@@ -24,7 +26,7 @@ NZipImpl::~NZipImpl(void)
 // Zip
 bool NZipImpl::ZipFolder(LPCTSTR srcFolder, LPCTSTR outputFile)
 {
-    if(srcFolder == NULL || srcFolder[0] == 0)
+    if(srcFolder == NULL || srcFolder[0] == 0 || outputFile == NULL || outputFile[0] == 0)
         return false;
 
     DWORD fileAttr = ::GetFileAttributes(srcFolder);
@@ -38,19 +40,9 @@ bool NZipImpl::ZipFolder(LPCTSTR srcFolder, LPCTSTR outputFile)
     if(zipFile == NULL)
         return false;
 
-    NString strFolder(srcFolder);
-    if(strFolder[strFolder.GetLength() - 1] == _T('\\'))
-        strFolder.Resize(strFolder.GetLength() - 1);
+    NString folder = File::CombinePath(srcFolder, _T(""));
 
-    NString strName;
-    size_t pos = strFolder.LastIndexOf(_T('\\'));
-    if(pos == -1)
-        return false;
-
-    strName = strFolder.SubString(pos + 1);
-    strFolder.Resize(pos);
-
-    bool result = !!AddFolderContent(zipFile, strFolder.GetData(), strName.GetData());
+    bool result = ZipFolderHelper(zipFile, folder, folder);
     result =(ZR_OK == CloseZip(zipFile)) && result;
 
     if(!result)
@@ -173,4 +165,41 @@ ZIPENTRYW* NZipImpl::GetZipEntry(LPCTSTR relativePath)
     if(ite == m_mapCacheData.end())
         return NULL;
     return &ite->second;
+}
+
+bool NZipImpl::ZipFolderHelper(HZIP zipFile, const NString& srcFolder, const NString& rootPath)
+{
+    NString filter = srcFolder + _T("*");
+
+    WIN32_FIND_DATA data;
+    HANDLE findHandle = ::FindFirstFile(filter, &data);
+    if(findHandle == INVALID_HANDLE_VALUE)
+        return false;
+
+    bool result = true;
+    NString absPath;
+    do
+    {
+        if(_tcscmp(data.cFileName, _T(".")) == 0
+            || _tcscmp(data.cFileName, _T("..")) == 0)
+        {
+            continue;
+        }
+        absPath = File::CombinePath(srcFolder, data.cFileName);
+        DWORD fileAttr = ::GetFileAttributes(absPath);
+        bool isDir = ((fileAttr & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY);
+        if(isDir)
+        {
+            result = (ZR_OK == ZipAdd(zipFile, absPath.SubString(rootPath.GetLength()), 0, 0, ZIP_FOLDER));
+            if(result)
+                result = ZipFolderHelper(zipFile, absPath + _T("\\"), rootPath);
+        }
+        else
+        {
+            result = (ZR_OK == ZipAdd(zipFile, absPath.SubString(rootPath.GetLength()), (void*)(LPCTSTR)absPath, 0, ZIP_FILENAME));
+        }
+    } while(result && ::FindNextFile(findHandle, &data));
+    ::FindClose(findHandle);
+
+    return result;
 }
