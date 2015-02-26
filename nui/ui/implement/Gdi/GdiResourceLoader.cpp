@@ -195,7 +195,7 @@ namespace nui
             NAssertError(imageMap_.empty(), _T("image leak detected"));
 
             ImageMap::iterator ite = imageMap_.begin();
-            for(; ite != imageMap_.end(); ++ ite)
+            while(ite != imageMap_.end())
             {
                 ImageData& data = ite->second;
                 -- data.refCount;
@@ -207,7 +207,11 @@ namespace nui
                     {
                         ::DeleteObject(data.vctBitmaps[i]);
                     }
-                    imageMap_.erase(ite);
+                    ite = imageMap_.erase(ite);
+                }
+                else
+                {
+                    ++ ite;
                 }
             }
         }
