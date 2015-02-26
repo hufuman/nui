@@ -211,14 +211,9 @@ namespace nui
             ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rect, flags | DT_CALCRECT);
         }
 
-        bool GdiRender::IsRectVisible(const Base::NRect& rect)
-        {
-            return !!RectVisible(memDC_, rect);
-        }
-
         void GdiRender::OffsetRender(int xOffset, int yOffset)
         {
-            ::SetViewportOrgEx(memDC_, -xOffset, -yOffset, NULL);
+            ::OffsetViewportOrgEx(memDC_, -xOffset, -yOffset, NULL);
         }
 
         void GdiRender::FillRectImpl(HDC hDc, const Base::NRect& rect, ArgbColor fillColor)

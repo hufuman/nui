@@ -93,7 +93,7 @@ namespace nui
         {
             NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::GetRect"));
             if(window_ != NULL)
-                return !!::GetWindowRect(window_, reinterpret_cast<RECT*>(&rect));
+                return !!::GetWindowRect(window_, rect);
             return false;
         }
 

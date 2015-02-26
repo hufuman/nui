@@ -44,10 +44,41 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     window.SetText(_T("Test Window"));
     window.SetVisible(true);
 
+    NWindow* wnd = &window;
+    wnd->GetRootFrame()->SetText(_T("Window Text"));
+    NRect rect;
+    wnd->GetRect(rect);
+    int width = rect.Width();
+    int height = rect.Height();
+    const int count = 2;
+    for(int i=0; i<count; ++ i)
+    {
+        for(int j=0; j<count; ++ j)
+        {
+            NString msg;
+            msg.Format(_T("%d * %d"), i, j);
+            NInstPtr<NFrame> frame(InstPtrParam);
+            frame->SetText(msg);
+            frame->SetPos(i * width / count, j * height / count);
+            frame->SetSize(width / count, height / count);
+            for(int k=0; k<count; ++ k)
+            {
+                NString msg;
+                msg.Format(_T("%d"), k);
+                NInstPtr<NFrame> child(InstPtrParam);
+                child->SetText(msg);
+                // child->SetPos(width / count / count * k, height / count);
+                child->SetSize(width / count / count, height / count);
+                frame->AddChild(child);
+            }
+            wnd->GetRootFrame()->AddChild(frame);
+        }
+    }
+
     {
         nui::Base::NHolder timer;
         NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
-        timer = timerSrv->startTimer(200, MakeDelegate(&window, &NWindow::Invalidate));
+        // timer = timerSrv->startTimer(200, MakeDelegate(&window, &NWindow::Invalidate));
 
         nui::Ui::NMsgLoop loop;
         loop.Loop(window.GetNative());
@@ -87,38 +118,6 @@ bool PaintCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lPar
     }
     else if(message == WM_CREATE)
     {
-        NWindow* wnd = dynamic_cast<NWindow*>(window);
-        wnd->GetRootFrame()->SetText(_T("Window Text"));
     }
-    if(message != WM_PAINT)
-        return false;
-
-    NRect rect;
-    ::GetClientRect(hWnd, reinterpret_cast<RECT*>(&rect));
-
-    PAINTSTRUCT ps = {0};
-    HDC hDc = ::BeginPaint(hWnd, &ps);
-
-    g_Render->Init(hDc, rect);
-
-    g_Render->FillRectangle(rect, nui::Ui::MakeArgb(255, 255, 255, 0));
-
-    NRect tmpRect(rect);
-    tmpRect.SetRect(0, 0, 310, 310);
-    g_Render->DrawRectangle(tmpRect, g_BorderWidth, MakeArgb(255, 255, 0, 0));
-    // g_Render->DrawRoundRectangle(tmpRect, 10, MakeArgb(255, 0, 255, 0));
-    g_Render->DrawRoundRectangle(tmpRect, g_BorderWidth, MakeArgb(100, 0, 255, 0), MakeArgb(254, 0, 255, 255));
-
-    NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-    Base::NString msg;
-    msg.Format(_T("Border: %d"), g_BorderWidth);
-    NAutoPtr<NText> text = loader->CreateText(msg);
-    text->SetHorzCenter(true).SetVertCenter(true);
-    g_Render->DrawText(text, tmpRect);
-
-    g_Render->DrawBack();
-
-    ::EndPaint(hWnd, &ps);
-
-    return true;
+    return false;
 }

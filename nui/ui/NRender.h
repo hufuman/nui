@@ -23,7 +23,6 @@ namespace nui
             virtual void DrawText(NText* text, const Base::NRect& rect) = 0;
             virtual void GetTextSize(NText* text, Base::NRect& rect) = 0;
 
-            virtual bool IsRectVisible(const Base::NRect& rect) = 0;
             virtual void OffsetRender(int xOffset, int yOffset) = 0;
 
             __inline void DrawLine(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)

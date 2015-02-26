@@ -22,6 +22,9 @@ namespace nui
             {
                 Base::NInstPtr<NFrame> rootFrame(InstPtrParam);
                 rootFrame_ = (NFrame*)rootFrame;
+                Base::NRect rect;
+                GetRect(rect);
+                rootFrame_->SetSize(rect.Width(), rect.Height());
             }
             return rootFrame_;
         }
@@ -117,6 +120,9 @@ namespace nui
 
         void NWindow::OnSize(int width, int height)
         {
+            if(rootFrame_)
+                rootFrame_->SetSize(width, height);
+
             HRGN rgn = ::CreateRectRgn(0, 0, width, height);
             if(rgn != NULL)
                 ::SetWindowRgn(GetNative(), rgn, FALSE);

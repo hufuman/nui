@@ -375,7 +375,7 @@ namespace nui
             newClipRect.Offset(frameRect_.Left, frameRect_.Top);
 
             render->OffsetRender(frameRect_.Left, frameRect_.Top);
-            if(render->IsRectVisible(frameRect_))
+
             {
                 FrameList::const_iterator ite = childs_.begin();
                 for(; ite != childs_.end(); ++ ite)
@@ -384,6 +384,7 @@ namespace nui
                     childImpl->Draw(render, clipRect);
                 }
             }
+
             render->OffsetRender(- frameRect_.Left, - frameRect_.Top);
         }
 
