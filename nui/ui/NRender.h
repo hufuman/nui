@@ -21,9 +21,7 @@ namespace nui
             virtual void DrawShape(const Base::NRect& rect, NShape* shape) = 0;
             virtual void DrawImage(NImage* image, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue) = 0;
             virtual void DrawText(NText* text, const Base::NRect& rect) = 0;
-            virtual void GetTextSize(NText* text, Base::NRect& rect) = 0;
-
-            virtual void OffsetRender(int xOffset, int yOffset) = 0;
+            virtual void GetTextSize(NText* text, Base::NSize& rect) = 0;
 
             __inline void DrawLine(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {

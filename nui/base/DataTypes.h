@@ -23,10 +23,16 @@ namespace nui
                 Y = p.Y;
                 return (*this);
             }
-            NPoint& SeNPoint(INT x, INT y)
+            NPoint& SetPoint(INT x, INT y)
             {
                 X = x;
                 Y = y;
+                return (*this);
+            }
+            NPoint& Offset(INT xOffset, int yOffset)
+            {
+                X += xOffset;
+                Y += yOffset;
                 return (*this);
             }
             bool operator == (const NPoint& point) const
@@ -53,7 +59,7 @@ namespace nui
                 Height = p.Height;
                 return (*this);
             }
-            NSize& SeNSize(INT width, INT height)
+            NSize& SetSize(INT width, INT height)
             {
                 Width = width;
                 Height = height;

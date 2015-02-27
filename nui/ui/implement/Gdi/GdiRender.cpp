@@ -172,17 +172,26 @@ namespace nui
                 return;
 
             Base::NRect textRect(rect);
-            Base::NRect tmpRect(rect);
-            tmpRect.Offset(-tmpRect.Left, -tmpRect.Top);
-            GetTextSize(text, tmpRect);
+            Base::NSize size(rect.Width(), rect.Height());
+            GetTextSize(text, size);
 
             if(gdiText->GetVertCenter())
             {
-                textRect.Inflate(-(rect.Width() - tmpRect.Width()) / 2, -(rect.Height() - tmpRect.Height()) / 2);
+                textRect.Inflate(-(rect.Width() - size.Width) / 2, -(rect.Height() - size.Height) / 2);
+                // limit rect to be valid
+                if(textRect.Top < rect.Top)
+                    textRect.Top = rect.Top;
+                if(textRect.Left < rect.Left)
+                    textRect.Left = rect.Left;
+                if(textRect.Right > rect.Right)
+                    textRect.Right = rect.Right;
+                if(textRect.Bottom > rect.Bottom)
+                    textRect.Bottom = rect.Bottom;
             }
             else
             {
-                textRect = tmpRect;
+                textRect.SetRect(0, 0, size.Width, size.Height);
+                textRect.Offset(rect.Left, rect.Top);
             }
 
             CAlphaDC alphaDc;
@@ -195,7 +204,7 @@ namespace nui
             alphaDc.EndDraw(GetAlpha(text->GetColor()));
         }
 
-        void GdiRender::GetTextSize(NText *text, nui::Base::NRect &rect)
+        void GdiRender::GetTextSize(NText *text, nui::Base::NSize &size)
         {
             GdiText* gdiText = dynamic_cast<GdiText*>(text);
             NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
@@ -208,12 +217,10 @@ namespace nui
             flags = (flags & (~DT_END_ELLIPSIS));
             flags = (flags & (~DT_PATH_ELLIPSIS));
             flags = (flags & (~DT_WORD_ELLIPSIS));
-            ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rect, flags | DT_CALCRECT);
-        }
-
-        void GdiRender::OffsetRender(int xOffset, int yOffset)
-        {
-            ::OffsetViewportOrgEx(memDC_, -xOffset, -yOffset, NULL);
+            Base::NRect rcTmp(0, 0, size.Width, size.Height);
+            ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rcTmp, flags | DT_CALCRECT);
+            size.Width = rcTmp.Width();
+            size.Height = rcTmp.Height();
         }
 
         void GdiRender::FillRectImpl(HDC hDc, const Base::NRect& rect, ArgbColor fillColor)

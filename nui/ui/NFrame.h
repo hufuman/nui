@@ -58,7 +58,7 @@ namespace nui
 
             // draw
             virtual void Invalidate() = 0;
-            virtual void Draw(NRender* render, const Base::NRect& clipRect) = 0;
+            virtual void Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect) = 0;
         };
     }
 }

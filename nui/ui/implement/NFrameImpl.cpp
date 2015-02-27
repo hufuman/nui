@@ -320,9 +320,9 @@ namespace nui
             NAssertError(window_ != NULL, _T("window is null"));
             if(!window_ || text_ == NULL)
                 return;
-            Base::NRect txtRect;
-            window_->GetRender()->GetTextSize(text_, txtRect);
-            SetSize(txtRect.Width(), txtRect.Height());
+            Base::NSize txtSize;
+            window_->GetRender()->GetTextSize(text_, txtSize);
+            SetSize(txtSize.Width, txtSize.Height);
         }
 
         void NFrameImpl::SetPos(int left, int top)
@@ -359,7 +359,7 @@ namespace nui
             window_->InvalidateRect(rootRect);
         }
 
-        void NFrameImpl::Draw(NRender* render, const Base::NRect& clipRect)
+        void NFrameImpl::Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect)
         {
             if(!IsVisible() || !IsValid())
                 return;
@@ -368,24 +368,21 @@ namespace nui
                 return;
 
             // test
+            Base::NRect rect(frameRect_);
+            rect.Offset(ptOffset.X, ptOffset.Y);
             if(text_ != NULL)
-                render->DrawText(text_, frameRect_);
-
-            Base::NRect newClipRect(clipRect);
-            newClipRect.Offset(frameRect_.Left, frameRect_.Top);
-
-            render->OffsetRender(frameRect_.Left, frameRect_.Top);
+                render->DrawText(text_, rect);
 
             {
+                ptOffset.Offset(frameRect_.Left, frameRect_.Top);
                 FrameList::const_iterator ite = childs_.begin();
                 for(; ite != childs_.end(); ++ ite)
                 {
                     NFrameImpl* const & childImpl = *ite;
-                    childImpl->Draw(render, clipRect);
+                    childImpl->Draw(render, ptOffset, clipRect);
                 }
+                ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
             }
-
-            render->OffsetRender(- frameRect_.Left, - frameRect_.Top);
         }
 
         void NFrameImpl::OnParentChanged()

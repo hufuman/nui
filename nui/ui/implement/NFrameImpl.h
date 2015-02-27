@@ -75,7 +75,7 @@ namespace nui
 
             // draw
             virtual void Invalidate();
-            virtual void Draw(NRender* render, const Base::NRect& clipRect);
+            virtual void Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
 
         protected:
             virtual void OnParentChanged();
