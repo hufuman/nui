@@ -13,7 +13,7 @@ using namespace Util;
 IMPLEMENT_REFLECTION(NZipImpl);
 
 
-NZipImpl::NZipImpl() : zipBuffer_(InstPtrParam)
+NZipImpl::NZipImpl() : zipBuffer_(MemToolParam)
 {
     zipFile_ = NULL;
 }
@@ -63,7 +63,7 @@ bool NZipImpl::LoadFile(LPCTSTR zipFilePath)
     bool result = false;
     for (;;)
     {
-        if(zipBuffer_.Create(InstPtrParam) == NULL)
+        if(zipBuffer_.Create(MemToolParam) == NULL)
             break;
 
         if(!zipBuffer_->OpenForRead(zipFilePath))

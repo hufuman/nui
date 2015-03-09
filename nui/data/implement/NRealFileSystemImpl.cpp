@@ -30,7 +30,7 @@ bool NRealFileSystemImpl::IsFileExists(LPCTSTR filePath)
 
 bool NRealFileSystemImpl::LoadFile(LPCTSTR filePath, nui::Data::NBuffer* pBuffer)
 {
-    nui::Base::NInstPtr<nui::Data::NFileMapping> mapping(InstPtrParam);
+    nui::Base::NInstPtr<nui::Data::NFileMapping> mapping(MemToolParam);
     if(mapping == NULL)
         return false;
     if(mapping->OpenForRead(filePath))

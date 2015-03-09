@@ -43,7 +43,7 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
         return false;
     }
 
-    nui::Base::NInstPtr<nui::Data::NFileSystem> fileSystem(InstPtrParam);
+    nui::Base::NInstPtr<nui::Data::NFileSystem> fileSystem(MemToolParam);
     NAssertError(fileSystem != NULL, _T("Failed to create NFileSystem"));
     if(!fileSystem)
         return false;

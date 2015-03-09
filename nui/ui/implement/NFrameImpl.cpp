@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "NFrameImpl.h"
 
+#include "../NRenderClip.h"
 
 namespace nui
 {
@@ -273,7 +274,7 @@ namespace nui
                 return;
             if(text_ == NULL)
             {
-                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(text);
+                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(text, MemToolParam);
             }
             else
             {
@@ -287,6 +288,11 @@ namespace nui
         Base::NString NFrameImpl::GetText() const
         {
             return text_ == NULL ? _T("") : text_->GetText();
+        }
+
+        NText* NFrameImpl::GetRichText() const
+        {
+            return text_;
         }
 
         void NFrameImpl::SetId(const Base::NString& id)
@@ -364,12 +370,14 @@ namespace nui
             if(!IsVisible() || !IsValid())
                 return;
 
-            if(!clipRect.Intersect(clipRect))
-                return;
-
-            // test
             Base::NRect rect(frameRect_);
             rect.Offset(ptOffset.X, ptOffset.Y);
+
+            if(!clipRect.Intersect(rect))
+                return;
+
+            NRenderClip clip(render, rect);
+
             if(text_ != NULL)
                 render->DrawText(text_, rect);
 

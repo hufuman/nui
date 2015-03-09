@@ -33,9 +33,10 @@ public:
 
         dc_ = hDc;
         alphaValue_ = alphaValue;
-        viewport_ = rcPaint;
+        viewPos_.SetPoint(rcPaint.Left, rcPaint.Top);
+        viewSize_.SetSize(rcPaint.Width(), rcPaint.Height());
         memDC_ = ::CreateCompatibleDC(dc_);
-        bitmap_ = ::CreateCompatibleBitmap(dc_, viewport_.Width(), viewport_.Height());
+        bitmap_ = ::CreateCompatibleBitmap(dc_, viewSize_.Width, viewSize_.Height);
         oldBitmap_ = ::SelectObject(memDC_, bitmap_);
         NAssertError(oldBitmap_ != NULL, _T("Error Encountered"));
         ::SetStretchBltMode(memDC_, COLORONCOLOR);
@@ -62,11 +63,11 @@ public:
         BlendFunc.SourceConstantAlpha = alphaValue_;
         BlendFunc.AlphaFormat = AC_SRC_ALPHA;
         BOOL bResult = ::AlphaBlend(dc_,
-            viewport_.Left, viewport_.Top,
-            viewport_.Width(), viewport_.Height(),
+            viewPos_.X, viewPos_.Y,
+            viewSize_.Width, viewSize_.Height,
             memDC_,
             0, 0,
-            viewport_.Width(), viewport_.Height(),
+            viewSize_.Width, viewSize_.Height,
             BlendFunc);
         NAssertError(!!bResult, _T("AlphaBlend Failed"));
     }
@@ -83,8 +84,17 @@ public:
             memDC_ = NULL;
             bitmap_ = NULL;
             dc_  = NULL;
-            viewport_.SetRect(0, 0, 0, 0);
         }
+    }
+
+    const nui::Base::NPoint& GetLeftTop() const
+    {
+        return viewPos_;
+    }
+
+    const nui::Base::NSize& GetSize() const
+    {
+        return viewSize_;
     }
 
 private:
@@ -93,5 +103,6 @@ private:
     HGDIOBJ oldBitmap_;
     HBITMAP bitmap_;
     BYTE alphaValue_;
-    nui::Base::NRect viewport_;
+    nui::Base::NPoint viewPos_;
+    nui::Base::NSize viewSize_;
 };

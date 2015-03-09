@@ -15,7 +15,7 @@ public:
 
 TEST_F(TestCore, Basic)
 {
-    NInstPtr<NCore> core(InstPtrParam);
+    NInstPtr<NCore> core(MemToolParam);
     ASSERT_NE(core, static_cast<NCore*>(0));
     NString filePath = TestUtil::GetTestFile(_T("resource\\package"));
     core->InitCore(filePath.GetData(), _T("2052"), NRenderType::GdiRender);

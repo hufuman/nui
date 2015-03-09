@@ -34,7 +34,7 @@ protected:
 
 TEST_F(TestTimerSrv, Timer)
 {
-    NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
+    NInstPtr<nui::Ui::NTimerSrv> timerSrv(MemToolParam);
     ASSERT_TRUE(timerSrv != NULL);
 
     onceTimer_ = false;
@@ -47,7 +47,7 @@ TEST_F(TestTimerSrv, Timer)
 
 TEST_F(TestTimerSrv, OnceTimer)
 {
-    NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
+    NInstPtr<nui::Ui::NTimerSrv> timerSrv(MemToolParam);
     ASSERT_TRUE(timerSrv != NULL);
 
     onceTimer_ = true;

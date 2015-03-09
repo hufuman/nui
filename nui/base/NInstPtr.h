@@ -5,8 +5,6 @@ namespace nui
 {
     namespace Base
     {
-#define InstPtrParam __FILE__, __LINE__
-
         class NReflect;
         template <typename T>
         class NInstPtr

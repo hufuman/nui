@@ -23,10 +23,12 @@ namespace nui
             virtual void DrawText(NText* text, const Base::NRect& rect) = 0;
             virtual void GetTextSize(NText* text, Base::NSize& rect) = 0;
 
+            virtual Base::NHolder ClipRect(const nui::Base::NRect& rect) = 0;
+
             __inline void DrawLine(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
                 shape->SetStyle(NShape::Line).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
                 DrawShape(rect, shape);
             }
@@ -34,7 +36,7 @@ namespace nui
             __inline void DrawRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
                 shape->SetStyle(NShape::RoundRect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
                 DrawShape(rect, shape);
             }
@@ -42,7 +44,7 @@ namespace nui
             __inline void DrawRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
                 shape->SetStyle(NShape::RoundRect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder).SetFillColor(clrFill);
                 DrawShape(rect, shape);
             }
@@ -50,7 +52,7 @@ namespace nui
             __inline void FillRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
                 shape->SetStyle(NShape::RoundRect).SetFillColor(clrFill).SetBorderWidth(borderWidth);
                 DrawShape(rect, shape);
             }
@@ -58,7 +60,7 @@ namespace nui
             __inline void DrawRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
                 shape->SetStyle(NShape::Rect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
                 DrawShape(rect, shape);
             }
@@ -66,7 +68,7 @@ namespace nui
             __inline void FillRectangle(const Base::NRect& rect, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
                 shape->SetStyle(NShape::Rect).SetFillColor(clrFill);
                 DrawShape(rect, shape);
             }
@@ -74,7 +76,7 @@ namespace nui
             __inline void DrawRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShape> shape = loader->CreateShape();
+                Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
                 shape->SetStyle(NShape::Rect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder).SetFillColor(clrFill);
                 DrawShape(rect, shape);
             }

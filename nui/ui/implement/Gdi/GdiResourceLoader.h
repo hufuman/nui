@@ -15,8 +15,8 @@ namespace nui
             ~GdiResourceLoader();
 
             virtual NImage* LoadImage(LPCTSTR filePath);
-            virtual NShape* CreateShape();
-            virtual NText* CreateText(LPCTSTR text);
+            virtual NShape* CreateShape(LPCSTR filePath, int line);
+            virtual NText* CreateText(LPCTSTR text, LPCSTR filePath, int line);
 
             void ReleaseImage(const Base::NString& path);
         private:

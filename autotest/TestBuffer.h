@@ -17,7 +17,7 @@ public:
 
 TEST_F(TestBuffer, Basic)
 {
-    NInstPtr<NBuffer> buffer(InstPtrParam);
+    NInstPtr<NBuffer> buffer(MemToolParam);
     ASSERT_TRUE(buffer != NULL);
     ASSERT_TRUE(buffer != NULL);
 

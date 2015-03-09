@@ -20,7 +20,7 @@ public:
 
     void TestUnZip(LPCTSTR filePath1, LPCTSTR filePath2)
     {
-        NInstPtr<NZip> zip1(InstPtrParam), zip2(InstPtrParam);
+        NInstPtr<NZip> zip1(MemToolParam), zip2(MemToolParam);
 
         ASSERT_TRUE(zip1->LoadFile(filePath1));
         ASSERT_TRUE(zip2->LoadFile(filePath2));
@@ -36,13 +36,13 @@ public:
         ASSERT_FALSE(zip1->IsFileExists(_T("asdfasfd")));
         ASSERT_FALSE(zip2->IsFileExists(_T("asdfasfd")));
 
-        NInstPtr<NBuffer> buffer1(InstPtrParam);
+        NInstPtr<NBuffer> buffer1(MemToolParam);
         for(int i=0; i<_countof(relativePath); ++ i)
         {
             LPVOID data1, data2;
             DWORD size1, size2;
 
-            NInstPtr<NBuffer> buffer2(InstPtrParam);
+            NInstPtr<NBuffer> buffer2(MemToolParam);
             ASSERT_TRUE(zip1->GetFileContent(relativePath[i], buffer1));
             ASSERT_TRUE(zip2->GetFileContent(relativePath[i], buffer2));
 
@@ -76,8 +76,8 @@ public:
                 break;
             }
 
-            NInstPtr<NBuffer> buffer1(InstPtrParam);
-            NInstPtr<NBuffer> buffer2(InstPtrParam);
+            NInstPtr<NBuffer> buffer1(MemToolParam);
+            NInstPtr<NBuffer> buffer2(MemToolParam);
 
             ZIPENTRYW entry1, entry2;
 
@@ -158,7 +158,7 @@ TEST_F(TestZip, Zip)
     ASSERT_TRUE(!nui::Util::File::IsFileExists(zip1File.GetData()) || ::DeleteFile(zip1File.GetData()));
     ASSERT_TRUE(!nui::Util::File::IsFileExists(zip2File.GetData()) || ::DeleteFile(zip2File.GetData()));
 
-    NInstPtr<NZip> zip(InstPtrParam);
+    NInstPtr<NZip> zip(MemToolParam);
     ASSERT_TRUE(zip->ZipFolder(folderPath.GetData(), zip1File.GetData()));
     ASSERT_TRUE(zip->ZipFolder((folderPath + _T("\\")).GetData(), zip2File.GetData()));
 

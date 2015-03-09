@@ -17,7 +17,7 @@ namespace nui
             return NNewImpl<T>(nui::Base::MemTypeNew, new T(), 1, filePath, line);
         }
 
-#define NReflectCreate(ptr) nui::Base::NReflect::GetInstance().Create(ptr, __FILE__, __LINE__)
+#define NReflectCreate(ptr) nui::Base::NReflect::GetInstance().Create(ptr, MemToolParam)
 
 #define DECLARE_REFLECTION(namespaceName, className)        \
     public:                                                 \

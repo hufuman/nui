@@ -15,8 +15,8 @@ namespace nui
         {
         public:
             virtual NImage* LoadImage(LPCTSTR filePath) = 0;
-            virtual NShape* CreateShape() = 0;
-            virtual NText* CreateText(LPCTSTR text) = 0;
+            virtual NShape* CreateShape(LPCSTR filePath, int line) = 0;
+            virtual NText* CreateText(LPCTSTR text, LPCSTR filePath, int line) = 0;
         };
     }
 }

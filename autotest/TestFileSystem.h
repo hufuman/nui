@@ -16,7 +16,7 @@ public:
 
     void CompareFile(nui::Base::NAutoPtr<nui::Data::NFileSystem> fs, LPCTSTR relativePath, LPCTSTR realPath)
     {
-        nui::Base::NInstPtr<NBuffer> buffer(InstPtrParam);
+        nui::Base::NInstPtr<NBuffer> buffer(MemToolParam);
         ASSERT_TRUE(fs->LoadFile(relativePath, buffer));
         DWORD dwSize;
         LPVOID pData = TestUtil::GetFileContent(realPath, dwSize);
@@ -70,7 +70,7 @@ public:
 
 TEST_F(TestFileSystem, RealFS)
 {
-    nui::Base::NInstPtr<nui::Data::NFileSystem> fs(InstPtrParam);
+    nui::Base::NInstPtr<nui::Data::NFileSystem> fs(MemToolParam);
     NString package = TestUtil::GetTestFile(_T("Resource\\Package"));
     ASSERT_TRUE(fs->Init(package.GetData()));
     TestImpl(fs);
@@ -82,11 +82,11 @@ TEST_F(TestFileSystem, PackFS)
     if(File::IsFileExists(xfPath))
         ASSERT_TRUE(!!::DeleteFile(xfPath));
 
-    NInstPtr<NZip> zip(InstPtrParam);
+    NInstPtr<NZip> zip(MemToolParam);
     NString folderPath = TestUtil::GetTestFile(_T("Resource\\Package\\"));
     ASSERT_TRUE(zip->ZipFolder(folderPath, xfPath));
 
-    nui::Base::NInstPtr<nui::Data::NFileSystem> fs(InstPtrParam);
+    nui::Base::NInstPtr<nui::Data::NFileSystem> fs(MemToolParam);
     NString package = TestUtil::GetTestFile(_T("Temp\\pack"));
     ASSERT_TRUE(fs->Init(package.GetData()));
     TestImpl(fs);

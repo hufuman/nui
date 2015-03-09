@@ -37,7 +37,7 @@ namespace nui
             UINT_PTR timerId = reinterpret_cast<UINT_PTR>(data);
             if(timerId <= 0)
                 return;
-            nui::Base::NInstPtr<NTimerSrv> timerSrv(InstPtrParam);
+            nui::Base::NInstPtr<NTimerSrv> timerSrv(MemToolParam);
             if(timerSrv == NULL)
                 return;
             NTimerSrvImpl* impl = dynamic_cast<NTimerSrvImpl*>((NTimerSrv*)timerSrv);

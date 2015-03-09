@@ -21,7 +21,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
     nui::Base::NString resPath = GetResourcePath();
-    nui::Base::NInstPtr<nui::Base::NCore> core(InstPtrParam);
+    nui::Base::NInstPtr<nui::Base::NCore> core(MemToolParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);
 
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
@@ -30,10 +30,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
     g_Image = loader->LoadImage(_T("@skin:images\\3.gif"));
 
-    g_SingleLineText = loader->CreateText(_T("single line"));
+    g_SingleLineText = loader->CreateText(_T("single line"), MemToolParam);
     g_SingleLineText->SetSingleLine(true).SetColor(MakeArgb(255, 0, 0, 0)).SetHorzCenter(true).SetVertCenter(true);
 
-    g_MultipleLineText = loader->CreateText(_T("line\r\nfirst line\r\nsecond line\r\nthird line"));
+    g_MultipleLineText = loader->CreateText(_T("line\r\nfirst line\r\nsecond line\r\nthird line"), MemToolParam);
     g_MultipleLineText->SetSingleLine(false).SetColor(MakeArgb(255, 0, 255, 0)).SetHorzCenter(true).SetVertCenter(true);
 
     NWindow window;
@@ -45,29 +45,30 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     window.SetVisible(true);
 
     NWindow* wnd = &window;
-    wnd->GetRootFrame()->SetText(_T("Window Text"));
     NRect rect;
     wnd->GetRect(rect);
     int width = rect.Width();
     int height = rect.Height();
-    const int count = 2;
+    const int count = 1;
+
     for(int i=0; i<count; ++ i)
     {
         for(int j=0; j<count; ++ j)
         {
             NString msg;
             msg.Format(_T("%d * %d"), i, j);
-            NInstPtr<NFrame> frame(InstPtrParam);
+            NInstPtr<NFrame> frame(MemToolParam);
             frame->SetText(msg);
+            frame->GetRichText()->SetVertCenter(true);
             frame->SetPos(i * width / count, j * height / count);
             frame->SetSize(width / count, height / count);
             for(int k=0; k<count; ++ k)
             {
                 NString msg;
                 msg.Format(_T("%d"), k);
-                NInstPtr<NFrame> child(InstPtrParam);
+                NInstPtr<NFrame> child(MemToolParam);
                 child->SetText(msg);
-                // child->SetPos(width / count / count * k, height / count);
+                child->SetPos(width / count / count * k, height / count);
                 child->SetSize(width / count / count, height / count);
                 frame->AddChild(child);
             }
@@ -77,7 +78,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
     {
         nui::Base::NHolder timer;
-        NInstPtr<nui::Ui::NTimerSrv> timerSrv(InstPtrParam);
+        NInstPtr<nui::Ui::NTimerSrv> timerSrv(MemToolParam);
         // timer = timerSrv->startTimer(200, MakeDelegate(&window, &NWindow::Invalidate));
 
         nui::Ui::NMsgLoop loop;

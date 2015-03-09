@@ -28,7 +28,7 @@ namespace nui
             static CRITICAL_SECTION ms_Section;
         };
 
-#define NMalloc(size) nui::Base::NMallocImpl(size, __FILE__, __LINE__)
+#define NMalloc(size) nui::Base::NMallocImpl(size, MemToolParam)
         __inline void* NMallocImpl(int size, LPCSTR szFilePath, int nLine)
         {
             NMemLocker locker;
@@ -47,8 +47,9 @@ namespace nui
             free(ptr);
         }
 
-#define NNew(type, ...) nui::Base::NNewImpl<type>(nui::Base::MemTypeNew, new type(__VA_ARGS__), 1, __FILE__, __LINE__)
-#define NNewArray(type, count) nui::Base::NNewImpl<type>(nui::Base::MemTypeNewArray, new type[count], count, __FILE__, __LINE__)
+#define NNew(type, ...) nui::Base::NNewImpl<type>(nui::Base::MemTypeNew, new type(__VA_ARGS__), 1, MemToolParam)
+#define NNewEx(type, file, line, ...) nui::Base::NNewImpl<type>(nui::Base::MemTypeNew, new type(__VA_ARGS__), 1, file, line)
+#define NNewArray(type, count) nui::Base::NNewImpl<type>(nui::Base::MemTypeNewArray, new type[count], count, MemToolParam)
         template <typename T>
         T* NNewImpl(NuiMemType memType, T* p, int count, LPCSTR szFilePath, int nLine)
         {

@@ -17,11 +17,24 @@ CAlphaDC::~CAlphaDC(void)
     Destroy();
 }
 
-bool CAlphaDC::Init(HDC hDc, const nui::Base::NRect& rcPaint, bool bCopyOrg)
+bool CAlphaDC::Init(HDC hDc, const nui::Base::NRect& rcPaint, const nui::Base::NSize& size, bool bCopyOrg)
 {
     rcPaint_ = rcPaint;
+
+    if(rcPaint_.Left < 0)
+        rcPaint_.Left = 0;
+    if(rcPaint_.Top < 0)
+        rcPaint_.Top = 0;
+    if(rcPaint_.Right > size.Width)
+        rcPaint_.Right = size.Width;
+    if(rcPaint_.Bottom > size.Height)
+        rcPaint_.Bottom = size.Height;
+
+    if(rcPaint_.Width() <= 0 || rcPaint_.Height() <= 0)
+        return false;
+
     orgDc_ = hDc;
-    if(memBmp_ != NULL && bmpInfo_.bmWidth == rcPaint.Width() && bmpInfo_.bmHeight == rcPaint.Height())
+    if(memBmp_ != NULL && bmpInfo_.bmWidth == rcPaint_.Width() && bmpInfo_.bmHeight == rcPaint_.Height())
     {
         if(bCopyOrg)
             CopyOrg();
@@ -40,8 +53,8 @@ bool CAlphaDC::Init(HDC hDc, const nui::Base::NRect& rcPaint, bool bCopyOrg)
     BITMAPINFOHEADER& bih = bi.bmiHeader;
 
     bih.biSize = sizeof(bih);
-    bih.biWidth = rcPaint.Width();
-    bih.biHeight = rcPaint.Height();
+    bih.biWidth = rcPaint_.Width();
+    bih.biHeight = rcPaint_.Height();
     bih.biPlanes = 1;
     bih.biBitCount = 32;
     bih.biCompression = BI_RGB;

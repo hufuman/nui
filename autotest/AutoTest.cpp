@@ -36,7 +36,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
     int result = RUN_ALL_TESTS();
-    NInstPtr<NCore> core(InstPtrParam);
+    NInstPtr<NCore> core(MemToolParam);
     core->DestroyCore();
     return result;
 }

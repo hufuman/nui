@@ -482,6 +482,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ui\NRenderClip.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui\NRenderDef.h"
 				>
 			</File>

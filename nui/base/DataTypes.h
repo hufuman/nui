@@ -39,6 +39,17 @@ namespace nui
             {
                 return X == point.X && Y == point.Y;
             }
+
+            operator POINT*()
+            {
+                return reinterpret_cast<POINT*>(this);
+            }
+
+            operator const POINT*() const
+            {
+                return reinterpret_cast<const POINT*>(this);
+            }
+
         public:
             INT X;
             INT Y;
@@ -69,6 +80,17 @@ namespace nui
             {
                 return Width == size.Width && Height == size.Height;
             }
+
+            operator SIZE*()
+            {
+                return reinterpret_cast<SIZE*>(this);
+            }
+
+            operator const SIZE*() const
+            {
+                return reinterpret_cast<const SIZE*>(this);
+            }
+
         public:
             INT Width;
             INT Height;
@@ -159,8 +181,8 @@ namespace nui
                 int y1 = h1 / 2 + Top;
                 int x2 = w2 / 2 + rect.Left;
                 int y2 = h2 / 2 + rect.Top;
-                return (std::abs(x1 - x2) <= (w1 + w2) / 2)
-                    && (std::abs(y1 - y2) <= (h1 + h2) / 2);
+                return (std::abs(x1 - x2) < (w1 + w2) / 2)
+                    && (std::abs(y1 - y2) < (h1 + h2) / 2);
             }
 
             NRect& SetRect(INT left, INT top, INT right, INT bottom)

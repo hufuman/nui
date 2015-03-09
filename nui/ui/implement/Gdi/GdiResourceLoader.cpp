@@ -36,8 +36,8 @@ namespace nui
                 return dynamic_cast<NImage*>(image);
             }
 
-            Base::NInstPtr<Data::NFileSystem> fs(InstPtrParam);
-            nui::Base::NInstPtr<Data::NBuffer> buffer(InstPtrParam);
+            Base::NInstPtr<Data::NFileSystem> fs(MemToolParam);
+            nui::Base::NInstPtr<Data::NBuffer> buffer(MemToolParam);
             if(!fs->LoadFile(filePath, buffer))
                 return NULL;
 
@@ -130,15 +130,15 @@ namespace nui
             return dynamic_cast<NImage*>(image);
         }
 
-        NShape* GdiResourceLoader::CreateShape()
+        NShape* GdiResourceLoader::CreateShape(LPCSTR filePath, int line)
         {
-            NShape* shape = dynamic_cast<NShape*>(NNew(GdiShape));
+            NShape* shape = dynamic_cast<NShape*>(NNewEx(GdiShape, filePath, line));
             return shape;
         }
 
-        NText* GdiResourceLoader::CreateText(LPCTSTR text)
+        NText* GdiResourceLoader::CreateText(LPCTSTR text, LPCSTR filePath, int line)
         {
-            NText* result = dynamic_cast<NText*>(NNew(GdiText));
+            NText* result = dynamic_cast<NText*>(NNewEx(GdiText, filePath, line));
             result->SetText(text);
             return result;
         }

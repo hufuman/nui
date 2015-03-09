@@ -27,11 +27,11 @@ protected:
 
 TEST_F(TestFrame, FrameTree)
 {
-    NInstPtr<NFrame> level1(InstPtrParam);
-    NInstPtr<NFrame> level2(InstPtrParam);
-    NInstPtr<NFrame> level3(InstPtrParam);
-    NInstPtr<NFrame> level4(InstPtrParam);
-    NInstPtr<NFrame> level5(InstPtrParam);
+    NInstPtr<NFrame> level1(MemToolParam);
+    NInstPtr<NFrame> level2(MemToolParam);
+    NInstPtr<NFrame> level3(MemToolParam);
+    NInstPtr<NFrame> level4(MemToolParam);
+    NInstPtr<NFrame> level5(MemToolParam);
 
     level1->AddChild(level2);
     level2->AddChild(level3);
@@ -43,10 +43,10 @@ TEST_F(TestFrame, FrameTree)
 
 TEST_F(TestFrame, AddRemoveChilds)
 {
-    NInstPtr<NFrame> parent1(InstPtrParam);
-    NInstPtr<NFrame> parent2(InstPtrParam);
-    NInstPtr<NFrame> child1(InstPtrParam);
-    NInstPtr<NFrame> child2(InstPtrParam);
+    NInstPtr<NFrame> parent1(MemToolParam);
+    NInstPtr<NFrame> parent2(MemToolParam);
+    NInstPtr<NFrame> child1(MemToolParam);
+    NInstPtr<NFrame> child2(MemToolParam);
 
     NAssertTempDisable();
 
@@ -69,10 +69,10 @@ TEST_F(TestFrame, AddRemoveChilds)
 
 TEST_F(TestFrame, Parent)
 {
-    NInstPtr<NFrame> parent1(InstPtrParam);
-    NInstPtr<NFrame> parent2(InstPtrParam);
-    NInstPtr<NFrame> child1(InstPtrParam);
-    NInstPtr<NFrame> child2(InstPtrParam);
+    NInstPtr<NFrame> parent1(MemToolParam);
+    NInstPtr<NFrame> parent2(MemToolParam);
+    NInstPtr<NFrame> child1(MemToolParam);
+    NInstPtr<NFrame> child2(MemToolParam);
 
     NAssertTempDisable();
 
@@ -108,9 +108,9 @@ TEST_F(TestFrame, Parent)
 
 TEST_F(TestFrame, ZOrder)
 {
-    NInstPtr<NFrame> parent(InstPtrParam);
-    NInstPtr<NFrame> child1(InstPtrParam);
-    NInstPtr<NFrame> child2(InstPtrParam);
+    NInstPtr<NFrame> parent(MemToolParam);
+    NInstPtr<NFrame> child1(MemToolParam);
+    NInstPtr<NFrame> child2(MemToolParam);
 
     NAssertTempDisable();
 
@@ -175,10 +175,10 @@ TEST_F(TestFrame, ZOrder)
 
 TEST_F(TestFrame, Id)
 {
-    NInstPtr<NFrame> parent(InstPtrParam);
-    NInstPtr<NFrame> child1(InstPtrParam);
-    NInstPtr<NFrame> child2(InstPtrParam);
-    NInstPtr<NFrame> grandson(InstPtrParam);
+    NInstPtr<NFrame> parent(MemToolParam);
+    NInstPtr<NFrame> child1(MemToolParam);
+    NInstPtr<NFrame> child2(MemToolParam);
+    NInstPtr<NFrame> grandson(MemToolParam);
 
     parent->AddChild(child1);
     parent->AddChild(child2);

@@ -38,7 +38,7 @@ bool NFileSystemImpl::Init(LPCTSTR packFilePath)
     if(!IsFileExists(fullPath.GetData()))
         return false;
 
-    nui::Base::NInstPtr<nui::Data::NBuffer> fileBuffer(InstPtrParam);
+    nui::Base::NInstPtr<nui::Data::NBuffer> fileBuffer(MemToolParam);
     if(!LoadFile(fullPath.GetData(), fileBuffer))
         return false;
 

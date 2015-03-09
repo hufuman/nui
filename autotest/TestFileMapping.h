@@ -17,7 +17,7 @@ public:
 
 TEST_F(TestFileMapping, Basic)
 {
-    NInstPtr<NFileMapping> fileMapping(InstPtrParam);
+    NInstPtr<NFileMapping> fileMapping(MemToolParam);
     NString filePath = TestUtil::GetTestFile(_T("FileMapping\\1.txt"));
     ASSERT_TRUE(fileMapping->OpenForRead(filePath.GetData()));
     EXPECT_TRUE(fileMapping->GetSize() == 10);

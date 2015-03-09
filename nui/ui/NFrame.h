@@ -45,6 +45,7 @@ namespace nui
             // data
             virtual void SetText(const Base::NString& text) = 0;
             virtual Base::NString GetText() const = 0;
+            virtual NText* GetRichText() const = 0;
             virtual void SetId(const Base::NString& id) = 0;
             virtual Base::NString GetId() const = 0;
 

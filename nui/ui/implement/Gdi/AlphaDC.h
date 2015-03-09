@@ -14,7 +14,7 @@ public:
     /**
      * copyOrg, must be true if there is any text-drawing. otherwise it could be false
      */
-    bool Init(HDC hDC, const nui::Base::NRect& rcPaint, bool bCopyOrg);
+    bool Init(HDC hDc, const nui::Base::NRect& rcPaint, const nui::Base::NSize& size, bool bCopyOrg);
     bool EndDraw(BYTE byAlpha);
 
 private:
@@ -27,6 +27,6 @@ private:
     HGDIOBJ oldBmp_;
     BITMAP bmpInfo_;
 
-    HDC orgDc_;;
+    HDC orgDc_;
     nui::Base::NRect rcPaint_;
 };

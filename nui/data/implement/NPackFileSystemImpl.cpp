@@ -4,7 +4,7 @@
 #include "../../util/NFileUtil.h"
 
 
-NPackFileSystemImpl::NPackFileSystemImpl() : zipFile_(InstPtrParam)
+NPackFileSystemImpl::NPackFileSystemImpl() : zipFile_(MemToolParam)
 {
 }
 

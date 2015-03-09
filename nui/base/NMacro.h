@@ -21,3 +21,7 @@
 #define END_USE_UNEXPORT_TEMPLATE()     \
     __pragma(warning(pop))
 #endif // END_USE_UNEXPORT_TEMPLATE
+
+
+#define MemToolParam __FILE__, __LINE__
+

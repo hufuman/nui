@@ -20,7 +20,7 @@ namespace nui
         {
             if(rootFrame_ == NULL)
             {
-                Base::NInstPtr<NFrame> rootFrame(InstPtrParam);
+                Base::NInstPtr<NFrame> rootFrame(MemToolParam);
                 rootFrame_ = (NFrame*)rootFrame;
                 Base::NRect rect;
                 GetRect(rect);
@@ -131,7 +131,10 @@ namespace nui
         void NWindow::OnDraw(NRender* render, const Base::NRect& clipRect)
         {
             if(rootFrame_ != NULL)
-                rootFrame_->Draw(render, clipRect);
+            {
+                Base::NPoint pt;
+                rootFrame_->Draw(render, pt, clipRect);
+            }
         }
     }
 }

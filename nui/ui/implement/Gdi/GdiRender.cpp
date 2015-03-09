@@ -49,72 +49,13 @@ namespace nui
             if(penAlpha == brushAlpha)
             {
                 CAlphaDC alphaDc;
-                alphaDc.Init(memDC_, rect, false);
-
-                switch(shape->GetStyle())
+                if(alphaDc.Init(memDC_, rect, memDC_.GetSize(), false))
                 {
-                case NShape::Rect:
-                    {
-                        DrawAndFillRectImpl(alphaDc, rect, borderWidth, borderColor, fillColor);
-                    }
-                    break;
-                case NShape::Line:
-                    {
-                        Gdi::CGdiSelector selector(alphaDc, ::CreatePen(PS_SOLID, borderWidth, borderColor & 0x00FFFFFF), true);
-                        ::MoveToEx(alphaDc, rect.Left, rect.Top, NULL);
-                        ::LineTo(alphaDc, rect.Right, rect.Bottom);
-                    }
-                    break;
-                case NShape::RoundRect:
-                    {
-                        Base::NRect rcRound(rect);
-                        Gdi::CGdiHolder rgnHolder(::CreateRoundRectRgn(rcRound.Left, rcRound.Top, rcRound.Right + 1, rcRound.Bottom + 1, borderWidth * 4, borderWidth * 4), true);
-                        Gdi::CGdiHolder fillBrushHolder(::CreateSolidBrush(fillColor & 0x00FFFFFF), true);
-                        ::FillRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(fillBrushHolder)));
-                        Gdi::CGdiHolder borderBrushHolder(::CreateSolidBrush(borderColor & 0x00FFFFFF), true);
-                        ::FrameRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(borderBrushHolder)), borderWidth, borderWidth);
-                    }
-                    break;
-                }
-                alphaDc.EndDraw(brushAlpha);
-            }
-            else
-            {
-                if(brushAlpha > 0)
-                {
-                    CAlphaDC alphaDc;
-                    alphaDc.Init(memDC_, rect, false);
-
                     switch(shape->GetStyle())
                     {
                     case NShape::Rect:
                         {
-                            Base::NRect rcTmp(rect);
-                            rcTmp.Inflate(-borderWidth, -borderWidth);
-                            FillRectImpl(alphaDc, rcTmp, fillColor);
-                        }
-                        break;
-                    case NShape::RoundRect:
-                        {
-                            Base::NRect rcRound(rect);
-                            Gdi::CGdiHolder brushHolder(::CreateSolidBrush(fillColor & 0x00FFFFFF), true);
-                            Gdi::CGdiHolder rgnHolder(::CreateRoundRectRgn(rcRound.Left, rcRound.Top, rcRound.Right + 1, rcRound.Bottom + 1, borderWidth * 4, borderWidth * 4), true);
-                            ::FillRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(brushHolder)));
-                        }
-                        break;
-                    }
-                    alphaDc.EndDraw(brushAlpha);
-                }
-                if(penAlpha > 0)
-                {
-                    CAlphaDC alphaDc;
-                    alphaDc.Init(memDC_, rect, false);
-
-                    switch(shape->GetStyle())
-                    {
-                    case NShape::Rect:
-                        {
-                            DrawRectImpl(alphaDc, rect, borderWidth, borderColor);
+                            DrawAndFillRectImpl(alphaDc, rect, borderWidth, borderColor, fillColor);
                         }
                         break;
                     case NShape::Line:
@@ -127,13 +68,75 @@ namespace nui
                     case NShape::RoundRect:
                         {
                             Base::NRect rcRound(rect);
-                            Gdi::CGdiHolder brushHolder(::CreateSolidBrush(borderColor & 0x00FFFFFF), true);
                             Gdi::CGdiHolder rgnHolder(::CreateRoundRectRgn(rcRound.Left, rcRound.Top, rcRound.Right + 1, rcRound.Bottom + 1, borderWidth * 4, borderWidth * 4), true);
-                            ::FrameRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(brushHolder)), borderWidth, borderWidth);
+                            Gdi::CGdiHolder fillBrushHolder(::CreateSolidBrush(fillColor & 0x00FFFFFF), true);
+                            ::FillRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(fillBrushHolder)));
+                            Gdi::CGdiHolder borderBrushHolder(::CreateSolidBrush(borderColor & 0x00FFFFFF), true);
+                            ::FrameRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(borderBrushHolder)), borderWidth, borderWidth);
                         }
                         break;
                     }
-                    alphaDc.EndDraw(penAlpha);
+                    alphaDc.EndDraw(brushAlpha);
+                }
+            }
+            else
+            {
+                if(brushAlpha > 0)
+                {
+                    CAlphaDC alphaDc;
+                    if(alphaDc.Init(memDC_, rect, memDC_.GetSize(), false))
+                    {
+                        switch(shape->GetStyle())
+                        {
+                        case NShape::Rect:
+                            {
+                                Base::NRect rcTmp(rect);
+                                rcTmp.Inflate(-borderWidth, -borderWidth);
+                                FillRectImpl(alphaDc, rcTmp, fillColor);
+                            }
+                            break;
+                        case NShape::RoundRect:
+                            {
+                                Base::NRect rcRound(rect);
+                                Gdi::CGdiHolder brushHolder(::CreateSolidBrush(fillColor & 0x00FFFFFF), true);
+                                Gdi::CGdiHolder rgnHolder(::CreateRoundRectRgn(rcRound.Left, rcRound.Top, rcRound.Right + 1, rcRound.Bottom + 1, borderWidth * 4, borderWidth * 4), true);
+                                ::FillRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(brushHolder)));
+                            }
+                            break;
+                        }
+                        alphaDc.EndDraw(brushAlpha);
+                    }
+                }
+                if(penAlpha > 0)
+                {
+                    CAlphaDC alphaDc;
+                    if(alphaDc.Init(memDC_, rect, memDC_.GetSize(), false))
+                    {
+                        switch(shape->GetStyle())
+                        {
+                        case NShape::Rect:
+                            {
+                                DrawRectImpl(alphaDc, rect, borderWidth, borderColor);
+                            }
+                            break;
+                        case NShape::Line:
+                            {
+                                Gdi::CGdiSelector selector(alphaDc, ::CreatePen(PS_SOLID, borderWidth, borderColor & 0x00FFFFFF), true);
+                                ::MoveToEx(alphaDc, rect.Left, rect.Top, NULL);
+                                ::LineTo(alphaDc, rect.Right, rect.Bottom);
+                            }
+                            break;
+                        case NShape::RoundRect:
+                            {
+                                Base::NRect rcRound(rect);
+                                Gdi::CGdiHolder brushHolder(::CreateSolidBrush(borderColor & 0x00FFFFFF), true);
+                                Gdi::CGdiHolder rgnHolder(::CreateRoundRectRgn(rcRound.Left, rcRound.Top, rcRound.Right + 1, rcRound.Bottom + 1, borderWidth * 4, borderWidth * 4), true);
+                                ::FrameRgn(alphaDc, static_cast<HRGN>(static_cast<HGDIOBJ>(rgnHolder)), static_cast<HBRUSH>(static_cast<HGDIOBJ>(brushHolder)), borderWidth, borderWidth);
+                            }
+                            break;
+                        }
+                        alphaDc.EndDraw(penAlpha);
+                    }
                 }
             }
         }
@@ -177,16 +180,10 @@ namespace nui
 
             if(gdiText->GetVertCenter())
             {
-                textRect.Inflate(-(rect.Width() - size.Width) / 2, -(rect.Height() - size.Height) / 2);
-                // limit rect to be valid
-                if(textRect.Top < rect.Top)
-                    textRect.Top = rect.Top;
-                if(textRect.Left < rect.Left)
-                    textRect.Left = rect.Left;
-                if(textRect.Right > rect.Right)
-                    textRect.Right = rect.Right;
-                if(textRect.Bottom > rect.Bottom)
-                    textRect.Bottom = rect.Bottom;
+                if(gdiText->GetHorzCenter())
+                    textRect.Inflate(-(rect.Width() - size.Width) / 2, -(rect.Height() - size.Height) / 2);
+                else
+                    textRect.Inflate(0, -(rect.Height() - size.Height) / 2);
             }
             else
             {
@@ -194,14 +191,25 @@ namespace nui
                 textRect.Offset(rect.Left, rect.Top);
             }
 
+            // limit rect to be valid
+            if(textRect.Top < rect.Top)
+                textRect.Top = rect.Top;
+            if(textRect.Left < rect.Left)
+                textRect.Left = rect.Left;
+            if(textRect.Right > rect.Right)
+                textRect.Right = rect.Right;
+            if(textRect.Bottom > rect.Bottom)
+                textRect.Bottom = rect.Bottom;
+
             CAlphaDC alphaDc;
-            alphaDc.Init(memDC_, textRect, true);
+            if(alphaDc.Init(memDC_, textRect, memDC_.GetSize(), true))
+            {
+                Gdi::CGdiSelector fontSelector(alphaDc, ::GetCurrentObject(memDC_, OBJ_FONT), false);
+                ::SetTextColor(alphaDc, gdiText->GetColor() & 0x00FFFFFF);
+                ::DrawText(alphaDc, text->GetText(), text->GetText().GetLength(), textRect, gdiText->GetDrawFlags());
 
-            Gdi::CGdiSelector fontSelector(alphaDc, ::GetCurrentObject(memDC_, OBJ_FONT), false);
-            ::SetTextColor(alphaDc, gdiText->GetColor() & 0x00FFFFFF);
-            ::DrawText(alphaDc, text->GetText(), text->GetText().GetLength(), textRect, gdiText->GetDrawFlags());
-
-            alphaDc.EndDraw(GetAlpha(text->GetColor()));
+                alphaDc.EndDraw(GetAlpha(text->GetColor()));
+            }
         }
 
         void GdiRender::GetTextSize(NText *text, nui::Base::NSize &size)
@@ -221,6 +229,45 @@ namespace nui
             ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rcTmp, flags | DT_CALCRECT);
             size.Width = rcTmp.Width();
             size.Height = rcTmp.Height();
+        }
+
+        nui::Base::NHolder GdiRender::ClipRect(const nui::Base::NRect& rect)
+        {
+            if(rect.Right <= rect.Left
+                || rect.Bottom <= rect.Top)
+            {
+                Base::NHolder holder;
+                return holder;
+            }
+
+            HRGN oldClip = ::CreateRectRgn(0, 0, 0, 0);
+            ::GetClipRgn(memDC_, oldClip);
+
+            HRGN hItemClip = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
+            if(hItemClip != NULL)
+            {
+                ::ExtSelectClipRgn(memDC_, hItemClip, RGN_AND);
+                ::DeleteObject(hItemClip);
+            }
+
+            Base::NHolder holder(reinterpret_cast<void*>(oldClip), MakeDelegate(this, &GdiRender::RestoreRgn));
+            return holder;
+        }
+
+        MemDC& GdiRender::GetMemDC()
+        {
+            return memDC_;
+        }
+
+        void GdiRender::RestoreRgn(void* data)
+        {
+            if(data == NULL || memDC_ == NULL)
+                return;
+
+            HRGN oldClip = reinterpret_cast<HRGN>(data);
+
+            ::ExtSelectClipRgn(memDC_, oldClip, RGN_COPY);
+            ::DeleteObject(oldClip);
         }
 
         void GdiRender::FillRectImpl(HDC hDc, const Base::NRect& rect, ArgbColor fillColor)
