@@ -3,6 +3,7 @@
 
 #include "../NMemTool.h"
 #include "../../data/NFileSystem.h"
+#include "../../util/NFileUtil.h"
 
 IMPLEMENT_REFLECTION_EX(NCoreImpl, nui::Base::NReflect::Singleton);
 
@@ -48,7 +49,9 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
     if(!fileSystem)
         return false;
 
-    bool initResult = fileSystem->Init(packFilePath);
+    bool initResult = true;
+    if(nui::Util::File::IsFileExists(packFilePath) || nui::Util::File::IsFolderExists(packFilePath))
+        initResult = fileSystem->Init(packFilePath);
     NAssertError(initResult, _T("Failed to init NFileSystem"));
     if(!initResult)
         return false;

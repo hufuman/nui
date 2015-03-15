@@ -15,6 +15,7 @@ namespace nui
         NWindowBase::NWindowBase()
         {
             window_ = NULL;
+            layered_ = false;
         }
 
         NWindowBase::~NWindowBase()
@@ -29,6 +30,11 @@ namespace nui
 
         bool NWindowBase::Create(HWND parentWindow)
         {
+            return Create(parentWindow, WindowStyle::Top);
+        }
+
+        bool NWindowBase::Create(HWND parentWindow, DWORD styleValue)
+        {
             NAssertError(window_ == NULL, _T("Window already exists"));
 
             bool result = Util::EnsureWindowClass(SKIN_WINDOW_NAME, &NWindowBase::_staticWndProc);
@@ -36,8 +42,13 @@ namespace nui
             if(!result)
                 return false;
 
-            window_ = ::CreateWindowEx(SKIN_WINDOW_EXSTYLE, SKIN_WINDOW_NAME, _T(""),
-                SKIN_WINDOW_STYLE,
+            DWORD style, exStyle;
+            GetStyle(styleValue, style, exStyle);
+
+            window_ = ::CreateWindowEx(exStyle,
+                SKIN_WINDOW_NAME,
+                _T(""),
+                style,
                 0, 0,
                 CW_USEDEFAULT, CW_USEDEFAULT,
                 parentWindow,
@@ -45,6 +56,11 @@ namespace nui
                 nui::Data::NModule::GetInst().GetNUIModule(),
                 static_cast<LPVOID>(this));
             NAssertError(window_ != NULL, _T("Failed to create window"));
+
+            if(window_)
+            {
+                OnCreate();
+            }
 
             return (window_ != NULL);
         }
@@ -86,7 +102,18 @@ namespace nui
         {
             NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::ShowWindow"));
             if(window_ != NULL)
-                ::ShowWindow(window_, visible ? SW_SHOWNORMAL : SW_HIDE);
+            {
+                if(visible)
+                {
+                    ::ShowWindow(window_, SW_SHOW);
+                    if(::IsIconic(window_) || ::GetForegroundWindow() != window_)
+                        ::SwitchToThisWindow(window_, TRUE);
+                }
+                else
+                {
+                    ::ShowWindow(window_, SW_HIDE);
+                }
+            }
         }
 
         bool NWindowBase::GetRect(nui::Base::NRect& rect)
@@ -168,14 +195,24 @@ namespace nui
         {
             NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
             if(window_ != NULL)
-                ::InvalidateRect(window_, NULL, TRUE);
+            {
+                if(IsLayered())
+                    ::PostMessage(window_, WM_PAINT, 0, 0);
+                else
+                    ::InvalidateRect(window_, NULL, TRUE);
+            }
         }
 
         void NWindowBase::InvalidateRect(const Base::NRect& rect)
         {
             NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
             if(window_ != NULL)
-                ::InvalidateRect(window_, rect, TRUE);
+            {
+                if(IsLayered())
+                    ::PostMessage(window_, WM_PAINT, 0, 0);
+                else
+                    ::InvalidateRect(window_, rect, TRUE);
+            }
         }
 
         void NWindowBase::SetText(LPCTSTR text)
@@ -232,5 +269,41 @@ namespace nui
             return false;
         }
 
+        void NWindowBase::OnCreate()
+        {
+            layered_ = ((::GetWindowLongPtr(window_, GWL_EXSTYLE) & WS_EX_LAYERED) == WS_EX_LAYERED);
+            Invalidate();
+        }
+
+        bool NWindowBase::IsLayered() const
+        {
+            return layered_;
+        }
+
+        void NWindowBase::GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const
+        {
+            style = 0;
+            exStyle = 0;
+            if(styleValue & WindowStyle::Child)
+            {
+                style |= WS_CHILD;
+            }
+            if(styleValue & WindowStyle::Layered)
+            {
+                exStyle |= WS_EX_LAYERED;
+            }
+            if(styleValue & WindowStyle::Sizable)
+            {
+                style |= WS_SIZEBOX | WS_OVERLAPPED;
+            }
+            if(styleValue & WindowStyle::Transparent)
+            {
+                exStyle |= WS_EX_TRANSPARENT;
+            }
+            if((styleValue & WindowStyle::Top) || styleValue == 0)
+            {
+                style |= WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_MAXIMIZEBOX;
+            }
+        }
     }
 }

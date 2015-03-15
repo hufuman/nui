@@ -15,12 +15,12 @@ namespace nui
             ~GdiRender();
 
             virtual bool Init(HDC hDc, const Base::NRect& rcPaint);
-            virtual void DrawBack();
+            virtual void DrawBack(bool layered);
 
             virtual void DrawShape(const Base::NRect& rect, NShape* shape);
             virtual void DrawImage(NImage* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue);
-            virtual void DrawText(NText* text, const Base::NRect& rect);
-            virtual void GetTextSize(NText* text, Base::NSize& rect);
+            virtual void DrawText(NText* text, NFont* font, const Base::NRect& rect);
+            virtual void GetTextSize(NText* text, NFont* font, Base::NSize& rect);
             virtual Base::NHolder ClipRect(const nui::Base::NRect& rect);
 
             MemDC& GetMemDC();
@@ -34,6 +34,7 @@ namespace nui
             void DrawAndFillRectImpl(HDC hDc, const Base::NRect& rect, int width, ArgbColor borderColor, ArgbColor fillColor);
 
         private:
+            HDC orgDc_;
             MemDC memDC_;
         };
     }

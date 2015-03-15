@@ -8,12 +8,10 @@ namespace nui
     {
         NWindow::NWindow()
         {
-            ;
         }
 
         NWindow::~NWindow()
         {
-            ;
         }
 
         NFrame* NWindow::GetRootFrame()
@@ -32,6 +30,11 @@ namespace nui
         NRender* NWindow::GetRender() const
         {
             return render_;
+        }
+
+        void NWindow::SetDrawCallback(WindowDrawCallback callback)
+        {
+            drawCallback_ = callback;
         }
 
         // WindowMsgFilter
@@ -73,37 +76,15 @@ namespace nui
             case WM_PAINT:
                 {
                     PAINTSTRUCT ps = {0};
-                    HDC hDC = ::BeginPaint(window_, &ps);
-
-                    Base::NRect clientRect;
-                    ::GetClientRect(window_, clientRect);
-                    render_->Init(hDC, clientRect);
-
-                    Base::NRect clipRect;
-                    int nResult = GetClipBox(hDC, clipRect);
-                    if(nResult == NULLREGION)
-                        ::GetClientRect(window_, clipRect);
-                    OnDraw(render_, clipRect);
-
-                    render_->DrawBack();
+                    HDC hDc = ::BeginPaint(window_, &ps);
+                    Draw(hDc);
                     ::EndPaint(window_, &ps);
                 }
                 break;
             case WM_PRINT:
                 {
-                    HDC hDC = (HDC)wParam;
-
-                    Base::NRect clientRect;
-                    ::GetClientRect(window_, clientRect);
-                    render_->Init(hDC, clientRect);
-
-                    Base::NRect clipRect;
-                    int nResult = GetClipBox(hDC, clipRect);
-                    if(nResult == NULLREGION)
-                        ::GetClientRect(window_, clipRect);
-                    OnDraw(render_, clipRect);
-
-                    render_->DrawBack();
+                    HDC hDc = (HDC)wParam;
+                    Draw(hDc);
                 }
                 break;
             case WM_SIZE:
@@ -130,11 +111,29 @@ namespace nui
 
         void NWindow::OnDraw(NRender* render, const Base::NRect& clipRect)
         {
+            if(drawCallback_ && drawCallback_(this, render, clipRect))
+                return;
+
             if(rootFrame_ != NULL)
             {
                 Base::NPoint pt;
                 rootFrame_->Draw(render, pt, clipRect);
             }
+        }
+
+        void NWindow::Draw(HDC hDc)
+        {
+            Base::NRect clientRect;
+            ::GetClientRect(window_, clientRect);
+            render_->Init(hDc, clientRect);
+
+            Base::NRect clipRect;
+            int nResult = GetClipBox(hDc, clipRect);
+            if(nResult == NULLREGION)
+                ::GetClientRect(window_, clipRect);
+            OnDraw(render_, clipRect);
+
+            render_->DrawBack(IsLayered());
         }
     }
 }

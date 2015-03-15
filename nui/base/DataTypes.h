@@ -220,6 +220,26 @@ namespace nui
                 return reinterpret_cast<const RECT*>(this);
             }
 
+            NPoint& GetLeftTop()
+            {
+                return *reinterpret_cast<NPoint*>(this);
+            }
+
+            const NPoint& GetLeftTop() const
+            {
+                return *reinterpret_cast<NPoint*>(const_cast<NRect*>(this));
+            }
+
+            NSize& GetSize()
+            {
+                return *reinterpret_cast<NSize*>(const_cast<NRect*>(this));
+            }
+
+            const NSize& GetSize() const
+            {
+                return *reinterpret_cast<NSize*>(const_cast<NRect*>(this) + 1);
+            }
+
             bool operator == (const NRect& rect) const
             {
                 return Left == rect.Left

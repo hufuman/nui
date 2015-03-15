@@ -18,7 +18,6 @@ public:
     }
     ~MemDC()
     {
-        DrawBack();
         Destroy();
     }
 
@@ -51,25 +50,6 @@ public:
         {
             ::DeleteObject(rgn);
         }
-    }
-
-    void DrawBack()
-    {
-        if(oldBitmap_ == NULL)
-            return;
-
-        BLENDFUNCTION BlendFunc = {0};
-        BlendFunc.BlendOp = AC_SRC_OVER;
-        BlendFunc.SourceConstantAlpha = alphaValue_;
-        BlendFunc.AlphaFormat = AC_SRC_ALPHA;
-        BOOL bResult = ::AlphaBlend(dc_,
-            viewPos_.X, viewPos_.Y,
-            viewSize_.Width, viewSize_.Height,
-            memDC_,
-            0, 0,
-            viewSize_.Width, viewSize_.Height,
-            BlendFunc);
-        NAssertError(!!bResult, _T("AlphaBlend Failed"));
     }
 
     void Destroy()

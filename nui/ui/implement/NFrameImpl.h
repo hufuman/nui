@@ -98,6 +98,7 @@ namespace nui
 
             Base::NString frameId_;
             Base::NAutoPtr<NText> text_;
+            Base::NAutoPtr<NFont> font_;
             Base::NRect frameRect_;
             Base::NSize minSize_;
         };

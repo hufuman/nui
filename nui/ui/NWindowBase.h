@@ -12,6 +12,19 @@ namespace nui
         class NWindowBase;
         typedef FastDelegate5<NWindowBase*, UINT, WPARAM, LPARAM, LRESULT&, bool> MsgFilterCallback;
 
+        class WindowStyle
+        {
+        public:
+            enum Value
+            {
+                Top         = 0x0001,
+                Child       = 0x0002,
+                Transparent = 0x0004,
+                Layered     = 0x0008,
+                Sizable     = 0x0010,
+            };
+        };
+
         class NUI_CLASS NWindowBase : public nui::Base::Noncopyable
         {
         public:
@@ -20,6 +33,7 @@ namespace nui
 
             void SetMsgFilterCallback(MsgFilterCallback callback);
             bool Create(HWND parentWindow);
+            bool Create(HWND parentWindow, DWORD styleValue);
             bool DoModal(HWND parentWindow);
             void Destroy();
             void SetVisible(BOOL visible);
@@ -40,9 +54,14 @@ namespace nui
         protected:
             static LRESULT WINAPI _staticWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+            virtual void OnCreate();
+
+            bool IsLayered() const;
+            void GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const;
 
         protected:
             HWND    window_;
+            bool    layered_;
             MsgFilterCallback msgFilterCallback_;
         };
         END_USE_UNEXPORT_TEMPLATE()

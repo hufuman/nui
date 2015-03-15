@@ -5,7 +5,9 @@
 #include "GdiImage.h"
 #include "GdiShape.h"
 #include "GdiText.h"
+#include "GdiFont.h"
 #include "StreamImpl.h"
+#include "GdiObjMgr.h"
 
 namespace nui
 {
@@ -20,6 +22,12 @@ namespace nui
         GdiResourceLoader::~GdiResourceLoader()
         {
             ReleaseAllImages();
+            GdiObjMgr::Instance().Destroy();
+        }
+
+        void GdiResourceLoader::Init()
+        {
+            GdiObjMgr::Instance().Init();
         }
 
         NImage* GdiResourceLoader::LoadImage(LPCTSTR filePath)
@@ -140,6 +148,13 @@ namespace nui
         {
             NText* result = dynamic_cast<NText*>(NNewEx(GdiText, filePath, line));
             result->SetText(text);
+            return result;
+        }
+
+        NFont* GdiResourceLoader::CreateFont(int fontSize, LPCSTR filePath, int line)
+        {
+            NFont* result = dynamic_cast<NFont*>(NNewEx(GdiFont, filePath, line));
+            result->SetFontSize(fontSize);
             return result;
         }
 

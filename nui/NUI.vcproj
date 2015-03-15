@@ -445,11 +445,19 @@
 				RelativePath=".\util\NMisc.h"
 				>
 			</File>
+			<File
+				RelativePath=".\util\NShellUtil.h"
+				>
+			</File>
 			<Filter
 				Name="implement"
 				>
 				<File
 					RelativePath=".\util\implement\NFileUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\util\implement\NShellUtil.cpp"
 					>
 				</File>
 			</Filter>
@@ -463,6 +471,10 @@
 			</File>
 			<File
 				RelativePath=".\ui\NEvent.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ui\NFont.h"
 				>
 			</File>
 			<File
@@ -592,11 +604,27 @@
 						>
 					</File>
 					<File
+						RelativePath=".\ui\implement\Gdi\GdiFont.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiFont.h"
+						>
+					</File>
+					<File
 						RelativePath=".\ui\implement\Gdi\GdiImage.cpp"
 						>
 					</File>
 					<File
 						RelativePath=".\ui\implement\Gdi\GdiImage.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiObjMgr.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiObjMgr.h"
 						>
 					</File>
 					<File

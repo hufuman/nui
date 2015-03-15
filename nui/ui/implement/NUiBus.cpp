@@ -29,6 +29,7 @@ namespace nui
             {
             case NRenderType::GdiRender:
                 loader_ = dynamic_cast<NResourceLoader*>(NNew(GdiResourceLoader));
+                dynamic_cast<GdiResourceLoader*>(loader_)->Init();
                 loader_->AddRef();
                 break;
             }

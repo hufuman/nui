@@ -7,6 +7,7 @@
 #include "GdiShape.h"
 #include "GdiImage.h"
 #include "GdiText.h"
+#include "GdiFont.h"
 #include "GdiUtil.h"
 
 namespace nui
@@ -14,21 +15,63 @@ namespace nui
     namespace Ui
     {
         GdiRender::GdiRender()
-        {}
+        {
+            orgDc_ = NULL;
+        }
 
         GdiRender::~GdiRender()
         {}
 
         bool GdiRender::Init(HDC hDc, const Base::NRect& rcPaint)
         {
+            orgDc_ = hDc;
             memDC_.Init(hDc, rcPaint, 255);
             ::SetBkMode(memDC_, TRANSPARENT);
             return true;
         }
 
-        void GdiRender::DrawBack()
+        void GdiRender::DrawBack(bool layered)
         {
-            memDC_.DrawBack();
+            if(memDC_ == NULL)
+                return;
+
+            BLENDFUNCTION BlendFunc = {0};
+            BlendFunc.BlendOp = AC_SRC_OVER;
+            BlendFunc.SourceConstantAlpha = 255;
+            BlendFunc.AlphaFormat = AC_SRC_ALPHA;
+
+            const nui::Base::NPoint& pt = memDC_.GetLeftTop();
+            const nui::Base::NSize& size = memDC_.GetSize();
+
+            BOOL result;
+            if(layered)
+            {
+                HWND window = ::WindowFromDC(orgDc_);
+                Base::NRect  rcWnd;
+                ::GetWindowRect(window, rcWnd);
+                POINT ptTemp = {pt.X, pt.Y};
+                SIZE sizeTemp = {rcWnd.Width(), rcWnd.Height()};
+                result = ::UpdateLayeredWindow(window,
+                    orgDc_,
+                    rcWnd.GetLeftTop(),
+                    &sizeTemp,
+                    memDC_,
+                    &ptTemp,
+                    0,
+                    &BlendFunc,
+                    ULW_ALPHA);
+            }
+            else
+            {
+                result = ::AlphaBlend(orgDc_,
+                    pt.X, pt.Y,
+                    size.Width, size.Height,
+                    memDC_,
+                    0, 0,
+                    size.Width, size.Height,
+                    BlendFunc);
+            }
+            NAssertError(!!result, _T("AlphaBlend Failed"));
             memDC_.Destroy();
         }
 
@@ -167,16 +210,25 @@ namespace nui
             NAssertError(!!bResult, _T("AlphaBlend Failed in GdiRender::DrawImage"));
         }
 
-        void GdiRender::DrawText(NText* text, const Base::NRect& rect)
+        void GdiRender::DrawText(NText* text, NFont* font, const Base::NRect& rect)
         {
             GdiText* gdiText = dynamic_cast<GdiText*>(text);
+            GdiFont* gdiFont = NULL;
             NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
             if(gdiText == NULL)
                 return;
 
+            if(font != NULL)
+            {
+                gdiFont = dynamic_cast<GdiFont*>(font);
+                NAssertError(gdiFont != NULL, _T("Not GdiFont in GdiRender::DrawText"));
+                if(gdiFont == NULL)
+                    return;
+            }
+
             Base::NRect textRect(rect);
             Base::NSize size(rect.Width(), rect.Height());
-            GetTextSize(text, size);
+            GetTextSize(text, font, size);
 
             if(gdiText->GetVertCenter())
             {
@@ -204,7 +256,10 @@ namespace nui
             CAlphaDC alphaDc;
             if(alphaDc.Init(memDC_, textRect, memDC_.GetSize(), true))
             {
-                Gdi::CGdiSelector fontSelector(alphaDc, ::GetCurrentObject(memDC_, OBJ_FONT), false);
+                HGDIOBJ hFont = gdiFont == NULL ? ::GetCurrentObject(memDC_, OBJ_FONT) : gdiFont->GetFont();
+                if(hFont == NULL)
+                    hFont = ::GetCurrentObject(memDC_, OBJ_FONT);
+                Gdi::CGdiSelector fontSelector(alphaDc, hFont, false);
                 ::SetTextColor(alphaDc, gdiText->GetColor() & 0x00FFFFFF);
                 ::DrawText(alphaDc, text->GetText(), text->GetText().GetLength(), textRect, gdiText->GetDrawFlags());
 
@@ -212,12 +267,21 @@ namespace nui
             }
         }
 
-        void GdiRender::GetTextSize(NText *text, nui::Base::NSize &size)
+        void GdiRender::GetTextSize(NText *text, NFont* font, nui::Base::NSize &size)
         {
             GdiText* gdiText = dynamic_cast<GdiText*>(text);
             NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
             if(gdiText == NULL)
                 return;
+
+            HFONT hFont = NULL;
+            GdiFont* gdiFont = NULL;
+            if(font != NULL)
+            {
+                gdiFont = dynamic_cast<GdiFont*>(font);
+                hFont = gdiFont->GetFont();
+            }
+            Gdi::CGdiSelector selector(memDC_, hFont, false);
 
             DWORD flags = gdiText->GetDrawFlags();
             flags = (flags & (~DT_CENTER));

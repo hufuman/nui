@@ -24,6 +24,7 @@
 #include <functional>
 
 #include <CommCtrl.h>
+#include <CommDlg.h>
 #include <shellapi.h>
 
 
@@ -53,6 +54,7 @@ using namespace fastdelegate;
 #include "./data/NArrayT.h"
 #include "./data/NFileSystem.h"
 
+#include "./util/NShellUtil.h"
 #include "./util/NFileUtil.h"
 #include "./util/NMisc.h"
 
@@ -67,6 +69,7 @@ using namespace fastdelegate;
 #include "./ui/NUiBus.h"
 #include "./ui/NRender.h"
 #include "./ui/NWindow.h"
+#include "./ui/NFont.h"
 
 #ifdef _NOT_USE_NUI_NAMESPACE
 using namespace nui;

@@ -327,7 +327,7 @@ namespace nui
             if(!window_ || text_ == NULL)
                 return;
             Base::NSize txtSize;
-            window_->GetRender()->GetTextSize(text_, txtSize);
+            window_->GetRender()->GetTextSize(text_, font_, txtSize);
             SetSize(txtSize.Width, txtSize.Height);
         }
 
@@ -379,7 +379,7 @@ namespace nui
             NRenderClip clip(render, rect);
 
             if(text_ != NULL)
-                render->DrawText(text_, rect);
+                render->DrawText(text_, font_, rect);
 
             {
                 ptOffset.Offset(frameRect_.Left, frameRect_.Top);
