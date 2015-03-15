@@ -15,6 +15,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uitest", "uitest\uitest.vcp
 		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{84718F2F-A4BA-453D-A793-BAA54CBF2E1E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgviewer", "imgviewer\imgviewer.vcproj", "{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +40,10 @@ Global
 		{071561F9-1C23-4903-A107-E92E5C7C8113}.Debug|Win32.Build.0 = Debug|Win32
 		{071561F9-1C23-4903-A107-E92E5C7C8113}.Release|Win32.ActiveCfg = Release|Win32
 		{071561F9-1C23-4903-A107-E92E5C7C8113}.Release|Win32.Build.0 = Release|Win32
+		{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}.Debug|Win32.Build.0 = Debug|Win32
+		{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}.Release|Win32.ActiveCfg = Release|Win32
+		{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,5 +51,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7BA70EEB-C1FF-4172-B719-34C12AE5A289} = {47AF0C06-85FE-465B-A744-4259AF476C69}
 		{071561F9-1C23-4903-A107-E92E5C7C8113} = {47AF0C06-85FE-465B-A744-4259AF476C69}
+		{ACAEFAB6-99BD-43AF-A12F-1105A17822BB} = {84718F2F-A4BA-453D-A793-BAA54CBF2E1E}
 	EndGlobalSection
 EndGlobal
