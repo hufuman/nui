@@ -17,7 +17,17 @@
 #include <memory.h>
 #include <tchar.h>
 
+#include <Unknwn.h>
+#include <GdiPlus.h>
+
+#pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "GdiPlus.lib")
+#pragma comment(lib, "Msimg32.lib")
+#pragma comment(lib, "comsupp.lib")
+#pragma comment(lib, "Urlmon.lib")
+
 
 #define _NOT_USE_NUI_NAMESPACE 1
+#define NUI_STATIC 1
 #include "../NUI/NUI.h"
 // TODO: reference additional headers your program requires here

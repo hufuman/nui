@@ -18,9 +18,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{84718F2F-A4BA-453D-A793-BAA54CBF2E1E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgviewer", "imgviewer\imgviewer.vcproj", "{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

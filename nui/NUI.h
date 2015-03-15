@@ -1,7 +1,12 @@
 #pragma once
 
 
-#ifdef NUI_EXPORTS
+#if defined(NUI_STATIC)
+    #define NUI_API
+    #define NUI_CLASS
+    #define NUI_INTF
+    #define NUI_TEMPLATE
+#elif defined(NUI_EXPORTS)
     #define NUI_API         __declspec(dllexport)
     #define NUI_CLASS       __declspec(dllexport)
     #define NUI_INTF

@@ -13,7 +13,7 @@ namespace nui
 
         NModule::NModule()
         {
-            nuiModule_ = NULL;
+            nuiModule_ = ::GetModuleHandle(NULL);
             bigIcon_ = NULL;
             smallIcon_ = NULL;
         }
