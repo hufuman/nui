@@ -19,7 +19,7 @@ namespace nui
             virtual void DrawBack() = 0;
 
             virtual void DrawShape(const Base::NRect& rect, NShape* shape) = 0;
-            virtual void DrawImage(NImage* image, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue) = 0;
+            virtual void DrawImage(NImage* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue) = 0;
             virtual void DrawText(NText* text, const Base::NRect& rect) = 0;
             virtual void GetTextSize(NText* text, Base::NSize& rect) = 0;
 
@@ -81,29 +81,27 @@ namespace nui
                 DrawShape(rect, shape);
             }
 
-            __inline void DrawImage(NImage* image, const Base::NRect& dstRect)
+            __inline void DrawImage(NImage* image, int horzIndex, int vertIndex, const Base::NRect& dstRect, int frameIndex)
             {
-                DrawImage(image, dstRect.Left, dstRect.Top, dstRect.Width(), dstRect.Height());
+                DrawImage(image, frameIndex, horzIndex, vertIndex, dstRect.Left, dstRect.Top, dstRect.Width(), dstRect.Height());
             }
 
-            __inline void DrawImage(NImage* image, int dstX, int dstY)
+            __inline void DrawImage(NImage* image, int horzIndex, int vertIndex, int dstX, int dstY, int frameIndex)
             {
                 Base::NSize size = image->GetSize();
-                DrawImage(image, dstX, dstY, size.Width, size.Height);
+                DrawImage(image, frameIndex, horzIndex, vertIndex, dstX, dstY, size.Width, size.Height);
             }
 
-            __inline void DrawImage(NImage* image, int dstX, int dstY, int dstWidth, int dstHeight)
+            __inline void DrawImage(NImage* image, int horzIndex, int vertIndex, int dstX, int dstY, int dstWidth, int dstHeight, int frameIndex)
             {
                 Base::NSize size = image->GetSize();
                 int horzCount, vertCount;
                 image->GetCount(horzCount, vertCount);
-                int horzIndex, vertIndex;
-                image->GetIndex(horzIndex, vertIndex);
                 int srcX = size.Width * horzIndex / horzCount;
                 int srcY = size.Height * vertIndex / vertCount;
                 int srcWidth = size.Width / horzCount;
                 int srcHeight = size.Height / vertCount;
-                DrawImage(image, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, 255);
+                DrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, 255);
             }
         };
     }

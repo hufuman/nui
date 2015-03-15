@@ -141,13 +141,13 @@ namespace nui
             }
         }
 
-        void GdiRender::DrawImage(NImage* image, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
+        void GdiRender::DrawImage(NImage* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
             GdiImage* gdiImage = dynamic_cast<GdiImage*>(image);
             NAssertError(gdiImage != NULL, _T("Not GdiImage in GdiRender::DrawImage"));
             if(gdiImage == NULL)
                 return;
-            HBITMAP bitmap = gdiImage->GetHBitmap();
+            HBITMAP bitmap = gdiImage->GetHBitmap(frameIndex);
             NAssertError(bitmap != NULL, _T("GetHBitmap return NULL in GdiRender::DrawImage"));
             if(bitmap == NULL)
                 return;

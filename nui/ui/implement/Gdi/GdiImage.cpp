@@ -29,10 +29,10 @@ namespace nui
             UNREFERENCED_PARAMETER(bits);
         }
 
-        int GdiImage::NextDelayCount()
+        int GdiImage::NextDelayValue(int index)
         {
-            NAssertError(frameIndex_ < vctDelayCount_->Count(), _T("Out of bound"));
-            return (*vctDelayCount_)[frameIndex_];
+            NAssertError(index < vctDelayCount_->Count(), _T("Out of bound"));
+            return (*vctDelayCount_)[index];
         }
 
         void GdiImage::SetBitmaps(const Base::NString& imagePath, const Data::NArrayT<HBITMAP>& vctBitmaps, const Data::NArrayT<int>& vctDelayCount)
@@ -59,10 +59,10 @@ namespace nui
             }
         }
 
-        HBITMAP GdiImage::GetHBitmap() const
+        HBITMAP GdiImage::GetHBitmap(int index) const
         {
-            NAssertError(frameIndex_ < frameCount_, _T("index out of bound"));
-            return (*vctBitmaps_)[frameIndex_];
+            NAssertError(index < frameCount_, _T("index out of bound"));
+            return (*vctBitmaps_)[index];
         }
 
         void GdiImage::Destroy()

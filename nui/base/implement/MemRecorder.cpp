@@ -128,8 +128,6 @@ namespace nui
                 wprintf(logBuffer);
                 ++ nIndex;
             }
-            LPCTSTR msgContent = (LPCTSTR)msg;
-            NAssertError(false, _T("%s"), msgContent);
         }
 
         void NMemRecorder::ReleaseMemChecker()

@@ -8,12 +8,9 @@ namespace nui
     {
         BaseImage::BaseImage(NResourceLoader* loader)
         {
-            frameIndex_ = 0;
             frameCount_ = 0;
             horzCount_ = 1;
             vertCount_ = 1;
-            horzIndex_ = 0;
-            vertIndex_ = 0;
             loader_ = loader;
         }
 
@@ -29,13 +26,6 @@ namespace nui
                 Destroy();
             }
             return NImage::Release();
-        }
-
-        bool BaseImage::NextFrame()
-        {
-            if(++ frameIndex_ >= frameCount_)
-                frameIndex_ = 0;
-            return true;
         }
 
         int BaseImage::GetFrameCount() const
@@ -64,29 +54,10 @@ namespace nui
             vertCount = vertCount_;
         }
 
-        bool BaseImage::SetIndex(int horzIndex, int vertIndex)
-        {
-            if(horzIndex_ == horzIndex && vertIndex_ == vertIndex)
-                return false;
-
-            horzIndex_ = horzIndex;
-            vertIndex_ = vertIndex;
-            return true;
-        }
-
-        void BaseImage::GetIndex(int& horzIndex, int& vertIndex) const
-        {
-            horzIndex = horzIndex_;
-            vertIndex = vertIndex_;
-        }
-
         void BaseImage::InitForDynamicImage(int frameCount, const Base::NSize& size)
         {
             horzCount_ = 1;
-            horzIndex_ = 0;
             vertCount_ = 1;
-            vertIndex_ = 0;
-            frameIndex_ = 0;
             frameCount_ = frameCount;
             size_ = size;
         }
@@ -94,10 +65,7 @@ namespace nui
         void BaseImage::InitForStaticImage(int horzCount, int vertCount, const Base::NSize& size)
         {
             horzCount_ = horzCount;
-            horzIndex_ = 0;
             vertCount_ = vertCount;
-            vertIndex_ = 0;
-            frameIndex_ = 0;
             frameCount_ = 1;
             size_ = size;
         }
