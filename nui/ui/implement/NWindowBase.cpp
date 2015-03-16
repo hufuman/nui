@@ -95,6 +95,7 @@ namespace nui
                 if(::IsWindow(window_))
                     ::DestroyWindow(window_);
                 window_ = NULL;
+                ::PostThreadMessage(::GetCurrentThreadId(), WM_NULL, 0, 0);
             }
         }
 
@@ -229,7 +230,9 @@ namespace nui
 
         LRESULT NWindowBase::DoDefault(UINT message, WPARAM wParam, LPARAM lParam)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::DoDefault"));
+            if(window_ == NULL)
+                return 0;
+            NAssertError(!!::IsWindow(window_), _T("Invalid window in WindowBase::DoDefault"));
             if(window_ != NULL)
                 return ::CallWindowProc(::DefWindowProc, window_, message, wParam, lParam);
             return 0;

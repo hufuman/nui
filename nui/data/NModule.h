@@ -22,6 +22,7 @@ namespace nui
         public:
             HMODULE GetNUIModule() const;
             Base::NString GetAppPath() const;
+            Base::NString GetAppFullName() const;
 
         private:
             HMODULE nuiModule_;

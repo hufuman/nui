@@ -33,10 +33,9 @@ namespace nui
             nuiModule_ = nuiModule;
 
             TCHAR tempPath[1024];
-            GetModuleFileName(NULL, tempPath, 1024);
+            ::GetModuleFileName(NULL, tempPath, 1024);
             appFullName_ = tempPath;
             appPath_ = Util::File::GetParentFolder(tempPath);
-
             return true;
         }
 
@@ -57,7 +56,7 @@ namespace nui
         {
             if(smallIcon_ != NULL)
                 return smallIcon_;
-            ::ExtractIconEx(appPath_, 0, &bigIcon_, &smallIcon_, 1);
+            ::ExtractIconEx(GetAppPath(), 0, &bigIcon_, &smallIcon_, 1);
             return smallIcon_;
         }
 
@@ -69,6 +68,11 @@ namespace nui
         Base::NString NModule::GetAppPath() const
         {
             return appPath_;
+        }
+
+        Base::NString NModule::GetAppFullName() const
+        {
+            return appFullName_;
         }
     }
 };
