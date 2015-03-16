@@ -55,6 +55,7 @@ void ImgViewer::Show(LPCTSTR filePath)
     ::DragAcceptFiles(window_.GetNative(), TRUE);
     Shell::FilterWindowMessage(0x0049 /*WM_COPYGLOBALDATA*/, 1);
     Shell::FilterWindowMessage(WM_DROPFILES, 1);
+    Shell::FilterWindowMessage(WM_COPYDATA, 1);
 
     if(filePath != NULL && filePath[0] != 0)
         OpenImage(filePath);
