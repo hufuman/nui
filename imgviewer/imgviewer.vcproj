@@ -164,11 +164,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\FileAssoc.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\imgviewer.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Registry.cpp"
 				>
 			</File>
 			<File
@@ -198,7 +206,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\FileAssoc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\imgviewer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MapFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Registry.h"
 				>
 			</File>
 			<File
@@ -211,6 +231,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ViewerData.h"
 				>
 			</File>
 		</Filter>
