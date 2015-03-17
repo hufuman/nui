@@ -97,17 +97,7 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
     if(message == WM_COPYDATA)
     {
         COPYDATASTRUCT* cds = reinterpret_cast<COPYDATASTRUCT*>(lParam);
-        if(cds->dwData == g_MagicNum && cds->cbData % 2 == 0)
-        {
-            HWND hWnd = window_.GetNative();
-            ::ShowWindow(hWnd, SW_SHOW);
-            if(::IsIconic(hWnd) || ::GetForegroundWindow() != hWnd)
-                ::SwitchToThisWindow(hWnd, TRUE);
-
-            LPCTSTR filePath = reinterpret_cast<LPCTSTR>(cds->lpData);
-            if(filePath != NULL && filePath[0] != 0 && File::IsFileExists(filePath))
-                OpenImage(filePath);
-        }
+        OnCopyData(cds);
     }
     else if(message == WM_GETDLGCODE)
     {
@@ -134,16 +124,7 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
         HDROP hDrop = (HDROP)wParam;
         if(hDrop != NULL)
         {
-            UINT uNumFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
-            if(uNumFiles > 0 && uNumFiles != 0xFFFFFFFF)
-            {
-                TCHAR buffer[1024];
-                if(::DragQueryFile(hDrop, 0, buffer, MAX_PATH) > 0)
-                {
-                    OpenImage(buffer);
-                }
-            }
-            DragFinish(hDrop);
+            OnDropFiles(hDrop);
             return true;
         }
     }
@@ -232,4 +213,33 @@ NString ImgViewer::GetFileDlgExts()
     }
     fileDlgExts_ += _T("||");
     return fileDlgExts_;
+}
+
+void ImgViewer::OnCopyData(COPYDATASTRUCT* cds)
+{
+    if(cds->dwData != g_MagicNum || cds->cbData % 2 != 0)
+        return;
+
+    HWND hWnd = window_.GetNative();
+    ::ShowWindow(hWnd, SW_SHOW);
+    if(::IsIconic(hWnd) || ::GetForegroundWindow() != hWnd)
+        ::SwitchToThisWindow(hWnd, TRUE);
+
+    LPCTSTR filePath = reinterpret_cast<LPCTSTR>(cds->lpData);
+    if(filePath != NULL && filePath[0] != 0 && File::IsFileExists(filePath))
+        OpenImage(filePath);
+}
+
+void ImgViewer::OnDropFiles(HDROP hDrop)
+{
+    UINT uNumFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+    if(uNumFiles > 0 && uNumFiles != 0xFFFFFFFF)
+    {
+        TCHAR buffer[1024];
+        if(::DragQueryFile(hDrop, 0, buffer, MAX_PATH) > 0)
+        {
+            OpenImage(buffer);
+        }
+    }
+    DragFinish(hDrop);
 }

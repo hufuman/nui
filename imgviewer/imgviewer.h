@@ -21,6 +21,10 @@ private:
     bool OpenImage(LPCTSTR filePath);
     NString GetFileDlgExts();
 
+    // message handler
+    void OnCopyData(COPYDATASTRUCT* cds);
+    void OnDropFiles(HDROP hDrop);
+
 private:
     NHolder drawTimerHolder_;
     NWindow window_;
