@@ -5,6 +5,7 @@
 #include "imgviewer.h"
 #include "FileAssoc.h"
 #include "ViewerData.h"
+#include "ProcUtil.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -15,6 +16,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
     ImgViewer viewer;
+    nui::Data::NModule::GetInst().Init(::GetModuleHandle(NULL));
 
     if(__argc == 2)
     {
@@ -32,6 +34,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
             else
             {
                 break;
+            }
+            if(!ProcUtil::IsElevated())
+            {
+                NString msg;
+                msg.Format(_T("%s need Administrator right"), needAssoc ? _T("Assoc") : _T("UnAssoc"));
+                ::MessageBox(NULL, msg, _T("Image Viewer"), MB_OK | MB_ICONINFORMATION);
+                ProcUtil::RunElevated(NModule::GetInst().GetAppFullName(), lpCmdLine, _T(""));
+                return 0;
             }
             const NArrayT<NString>& formats = viewer.GetSupportedFormats();
             FileAssoc fileAssoc;
@@ -54,7 +64,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     }
 
     nui::Base::NInstPtr<nui::Base::NCore> core(MemToolParam);
-    nui::Data::NModule::GetInst().Init(::GetModuleHandle(NULL));
     core->InitCore(_T(""), _T("2052"), NRenderType::GdiRender);
 
     NString filePath;

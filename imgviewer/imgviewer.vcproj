@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -110,7 +110,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ProcUtil.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Registry.cpp"
 				>
 			</File>
@@ -215,6 +219,10 @@
 			</File>
 			<File
 				RelativePath=".\MapFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ProcUtil.h"
 				>
 			</File>
 			<File

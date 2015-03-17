@@ -20,10 +20,12 @@ private:
     void DrawTimerFunc();
     bool OpenImage(LPCTSTR filePath);
     NString GetFileDlgExts();
+    void GetProperSize(NSize& size);
 
     // message handler
     void OnCopyData(COPYDATASTRUCT* cds);
     void OnDropFiles(HDROP hDrop);
+    void OnMouseWheel(short delta);
 
 private:
     NHolder drawTimerHolder_;
@@ -34,6 +36,8 @@ private:
     Base::NAutoPtr<NText> text_;
     Base::NAutoPtr<NFont> font_;
     Base::NAutoPtr<NImage> image_;
+
+    int rate_;
 
     NString fileDlgExts_;
     NArrayT<NString> supportedForamts_;

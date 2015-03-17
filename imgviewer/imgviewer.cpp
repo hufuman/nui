@@ -8,6 +8,8 @@ namespace
 {
     const int g_MinWidth = 400;
     const int g_MinHeight = 300;
+    const int g_HorzMargin = 100;
+    const int g_VertMargin = 90;
     const DWORD g_MagicNum = 0xF74F2AFB;
 }
 
@@ -16,6 +18,7 @@ ImgViewer::ImgViewer()
     image_ = NULL;
     frameIndex_ = 0;
     frameCount_ = 0;
+    rate_ = 1;
 
     supportedForamts_.AddItem(_T(".bmp"));
     supportedForamts_.AddItem(_T(".ico"));
@@ -119,6 +122,10 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
 
         OpenImage(filePath);
     }
+    else if(message == WM_MOUSEWHEEL)
+    {
+        OnMouseWheel((short)HIWORD(wParam));
+    }
     else if(message == WM_DROPFILES)
     {
         HDROP hDrop = (HDROP)wParam;
@@ -133,6 +140,8 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
         MINMAXINFO* info = reinterpret_cast<MINMAXINFO*>(lParam);
         info->ptMinTrackSize.x = g_MinWidth;
         info->ptMinTrackSize.y = g_MinHeight;
+        info->ptMaxTrackSize.x = 65535;
+        info->ptMaxTrackSize.y = 65535;
     }
     return false;
 }
@@ -150,6 +159,16 @@ bool ImgViewer::DrawCallback(NWindow*, NRender* render, const NRect& clipRect)
     else
     {
         NSize size = image_->GetSize();
+        if(rate_ > 0)
+        {
+            size.Width *= rate_;
+            size.Height *= rate_;
+        }
+        else
+        {
+            size.Width /= -rate_;
+            size.Height /= -rate_;
+        }
         if(size.Width < rcWnd.Width() || size.Height < rcWnd.Height())
         {
             rcWnd.GetLeftTop().SetPoint((rcWnd.Width() - size.Width) / 2, (rcWnd.Height() - size.Height) / 2);
@@ -184,6 +203,7 @@ bool ImgViewer::OpenImage(LPCTSTR filePath)
 
     ViewerDataMgr::Instance().Hold(filePath, window_.GetNative(), TRUE);
     image_ = image;
+    rate_ = 1;
     frameIndex_ = 0;
     frameCount_ = image_->GetFrameCount();
     drawTimerHolder_.Release();
@@ -193,6 +213,7 @@ bool ImgViewer::OpenImage(LPCTSTR filePath)
     }
 
     NSize size = image_->GetSize();
+    GetProperSize(size);
     window_.SetSize(size.Width, size.Height);
     window_.SetVisible(TRUE);
     window_.Invalidate();
@@ -213,6 +234,22 @@ NString ImgViewer::GetFileDlgExts()
     }
     fileDlgExts_ += _T("||");
     return fileDlgExts_;
+}
+
+void ImgViewer::GetProperSize(NSize& size)
+{
+    if(rate_ > 0)
+    {
+        size.Width *= rate_;
+        size.Height *= rate_;
+    }
+    else
+    {
+        size.Width /= -rate_;
+        size.Height /= -rate_;
+    }
+    size.Width += 2 * g_HorzMargin;
+    size.Height += 2 * g_VertMargin;
 }
 
 void ImgViewer::OnCopyData(COPYDATASTRUCT* cds)
@@ -242,4 +279,24 @@ void ImgViewer::OnDropFiles(HDROP hDrop)
         }
     }
     DragFinish(hDrop);
+}
+
+void ImgViewer::OnMouseWheel(short delta)
+{
+    if(image_ == NULL)
+        return;
+
+    int rate = delta / WHEEL_DELTA;
+    if(rate > 0 && rate_ > 10)
+        return;
+    if(rate < 0 && rate_ < -10)
+        return;
+    rate_ += rate;
+    if(rate_ == 0)
+        return;
+
+    NSize size = image_->GetSize();
+    GetProperSize(size);
+    window_.SetSize(size.Width, size.Height);
+    window_.Invalidate();
 }
