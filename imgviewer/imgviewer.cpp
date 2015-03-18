@@ -154,6 +154,13 @@ bool ImgViewer::DrawCallback(NWindow*, NRender* render, const NRect& clipRect)
     render->FillRectangle(rcWnd, MakeArgb(180, 125, 125, 125));
     if(image_ == NULL)
     {
+        NSize size;
+        render->GetTextSize(text_, font_, size);
+        NRect txtRect;
+        const int margin = 4;
+        txtRect.SetPos((rcWnd.Width() - size.Width) / 2 - margin, (rcWnd.Height() - size.Height) / 2 - margin);
+        txtRect.SetSize(size.Width + 2 * margin, size.Height + 2 * margin);
+        render->FillRoundRectangle(txtRect, margin, MakeArgb(180, 58, 58, 58));
         render->DrawText(text_, font_, rcWnd);
     }
     else

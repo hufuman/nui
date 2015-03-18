@@ -203,11 +203,29 @@ namespace nui
                 Bottom = Top + height;
                 return (*this);
             }
+            NRect& SetPos(INT left, INT top)
+            {
+                Right = left + Right - Left;
+                Bottom = top + Bottom - Top;
+                Left = left;
+                Top = top;
+                return (*this);
+            }
             NRect& SetSize(INT width, INT height)
             {
                 Right = Left + width;
                 Bottom = Top + height;
                 return (*this);
+            }
+            bool Contains(INT x, INT y) const
+            {
+                return x >= Left && x <= Right
+                    && y >= Top && y <= Bottom;
+            }
+            bool Contains(const NPoint& pt) const
+            {
+                return pt.X >= Left && pt.X <= Right
+                    && pt.Y >= Top && pt.Y <= Bottom;
             }
 
             operator RECT*()

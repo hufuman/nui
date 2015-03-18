@@ -26,7 +26,6 @@ namespace nui
         {
             orgDc_ = hDc;
             memDC_.Init(hDc, rcPaint, 255);
-            ::SetBkMode(memDC_, TRANSPARENT);
             return true;
         }
 
@@ -253,9 +252,12 @@ namespace nui
             if(textRect.Bottom > rect.Bottom)
                 textRect.Bottom = rect.Bottom;
 
+            FillRectangle(textRect, gdiText->GetBgColor());
+
             CAlphaDC alphaDc;
             if(alphaDc.Init(memDC_, textRect, memDC_.GetSize(), true))
             {
+                ::SetBkMode(alphaDc, TRANSPARENT);
                 HGDIOBJ hFont = gdiFont == NULL ? ::GetCurrentObject(memDC_, OBJ_FONT) : gdiFont->GetFont();
                 if(hFont == NULL)
                     hFont = ::GetCurrentObject(memDC_, OBJ_FONT);

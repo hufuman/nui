@@ -138,7 +138,6 @@ void CAlphaDC::CopyOrg()
         rcPaint_.Width(), rcPaint_.Height(),
         BlendFunc);
     NAssertError(!!bResult, _T("AlphaBlend Failed"));
-    ::SetBkMode(memDc_, TRANSPARENT);
     // Should cancel premultiple, now border of text looks not so good
     CSSE::DoOr(0xFF000000, bmpInfo_.bmBits, bmpInfo_.bmWidthBytes * bmpInfo_.bmHeight);
 }

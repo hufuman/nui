@@ -10,6 +10,7 @@ namespace nui
         GdiText::GdiText()
         {
             color_ = MakeArgb(255, 0, 0, 0);
+            bgColor_ = MakeArgb(0, 0, 0, 0);
             text_ = _T("");
             singleLine_ = true;
             horzCenter_ = false;
@@ -41,6 +42,17 @@ namespace nui
         ArgbColor GdiText::GetColor() const
         {
             return color_;
+        }
+
+        NText& GdiText::SetBgColor(ArgbColor bgColor)
+        {
+            bgColor_ = bgColor;
+            return *this;
+        }
+
+        ArgbColor GdiText::GetBgColor() const
+        {
+            return bgColor_;
         }
 
         NText& GdiText::SetSingleLine(bool singleLine)
