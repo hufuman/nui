@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "NFrameImpl.h"
+#include "../NFrame.h"
 
 #include "../NRenderClip.h"
 
@@ -7,9 +7,9 @@ namespace nui
 {
     namespace Ui
     {
-        IMPLEMENT_REFLECTION(NFrameImpl);
+        IMPLEMENT_REFLECTION(NFrame);
 
-        NFrameImpl::NFrameImpl()
+        NFrame::NFrame()
         {
             parentFrame_ = NULL;
             topMostCount_ = 0;
@@ -17,39 +17,37 @@ namespace nui
             frameFlags_ = FlagVisible | FlagValid;
         }
 
-        NFrameImpl::~NFrameImpl()
+        NFrame::~NFrame()
         {
             parentFrame_ = NULL;
             RemoveAllChilds();
         }
 
-        bool NFrameImpl::AddChild(NFrame* child)
+        bool NFrame::AddChild(NFrame* child)
         {
-            NFrameImpl* childImpl = dynamic_cast<NFrameImpl*>(child);
-            NAssertError(childImpl != NULL, _T("wrong type"));
-            if(childImpl == NULL)
+            NAssertError(child != NULL, _T("wrong type"));
+            if(child == NULL)
                 return FALSE;
 
             // check if exists
             size_t zorder;
-            NAssertError(GetChildHelper(childImpl, zorder) == childs_.end(), _T("child already exists"));
-            if(GetChildHelper(childImpl, zorder) != childs_.end())
+            NAssertError(GetChildHelper(child, zorder) == childs_.end(), _T("child already exists"));
+            if(GetChildHelper(child, zorder) != childs_.end())
                 return true;
 
-            childs_.push_back(childImpl);
-            SetParentHelper(childImpl, this);
+            childs_.push_back(child);
+            SetParentHelper(child, this);
             return true;
         }
 
-        bool NFrameImpl::RemoveChild(NFrame* child)
+        bool NFrame::RemoveChild(NFrame* child)
         {
-            NFrameImpl* childImpl = dynamic_cast<NFrameImpl*>(child);
-            NAssertError(childImpl != NULL, _T("wrong type"));
-            if(childImpl == NULL)
+            NAssertError(child != NULL, _T("wrong type"));
+            if(child == NULL)
                 return FALSE;
 
             size_t zorder;
-            FrameList::const_iterator ite = GetChildHelper(childImpl, zorder);
+            FrameList::const_iterator ite = GetChildHelper(child, zorder);
             if(ite == childs_.end())
                 return false;
 
@@ -59,16 +57,16 @@ namespace nui
                 -- bottomMostCount_;
 
             childs_.erase(ite);
-            SetParentHelper(childImpl, NULL);
+            SetParentHelper(child, NULL);
             return true;
         }
 
-        void NFrameImpl::RemoveAllChilds()
+        void NFrame::RemoveAllChilds()
         {
             FrameList::iterator ite = childs_.begin();
             while(ite != childs_.end())
             {
-                NFrameImpl*& child = *ite;
+                NFrame*& child = *ite;
                 child->parentFrame_ = NULL;
                 child->OnParentChanged();
                 child->Release();
@@ -79,15 +77,14 @@ namespace nui
             bottomMostCount_ = 0;
         }
 
-        size_t NFrameImpl::SetChildZOrder(NFrame* child, size_t zorder)
+        size_t NFrame::SetChildZOrder(NFrame* child, size_t zorder)
         {
-            NFrameImpl* childImpl = dynamic_cast<NFrameImpl*>(child);
-            NAssertError(childImpl != NULL, _T("wrong type"));
-            if(childImpl == NULL)
+            NAssertError(child != NULL, _T("wrong type"));
+            if(child == NULL)
                 return static_cast<size_t>(-1);
 
             size_t tmpZorder;
-            FrameList::const_iterator ite = GetChildHelper(childImpl, tmpZorder);
+            FrameList::const_iterator ite = GetChildHelper(child, tmpZorder);
             NAssertError(ite != childs_.end(), _T("child not exists"));
             if(ite == childs_.end())
                 return static_cast<size_t>(-1);
@@ -101,32 +98,30 @@ namespace nui
             ite = childs_.begin();
             for(size_t i=0; i<zorder; ++ i)
                 ++ ite;
-            childs_.insert(ite, childImpl);
+            childs_.insert(ite, child);
             return zorder;
         }
 
-        size_t NFrameImpl::GetChildZOrder(NFrame* child) const
+        size_t NFrame::GetChildZOrder(NFrame* child) const
         {
-            NFrameImpl* childImpl = dynamic_cast<NFrameImpl*>(child);
-            NAssertError(childImpl != NULL, _T("wrong type"));
-            if(childImpl == NULL)
+            NAssertError(child != NULL, _T("wrong type"));
+            if(child == NULL)
                 return static_cast<size_t>(-1);
 
             size_t zorder;
-            FrameList::const_iterator ite = GetChildHelper(childImpl, zorder);
+            FrameList::const_iterator ite = GetChildHelper(child, zorder);
             NAssertError(ite != childs_.end(), _T("child not exists"));
             return zorder;
         }
 
-        void NFrameImpl::SetChildTopmost(NFrame* child)
+        void NFrame::SetChildTopmost(NFrame* child)
         {
-            NFrameImpl* childImpl = dynamic_cast<NFrameImpl*>(child);
-            NAssertError(childImpl != NULL, _T("wrong type"));
-            if(childImpl == NULL)
+            NAssertError(child != NULL, _T("wrong type"));
+            if(child == NULL)
                 return;
 
             size_t zorder;
-            FrameList::const_iterator ite = GetChildHelper(childImpl, zorder);
+            FrameList::const_iterator ite = GetChildHelper(child, zorder);
             NAssertError((ite != childs_.end()), _T("child not exists"));
             if(ite == childs_.end())
                 return;
@@ -141,19 +136,18 @@ namespace nui
             {
                 ++ ite;
             }
-            childs_.insert(ite, childImpl);
+            childs_.insert(ite, child);
             ++ topMostCount_;
         }
 
-        void NFrameImpl::SetChildBottommost(NFrame* child)
+        void NFrame::SetChildBottommost(NFrame* child)
         {
-            NFrameImpl* childImpl = dynamic_cast<NFrameImpl*>(child);
-            NAssertError(childImpl != NULL, _T("wrong type"));
-            if(childImpl == NULL)
+            NAssertError(child != NULL, _T("wrong type"));
+            if(child == NULL)
                 return;
 
             size_t zorder;
-            FrameList::const_iterator ite = GetChildHelper(childImpl, zorder);
+            FrameList::const_iterator ite = GetChildHelper(child, zorder);
             NAssertError((ite != childs_.end()), _T("child not exists"));
             if(ite == childs_.end())
                 return;
@@ -169,11 +163,11 @@ namespace nui
             {
                 ++ ite;
             }
-            childs_.insert(ite, childImpl);
+            childs_.insert(ite, child);
             ++ bottomMostCount_;
         }
 
-        bool NFrameImpl::EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const
+        bool NFrame::EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const
         {
             FrameList::const_iterator ite = childs_.begin();
             while(ite != childs_.end())
@@ -185,7 +179,7 @@ namespace nui
             return true;
         }
 
-        NFrame* NFrameImpl::GetChildById(const Base::NString& id, bool recursive)
+        NFrame* NFrame::GetChildById(const Base::NString& id, bool recursive)
         {
             if(frameId_ == id)
                 return this;
@@ -193,82 +187,82 @@ namespace nui
             FrameList::const_iterator ite = childs_.begin();
             while(ite != childs_.end())
             {
-                NFrameImpl* childImpl = *ite;
+                NFrame* child = *ite;
                 if(recursive)
                 {
-                    NFrame* result = childImpl->GetChildById(id, recursive);
+                    NFrame* result = child->GetChildById(id, recursive);
                     if(result != NULL)
                         return result;
                 }
                 else
                 {
-                    if(childImpl->frameId_ == id)
-                        return childImpl;
+                    if(child->frameId_ == id)
+                        return child;
                 }
                 ++ ite;
             }
             return NULL;
         }
 
-        NFrame* NFrameImpl::GetParent() const
+        NFrame* NFrame::GetParent() const
         {
             return parentFrame_;
         }
 
-        void NFrameImpl::SetVisible(bool visible)
+        void NFrame::SetVisible(bool visible)
         {
             if(visible == IsVisible())
                 return;
-            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagVisible, visible);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagVisible, visible);
             Invalidate();
         }
 
-        bool NFrameImpl::IsVisible() const
+        bool NFrame::IsVisible() const
         {
-            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagVisible);
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrame::FlagVisible);
         }
 
-        void NFrameImpl::SetEnabled(bool enabled)
+        void NFrame::SetEnabled(bool enabled)
         {
             if(enabled == IsEnabled())
                 return;
-            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagEnabled, enabled);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagEnabled, enabled);
             Invalidate();
         }
 
-        bool NFrameImpl::IsEnabled() const
+        bool NFrame::IsEnabled() const
         {
-            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagEnabled);
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrame::FlagEnabled);
         }
 
-        void NFrameImpl::SetAutoSize(bool autosize)
+        void NFrame::SetAutoSize(bool autosize)
         {
             if(autosize == IsAutoSize())
                 return;
-            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagAutoSize, autosize);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, autosize);
             if(autosize)
                 AutoSize();
         }
 
-        bool NFrameImpl::IsAutoSize() const
+        bool NFrame::IsAutoSize() const
         {
-            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagAutoSize);
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrame::FlagAutoSize);
         }
 
-        void NFrameImpl::SetValid(bool valid)
+        void NFrame::SetValid(bool valid)
         {
             if(valid == IsValid())
                 return;
-            Util::Misc::CheckFlag(frameFlags_, NFrameImpl::FlagValid, valid);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagValid, valid);
             Invalidate();
         }
 
-        bool NFrameImpl::IsValid() const
+        bool NFrame::IsValid() const
         {
-            return Util::Misc::IsFlagChecked(frameFlags_, NFrameImpl::FlagValid);
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrame::FlagValid);
         }
 
-        void NFrameImpl::SetText(const Base::NString& text)
+        void NFrame::SetText(const Base::NString& text)
         {
             if(text.IsEmpty() && text_  == NULL)
                 return;
@@ -285,32 +279,32 @@ namespace nui
             Invalidate();
         }
 
-        Base::NString NFrameImpl::GetText() const
+        Base::NString NFrame::GetText() const
         {
             return text_ == NULL ? _T("") : text_->GetText();
         }
 
-        NText* NFrameImpl::GetRichText() const
+        NText* NFrame::GetRichText() const
         {
             return text_;
         }
 
-        void NFrameImpl::SetId(const Base::NString& id)
+        void NFrame::SetId(const Base::NString& id)
         {
             frameId_ = id;
         }
 
-        Base::NString NFrameImpl::GetId() const
+        Base::NString NFrame::GetId() const
         {
             return frameId_;
         }
 
-        const Base::NRect& NFrameImpl::GetRect() const
+        const Base::NRect& NFrame::GetRect() const
         {
             return frameRect_;
         }
 
-        Base::NRect NFrameImpl::GetRootRect() const
+        Base::NRect NFrame::GetRootRect() const
         {
             Base::NRect result = frameRect_;
             if(parentFrame_ != NULL)
@@ -321,7 +315,7 @@ namespace nui
             return result;
         }
 
-        void NFrameImpl::AutoSize()
+        void NFrame::AutoSize()
         {
             NAssertError(window_ != NULL, _T("window is null"));
             if(!window_ || text_ == NULL)
@@ -331,7 +325,7 @@ namespace nui
             SetSize(txtSize.Width, txtSize.Height);
         }
 
-        void NFrameImpl::SetPos(int left, int top)
+        void NFrame::SetPos(int left, int top)
         {
             if(frameRect_.Left == left && frameRect_.Top == top)
                 return;
@@ -340,7 +334,7 @@ namespace nui
             Invalidate();
         }
 
-        void NFrameImpl::SetSize(int width, int height)
+        void NFrame::SetSize(int width, int height)
         {
             int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
             int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
@@ -351,13 +345,13 @@ namespace nui
             Invalidate();
         }
 
-        void NFrameImpl::SetMinSize(int minWidth, int minHeight)
+        void NFrame::SetMinSize(int minWidth, int minHeight)
         {
             minSize_.Width = minWidth;
             minSize_.Height = minHeight;
         }
 
-        void NFrameImpl::Invalidate()
+        void NFrame::Invalidate()
         {
             if(!window_)
                 return;
@@ -365,7 +359,7 @@ namespace nui
             window_->InvalidateRect(rootRect);
         }
 
-        void NFrameImpl::Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect)
+        void NFrame::Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect)
         {
             if(!IsVisible() || !IsValid())
                 return;
@@ -386,49 +380,56 @@ namespace nui
                 FrameList::const_iterator ite = childs_.begin();
                 for(; ite != childs_.end(); ++ ite)
                 {
-                    NFrameImpl* const & childImpl = *ite;
-                    childImpl->Draw(render, ptOffset, clipRect);
+                    NFrame* const & child = *ite;
+                    child->Draw(render, ptOffset, clipRect);
                 }
                 ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
             }
         }
 
-        void NFrameImpl::OnParentChanged()
+        void NFrame::OnParentChanged()
         {
             if(window_)
                 window_ = NULL;
             if(parentFrame_)
-                window_ = parentFrame_->window_;
+                OnWindowChanged(NULL);
+            else
+                OnWindowChanged(parentFrame_->window_);
         }
 
-        void NFrameImpl::SetParentHelper(NFrameImpl* childImpl, NFrameImpl* newParent)
+        void NFrame::OnWindowChanged(NWindow* window)
         {
-            if(newParent == childImpl->parentFrame_)
-                return;
-            NAssertError(childImpl != NULL, _T("wrong type"));
+            window_ = window;
+        }
 
-            if(childImpl->parentFrame_ != NULL)
+        void NFrame::SetParentHelper(NFrame* child, NFrame* newParent)
+        {
+            if(newParent == child->parentFrame_)
+                return;
+            NAssertError(child != NULL, _T("wrong type"));
+
+            if(child->parentFrame_ != NULL)
             {
-                childImpl->parentFrame_->RemoveChild(childImpl);
-                childImpl->parentFrame_ = NULL;
+                child->parentFrame_->RemoveChild(child);
+                child->parentFrame_ = NULL;
             }
             if(newParent == NULL)
             {
-                childImpl->Release();
+                child->Release();
             }
             else
             {
-                childImpl->parentFrame_ = newParent;
-                childImpl->AddRef();
+                child->parentFrame_ = newParent;
+                child->AddRef();
             }
-            childImpl->OnParentChanged();
+            child->OnParentChanged();
         }
 
-        NFrameImpl::FrameList::const_iterator NFrameImpl::GetChildHelper(NFrameImpl* childImpl, size_t& zorder) const
+        NFrame::FrameList::const_iterator NFrame::GetChildHelper(NFrame* child, size_t& zorder) const
         {
             zorder = 0;
             FrameList::const_iterator ite = childs_.begin();
-            while(ite != childs_.end() && (*ite) != childImpl)
+            while(ite != childs_.end() && (*ite) != child)
             {
                 ++ zorder;
                 ++ ite;

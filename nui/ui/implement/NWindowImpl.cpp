@@ -20,6 +20,7 @@ namespace nui
             {
                 Base::NInstPtr<NFrame> rootFrame(MemToolParam);
                 rootFrame_ = (NFrame*)rootFrame;
+                rootFrame_->window_ = this;
                 Base::NRect rect;
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());

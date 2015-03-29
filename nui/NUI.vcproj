@@ -545,10 +545,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ui\implement\NFrameImpl.h"
-					>
-				</File>
-				<File
 					RelativePath=".\ui\implement\NMsgLoop.cpp"
 					>
 				</File>
