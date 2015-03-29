@@ -399,7 +399,16 @@ namespace nui
 
         void NFrame::OnWindowChanged(NWindow* window)
         {
+            if(window == window_)
+                return;
             window_ = window;
+            FrameList::iterator ite = childs_.begin();
+            while(ite != childs_.end())
+            {
+                NFrame*& child = *ite;
+                child->OnWindowChanged(window_);
+                ++ ite;
+            }
         }
 
         void NFrame::SetParentHelper(NFrame* child, NFrame* newParent)
