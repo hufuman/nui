@@ -65,7 +65,7 @@ namespace nui
                 }
             case WM_NCHITTEST:
                 {
-                    lResult = HTCAPTION;
+                    lResult = HTCLIENT;
                     return true;
                 }
             case WM_NCPAINT:
@@ -95,6 +95,28 @@ namespace nui
                     OnSize(LOWORD(lParam), HIWORD(lParam));
                     return true;
                 }
+                break;
+            case WM_ACTIVATE:
+                {
+                    BOOL bActive = (LOWORD(wParam) != WA_INACTIVE);
+                    if(!bActive)
+                    {
+                        SetHoverItem(NULL);
+                        NUiBus::Instance().SetCaptureFrame(NULL);
+                    }
+                    break;
+                }
+            case WM_MOUSEMOVE:
+                {
+                    Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
+                    RefreshHoverItem(point);
+                }
+                break;
+            case WM_LBUTTONDOWN:
+                ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+                break;
+            case WM_LBUTTONUP:
+                break;
                 break;
             }
             return false;
@@ -135,6 +157,31 @@ namespace nui
             OnDraw(render_, clipRect);
 
             render_->DrawBack(IsLayered());
+        }
+
+        void NWindow::SetHoverItem(NFrame* frame)
+        {
+            if(hoverFrame_ == frame)
+                return;
+            if(hoverFrame_)
+                hoverFrame_->CancelHover();
+            hoverFrame_ = frame;
+            if(hoverFrame_)
+                hoverFrame_->BeginHover();
+        }
+
+        void NWindow::RefreshHoverItem(const Base::NPoint& point)
+        {
+            NFrame* newHover = NULL;
+            if(hoverFrame_)
+            {
+                newHover = hoverFrame_->GetChildByPointAndFlag(point, NFrame::FlagCanHover);
+            }
+            if(!newHover)
+            {
+                newHover = rootFrame_->GetChildByPointAndFlag(point, NFrame::FlagCanHover);
+            }
+            SetHoverItem(newHover);
         }
     }
 }

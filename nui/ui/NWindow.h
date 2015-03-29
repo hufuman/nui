@@ -34,6 +34,8 @@ namespace nui
             virtual void OnDraw(NRender* render, const Base::NRect& clipRect);
 
             void Draw(HDC hDc);
+            void SetHoverItem(NFrame* frame);
+            void RefreshHoverItem(const Base::NPoint& point);
 
         protected:
 
@@ -41,6 +43,9 @@ namespace nui
             Base::NAutoPtr<NFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;
             WindowDrawCallback drawCallback_;
+
+            Base::NAutoPtr<NFrame> hoverFrame_;
+            Base::NAutoPtr<NFrame> selectedFrame_;
         END_USE_UNEXPORT_TEMPLATE()
         };
     }

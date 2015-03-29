@@ -11,6 +11,7 @@ namespace nui
         NUiBus::NUiBus()
         {
             loader_ = NULL;
+            captureFrame_ = NULL;
         }
 
         NUiBus::~NUiBus()
@@ -70,5 +71,14 @@ namespace nui
             return loader_;
         }
 
+        NFrame* NUiBus::GetCaptureFrame()
+        {
+            return captureFrame_;
+        }
+
+        void NUiBus::SetCaptureFrame(NFrame* frame)
+        {
+            captureFrame_ = frame;
+        }
     }
 }

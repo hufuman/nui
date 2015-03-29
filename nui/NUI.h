@@ -67,7 +67,6 @@ using namespace fastdelegate;
 #include "./ui/NMsgLoop.h"
 #include "./ui/NWindowBase.h"
 #include "./ui/NTimerSrv.h"
-#include "./ui/NEvent.h"
 #include "./ui/NFrame.h"
 #include "./ui/NImage.h"
 #include "./ui/NResourceLoader.h"

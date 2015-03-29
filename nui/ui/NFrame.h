@@ -24,9 +24,10 @@ namespace nui
          */
 
         BEGIN_USE_UNEXPORT_TEMPLATE()
-        class NFrame;
-        class NWindow;
+        class NUI_CLASS NFrame;
+        class NUI_CLASS NWindow;
         typedef FastDelegate2<NFrame*, LPARAM, bool> UiContainerEnumCallback;
+        typedef FastDelegate2<NFrame*, const Base::NPoint&, bool> ClickEventCallback;
 
         class NUI_CLASS NFrame : public nui::Base::NBaseObj
         {
@@ -41,6 +42,17 @@ namespace nui
                 FlagEnabled     = 0x0002,
                 FlagAutoSize    = 0x0004,
                 FlagValid       = 0x0008,
+                FlagCanHover    = 0x0010,
+            };
+
+            enum Status
+            {
+                StatusNormal  = 0x0001,
+                StatusHover   = 0x0002,
+                StatusPressed = 0x0004,
+                StatusDisabled= 0x0008,
+                StatusSelected= 0x0010,
+                StatusChecked = 0x0020,
             };
 
             DECLARE_REFLECTION(TEXT("nui"), TEXT("frame"))
@@ -49,6 +61,9 @@ namespace nui
             ~NFrame();
 
         public:
+            // Event
+            virtual void SetClickCallback(ClickEventCallback callback);
+
             // childs manipulations
             virtual bool AddChild(NFrame* child);
             virtual bool RemoveChild(NFrame* child);
@@ -59,6 +74,7 @@ namespace nui
             virtual void SetChildBottommost(NFrame* child);
             virtual bool EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const;
             virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
+            virtual NFrame* GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags);
 
             virtual NFrame* GetParent() const;
 
@@ -95,6 +111,13 @@ namespace nui
             virtual void OnParentChanged();
             virtual void OnWindowChanged(NWindow* window);
 
+            virtual void OnClicked(const nui::Base::NPoint& point);
+
+            // called by NWindow
+            virtual void CancelHover();
+            virtual void BeginHover();
+            virtual bool CanHover() const;
+
         private:
             static void SetParentHelper(NFrame* child, NFrame* newParent);
             FrameList::const_iterator GetChildHelper(NFrame* child, size_t& zorder) const;
@@ -110,11 +133,16 @@ namespace nui
             // NFrame::Flag
             DWORD frameFlags_;
 
+            // NFrame::Status
+            DWORD frameStatus_;
+
             Base::NString frameId_;
             Base::NAutoPtr<NText> text_;
             Base::NAutoPtr<NFont> font_;
             Base::NRect frameRect_;
             Base::NSize minSize_;
+
+            ClickEventCallback clickCallback_;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

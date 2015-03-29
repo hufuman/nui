@@ -15,12 +15,18 @@ namespace nui
             topMostCount_ = 0;
             bottomMostCount_ = 0;
             frameFlags_ = FlagVisible | FlagValid;
+            frameStatus_ = StatusNormal;
         }
 
         NFrame::~NFrame()
         {
             parentFrame_ = NULL;
             RemoveAllChilds();
+        }
+
+        void NFrame::SetClickCallback(ClickEventCallback callback)
+        {
+            clickCallback_ = callback;
         }
 
         bool NFrame::AddChild(NFrame* child)
@@ -202,6 +208,29 @@ namespace nui
                 ++ ite;
             }
             return NULL;
+        }
+
+        NFrame* NFrame::GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags)
+        {
+            if(!IsVisible()  || !IsEnabled() || !IsValid())
+                return NULL;
+
+            Base::NPoint pt(point);
+            pt.Offset(-frameRect_.Left, -frameRect_.Top);
+            if(!frameRect_.Contains(pt))
+                return NULL;
+
+            NFrame* result = NULL;
+            FrameList::const_iterator ite = childs_.begin();
+            while(result == NULL && ite != childs_.end())
+            {
+                NFrame* const& child = *ite;
+                result = child->GetChildByPointAndFlag(pt, flags);
+                ++ ite;
+            }
+            if(result == NULL && (frameFlags_ & flags))
+                result = this;
+            return result;
         }
 
         NFrame* NFrame::GetParent() const
@@ -409,6 +438,35 @@ namespace nui
                 child->OnWindowChanged(window_);
                 ++ ite;
             }
+        }
+
+        void NFrame::OnClicked(const nui::Base::NPoint& point)
+        {
+            if(clickCallback_)
+                clickCallback_(this, point);
+        }
+
+        void NFrame::CancelHover()
+        {
+            if(!(frameStatus_ & StatusHover))
+                return;
+
+            frameStatus_ = frameFlags_ & (~StatusHover);
+            Invalidate();
+        }
+
+        void NFrame::BeginHover()
+        {
+            if((frameStatus_ & StatusHover) || !CanHover())
+                return;
+
+            frameStatus_ = frameFlags_ | StatusHover;
+            Invalidate();
+        }
+
+        bool NFrame::CanHover() const
+        {
+            return !!(FlagCanHover & frameFlags_);
         }
 
         void NFrame::SetParentHelper(NFrame* child, NFrame* newParent)

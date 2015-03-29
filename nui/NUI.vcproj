@@ -466,11 +466,7 @@
 			Name="ui"
 			>
 			<File
-				RelativePath=".\ui\EventDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NEvent.h"
+				RelativePath=".\ui\NButton.h"
 				>
 			</File>
 			<File
@@ -538,6 +534,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\BaseImage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NButtonImpl.cpp"
 					>
 				</File>
 				<File

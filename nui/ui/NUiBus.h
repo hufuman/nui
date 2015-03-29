@@ -8,8 +8,9 @@ namespace nui
 {
     namespace Ui
     {
-        class NUI_INTF NRender;
-        class NUI_INTF NResourceLoader;
+        class NRender;
+        class NFrame;
+        class NResourceLoader;
 
         class NUI_CLASS NUiBus
         {
@@ -26,9 +27,13 @@ namespace nui
             NRender* CreateRender();
             NResourceLoader* GetResourceLoader();
 
+            NFrame* GetCaptureFrame();
+            void SetCaptureFrame(NFrame* frame);
+
         private:
             NRenderType::Type renderType_;
             NResourceLoader* loader_;
+            NFrame* captureFrame_;
         };
     }
 }

@@ -12,6 +12,16 @@ NAutoPtr<NText> g_MultipleLineText;
 nui::Base::NAutoPtr<nui::Ui::NRender> g_Render;
 int g_BorderWidth = 1;
 
+class EventClass
+{
+public:
+    bool OnClick(NFrame* frame, const Base::NPoint& pt)
+    {
+        ::MessageBox(NULL, frame->GetText(), frame->GetText(), MB_OK);
+        return true;
+    }
+};
+
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPTSTR    lpCmdLine,
@@ -26,6 +36,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
 
+    EventClass eventClass;
     g_Render = NUiBus::Instance().CreateRender();
 
     g_Image = loader->LoadImage(_T("@skin:images\\3.gif"));
@@ -62,6 +73,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
             frame->GetRichText()->SetVertCenter(true);
             frame->SetPos(i * width / count, j * height / count);
             frame->SetSize(width / count, height / count);
+            frame->SetClickCallback(MakeDelegate(&eventClass, &EventClass::OnClick));
             for(int k=0; k<count; ++ k)
             {
                 NString msg;
@@ -71,6 +83,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                 child->SetPos(width / count / count * k, height / count);
                 child->SetSize(width / count / count, height / count);
                 frame->AddChild(child);
+                frame->SetClickCallback(MakeDelegate(&eventClass, &EventClass::OnClick));
             }
             wnd->GetRootFrame()->AddChild(frame);
         }
