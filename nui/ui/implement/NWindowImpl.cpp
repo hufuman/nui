@@ -172,6 +172,8 @@ namespace nui
 
         void NWindow::RefreshHoverItem(const Base::NPoint& point)
         {
+            if(rootFrame_ == NULL)
+                return;
             NFrame* newHover = NULL;
             if(hoverFrame_)
             {
