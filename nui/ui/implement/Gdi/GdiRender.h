@@ -17,7 +17,7 @@ namespace nui
             virtual bool Init(HDC hDc, const Base::NRect& rcPaint);
             virtual void DrawBack(bool layered);
 
-            virtual void DrawShape(const Base::NRect& rect, NShape* shape);
+            virtual void DrawShape(NShape* shape, const Base::NRect& rect);
             virtual void DrawImage(NImage* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue);
             virtual void DrawText(NText* text, NFont* font, const Base::NRect& rect);
             virtual void GetTextSize(NText* text, NFont* font, Base::NSize& rect);

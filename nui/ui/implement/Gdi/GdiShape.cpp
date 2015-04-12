@@ -17,28 +17,28 @@ namespace nui
             ;
         }
 
-        NShape& GdiShape::SetStyle(GdiShape::Style style)
+        NShape* GdiShape::SetStyle(GdiShape::Style style)
         {
             style_ = style;
-            return *this;
+            return this;
         }
 
-        NShape& GdiShape::SetBorderColor(ArgbColor borderColor)
+        NShape* GdiShape::SetBorderColor(ArgbColor borderColor)
         {
             borderColor_ = borderColor;
-            return *this;
+            return this;
         }
 
-        NShape& GdiShape::SetBorderWidth(int borderWidth)
+        NShape* GdiShape::SetBorderWidth(int borderWidth)
         {
             borderWidth_ = borderWidth;
-            return *this;
+            return this;
         }
 
-        NShape& GdiShape::SetFillColor(ArgbColor fillColor)
+        NShape* GdiShape::SetFillColor(ArgbColor fillColor)
         {
             fillColor_ = fillColor;
-            return *this;
+            return this;
         }
 
         GdiShape::Style GdiShape::GetStyle() const
@@ -69,6 +69,16 @@ namespace nui
         ArgbColor GdiShape::GetFillColor() const
         {
             return fillColor_;
+        }
+
+        void GdiShape::Draw(NRender* render, const Base::NRect& rect)
+        {
+            render->DrawShape(this, rect);
+        }
+
+        bool GdiShape::IsDrawValid() const
+        {
+            return true;
         }
     }
 }

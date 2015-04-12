@@ -19,16 +19,6 @@ namespace nui
             Destroy();
         }
 
-        LPVOID GdiImage::LockBits()
-        {
-            return NULL;
-        }
-
-        void GdiImage::UnlockBits(LPVOID bits)
-        {
-            UNREFERENCED_PARAMETER(bits);
-        }
-
         int GdiImage::NextDelayValue(int index)
         {
             NAssertError(index < vctDelayCount_->Count(), _T("Out of bound"));
@@ -65,6 +55,11 @@ namespace nui
             return (*vctBitmaps_)[index];
         }
 
+        bool GdiImage::IsDrawValid() const
+        {
+            return vctBitmaps_ != NULL && vctBitmaps_->Count() > 0;
+        }
+
         void GdiImage::Destroy()
         {
             if(loader_ == NULL || imagePath_.IsEmpty())
@@ -72,6 +67,8 @@ namespace nui
             GdiResourceLoader* gdiLoader = dynamic_cast<GdiResourceLoader*>(loader_);
             gdiLoader->ReleaseImage(imagePath_);
             imagePath_ = _T("");
+            vctBitmaps_ = NULL;
+            vctDelayCount_ = NULL;
         }
     }
 }

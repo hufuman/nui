@@ -2,6 +2,7 @@
 
 
 #include "./NRender.h"
+#include "./NDraw.h"
 #include "../base/BaseObj.h"
 #include "../base/NString.h"
 #include "../base/DataTypes.h"
@@ -104,6 +105,8 @@ namespace nui
             virtual void SetMinSize(int minWidth, int minHeight);
 
             // draw
+            virtual void SetBkgDraw(NDraw* bkgDraw);
+            virtual NDraw* GetBkgDraw() const;
             virtual void Invalidate();
             virtual void Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
 
@@ -135,6 +138,9 @@ namespace nui
 
             // NFrame::Status
             DWORD frameStatus_;
+
+            // Background
+            Base::NAutoPtr<NDraw> bkgDraw_;
 
             Base::NString frameId_;
             Base::NAutoPtr<NText> text_;

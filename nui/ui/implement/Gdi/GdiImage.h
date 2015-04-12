@@ -14,14 +14,15 @@ namespace nui
             GdiImage(NResourceLoader* loader);
             ~GdiImage();
 
-            virtual LPVOID LockBits();
-            virtual void UnlockBits(LPVOID bits);
             virtual int NextDelayValue(int index);
 
             virtual void Destroy();
 
             void SetBitmaps(const Base::NString& imagePath, const Data::NArrayT<HBITMAP>& vctBitmaps, const Data::NArrayT<int>& vctDelayCount);
             HBITMAP GetHBitmap(int index) const;
+
+            // NDraw
+            virtual bool IsDrawValid() const;
 
         private:
             Base::NString imagePath_;

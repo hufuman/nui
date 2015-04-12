@@ -16,10 +16,10 @@ namespace nui
             ~GdiShape();
 
         public:
-            virtual NShape& SetStyle(Style style);
-            virtual NShape& SetBorderColor(ArgbColor borderColor);
-            virtual NShape& SetBorderWidth(int borderWidth);
-            virtual NShape& SetFillColor(ArgbColor fillColor);
+            virtual NShape* SetStyle(Style style);
+            virtual NShape* SetBorderColor(ArgbColor borderColor);
+            virtual NShape* SetBorderWidth(int borderWidth);
+            virtual NShape* SetFillColor(ArgbColor fillColor);
             virtual Style GetStyle() const;
 
             BYTE GetBorderAlpha() const;
@@ -27,6 +27,10 @@ namespace nui
             int GetBorderWidth() const;
             BYTE GetFillAlpha() const;
             ArgbColor GetFillColor() const;
+
+            // NDraw
+            virtual void Draw(NRender* render, const Base::NRect& rect);
+            virtual bool IsDrawValid() const;
 
         private:
             Style style_;

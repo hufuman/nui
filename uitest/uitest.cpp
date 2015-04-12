@@ -5,7 +5,9 @@
 #include "uitest.h"
 
 nui::Base::NString GetResourcePath();
-bool PaintCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+bool MsgFilterCallbackProc(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+void InitWindow(NWindow* window);
+
 NAutoPtr<NImage> g_Image;
 NAutoPtr<NText> g_SingleLineText;
 NAutoPtr<NText> g_MultipleLineText;
@@ -36,7 +38,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
 
-    EventClass eventClass;
     g_Render = NUiBus::Instance().CreateRender();
 
     g_Image = loader->LoadImage(_T("@skin:images\\3.gif"));
@@ -47,47 +48,15 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     g_MultipleLineText = loader->CreateText(_T("line\r\nfirst line\r\nsecond line\r\nthird line"), MemToolParam);
     g_MultipleLineText->SetSingleLine(false).SetColor(MakeArgb(255, 0, 255, 0)).SetHorzCenter(true).SetVertCenter(true);
 
-    NWindow window;
-    window.SetMsgFilterCallback(PaintCallback);
-    window.Create(NULL);
-    window.SetSize(500, 400);
-    window.CenterWindow(NULL);
-    window.SetText(_T("Test Window"));
-    window.SetVisible(true);
+    NInstPtr<NWindow> window(MemToolParam);
+    window->SetMsgFilterCallback(&MsgFilterCallbackProc);
+    window->Create(NULL);
+    window->SetSize(500, 400);
+    window->CenterWindow(NULL);
+    window->SetText(_T("Test Window"));
+    window->SetVisible(true);
 
-    NWindow* wnd = &window;
-    NRect rect;
-    wnd->GetRect(rect);
-    int width = rect.Width();
-    int height = rect.Height();
-    const int count = 1;
-
-    for(int i=0; i<count; ++ i)
-    {
-        for(int j=0; j<count; ++ j)
-        {
-            NString msg;
-            msg.Format(_T("%d * %d"), i, j);
-            NInstPtr<NFrame> frame(MemToolParam);
-            frame->SetText(msg);
-            frame->GetRichText()->SetVertCenter(true);
-            frame->SetPos(i * width / count, j * height / count);
-            frame->SetSize(width / count, height / count);
-            frame->SetClickCallback(MakeDelegate(&eventClass, &EventClass::OnClick));
-            for(int k=0; k<count; ++ k)
-            {
-                NString msg;
-                msg.Format(_T("%d"), k);
-                NInstPtr<NFrame> child(MemToolParam);
-                child->SetText(msg);
-                child->SetPos(width / count / count * k, height / count);
-                child->SetSize(width / count / count, height / count);
-                frame->AddChild(child);
-                frame->SetClickCallback(MakeDelegate(&eventClass, &EventClass::OnClick));
-            }
-            wnd->GetRootFrame()->AddChild(frame);
-        }
-    }
+    InitWindow(window);
 
     {
         nui::Base::NHolder timer;
@@ -95,13 +64,15 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         // timer = timerSrv->startTimer(200, MakeDelegate(&window, &NWindow::Invalidate));
 
         nui::Ui::NMsgLoop loop;
-        loop.Loop(window.GetNative());
+        loop.Loop(window->GetNative());
 
         g_Image = NULL;
         g_SingleLineText = NULL;
         g_MultipleLineText = NULL;
         g_Render = NULL;
     }
+
+    window = NULL;
 
     core->DestroyCore();
 	return 0;
@@ -122,7 +93,7 @@ nui::Base::NString GetResourcePath()
     return tmp;
 }
 
-bool PaintCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+bool MsgFilterCallbackProc(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
 {
     HWND hWnd = window->GetNative();
     if(message == WM_KEYDOWN)
@@ -135,3 +106,37 @@ bool PaintCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lPar
     }
     return false;
 }
+
+void InitWindow(NWindow* window)
+{
+    NFrame* rootFrame = window->GetRootFrame();
+    NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+    rootFrame->SetBkgDraw(loader->CreateShape(MemToolParam)->SetFillColor(MakeArgb(200, 255, 255, 0)));
+
+    NRect rect;
+    window->GetRect(rect);
+    rect.Offset(-rect.Left, -rect.Top);
+
+    Base::NInstPtr<NFrame> leftTopFrame(MemToolParam);
+    leftTopFrame->SetPos(0, 0);
+    leftTopFrame->SetId(_T("leftTop"));
+    leftTopFrame->SetSize(rect.Width() / 2, rect.Height() / 2);
+    leftTopFrame->SetBkgDraw(loader->CreateShape(MemToolParam)->SetFillColor(MakeArgb(200, 0, 0, 255)));
+
+    Base::NInstPtr<NFrame> rightTopFrame(MemToolParam);
+    rightTopFrame->SetPos(rect.Width() / 2, 0);
+    rightTopFrame->SetId(_T("rightTop"));
+    rightTopFrame->SetSize(rect.Width() / 2, rect.Height() / 2);
+    rightTopFrame->SetBkgDraw(loader->LoadImage(_T("@skin:images\\3.gif")));
+
+    Base::NInstPtr<NFrame> rightBottomFrame(MemToolParam);
+    rightBottomFrame->SetPos(rect.Width() / 2, rect.Height() / 2);
+    rightBottomFrame->SetId(_T("rightBottom"));
+    rightBottomFrame->SetSize(rect.Width() / 2, rect.Height() / 2);
+    rightBottomFrame->SetBkgDraw(loader->CreateShape(MemToolParam)->SetFillColor(MakeArgb(200, 0, 255, 0)));
+
+    rootFrame->AddChild(leftTopFrame);
+    rootFrame->AddChild(rightTopFrame);
+    rootFrame->AddChild(rightBottomFrame);
+}
+

@@ -19,7 +19,7 @@ namespace nui
             virtual bool Init(HDC hDc, const Base::NRect& rcPaint) = 0;
             virtual void DrawBack(bool layered) = 0;
 
-            virtual void DrawShape(const Base::NRect& rect, NShape* shape) = 0;
+            virtual void DrawShape(NShape* shape, const Base::NRect& rect) = 0;
             virtual void DrawImage(NImage* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue) = 0;
             virtual void DrawText(NText* text, NFont* font, const Base::NRect& rect) = 0;
             virtual void GetTextSize(NText* text, NFont* font, Base::NSize& rect) = 0;
@@ -30,56 +30,56 @@ namespace nui
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
-                shape->SetStyle(NShape::Line).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
-                DrawShape(rect, shape);
+                shape->SetStyle(NShape::Line)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder);
+                DrawShape(shape, rect);
             }
 
             __inline void DrawRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
-                shape->SetStyle(NShape::RoundRect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
-                DrawShape(rect, shape);
+                shape->SetStyle(NShape::RoundRect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder);
+                DrawShape(shape, rect);
             }
 
             __inline void DrawRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
-                shape->SetStyle(NShape::RoundRect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder).SetFillColor(clrFill);
-                DrawShape(rect, shape);
+                shape->SetStyle(NShape::RoundRect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder)->SetFillColor(clrFill);
+                DrawShape(shape, rect);
             }
 
             __inline void FillRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
-                shape->SetStyle(NShape::RoundRect).SetFillColor(clrFill).SetBorderWidth(borderWidth);
-                DrawShape(rect, shape);
+                shape->SetStyle(NShape::RoundRect)->SetFillColor(clrFill)->SetBorderWidth(borderWidth);
+                DrawShape(shape, rect);
             }
 
             __inline void DrawRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
-                shape->SetStyle(NShape::Rect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder);
-                DrawShape(rect, shape);
+                shape->SetStyle(NShape::Rect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder);
+                DrawShape(shape, rect);
             }
 
             __inline void FillRectangle(const Base::NRect& rect, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
-                shape->SetStyle(NShape::Rect).SetFillColor(clrFill);
-                DrawShape(rect, shape);
+                shape->SetStyle(NShape::Rect)->SetFillColor(clrFill);
+                DrawShape(shape, rect);
             }
 
             __inline void DrawRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
             {
                 Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
                 Base::NAutoPtr<NShape> shape = loader->CreateShape(MemToolParam);
-                shape->SetStyle(NShape::Rect).SetBorderWidth(borderWidth).SetBorderColor(clrBorder).SetFillColor(clrFill);
-                DrawShape(rect, shape);
+                shape->SetStyle(NShape::Rect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder)->SetFillColor(clrFill);
+                DrawShape(shape, rect);
             }
 
             __inline void DrawImage(NImage* image, int horzIndex, int vertIndex, const Base::NRect& dstRect, int frameIndex)

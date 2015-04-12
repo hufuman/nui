@@ -16,6 +16,7 @@ namespace nui
         {
             window_ = NULL;
             layered_ = false;
+            mouseTracking_ = false;
         }
 
         NWindowBase::~NWindowBase()
@@ -265,6 +266,22 @@ namespace nui
 
         bool NWindowBase::OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
         {
+            if(!mouseTracking_ && message == WM_MOUSEMOVE)
+            {
+                TRACKMOUSEEVENT _Event = {0};
+                _Event.cbSize = sizeof(_Event);
+                _Event.dwFlags = TME_LEAVE;
+                _Event.hwndTrack = window_;
+                if(::TrackMouseEvent(&_Event))
+                {
+                    mouseTracking_ = true;
+                }
+            }
+            else if(message == WM_MOUSELEAVE)
+            {
+                mouseTracking_ = false;
+            }
+
             if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
                 return true;
 

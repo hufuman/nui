@@ -14,12 +14,14 @@ namespace nui
             parentFrame_ = NULL;
             topMostCount_ = 0;
             bottomMostCount_ = 0;
-            frameFlags_ = FlagVisible | FlagValid;
+            frameFlags_ = FlagVisible | FlagValid | FlagEnabled;
             frameStatus_ = StatusNormal;
+            bkgDraw_ = NULL;
         }
 
         NFrame::~NFrame()
         {
+            bkgDraw_ = NULL;
             parentFrame_ = NULL;
             RemoveAllChilds();
         }
@@ -216,7 +218,6 @@ namespace nui
                 return NULL;
 
             Base::NPoint pt(point);
-            pt.Offset(-frameRect_.Left, -frameRect_.Top);
             if(!frameRect_.Contains(pt))
                 return NULL;
 
@@ -380,6 +381,19 @@ namespace nui
             minSize_.Height = minHeight;
         }
 
+        void NFrame::SetBkgDraw(NDraw* bkgDraw)
+        {
+            if(bkgDraw == bkgDraw_)
+                return;
+            bkgDraw_ = bkgDraw;
+            Invalidate();
+        }
+
+        NDraw* NFrame::GetBkgDraw() const
+        {
+            return bkgDraw_;
+        }
+
         void NFrame::Invalidate()
         {
             if(!window_)
@@ -396,10 +410,13 @@ namespace nui
             Base::NRect rect(frameRect_);
             rect.Offset(ptOffset.X, ptOffset.Y);
 
-            if(!clipRect.Intersect(rect))
+            if(!clipRect.Overlap(rect))
                 return;
 
-            NRenderClip clip(render, rect);
+            NRenderClip clip(render, clipRect, rect);
+
+            if(bkgDraw_ != NULL && bkgDraw_->IsDrawValid())
+                bkgDraw_->Draw(render, rect);
 
             if(text_ != NULL)
                 render->DrawText(text_, font_, rect);
@@ -421,9 +438,9 @@ namespace nui
             if(window_)
                 window_ = NULL;
             if(parentFrame_)
-                OnWindowChanged(NULL);
-            else
                 OnWindowChanged(parentFrame_->window_);
+            else
+                OnWindowChanged(NULL);
         }
 
         void NFrame::OnWindowChanged(NWindow* window)

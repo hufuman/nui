@@ -6,6 +6,8 @@ namespace nui
 {
     namespace Ui
     {
+        IMPLEMENT_REFLECTION(NWindow);
+
         NWindow::NWindow()
         {
         }
@@ -20,6 +22,7 @@ namespace nui
             {
                 Base::NInstPtr<NFrame> rootFrame(MemToolParam);
                 rootFrame_ = (NFrame*)rootFrame;
+                rootFrame_->SetId(_T("rootFrame"));
                 rootFrame_->window_ = this;
                 Base::NRect rect;
                 GetRect(rect);
@@ -117,6 +120,8 @@ namespace nui
                 break;
             case WM_LBUTTONUP:
                 break;
+            case WM_MOUSELEAVE:
+                SetHoverItem(NULL);
                 break;
             }
             return false;

@@ -68,12 +68,15 @@ using namespace fastdelegate;
 #include "./ui/NWindowBase.h"
 #include "./ui/NTimerSrv.h"
 #include "./ui/NFrame.h"
-#include "./ui/NImage.h"
 #include "./ui/NResourceLoader.h"
 #include "./ui/NUiBus.h"
 #include "./ui/NRender.h"
+#include "./ui/NDraw.h"
 #include "./ui/NWindow.h"
 #include "./ui/NFont.h"
+#include "./ui/NImage.h"
+#include "./ui/NShape.h"
+#include "./ui/NText.h"
 
 #ifdef _NOT_USE_NUI_NAMESPACE
 using namespace nui;

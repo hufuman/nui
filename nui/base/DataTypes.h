@@ -170,7 +170,7 @@ namespace nui
                 return *this;
             }
 
-            bool Intersect(const NRect& rect) const
+            bool Overlap(const NRect& rect) const
             {
                 // center to center
                 int w1 = (Left + Right);
@@ -183,6 +183,11 @@ namespace nui
                 int y2 = h2 / 2 + rect.Top;
                 return (std::abs(x1 - x2) < (w1 + w2) / 2)
                     && (std::abs(y1 - y2) < (h1 + h2) / 2);
+            }
+
+            void Intersect(const NRect& rect)
+            {
+                ::IntersectRect(reinterpret_cast<LPRECT>(this), reinterpret_cast<const RECT*>(this), reinterpret_cast<const RECT*>(&rect));
             }
 
             NRect& SetRect(INT left, INT top, INT right, INT bottom)

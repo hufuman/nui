@@ -24,7 +24,8 @@ namespace nui
     static LPCTSTR GetNamespace()                           \
         { return namespaceName; }                           \
         static LPCTSTR GetClassName()                       \
-        { return className; }
+        { return className; }                               \
+    private:
 
 
 

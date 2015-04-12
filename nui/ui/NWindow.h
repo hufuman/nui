@@ -18,6 +18,7 @@ namespace nui
         class NUI_CLASS NWindow : public Base::NBaseObj, public NWindowBase
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("window"))
+
         public:
             NWindow();
             ~NWindow();

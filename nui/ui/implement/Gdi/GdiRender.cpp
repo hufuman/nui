@@ -74,7 +74,7 @@ namespace nui
             memDC_.Destroy();
         }
 
-        void GdiRender::DrawShape(const Base::NRect& rect, NShape* shape)
+        void GdiRender::DrawShape(NShape* shape, const Base::NRect& rect)
         {
             GdiShape* gdiShape = dynamic_cast<GdiShape*>(shape);
 

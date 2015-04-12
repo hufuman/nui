@@ -62,6 +62,7 @@ namespace nui
         protected:
             HWND    window_;
             bool    layered_;
+            bool    mouseTracking_;
             MsgFilterCallback msgFilterCallback_;
         };
         END_USE_UNEXPORT_TEMPLATE()
