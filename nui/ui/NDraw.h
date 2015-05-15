@@ -10,8 +10,7 @@ namespace nui
         class NUI_INTF NDraw : public nui::Base::NBaseObj
         {
         public:
-            virtual void Draw(NRender* render, const Base::NRect& rect) = 0;
-            virtual bool IsDrawValid() const = 0;
+            virtual void Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect) = 0;
         };
     }
 }

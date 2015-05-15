@@ -16,12 +16,12 @@ namespace nui
         {
         }
 
-        NFrame* NWindow::GetRootFrame()
+        NRichFrame* NWindow::GetRootFrame()
         {
             if(rootFrame_ == NULL)
             {
-                Base::NInstPtr<NFrame> rootFrame(MemToolParam);
-                rootFrame_ = (NFrame*)rootFrame;
+                Base::NInstPtr<NRichFrame> rootFrame(MemToolParam);
+                rootFrame_ = (NRichFrame*)rootFrame;
                 rootFrame_->SetId(_T("rootFrame"));
                 rootFrame_->window_ = this;
                 Base::NRect rect;

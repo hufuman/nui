@@ -55,11 +55,6 @@ namespace nui
             return (*vctBitmaps_)[index];
         }
 
-        bool GdiImage::IsDrawValid() const
-        {
-            return vctBitmaps_ != NULL && vctBitmaps_->Count() > 0;
-        }
-
         void GdiImage::Destroy()
         {
             if(loader_ == NULL || imagePath_.IsEmpty())

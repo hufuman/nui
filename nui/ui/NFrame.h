@@ -2,7 +2,6 @@
 
 
 #include "./NRender.h"
-#include "./NDraw.h"
 #include "../base/BaseObj.h"
 #include "../base/NString.h"
 #include "../base/DataTypes.h"
@@ -36,6 +35,7 @@ namespace nui
 
             friend class NWindow;
 
+        protected:
             enum Flag
             {
                 FlagNone        = 0x0000,
@@ -46,6 +46,7 @@ namespace nui
                 FlagCanHover    = 0x0010,
             };
 
+        public:
             enum Status
             {
                 StatusNormal  = 0x0001,
@@ -62,6 +63,7 @@ namespace nui
             ~NFrame();
 
         public:
+
             // Event
             virtual void SetClickCallback(ClickEventCallback callback);
 
@@ -78,37 +80,27 @@ namespace nui
             virtual NFrame* GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags);
 
             virtual NFrame* GetParent() const;
+            virtual void Invalidate() const;
+            virtual void Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
 
             // flags
             virtual void SetVisible(bool visible);
             virtual bool IsVisible() const;
             virtual void SetEnabled(bool enabled);
             virtual bool IsEnabled() const;
-            virtual void SetAutoSize(bool autosize);
-            virtual bool IsAutoSize() const;
             virtual void SetValid(bool valid);
             virtual bool IsValid() const;
 
             // data
-            virtual void SetText(const Base::NString& text);
-            virtual Base::NString GetText() const;
-            virtual NText* GetRichText() const;
             virtual void SetId(const Base::NString& id);
             virtual Base::NString GetId() const;
 
             // pos / size
             virtual const Base::NRect& GetRect() const;
             virtual Base::NRect GetRootRect() const;
-            virtual void AutoSize();
             virtual void SetPos(int left, int top);
             virtual void SetSize(int width, int height);
             virtual void SetMinSize(int minWidth, int minHeight);
-
-            // draw
-            virtual void SetBkgDraw(NDraw* bkgDraw);
-            virtual NDraw* GetBkgDraw() const;
-            virtual void Invalidate();
-            virtual void Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
 
         protected:
             virtual void OnParentChanged();
@@ -121,11 +113,18 @@ namespace nui
             virtual void BeginHover();
             virtual bool CanHover() const;
 
+            // Draw
+            virtual void GetDrawIndex(int& horzIndex, int& vertIndex) const;
+            virtual void DrawBkg(NRender* render, const Base::NRect& rect) const;
+            virtual void DrawFore(NRender* render, const Base::NRect& rect) const;
+            virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
+            virtual void DrawChilds(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
+
         private:
             static void SetParentHelper(NFrame* child, NFrame* newParent);
             FrameList::const_iterator GetChildHelper(NFrame* child, size_t& zorder) const;
 
-        private:
+        protected:
             size_t topMostCount_;
             size_t bottomMostCount_;
             NFrame* parentFrame_;
@@ -139,12 +138,7 @@ namespace nui
             // NFrame::Status
             DWORD frameStatus_;
 
-            // Background
-            Base::NAutoPtr<NDraw> bkgDraw_;
-
             Base::NString frameId_;
-            Base::NAutoPtr<NText> text_;
-            Base::NAutoPtr<NFont> font_;
             Base::NRect frameRect_;
             Base::NSize minSize_;
 

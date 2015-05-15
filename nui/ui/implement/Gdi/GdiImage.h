@@ -21,9 +21,6 @@ namespace nui
             void SetBitmaps(const Base::NString& imagePath, const Data::NArrayT<HBITMAP>& vctBitmaps, const Data::NArrayT<int>& vctDelayCount);
             HBITMAP GetHBitmap(int index) const;
 
-            // NDraw
-            virtual bool IsDrawValid() const;
-
         private:
             Base::NString imagePath_;
             const Data::NArrayT<HBITMAP>* vctBitmaps_;

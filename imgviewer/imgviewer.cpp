@@ -47,23 +47,38 @@ void ImgViewer::Show(LPCTSTR filePath)
         .SetSingleLine(TRUE)
         .SetColor(MakeArgb(255, 255, 255, 0));
 
-    window_.SetDrawCallback(MakeDelegate(this, &ImgViewer::DrawCallback));
-    window_.SetMsgFilterCallback(MakeDelegate(this, &ImgViewer::MsgCallback));
-    window_.Create(NULL, WindowStyle::Layered | WindowStyle::Sizable);
-    window_.SetSize(500, 400);
-    window_.CenterWindow(NULL);
-    window_.SetText(_T("Test Window"));
-    window_.SetVisible(true);
+    NReflectCreate(window_);
+    window_->SetDrawCallback(MakeDelegate(this, &ImgViewer::DrawCallback));
+    window_->SetMsgFilterCallback(MakeDelegate(this, &ImgViewer::MsgCallback));
+    window_->Create(NULL, WindowStyle::Layered | WindowStyle::Sizable);
+    window_->SetSize(500, 400);
+    window_->SetText(_T("Test Window"));
 
-    ::DragAcceptFiles(window_.GetNative(), TRUE);
+    NShape* shape = NULL;
+    NReflectCreate(shape);
+    shape->SetFillColor(MakeArgb(255, 255, 0, 255));
+    NInstPtr<NButton> button(MemToolParam);
+    button->SetBkgDraw(shape);
+    button->SetSize(100, 100);
+    window_->GetRootFrame()->AddChild(button);
+
+    InitControls();
+
+    ::DragAcceptFiles(window_->GetNative(), TRUE);
     Shell::FilterWindowMessage(0x0049 /*WM_COPYGLOBALDATA*/, 1);
     Shell::FilterWindowMessage(WM_DROPFILES, 1);
     Shell::FilterWindowMessage(WM_COPYDATA, 1);
 
     if(filePath != NULL && filePath[0] != 0)
+    {
         OpenImage(filePath);
+    }
     else
-        ViewerDataMgr::Instance().Hold(_T(""), window_.GetNative(), TRUE);
+    {
+        ViewerDataMgr::Instance().Hold(_T(""), window_->GetNative(), TRUE);
+        window_->CenterWindow(NULL);
+        window_->SetVisible(true);
+    }
 }
 
 void ImgViewer::Destroy()
@@ -71,6 +86,7 @@ void ImgViewer::Destroy()
     image_ = NULL;
     timerSrv_ = NULL;
     drawTimerHolder_.Release();
+    window_ = NULL;
 }
 
 const NArrayT<NString>& ImgViewer::GetSupportedFormats() const
@@ -80,7 +96,7 @@ const NArrayT<NString>& ImgViewer::GetSupportedFormats() const
 
 HWND ImgViewer::GetNative() const
 {
-    return window_.GetNative();
+    return window_->GetNative();
 }
 
 void ImgViewer::ShowPrev(HWND hWnd, LPCTSTR filePath)
@@ -109,12 +125,12 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
     }
     else if(message == WM_KEYDOWN)
     {
-        if(wParam == VK_ESCAPE && ::GetForegroundWindow() == window_.GetNative())
+        if(wParam == VK_ESCAPE && ::GetForegroundWindow() == window_->GetNative())
         {
-            window_.Destroy();
+            window_->Destroy();
         }
     }
-    else if(message == WM_NCLBUTTONDBLCLK)
+    else if(message == WM_LBUTTONDBLCLK)
     {
         Base::NString filePath = Shell::BrowseForFile(window->GetNative(), TRUE, GetFileDlgExts());
         if(filePath.IsEmpty())
@@ -149,7 +165,7 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
 bool ImgViewer::DrawCallback(NWindow*, NRender* render, const NRect& clipRect)
 {
     NRect rcWnd;
-    window_.GetRect(rcWnd);
+    window_->GetRect(rcWnd);
     rcWnd.Offset(-rcWnd.Left, -rcWnd.Top);
     render->FillRectangle(rcWnd, MakeArgb(180, 125, 125, 125));
     if(image_ == NULL)
@@ -187,13 +203,13 @@ bool ImgViewer::DrawCallback(NWindow*, NRender* render, const NRect& clipRect)
             render->DrawImage(image_, 0, 0, rcWnd, frameIndex_);
         }
     }
-    return true;
+    return false;
 }
 
 void ImgViewer::DrawTimerFunc()
 {
     frameIndex_ = (frameIndex_ + 1) % frameCount_;
-    window_.Invalidate();
+    window_->Invalidate();
     drawTimerHolder_.Release();
     drawTimerHolder_ = timerSrv_->startTimer(image_->NextDelayValue(frameIndex_), MakeDelegate(this, &ImgViewer::DrawTimerFunc));
 }
@@ -204,13 +220,12 @@ bool ImgViewer::OpenImage(LPCTSTR filePath)
     NAutoPtr<NImage> image = loader->LoadImage(filePath);
     if(image == NULL)
     {
-        ::MessageBox(window_.GetNative(), _T("Failed to open image"), _T("Error"), MB_OK | MB_ICONERROR);
+        ::MessageBox(window_->GetNative(), _T("Failed to open image"), _T("Error"), MB_OK | MB_ICONERROR);
         return false;
     }
 
-    ViewerDataMgr::Instance().Hold(filePath, window_.GetNative(), TRUE);
+    ViewerDataMgr::Instance().Hold(filePath, window_->GetNative(), TRUE);
     image_ = image;
-    rate_ = 1;
     frameIndex_ = 0;
     frameCount_ = image_->GetFrameCount();
     drawTimerHolder_.Release();
@@ -219,11 +234,23 @@ bool ImgViewer::OpenImage(LPCTSTR filePath)
         drawTimerHolder_ = timerSrv_->startTimer(image_->NextDelayValue(frameIndex_), MakeDelegate(this, &ImgViewer::DrawTimerFunc));
     }
 
+    NRect rcWorkarea = Shell::GetWorkareaRect();
     NSize size = image_->GetSize();
+    if(size.Width < rcWorkarea.Width() && size.Height < rcWorkarea.Height())
+    {
+        rate_ = 1;
+    }
+    else
+    {
+        int xRate = size.Width / rcWorkarea.Width() + 2;
+        int yRate = size.Height / rcWorkarea.Height() + 2;
+        rate_ = xRate < yRate ? - xRate : - yRate;
+    }
     GetProperSize(size);
-    window_.SetSize(size.Width, size.Height);
-    window_.SetVisible(TRUE);
-    window_.Invalidate();
+    window_->SetSize(size.Width, size.Height);
+    window_->SetVisible(TRUE);
+    window_->Invalidate();
+    window_->CenterWindow(NULL);
     return true;
 }
 
@@ -264,7 +291,7 @@ void ImgViewer::OnCopyData(COPYDATASTRUCT* cds)
     if(cds->dwData != g_MagicNum || cds->cbData % 2 != 0)
         return;
 
-    HWND hWnd = window_.GetNative();
+    HWND hWnd = window_->GetNative();
     ::ShowWindow(hWnd, SW_SHOW);
     if(::IsIconic(hWnd) || ::GetForegroundWindow() != hWnd)
         ::SwitchToThisWindow(hWnd, TRUE);
@@ -304,6 +331,16 @@ void ImgViewer::OnMouseWheel(short delta)
 
     NSize size = image_->GetSize();
     GetProperSize(size);
-    window_.SetSize(size.Width, size.Height);
-    window_.Invalidate();
+    window_->SetSize(size.Width, size.Height);
+    window_->Invalidate();
+}
+
+void ImgViewer::InitControls()
+{
+    /*
+    NButton* pBtnLeft = NULL;
+    NButton* pBtnRight = NULL;
+    NReflectCreate(pBtnLeft);
+    NReflectCreate(pBtnRight);
+    */
 }

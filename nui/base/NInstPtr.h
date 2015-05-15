@@ -41,6 +41,7 @@ namespace nui
 
             NInstPtr& operator = (int nullPtr)
             {
+                UNREFERENCED_PARAMETER(nullPtr);
                 NAssertError(nullPtr == 0, _T("only null acceptable"));
                 NSafeRelease(ptr_);
                 ptr_ = NULL;
@@ -61,8 +62,6 @@ namespace nui
             T* Create(LPCSTR filePath, int line)
             {
                 nui::Base::NReflect::GetInstance().Create(ptr_, filePath, line);
-                if(ptr_)
-                    ptr_->AddRef();
                 NAssertError(ptr_ != NULL, _T("Failed to create obj"));
                 return ptr_;
             }

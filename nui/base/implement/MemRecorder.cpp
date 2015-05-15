@@ -76,14 +76,14 @@ namespace nui
 
         void NMemRecorder::RemoveMemLog(nui::Base::NuiMemType memType, void* p)
         {
+            UNREFERENCED_PARAMETER(memType);
             if(this == 0)
                 return;
             AllocLogIter iter = FindMemLog(p);
             NAssertError(iter != mapAllocLog_.end(), _T("Ptr Not Found in NMemRecorder::RemoveMemLog"));
             if(iter == mapAllocLog_.end())
                 return;
-            stAllocLog& log = iter->second;
-            NAssertError(log.memType == memType, _T("Wrong Memory Release Function Invoked"));
+            NAssertError(iter->second.memType == memType, _T("Wrong Memory Release Function Invoked"));
             mapAllocLog_.erase(iter);
         }
 

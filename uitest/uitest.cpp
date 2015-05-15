@@ -14,15 +14,6 @@ NAutoPtr<NText> g_MultipleLineText;
 nui::Base::NAutoPtr<nui::Ui::NRender> g_Render;
 int g_BorderWidth = 1;
 
-class EventClass
-{
-public:
-    bool OnClick(NFrame* frame, const Base::NPoint& pt)
-    {
-        ::MessageBox(NULL, frame->GetText(), frame->GetText(), MB_OK);
-        return true;
-    }
-};
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -109,7 +100,7 @@ bool MsgFilterCallbackProc(NWindowBase* window, UINT message, WPARAM wParam, LPA
 
 void InitWindow(NWindow* window)
 {
-    NFrame* rootFrame = window->GetRootFrame();
+    NRichFrame* rootFrame = window->GetRootFrame();
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
     rootFrame->SetBkgDraw(loader->CreateShape(MemToolParam)->SetFillColor(MakeArgb(200, 255, 255, 0)));
 
@@ -117,19 +108,19 @@ void InitWindow(NWindow* window)
     window->GetRect(rect);
     rect.Offset(-rect.Left, -rect.Top);
 
-    Base::NInstPtr<NFrame> leftTopFrame(MemToolParam);
+    Base::NInstPtr<NRichFrame> leftTopFrame(MemToolParam);
     leftTopFrame->SetPos(0, 0);
     leftTopFrame->SetId(_T("leftTop"));
     leftTopFrame->SetSize(rect.Width() / 2, rect.Height() / 2);
     leftTopFrame->SetBkgDraw(loader->CreateShape(MemToolParam)->SetFillColor(MakeArgb(200, 0, 0, 255)));
 
-    Base::NInstPtr<NFrame> rightTopFrame(MemToolParam);
+    Base::NInstPtr<NRichFrame> rightTopFrame(MemToolParam);
     rightTopFrame->SetPos(rect.Width() / 2, 0);
     rightTopFrame->SetId(_T("rightTop"));
     rightTopFrame->SetSize(rect.Width() / 2, rect.Height() / 2);
     rightTopFrame->SetBkgDraw(loader->LoadImage(_T("@skin:images\\3.gif")));
 
-    Base::NInstPtr<NFrame> rightBottomFrame(MemToolParam);
+    Base::NInstPtr<NRichFrame> rightBottomFrame(MemToolParam);
     rightBottomFrame->SetPos(rect.Width() / 2, rect.Height() / 2);
     rightBottomFrame->SetId(_T("rightBottom"));
     rightBottomFrame->SetSize(rect.Width() / 2, rect.Height() / 2);

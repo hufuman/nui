@@ -490,11 +490,11 @@
 					Name="ui"
 					>
 					<File
-						RelativePath="..\nui\ui\EventDef.h"
+						RelativePath="..\nui\ui\NButton.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NEvent.h"
+						RelativePath="..\nui\ui\NDraw.h"
 						>
 					</File>
 					<File
@@ -527,6 +527,10 @@
 					</File>
 					<File
 						RelativePath="..\nui\ui\NResourceLoader.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\ui\NRichFrame.h"
 						>
 					</File>
 					<File
@@ -565,15 +569,19 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NButtonImpl.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NFrameImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NFrameImpl.h"
+							RelativePath="..\nui\ui\implement\NMsgLoop.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NMsgLoop.cpp"
+							RelativePath="..\nui\ui\implement\NRichFrameImpl.cpp"
 							>
 						</File>
 						<File

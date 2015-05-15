@@ -51,6 +51,7 @@ namespace nui
 
             NAutoPtr& operator = (int nullPtr)
             {
+                UNREFERENCED_PARAMETER(nullPtr);
                 NAssertError(nullPtr == 0, _T("only null acceptable"));
                 NSafeRelease(ptr_);
                 ptr_ = NULL;

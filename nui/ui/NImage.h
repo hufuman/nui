@@ -20,9 +20,6 @@ namespace nui
 
             virtual bool SetCount(int horzCount, int vertCount) = 0;
             virtual void GetCount(int& horzCount, int& vertCount) const = 0;
-
-            virtual bool SetIndex(int horzIndex, int vertIndex) = 0;
-            virtual void GetIndex(int& horzIndex, int& vertIndex) const = 0;
         };
     }
 }

@@ -199,14 +199,13 @@ namespace nui
             BlendFunc.BlendOp = AC_SRC_OVER;
             BlendFunc.SourceConstantAlpha = alphaValue;
             BlendFunc.AlphaFormat = AC_SRC_ALPHA;
-            BOOL bResult = ::AlphaBlend(memDC_,
+            NVerify(!!::AlphaBlend(memDC_,
                 dstX, dstY,
                 dstWidth, dstHeight,
                 imageDc,
                 srcX, srcY,
                 srcWidth, srcHeight,
-                BlendFunc);
-            NAssertError(!!bResult, _T("AlphaBlend Failed in GdiRender::DrawImage"));
+                BlendFunc), _T("AlphaBlend Failed in GdiRender::DrawImage"));
         }
 
         void GdiRender::DrawText(NText* text, NFont* font, const Base::NRect& rect)

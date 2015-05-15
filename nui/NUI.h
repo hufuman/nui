@@ -68,6 +68,8 @@ using namespace fastdelegate;
 #include "./ui/NWindowBase.h"
 #include "./ui/NTimerSrv.h"
 #include "./ui/NFrame.h"
+#include "./ui/NRichFrame.h"
+#include "./ui/NButton.h"
 #include "./ui/NResourceLoader.h"
 #include "./ui/NUiBus.h"
 #include "./ui/NRender.h"

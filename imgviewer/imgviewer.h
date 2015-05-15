@@ -27,9 +27,11 @@ private:
     void OnDropFiles(HDROP hDrop);
     void OnMouseWheel(short delta);
 
+    void InitControls();
+
 private:
     NHolder drawTimerHolder_;
-    NWindow window_;
+    NAutoPtr<NWindow> window_;
     int frameIndex_;
     int frameCount_;
     NAutoPtr<NTimerSrv> timerSrv_;

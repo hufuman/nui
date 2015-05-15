@@ -7,6 +7,8 @@ namespace nui
 {
     namespace Ui
     {
+        IMPLEMENT_REFLECTION(NButton);
+
         NButton::NButton()
         {
         }

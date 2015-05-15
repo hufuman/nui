@@ -114,6 +114,13 @@ namespace nui
                     return FALSE;
                 return pfnChangeWindowMessageFilter(message, dwValue);
             }
+
+            NUI_API Base::NRect GetWorkareaRect()
+            {
+                Base::NRect rcWorkarea;
+                ::SystemParametersInfo(SPI_GETWORKAREA, 0, rcWorkarea, 0);
+                return rcWorkarea;
+            }
         }
     }
 }

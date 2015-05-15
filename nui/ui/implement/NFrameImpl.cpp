@@ -16,12 +16,10 @@ namespace nui
             bottomMostCount_ = 0;
             frameFlags_ = FlagVisible | FlagValid | FlagEnabled;
             frameStatus_ = StatusNormal;
-            bkgDraw_ = NULL;
         }
 
         NFrame::~NFrame()
         {
-            bkgDraw_ = NULL;
             parentFrame_ = NULL;
             RemoveAllChilds();
         }
@@ -265,20 +263,6 @@ namespace nui
             return Util::Misc::IsFlagChecked(frameFlags_, NFrame::FlagEnabled);
         }
 
-        void NFrame::SetAutoSize(bool autosize)
-        {
-            if(autosize == IsAutoSize())
-                return;
-            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, autosize);
-            if(autosize)
-                AutoSize();
-        }
-
-        bool NFrame::IsAutoSize() const
-        {
-            return Util::Misc::IsFlagChecked(frameFlags_, NFrame::FlagAutoSize);
-        }
-
         void NFrame::SetValid(bool valid)
         {
             if(valid == IsValid())
@@ -290,33 +274,6 @@ namespace nui
         bool NFrame::IsValid() const
         {
             return Util::Misc::IsFlagChecked(frameFlags_, NFrame::FlagValid);
-        }
-
-        void NFrame::SetText(const Base::NString& text)
-        {
-            if(text.IsEmpty() && text_  == NULL)
-                return;
-            if(text_ == NULL)
-            {
-                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(text, MemToolParam);
-            }
-            else
-            {
-                if(text_->GetText() == text)
-                    return;
-                text_->SetText(text);
-            }
-            Invalidate();
-        }
-
-        Base::NString NFrame::GetText() const
-        {
-            return text_ == NULL ? _T("") : text_->GetText();
-        }
-
-        NText* NFrame::GetRichText() const
-        {
-            return text_;
         }
 
         void NFrame::SetId(const Base::NString& id)
@@ -345,16 +302,6 @@ namespace nui
             return result;
         }
 
-        void NFrame::AutoSize()
-        {
-            NAssertError(window_ != NULL, _T("window is null"));
-            if(!window_ || text_ == NULL)
-                return;
-            Base::NSize txtSize;
-            window_->GetRender()->GetTextSize(text_, font_, txtSize);
-            SetSize(txtSize.Width, txtSize.Height);
-        }
-
         void NFrame::SetPos(int left, int top)
         {
             if(frameRect_.Left == left && frameRect_.Top == top)
@@ -381,20 +328,7 @@ namespace nui
             minSize_.Height = minHeight;
         }
 
-        void NFrame::SetBkgDraw(NDraw* bkgDraw)
-        {
-            if(bkgDraw == bkgDraw_)
-                return;
-            bkgDraw_ = bkgDraw;
-            Invalidate();
-        }
-
-        NDraw* NFrame::GetBkgDraw() const
-        {
-            return bkgDraw_;
-        }
-
-        void NFrame::Invalidate()
+        void NFrame::Invalidate() const
         {
             if(!window_)
                 return;
@@ -415,22 +349,11 @@ namespace nui
 
             NRenderClip clip(render, clipRect, rect);
 
-            if(bkgDraw_ != NULL && bkgDraw_->IsDrawValid())
-                bkgDraw_->Draw(render, rect);
+            DrawBkg(render, rect);
+            DrawContent(render, rect);
+            DrawFore(render, rect);
 
-            if(text_ != NULL)
-                render->DrawText(text_, font_, rect);
-
-            {
-                ptOffset.Offset(frameRect_.Left, frameRect_.Top);
-                FrameList::const_iterator ite = childs_.begin();
-                for(; ite != childs_.end(); ++ ite)
-                {
-                    NFrame* const & child = *ite;
-                    child->Draw(render, ptOffset, clipRect);
-                }
-                ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
-            }
+            DrawChilds(render, ptOffset, clipRect);
         }
 
         void NFrame::OnParentChanged()
@@ -494,8 +417,10 @@ namespace nui
 
             if(child->parentFrame_ != NULL)
             {
-                child->parentFrame_->RemoveChild(child);
+                NFrame* parent = child->parentFrame_;
+                parent->RemoveChild(child);
                 child->parentFrame_ = NULL;
+                parent->Invalidate();
             }
             if(newParent == NULL)
             {
@@ -507,6 +432,8 @@ namespace nui
                 child->AddRef();
             }
             child->OnParentChanged();
+            if(child->parentFrame_)
+                child->parentFrame_->Invalidate();
         }
 
         NFrame::FrameList::const_iterator NFrame::GetChildHelper(NFrame* child, size_t& zorder) const
@@ -527,6 +454,42 @@ namespace nui
             {
                 return ite;
             }
+        }
+
+        void NFrame::GetDrawIndex(int& horzIndex, int& vertIndex) const
+        {
+            horzIndex = (frameStatus_ == StatusDisabled) ? 3 : (frameStatus_ & 0x0F) / 2;
+            vertIndex = (frameStatus_ & StatusChecked) ? 1 : 0;
+        }
+
+        void NFrame::DrawBkg(NRender* render, const Base::NRect& rect) const
+        {
+            UNREFERENCED_PARAMETER(render);
+            UNREFERENCED_PARAMETER(rect);
+        }
+
+        void NFrame::DrawFore(NRender* render, const Base::NRect& rect) const
+        {
+            UNREFERENCED_PARAMETER(render);
+            UNREFERENCED_PARAMETER(rect);
+        }
+
+        void NFrame::DrawContent(NRender* render, const Base::NRect& rect) const
+        {
+            UNREFERENCED_PARAMETER(render);
+            UNREFERENCED_PARAMETER(rect);
+        }
+
+        void NFrame::DrawChilds(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect)
+        {
+            ptOffset.Offset(frameRect_.Left, frameRect_.Top);
+            FrameList::const_iterator ite = childs_.begin();
+            for(; ite != childs_.end(); ++ ite)
+            {
+                NFrame* const & child = *ite;
+                child->Draw(render, ptOffset, clipRect);
+            }
+            ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
         }
     }
 }

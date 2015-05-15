@@ -24,7 +24,7 @@ public:
         for(; ;)
         {
             if(needCreate)
-                m_hMap = ::CreateFileMapping(NULL, NULL, PAGE_READWRITE, 0, dwSize, dataName);
+                m_hMap = ::CreateFileMapping((HANDLE)0xFFFFFFFF, NULL, PAGE_READWRITE, 0, dwSize, dataName);
             else
                 m_hMap = ::OpenFileMapping(FILE_MAP_WRITE | FILE_MAP_READ, FALSE, dataName);
             if(m_hMap == NULL)

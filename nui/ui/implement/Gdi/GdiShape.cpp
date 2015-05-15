@@ -5,6 +5,9 @@ namespace nui
 {
     namespace Ui
     {
+
+        IMPLEMENT_REFLECTION(GdiShape);
+
         GdiShape::GdiShape()
         {
             style_ = Rect;
@@ -71,14 +74,11 @@ namespace nui
             return fillColor_;
         }
 
-        void GdiShape::Draw(NRender* render, const Base::NRect& rect)
+        void GdiShape::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
         {
+            UNREFERENCED_PARAMETER(horzIndex);
+            UNREFERENCED_PARAMETER(vertIndex);
             render->DrawShape(this, rect);
-        }
-
-        bool GdiShape::IsDrawValid() const
-        {
-            return true;
         }
     }
 }

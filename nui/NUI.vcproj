@@ -506,6 +506,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ui\NRichFrame.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui\NShape.h"
 				>
 			</File>
@@ -550,6 +554,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NMsgLoop.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NRichFrameImpl.cpp"
 					>
 				</File>
 				<File

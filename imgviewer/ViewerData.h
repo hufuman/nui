@@ -29,7 +29,7 @@ public:
     ViewerData* Hold(LPCTSTR filePath, HWND hWnd, BOOL needCreate)
     {
         NString name;
-        name = _T("Global\\ImgViewer_1"); // only one instance is allowed
+        name = _T("Global_ImgViewer_1"); // only one instance is allowed
         /*
         name.Format(_T("Global\\ImgViewer%s_%d"), filePath, 1);  // TODO: Version
         name.Replace(_T("\\"), _T("_"));
@@ -42,7 +42,7 @@ public:
         name.Replace(_T(">"), _T("_"));
         name.Replace(_T("|"), _T("_"));
         name.Replace(_T("$"), _T("_"));
-        */
+        //*/
         if(!mapFile_.Create(name, sizeof(ViewerData), needCreate))
             return NULL;
         ViewerData* data = reinterpret_cast<ViewerData*>(mapFile_.GetData());

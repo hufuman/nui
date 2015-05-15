@@ -4,7 +4,7 @@
 
 #include "NWindowBase.h"
 #include "NRender.h"
-#include "NFrame.h"
+#include "NRichFrame.h"
 #include "../base/NInstPtr.h"
 #include "../base/NAutoPtr.h"
 
@@ -23,7 +23,7 @@ namespace nui
             NWindow();
             ~NWindow();
 
-            NFrame* GetRootFrame();
+            NRichFrame* GetRootFrame();
             NRender* GetRender() const;
 
             void SetDrawCallback(WindowDrawCallback callback);
@@ -41,7 +41,7 @@ namespace nui
         protected:
 
         BEGIN_USE_UNEXPORT_TEMPLATE()
-            Base::NAutoPtr<NFrame> rootFrame_;
+            Base::NAutoPtr<NRichFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;
             WindowDrawCallback drawCallback_;
 

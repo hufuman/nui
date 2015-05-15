@@ -31,11 +31,11 @@ namespace nui
 
 #define IMPLEMENT_REFLECTION_EX(implementClass, flag)       \
     namespace   {                                           \
-        class ReflectClass                                  \
+        class MERGE_MACRO(ReflectClass, implementClass)     \
         {                                                   \
         public:                                             \
-        ReflectClass(){ nui::Base::NReflect::GetInstance().AddReflect<implementClass>(flag); }      \
-        ~ReflectClass(){}  \
+        MERGE_MACRO(ReflectClass, implementClass)(){ nui::Base::NReflect::GetInstance().AddReflect<implementClass>(flag); }      \
+        ~MERGE_MACRO(ReflectClass, implementClass)(){}  \
         } MERGE_MACRO(g_ReflectClassObj, implementClass);}
 
 #define IMPLEMENT_REFLECTION(implementClass)    IMPLEMENT_REFLECTION_EX(implementClass, (nui::Base::NReflect::None))
@@ -102,6 +102,7 @@ namespace nui
                 NAssertError(p == NULL, _T("Not Null AutoPtr"));
                 bool result = Create<T>(p, filePath, line);
                 ptr = p;
+                ptr->Release();
                 return result;
             }
 
@@ -114,7 +115,6 @@ namespace nui
                 data = dynamic_cast<T*>(obj);
                 if(data)
                     return true;
-                obj->AddRef();
                 obj->Release();
                 return false;
             }

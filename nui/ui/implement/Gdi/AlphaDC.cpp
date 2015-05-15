@@ -95,15 +95,14 @@ bool CAlphaDC::EndDraw(BYTE byAlpha)
     BlendFunc.BlendOp = AC_SRC_OVER;
     BlendFunc.SourceConstantAlpha = byAlpha;
     BlendFunc.AlphaFormat = AC_SRC_ALPHA;
-    BOOL bResult = ::AlphaBlend(
+    NVerify(!!::AlphaBlend(
         orgDc_,
         rcPaint_.Left, rcPaint_.Top,
         rcPaint_.Width(), rcPaint_.Height(),
         memDc_,
         rcPaint_.Left, rcPaint_.Top,
         rcPaint_.Width(), rcPaint_.Height(),
-        BlendFunc);
-    NAssertError(!!bResult, _T("AlphaBlend Failed"));
+        BlendFunc), _T("AlphaBlend Failed"));
     return true;
 }
 
@@ -129,15 +128,14 @@ void CAlphaDC::CopyOrg()
     BlendFunc.BlendOp = AC_SRC_OVER;
     BlendFunc.SourceConstantAlpha = 255;
     BlendFunc.AlphaFormat = AC_SRC_ALPHA;
-    BOOL bResult = ::AlphaBlend(
+    NVerify(!!::AlphaBlend(
         memDc_,
         0, 0,
         rcPaint_.Width(), rcPaint_.Height(),
         orgDc_,
         rcPaint_.Left, rcPaint_.Top,
         rcPaint_.Width(), rcPaint_.Height(),
-        BlendFunc);
-    NAssertError(!!bResult, _T("AlphaBlend Failed"));
+        BlendFunc), _T("AlphaBlend Failed"));
     // Should cancel premultiple, now border of text looks not so good
     CSSE::DoOr(0xFF000000, bmpInfo_.bmBits, bmpInfo_.bmWidthBytes * bmpInfo_.bmHeight);
 }
