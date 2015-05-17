@@ -6,7 +6,7 @@ namespace nui
 {
     namespace Ui
     {
-        BaseImage::BaseImage(NResourceLoader* loader)
+        BaseImageDraw::BaseImageDraw(NResourceLoader* loader)
         {
             frameIndex_ = 0;
             frameCount_ = 0;
@@ -15,38 +15,38 @@ namespace nui
             loader_ = loader;
         }
 
-        BaseImage::~BaseImage()
+        BaseImageDraw::~BaseImageDraw()
         {
             ;
         }
 
-        INT BaseImage::Release()
+        INT BaseImageDraw::Release()
         {
             if(RefCount() == 1)
             {
                 Destroy();
             }
-            return NImage::Release();
+            return NImageDraw::Release();
         }
 
-        void BaseImage::NextFrame()
+        void BaseImageDraw::NextFrame()
         {
             if(frameCount_ == 0)
                 return;
             frameIndex_ = (++ frameIndex_) % frameCount_;
         }
 
-        int BaseImage::GetFrameCount() const
+        int BaseImageDraw::GetFrameCount() const
         {
             return frameCount_;
         }
 
-        const Base::NSize& BaseImage::GetSize() const
+        const Base::NSize& BaseImageDraw::GetSize() const
         {
             return size_;
         }
 
-        bool BaseImage::SetCount(int horzCount, int vertCount)
+        bool BaseImageDraw::SetCount(int horzCount, int vertCount)
         {
             if(horzCount_ == horzCount && vertCount_ == vertCount)
                 return false;
@@ -56,13 +56,13 @@ namespace nui
             return true;
         }
 
-        void BaseImage::GetCount(int& horzCount, int& vertCount) const
+        void BaseImageDraw::GetCount(int& horzCount, int& vertCount) const
         {
             horzCount = horzCount_;
             vertCount = vertCount_;
         }
 
-        void BaseImage::InitForDynamicImage(int frameCount, const Base::NSize& size)
+        void BaseImageDraw::InitForDynamicImage(int frameCount, const Base::NSize& size)
         {
             horzCount_ = 1;
             vertCount_ = 1;
@@ -71,7 +71,7 @@ namespace nui
             size_ = size;
         }
 
-        void BaseImage::InitForStaticImage(int horzCount, int vertCount, const Base::NSize& size)
+        void BaseImageDraw::InitForStaticImage(int horzCount, int vertCount, const Base::NSize& size)
         {
             horzCount_ = horzCount;
             vertCount_ = vertCount;
@@ -80,12 +80,12 @@ namespace nui
             size_ = size;
         }
 
-        bool BaseImage::IsValid() const
+        bool BaseImageDraw::IsValid() const
         {
             return frameCount_ > 0;
         }
 
-        void BaseImage::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
+        void BaseImageDraw::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
         {
             if(!IsValid())
                 return;

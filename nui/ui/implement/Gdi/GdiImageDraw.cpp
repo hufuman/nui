@@ -7,25 +7,25 @@ namespace nui
 {
     namespace Ui
     {
-        GdiImage::GdiImage(NResourceLoader* loader)
-            : BaseImage(loader)
+        GdiImageDraw::GdiImageDraw(NResourceLoader* loader)
+            : BaseImageDraw(loader)
         {
             vctBitmaps_ = NULL;
             vctDelayCount_ = NULL;
         }
 
-        GdiImage::~GdiImage()
+        GdiImageDraw::~GdiImageDraw()
         {
             Destroy();
         }
 
-        int GdiImage::NextDelayValue(int index)
+        int GdiImageDraw::NextDelayValue(int index)
         {
             NAssertError(index < vctDelayCount_->Count(), _T("Out of bound"));
             return (*vctDelayCount_)[index];
         }
 
-        void GdiImage::SetBitmaps(const Base::NString& imagePath, const Data::NArrayT<HBITMAP>& vctBitmaps, const Data::NArrayT<int>& vctDelayCount)
+        void GdiImageDraw::SetBitmaps(const Base::NString& imagePath, const Data::NArrayT<HBITMAP>& vctBitmaps, const Data::NArrayT<int>& vctDelayCount)
         {
             Destroy();
 
@@ -49,13 +49,13 @@ namespace nui
             }
         }
 
-        HBITMAP GdiImage::GetHBitmap(int index) const
+        HBITMAP GdiImageDraw::GetHBitmap(int index) const
         {
             NAssertError(index < frameCount_, _T("index out of bound"));
             return (*vctBitmaps_)[index];
         }
 
-        void GdiImage::Destroy()
+        void GdiImageDraw::Destroy()
         {
             if(loader_ == NULL || imagePath_.IsEmpty())
                 return;

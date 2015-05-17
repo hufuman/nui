@@ -466,55 +466,11 @@
 			Name="ui"
 			>
 			<File
-				RelativePath=".\ui\NButton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NDraw.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NFont.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NFrame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NImageDraw.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ui\NMsgLoop.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ui\NRender.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NRenderClip.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NRenderDef.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ui\NResourceLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NRichFrame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NShapeDraw.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NText.h"
 				>
 			</File>
 			<File
@@ -523,14 +479,6 @@
 			</File>
 			<File
 				RelativePath=".\ui\NUiBus.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NWindow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NWindowBase.h"
 				>
 			</File>
 			<Filter
@@ -700,6 +648,66 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="draw"
+				>
+				<File
+					RelativePath=".\ui\NDraw.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NFont.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NImageDraw.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NRender.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NRenderClip.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NRenderDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NShapeDraw.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NText.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="controls"
+				>
+				<File
+					RelativePath=".\ui\NButton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NRichFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NWindow.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NWindowBase.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

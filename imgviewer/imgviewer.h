@@ -37,7 +37,7 @@ private:
     NAutoPtr<NTimerSrv> timerSrv_;
     Base::NAutoPtr<NText> text_;
     Base::NAutoPtr<NFont> font_;
-    Base::NAutoPtr<NImage> image_;
+    Base::NAutoPtr<NImageDraw> image_;
 
     int rate_;
 

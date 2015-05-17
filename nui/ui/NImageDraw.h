@@ -9,7 +9,7 @@ namespace nui
 {
     namespace Ui
     {
-        class NUI_INTF NImage : public NDraw
+        class NUI_INTF NImageDraw : public NDraw
         {
         public:
             virtual const Base::NSize& GetSize() const  = 0;

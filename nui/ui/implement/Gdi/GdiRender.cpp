@@ -74,19 +74,19 @@ namespace nui
             memDC_.Destroy();
         }
 
-        void GdiRender::DrawShape(NShape* shape, const Base::NRect& rect)
+        void GdiRender::DrawShape(NShapeDraw* shape, const Base::NRect& rect)
         {
-            GdiShape* gdiShape = dynamic_cast<GdiShape*>(shape);
+            GdiShapeDraw* gdiShapeDraw = dynamic_cast<GdiShapeDraw*>(shape);
 
-            BYTE penAlpha = gdiShape->GetBorderAlpha();
-            BYTE brushAlpha = gdiShape->GetFillAlpha();
+            BYTE penAlpha = gdiShapeDraw->GetBorderAlpha();
+            BYTE brushAlpha = gdiShapeDraw->GetFillAlpha();
 
             if(penAlpha == 0 && brushAlpha == 0)
                 return;
 
-            int borderWidth = gdiShape->GetBorderWidth();
-            ArgbColor borderColor = gdiShape->GetBorderColor();
-            ArgbColor fillColor = gdiShape->GetFillColor();
+            int borderWidth = gdiShapeDraw->GetBorderWidth();
+            ArgbColor borderColor = gdiShapeDraw->GetBorderColor();
+            ArgbColor fillColor = gdiShapeDraw->GetFillColor();
 
             if(penAlpha == brushAlpha)
             {
@@ -95,19 +95,19 @@ namespace nui
                 {
                     switch(shape->GetStyle())
                     {
-                    case NShape::Rect:
+                    case NShapeDraw::Rect:
                         {
                             DrawAndFillRectImpl(alphaDc, rect, borderWidth, borderColor, fillColor);
                         }
                         break;
-                    case NShape::Line:
+                    case NShapeDraw::Line:
                         {
                             Gdi::CGdiSelector selector(alphaDc, ::CreatePen(PS_SOLID, borderWidth, borderColor & 0x00FFFFFF), true);
                             ::MoveToEx(alphaDc, rect.Left, rect.Top, NULL);
                             ::LineTo(alphaDc, rect.Right, rect.Bottom);
                         }
                         break;
-                    case NShape::RoundRect:
+                    case NShapeDraw::RoundRect:
                         {
                             Base::NRect rcRound(rect);
                             Gdi::CGdiHolder rgnHolder(::CreateRoundRectRgn(rcRound.Left, rcRound.Top, rcRound.Right + 1, rcRound.Bottom + 1, borderWidth * 4, borderWidth * 4), true);
@@ -130,14 +130,14 @@ namespace nui
                     {
                         switch(shape->GetStyle())
                         {
-                        case NShape::Rect:
+                        case NShapeDraw::Rect:
                             {
                                 Base::NRect rcTmp(rect);
                                 rcTmp.Inflate(-borderWidth, -borderWidth);
                                 FillRectImpl(alphaDc, rcTmp, fillColor);
                             }
                             break;
-                        case NShape::RoundRect:
+                        case NShapeDraw::RoundRect:
                             {
                                 Base::NRect rcRound(rect);
                                 Gdi::CGdiHolder brushHolder(::CreateSolidBrush(fillColor & 0x00FFFFFF), true);
@@ -156,19 +156,19 @@ namespace nui
                     {
                         switch(shape->GetStyle())
                         {
-                        case NShape::Rect:
+                        case NShapeDraw::Rect:
                             {
                                 DrawRectImpl(alphaDc, rect, borderWidth, borderColor);
                             }
                             break;
-                        case NShape::Line:
+                        case NShapeDraw::Line:
                             {
                                 Gdi::CGdiSelector selector(alphaDc, ::CreatePen(PS_SOLID, borderWidth, borderColor & 0x00FFFFFF), true);
                                 ::MoveToEx(alphaDc, rect.Left, rect.Top, NULL);
                                 ::LineTo(alphaDc, rect.Right, rect.Bottom);
                             }
                             break;
-                        case NShape::RoundRect:
+                        case NShapeDraw::RoundRect:
                             {
                                 Base::NRect rcRound(rect);
                                 Gdi::CGdiHolder brushHolder(::CreateSolidBrush(borderColor & 0x00FFFFFF), true);
@@ -183,13 +183,13 @@ namespace nui
             }
         }
 
-        void GdiRender::DrawImage(NImage* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
+        void GdiRender::DrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
-            GdiImage* gdiImage = dynamic_cast<GdiImage*>(image);
-            NAssertError(gdiImage != NULL, _T("Not GdiImage in GdiRender::DrawImage"));
-            if(gdiImage == NULL)
+            GdiImageDraw* gdiImageDraw = dynamic_cast<GdiImageDraw*>(image);
+            NAssertError(gdiImageDraw != NULL, _T("Not GdiImageDraw in GdiRender::DrawImage"));
+            if(gdiImageDraw == NULL)
                 return;
-            HBITMAP bitmap = gdiImage->GetHBitmap(frameIndex);
+            HBITMAP bitmap = gdiImageDraw->GetHBitmap(frameIndex);
             NAssertError(bitmap != NULL, _T("GetHBitmap return NULL in GdiRender::DrawImage"));
             if(bitmap == NULL)
                 return;

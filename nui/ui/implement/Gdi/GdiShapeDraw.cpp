@@ -6,75 +6,75 @@ namespace nui
     namespace Ui
     {
 
-        IMPLEMENT_REFLECTION(GdiShape);
+        IMPLEMENT_REFLECTION(GdiShapeDraw);
 
-        GdiShape::GdiShape()
+        GdiShapeDraw::GdiShapeDraw()
         {
             style_ = Rect;
             borderWidth_ = 0;
             borderColor_ = 0;
             fillColor_ = 0;
         }
-        GdiShape::~GdiShape()
+        GdiShapeDraw::~GdiShapeDraw()
         {
             ;
         }
 
-        NShape* GdiShape::SetStyle(GdiShape::Style style)
+        NShapeDraw* GdiShapeDraw::SetStyle(GdiShapeDraw::Style style)
         {
             style_ = style;
             return this;
         }
 
-        NShape* GdiShape::SetBorderColor(ArgbColor borderColor)
+        NShapeDraw* GdiShapeDraw::SetBorderColor(ArgbColor borderColor)
         {
             borderColor_ = borderColor;
             return this;
         }
 
-        NShape* GdiShape::SetBorderWidth(int borderWidth)
+        NShapeDraw* GdiShapeDraw::SetBorderWidth(int borderWidth)
         {
             borderWidth_ = borderWidth;
             return this;
         }
 
-        NShape* GdiShape::SetFillColor(ArgbColor fillColor)
+        NShapeDraw* GdiShapeDraw::SetFillColor(ArgbColor fillColor)
         {
             fillColor_ = fillColor;
             return this;
         }
 
-        GdiShape::Style GdiShape::GetStyle() const
+        GdiShapeDraw::Style GdiShapeDraw::GetStyle() const
         {
             return style_;
         }
 
-        BYTE GdiShape::GetBorderAlpha() const
+        BYTE GdiShapeDraw::GetBorderAlpha() const
         {
             return GetAlpha(borderColor_);
         }
 
-        ArgbColor GdiShape::GetBorderColor() const
+        ArgbColor GdiShapeDraw::GetBorderColor() const
         {
             return borderColor_;
         }
 
-        int GdiShape::GetBorderWidth() const
+        int GdiShapeDraw::GetBorderWidth() const
         {
             return borderWidth_;
         }
 
-        BYTE GdiShape::GetFillAlpha() const
+        BYTE GdiShapeDraw::GetFillAlpha() const
         {
             return GetAlpha(fillColor_);
         }
 
-        ArgbColor GdiShape::GetFillColor() const
+        ArgbColor GdiShapeDraw::GetFillColor() const
         {
             return fillColor_;
         }
 
-        void GdiShape::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
+        void GdiShapeDraw::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
         {
             UNREFERENCED_PARAMETER(horzIndex);
             UNREFERENCED_PARAMETER(vertIndex);

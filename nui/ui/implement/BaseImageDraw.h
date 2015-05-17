@@ -8,11 +8,11 @@ namespace nui
 {
     namespace Ui
     {
-        class BaseImage : public NImage
+        class BaseImageDraw : public NImageDraw
         {
         public:
-            BaseImage(NResourceLoader* loader);
-            ~BaseImage();
+            BaseImageDraw(NResourceLoader* loader);
+            ~BaseImageDraw();
 
             virtual INT Release();
             virtual const Base::NSize& GetSize() const ;

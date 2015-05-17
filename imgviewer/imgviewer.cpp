@@ -54,7 +54,7 @@ void ImgViewer::Show(LPCTSTR filePath)
     window_->SetSize(500, 400);
     window_->SetText(_T("Test Window"));
 
-    NShape* shape = NULL;
+    NShapeDraw* shape = NULL;
     NReflectCreate(shape);
     shape->SetFillColor(MakeArgb(255, 255, 0, 255));
     NInstPtr<NButton> button(MemToolParam);
@@ -217,7 +217,7 @@ void ImgViewer::DrawTimerFunc()
 bool ImgViewer::OpenImage(LPCTSTR filePath)
 {
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-    NAutoPtr<NImage> image = loader->LoadImage(filePath);
+    NAutoPtr<NImageDraw> image = loader->LoadImage(filePath);
     if(image == NULL)
     {
         ::MessageBox(window_->GetNative(), _T("Failed to open image"), _T("Error"), MB_OK | MB_ICONERROR);

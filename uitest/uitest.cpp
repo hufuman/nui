@@ -8,7 +8,7 @@ nui::Base::NString GetResourcePath();
 bool MsgFilterCallbackProc(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 void InitWindow(NWindow* window);
 
-NAutoPtr<NImage> g_Image;
+NAutoPtr<NImageDraw> g_Image;
 NAutoPtr<NText> g_SingleLineText;
 NAutoPtr<NText> g_MultipleLineText;
 nui::Base::NAutoPtr<nui::Ui::NRender> g_Render;

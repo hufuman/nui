@@ -8,11 +8,11 @@ namespace nui
 {
     namespace Ui
     {
-        class GdiImage : public BaseImage
+        class GdiImageDraw : public BaseImageDraw
         {
         public:
-            GdiImage(NResourceLoader* loader);
-            ~GdiImage();
+            GdiImageDraw(NResourceLoader* loader);
+            ~GdiImageDraw();
 
             virtual int NextDelayValue(int index);
 

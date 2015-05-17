@@ -9,7 +9,7 @@ namespace nui
 {
     namespace Ui
     {
-        class NUI_INTF NShape : public NDraw
+        class NUI_INTF NShapeDraw : public NDraw
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("shape"))
 
@@ -22,10 +22,10 @@ namespace nui
             };
 
         public:
-            virtual NShape* SetStyle(Style style) = 0;
-            virtual NShape* SetBorderColor(ArgbColor borderColor) = 0;
-            virtual NShape* SetBorderWidth(int borderWidth) = 0;
-            virtual NShape* SetFillColor(ArgbColor fillColor) = 0;
+            virtual NShapeDraw* SetStyle(Style style) = 0;
+            virtual NShapeDraw* SetBorderColor(ArgbColor borderColor) = 0;
+            virtual NShapeDraw* SetBorderWidth(int borderWidth) = 0;
+            virtual NShapeDraw* SetFillColor(ArgbColor fillColor) = 0;
 
             virtual Style GetStyle() const = 0;
         };

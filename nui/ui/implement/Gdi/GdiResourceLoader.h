@@ -16,8 +16,8 @@ namespace nui
 
             void Init();
 
-            virtual NImage* LoadImage(LPCTSTR filePath);
-            virtual NShape* CreateShape(LPCSTR filePath, int line);
+            virtual NImageDraw* LoadImage(LPCTSTR filePath);
+            virtual NShapeDraw* CreateShape(LPCSTR filePath, int line);
             virtual NText* CreateText(LPCTSTR text, LPCSTR filePath, int line);
             virtual NFont* CreateFont(int fontSize, LPCSTR filePath, int line);
 

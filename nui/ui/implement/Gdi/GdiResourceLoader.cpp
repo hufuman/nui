@@ -30,18 +30,18 @@ namespace nui
             GdiObjMgr::Instance().Init();
         }
 
-        NImage* GdiResourceLoader::LoadImage(LPCTSTR filePath)
+        NImageDraw* GdiResourceLoader::LoadImage(LPCTSTR filePath)
         {
             Base::NString path(filePath);
             path.MakeLower();
             ImageMap::iterator ite = imageMap_.find(path);
             if(ite != imageMap_.end())
             {
-                GdiImage* image = NNew(GdiImage, this);
+                GdiImageDraw* image = NNew(GdiImageDraw, this);
                 ImageData& data = ite->second;
                 image->SetBitmaps(path, data.vctBitmaps, data.vctDelayTicks);
                 ++ data.refCount;
-                return dynamic_cast<NImage*>(image);
+                return dynamic_cast<NImageDraw*>(image);
             }
 
             Base::NInstPtr<Data::NFileSystem> fs(MemToolParam);
@@ -133,14 +133,14 @@ namespace nui
             if(pFrameDelay != NULL)
                 NFree(pFrameDelay);
 
-            GdiImage* image = NNew(GdiImage, this);
+            GdiImageDraw* image = NNew(GdiImageDraw, this);
             image->SetBitmaps(path, imageData.vctBitmaps, imageData.vctDelayTicks);
-            return dynamic_cast<NImage*>(image);
+            return dynamic_cast<NImageDraw*>(image);
         }
 
-        NShape* GdiResourceLoader::CreateShape(LPCSTR filePath, int line)
+        NShapeDraw* GdiResourceLoader::CreateShape(LPCSTR filePath, int line)
         {
-            NShape* shape = dynamic_cast<NShape*>(NNewEx(GdiShape, filePath, line));
+            NShapeDraw* shape = dynamic_cast<NShapeDraw*>(NNewEx(GdiShapeDraw, filePath, line));
             return shape;
         }
 

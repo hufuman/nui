@@ -9,17 +9,17 @@ namespace nui
 {
     namespace Ui
     {
-        class GdiShape : public NShape
+        class GdiShapeDraw : public NShapeDraw
         {
         public:
-            GdiShape();
-            ~GdiShape();
+            GdiShapeDraw();
+            ~GdiShapeDraw();
 
         public:
-            virtual NShape* SetStyle(Style style);
-            virtual NShape* SetBorderColor(ArgbColor borderColor);
-            virtual NShape* SetBorderWidth(int borderWidth);
-            virtual NShape* SetFillColor(ArgbColor fillColor);
+            virtual NShapeDraw* SetStyle(Style style);
+            virtual NShapeDraw* SetBorderColor(ArgbColor borderColor);
+            virtual NShapeDraw* SetBorderWidth(int borderWidth);
+            virtual NShapeDraw* SetFillColor(ArgbColor fillColor);
             virtual Style GetStyle() const;
 
             BYTE GetBorderAlpha() const;
