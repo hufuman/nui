@@ -17,7 +17,7 @@ namespace nui
             virtual INT Release();
             virtual const Base::NSize& GetSize() const ;
 
-            virtual void NextFrame();
+            virtual NImageDraw* NextFrame();
             virtual int GetFrameCount() const;
 
             virtual bool SetCount(int horzCount, int vertCount);
@@ -30,7 +30,7 @@ namespace nui
             bool IsValid() const;
 
             // NDraw
-            virtual void Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect);
+            virtual NDraw* Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect);
 
         protected:
             Base::NSize size_;

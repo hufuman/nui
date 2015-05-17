@@ -22,10 +22,10 @@ namespace nui
             ;
         }
 
-        NText& GdiText::SetText(LPCTSTR text)
+        NText* GdiText::SetText(LPCTSTR text)
         {
             text_ = text;
-            return *this;
+            return this;
         }
 
         Base::NString GdiText::GetText() const
@@ -33,10 +33,10 @@ namespace nui
             return text_;
         }
 
-        NText& GdiText::SetColor(ArgbColor color)
+        NText* GdiText::SetColor(ArgbColor color)
         {
             color_ = color;
-            return *this;
+            return this;
         }
 
         ArgbColor GdiText::GetColor() const
@@ -44,10 +44,10 @@ namespace nui
             return color_;
         }
 
-        NText& GdiText::SetBgColor(ArgbColor bgColor)
+        NText* GdiText::SetBgColor(ArgbColor bgColor)
         {
             bgColor_ = bgColor;
-            return *this;
+            return this;
         }
 
         ArgbColor GdiText::GetBgColor() const
@@ -55,10 +55,10 @@ namespace nui
             return bgColor_;
         }
 
-        NText& GdiText::SetSingleLine(bool singleLine)
+        NText* GdiText::SetSingleLine(bool singleLine)
         {
             singleLine_ = singleLine;
-            return *this;
+            return this;
         }
 
         bool GdiText::GetSingleLine() const
@@ -66,10 +66,10 @@ namespace nui
             return singleLine_;
         }
 
-        NText& GdiText::SetHorzCenter(bool center)
+        NText* GdiText::SetHorzCenter(bool center)
         {
             horzCenter_ = center;
-            return *this;
+            return this;
         }
 
         bool GdiText::GetHorzCenter() const
@@ -77,10 +77,10 @@ namespace nui
             return horzCenter_;
         }
 
-        NText& GdiText::SetVertCenter(bool center)
+        NText* GdiText::SetVertCenter(bool center)
         {
             vertCenter_ = center;
-            return *this;
+            return this;
         }
 
         bool GdiText::GetVertCenter() const

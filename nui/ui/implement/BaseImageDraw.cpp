@@ -29,11 +29,11 @@ namespace nui
             return NImageDraw::Release();
         }
 
-        void BaseImageDraw::NextFrame()
+        NImageDraw* BaseImageDraw::NextFrame()
         {
-            if(frameCount_ == 0)
-                return;
-            frameIndex_ = (++ frameIndex_) % frameCount_;
+            if(frameCount_ != 0)
+                frameIndex_ = (++ frameIndex_) % frameCount_;
+            return this;
         }
 
         int BaseImageDraw::GetFrameCount() const
@@ -85,13 +85,14 @@ namespace nui
             return frameCount_ > 0;
         }
 
-        void BaseImageDraw::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
+        NDraw* BaseImageDraw::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
         {
             if(!IsValid())
-                return;
+                return this;
             horzIndex = (horzIndex < 0) ? 0 : ((horzIndex >= horzCount_) ? horzCount_ - 1 : horzIndex);
             vertIndex = (vertIndex < 0) ? 0 : ((vertIndex >= vertCount_) ? vertCount_ - 1 : vertIndex);
             render->DrawImage(this, horzIndex, vertIndex, rect, frameIndex_);
+            return this;
         }
     }
 }

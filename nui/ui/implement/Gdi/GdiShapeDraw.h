@@ -29,7 +29,7 @@ namespace nui
             ArgbColor GetFillColor() const;
 
             // NDraw
-            virtual void Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect);
+            virtual NDraw* Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect);
 
         private:
             Style style_;

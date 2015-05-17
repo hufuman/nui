@@ -34,10 +34,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     g_Image = loader->LoadImage(_T("@skin:images\\3.gif"));
 
     g_SingleLineText = loader->CreateText(_T("single line"), MemToolParam);
-    g_SingleLineText->SetSingleLine(true).SetColor(MakeArgb(255, 0, 0, 0)).SetHorzCenter(true).SetVertCenter(true);
+    g_SingleLineText->SetSingleLine(true)->SetColor(MakeArgb(255, 0, 0, 0))->SetHorzCenter(true)->SetVertCenter(true);
 
     g_MultipleLineText = loader->CreateText(_T("line\r\nfirst line\r\nsecond line\r\nthird line"), MemToolParam);
-    g_MultipleLineText->SetSingleLine(false).SetColor(MakeArgb(255, 0, 255, 0)).SetHorzCenter(true).SetVertCenter(true);
+    g_MultipleLineText->SetSingleLine(false)->SetColor(MakeArgb(255, 0, 255, 0))->SetHorzCenter(true)->SetVertCenter(true);
 
     NInstPtr<NWindow> window(MemToolParam);
     window->SetMsgFilterCallback(&MsgFilterCallbackProc);

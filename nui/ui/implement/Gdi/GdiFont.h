@@ -23,12 +23,12 @@ namespace nui
             };
 
         public:
-            virtual NFont& SetFontSize(LONG fontSize);
-            virtual NFont& SetBold(bool bold);
-            virtual NFont& SetItalic(bool italic);
-            virtual NFont& SetUnderline(bool underline);
-            virtual NFont& SetStrikeOut(bool strikeOut);
-            virtual NFont& SetFontName(LPCTSTR fontName);
+            virtual NFont* SetFontSize(LONG fontSize);
+            virtual NFont* SetBold(bool bold);
+            virtual NFont* SetItalic(bool italic);
+            virtual NFont* SetUnderline(bool underline);
+            virtual NFont* SetStrikeOut(bool strikeOut);
+            virtual NFont* SetFontName(LPCTSTR fontName);
 
             virtual LONG GetFontSize() const;
             virtual bool GetBold() const;

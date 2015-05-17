@@ -15,7 +15,7 @@ namespace nui
             virtual const Base::NSize& GetSize() const  = 0;
 
             virtual int NextDelayValue(int index) = 0;
-            virtual void NextFrame() = 0;
+            virtual NImageDraw* NextFrame() = 0;
             virtual int GetFrameCount() const = 0;
 
             virtual bool SetCount(int horzCount, int vertCount) = 0;

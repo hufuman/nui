@@ -43,9 +43,9 @@ void ImgViewer::Show(LPCTSTR filePath)
     font_->SetBold(true);
 
     text_->SetHorzCenter(true)
-        .SetVertCenter(TRUE)
-        .SetSingleLine(TRUE)
-        .SetColor(MakeArgb(255, 255, 255, 0));
+        ->SetVertCenter(TRUE)
+        ->SetSingleLine(TRUE)
+        ->SetColor(MakeArgb(255, 255, 255, 0));
 
     NReflectCreate(window_);
     window_->SetDrawCallback(MakeDelegate(this, &ImgViewer::DrawCallback));

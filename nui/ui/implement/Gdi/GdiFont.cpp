@@ -26,17 +26,17 @@ namespace nui
 
         //////////////////////////////////////////////////////////////////////////
         // IXFont
-        NFont& GdiFont::SetFontSize(LONG fontSize)
+        NFont* GdiFont::SetFontSize(LONG fontSize)
         {
             if(fontSize_ != fontSize)
             {
                 fontSize_ = fontSize;
                 UpdateFont();
             }
-            return *this;
+            return this;
         }
 
-        NFont& GdiFont::SetBold(bool bold)
+        NFont* GdiFont::SetBold(bool bold)
         {
             bool oldBold = (fontFlags_ & StyleBold) == StyleBold;
             if(oldBold != bold)
@@ -44,10 +44,10 @@ namespace nui
                 fontFlags_ = fontFlags_ | StyleBold;
                 UpdateFont();
             }
-            return *this;
+            return this;
         }
 
-        NFont& GdiFont::SetItalic(bool italic)
+        NFont* GdiFont::SetItalic(bool italic)
         {
             bool oldItalic = (fontFlags_ & StyleItalic) == StyleItalic;
             if(oldItalic != italic)
@@ -55,10 +55,10 @@ namespace nui
                 fontFlags_ = fontFlags_ | StyleItalic;
                 UpdateFont();
             }
-            return *this;
+            return this;
         }
 
-        NFont& GdiFont::SetUnderline(bool underline)
+        NFont* GdiFont::SetUnderline(bool underline)
         {
             bool oldUnderline = (fontFlags_ & StyleUnderline) == StyleUnderline;
             if(oldUnderline != underline)
@@ -66,10 +66,10 @@ namespace nui
                 fontFlags_ = fontFlags_ | StyleUnderline;
                 UpdateFont();
             }
-            return *this;
+            return this;
         }
 
-        NFont& GdiFont::SetStrikeOut(bool strikeOut)
+        NFont* GdiFont::SetStrikeOut(bool strikeOut)
         {
             bool oldStrikeOut = (fontFlags_ & StyleStrikeOut) == StyleStrikeOut;
             if(oldStrikeOut != strikeOut)
@@ -77,17 +77,17 @@ namespace nui
                 fontFlags_ = fontFlags_ | StyleStrikeOut;
                 UpdateFont();
             }
-            return *this;
+            return this;
         }
 
-        NFont& GdiFont::SetFontName(LPCTSTR fontName)
+        NFont* GdiFont::SetFontName(LPCTSTR fontName)
         {
             if(fontName_ != fontName)
             {
                 fontName_ = fontName;
                 UpdateFont();
             }
-            return *this;
+            return this;
         }
 
         LONG GdiFont::GetFontSize() const

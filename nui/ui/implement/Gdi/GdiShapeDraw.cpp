@@ -74,11 +74,12 @@ namespace nui
             return fillColor_;
         }
 
-        void GdiShapeDraw::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
+        NDraw* GdiShapeDraw::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)
         {
             UNREFERENCED_PARAMETER(horzIndex);
             UNREFERENCED_PARAMETER(vertIndex);
             render->DrawShape(this, rect);
+            return this;
         }
     }
 }
