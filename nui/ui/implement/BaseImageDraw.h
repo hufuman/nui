@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../NImage.h"
+#include "../NImageDraw.h"
 
 
 namespace nui

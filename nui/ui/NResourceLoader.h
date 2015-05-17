@@ -3,8 +3,8 @@
 
 
 #include "../base/BaseObj.h"
-#include "NImage.h"
-#include "NShape.h"
+#include "NImageDraw.h"
+#include "NShapeDraw.h"
 #include "NText.h"
 #include "NFont.h"
 

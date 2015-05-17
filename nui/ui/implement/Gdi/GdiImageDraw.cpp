@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GdiImage.h"
+#include "GdiImageDraw.h"
 
 #include "GdiResourceLoader.h"
 

@@ -3,7 +3,7 @@
 
 #include "../base/noncopyable.h"
 #include "../base/NHolder.h"
-#include "NShape.h"
+#include "NShapeDraw.h"
 #include "NResourceLoader.h"
 #include "NUiBus.h"
 #include "NText.h"

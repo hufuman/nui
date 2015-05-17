@@ -2,8 +2,8 @@
 #include "GdiResourceLoader.h"
 
 #include "../../../Data/NFileSystem.h"
-#include "GdiImage.h"
-#include "GdiShape.h"
+#include "GdiImageDraw.h"
+#include "GdiShapeDraw.h"
 #include "GdiText.h"
 #include "GdiFont.h"
 #include "StreamImpl.h"

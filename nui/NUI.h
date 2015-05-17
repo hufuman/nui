@@ -76,8 +76,8 @@ using namespace fastdelegate;
 #include "./ui/NDraw.h"
 #include "./ui/NWindow.h"
 #include "./ui/NFont.h"
-#include "./ui/NImage.h"
-#include "./ui/NShape.h"
+#include "./ui/NImageDraw.h"
+#include "./ui/NShapeDraw.h"
 #include "./ui/NText.h"
 
 #ifdef _NOT_USE_NUI_NAMESPACE

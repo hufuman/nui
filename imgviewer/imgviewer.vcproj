@@ -506,7 +506,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NImage.h"
+						RelativePath="..\nui\ui\NImageDraw.h"
 						>
 					</File>
 					<File
@@ -534,7 +534,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NShape.h"
+						RelativePath="..\nui\ui\NShapeDraw.h"
 						>
 					</File>
 					<File
@@ -561,11 +561,11 @@
 						Name="implement"
 						>
 						<File
-							RelativePath="..\nui\ui\implement\BaseImage.cpp"
+							RelativePath="..\nui\ui\implement\BaseImageDraw.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\BaseImage.h"
+							RelativePath="..\nui\ui\implement\BaseImageDraw.h"
 							>
 						</File>
 						<File
@@ -644,11 +644,11 @@
 								>
 							</File>
 							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiImage.cpp"
+								RelativePath="..\nui\ui\implement\Gdi\GdiImageDraw.cpp"
 								>
 							</File>
 							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiImage.h"
+								RelativePath="..\nui\ui\implement\Gdi\GdiImageDraw.h"
 								>
 							</File>
 							<File
@@ -676,11 +676,11 @@
 								>
 							</File>
 							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiShape.cpp"
+								RelativePath="..\nui\ui\implement\Gdi\GdiShapeDraw.cpp"
 								>
 							</File>
 							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiShape.h"
+								RelativePath="..\nui\ui\implement\Gdi\GdiShapeDraw.h"
 								>
 							</File>
 							<File

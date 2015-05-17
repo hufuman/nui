@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "BaseImage.h"
+#include "BaseImageDraw.h"
 
 
 namespace nui

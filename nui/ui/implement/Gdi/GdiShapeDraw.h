@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../../NShape.h"
+#include "../../NShapeDraw.h"
 #include "../../NRenderDef.h"
 #include "GdiUtil.h"
 

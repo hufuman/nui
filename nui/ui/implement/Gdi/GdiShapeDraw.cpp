@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GdiShape.h"
+#include "GdiShapeDraw.h"
 
 namespace nui
 {
