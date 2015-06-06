@@ -156,8 +156,8 @@ namespace Gdi
 
     bool GetImageData(const BYTE* pData, DWORD dwSize, nui::Ui::stImageExtInfo& extInfo)
     {
-        DWORD dwExtBodySize = sizeof(g_dwImageExtInfoStartTag) + sizeof(DWORD) + sizeof(nui::Ui::stImageExtInfo) + sizeof(g_dwImageExtInfoEndTag);
-        if(dwSize <= dwExtBodySize)
+        const DWORD dwExtBodySize = sizeof(g_dwImageExtInfoStartTag) + sizeof(DWORD) + sizeof(nui::Ui::stImageExtInfo) + sizeof(g_dwImageExtInfoEndTag);
+        if(dwSize < dwExtBodySize)
             return false;
         const BYTE* pStart = pData + dwSize - dwExtBodySize;
         if(*((DWORD*)pStart) != g_dwImageExtInfoStartTag
@@ -170,15 +170,61 @@ namespace Gdi
         return true;
     }
 
-    bool SetImageData(const nui::Ui::stImageExtInfo& extInfo, std::string& strData)
+    void SetImageData(const nui::Ui::stImageExtInfo& extInfo, std::string& strData)
     {
         // |StartTag Version ExtInfo EndTag|
         DWORD dwVersion = 1;
+        strData = "";
         strData.append((const char*)&g_dwImageExtInfoStartTag, sizeof(g_dwImageExtInfoStartTag));
         strData.append((const char*)&dwVersion, sizeof(dwVersion));
         strData.append((const char*)&extInfo, sizeof(extInfo));
         strData.append((const char*)&g_dwImageExtInfoEndTag, sizeof(g_dwImageExtInfoEndTag));
-        return true;
+
+        const DWORD dwExtBodySize = sizeof(g_dwImageExtInfoStartTag) + sizeof(DWORD) + sizeof(nui::Ui::stImageExtInfo) + sizeof(g_dwImageExtInfoEndTag);
+        NVerify(dwExtBodySize == strData.size(), _T("Wrong data"));
     }
 
+    bool UpdateImageData(LPCTSTR filePath, const nui::Ui::stImageExtInfo& extInfo)
+    {
+        HANDLE fileHandle = ::CreateFile(filePath, GENERIC_WRITE | GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+        if(fileHandle == NULL)
+            return false;
+
+        const DWORD dwExtBodySize = sizeof(g_dwImageExtInfoStartTag) + sizeof(DWORD) + sizeof(nui::Ui::stImageExtInfo) + sizeof(g_dwImageExtInfoEndTag);
+        DWORD dwSize = ::GetFileSize(fileHandle, NULL);
+        bool result = false;
+        if(dwSize > dwExtBodySize)
+        {
+            BYTE byData[dwExtBodySize];
+            if(::SetFilePointer(fileHandle, 0 - dwExtBodySize, 0, FILE_END) > 0)
+            {
+                std::string strData;
+                SetImageData(extInfo, strData);
+
+                DWORD dwRead;
+                DWORD dwWritten;
+                nui::Ui::stImageExtInfo tmpExtInfo;
+                if(::ReadFile(fileHandle, byData, dwExtBodySize, &dwRead, 0)
+                    && dwExtBodySize == dwRead
+                    && GetImageData(byData, dwExtBodySize, tmpExtInfo))
+                {
+                    // Replace existing
+                    result = ::SetFilePointer(fileHandle, 0 - dwExtBodySize, 0, FILE_END) > 0
+                        && ::WriteFile(fileHandle, &strData[0], strData.size(), &dwWritten, 0)
+                        && dwWritten == strData.size()
+                        && ::SetEndOfFile(fileHandle);
+                }
+                else
+                {
+                    // Append New
+                    result = ::SetFilePointer(fileHandle, 0, 0, FILE_END) > 0
+                        && ::WriteFile(fileHandle, &strData[0], strData.size(), &dwWritten, 0)
+                        && dwWritten == strData.size()
+                        && ::SetEndOfFile(fileHandle);
+                }
+            }
+        }
+        ::CloseHandle(fileHandle);
+        return result;
+    }
 }

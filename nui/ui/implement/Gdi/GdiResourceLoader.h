@@ -16,12 +16,13 @@ namespace nui
 
             void Init();
 
-            virtual NImageDraw* LoadImage(LPCTSTR filePath);
+            virtual NImageDraw* LoadImage(LPCTSTR filePath, bool& hasExtInfo);
             virtual NShapeDraw* CreateShape(LPCSTR filePath, int line);
             virtual NText* CreateText(LPCTSTR text, LPCSTR filePath, int line);
             virtual NFont* CreateFont(int fontSize, LPCSTR filePath, int line);
 
             void ReleaseImage(const Base::NString& path);
+
         private:
             Gdiplus::Bitmap* LoadImageFromBuffer(Data::NBuffer* buffer);
             void ReleaseAllImages();

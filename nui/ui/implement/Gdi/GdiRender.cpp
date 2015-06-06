@@ -366,8 +366,11 @@ namespace nui
 
         void GdiRender::StretchDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
-            if(srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0)
+            if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
+                || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
+            {
                 return;
+            }
 
             GdiImageDraw* gdiImageDraw = dynamic_cast<GdiImageDraw*>(image);
             NAssertError(gdiImageDraw != NULL, _T("Not GdiImageDraw in GdiRender::DrawImage"));
@@ -394,8 +397,11 @@ namespace nui
 
         void GdiRender::TileDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
-            if(srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0)
+            if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
+                || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
+            {
                 return;
+            }
 
             int horzFullCount = dstWidth / srcWidth;
             int vertFullCount = dstHeight / srcHeight;
@@ -438,58 +444,96 @@ namespace nui
 
         void GdiRender::NineStretchDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
-            if(srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0)
+            if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
+                || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
+            {
                 return;
+            }
 
             Base::NRect rcParam = image->GetStretchParam();
 
+            int srcDrawWidth, srcDrawHeight, dstDrawWidth, dstDrawHeight;
+#undef min
             // LeftTop
+            srcDrawWidth = std::min(rcParam.Left, srcWidth);
+            srcDrawHeight = std::min(rcParam.Top, srcHeight);
+            dstDrawWidth = std::min(rcParam.Left, dstWidth);
+            dstDrawHeight = std::min(rcParam.Top, dstHeight);
+
             StretchDrawImage(image, frameIndex,
-                srcX, srcY, rcParam.Left, rcParam.Top,
-                dstX, dstY, rcParam.Left, rcParam.Top,
+                srcX, srcY, srcDrawWidth, srcDrawHeight,
+                dstX, dstY, dstDrawWidth, dstDrawHeight,
                 alphaValue);
             // Left
             StretchDrawImage(image, frameIndex,
-                srcX, srcY + rcParam.Top, rcParam.Left, srcHeight - rcParam.Top - rcParam.Bottom,
-                dstX, dstY + rcParam.Top, rcParam.Left, dstHeight - rcParam.Top - rcParam.Bottom,
+                srcX, srcY + srcDrawHeight, srcDrawWidth, srcHeight - rcParam.Top - rcParam.Bottom,
+                dstX, dstY + dstDrawHeight, dstDrawWidth, dstHeight - rcParam.Top - rcParam.Bottom,
                 alphaValue);
             // LeftBottom
-            StretchDrawImage(image, frameIndex,
-                srcX, srcY + srcHeight - rcParam.Bottom, rcParam.Left, rcParam.Bottom,
-                dstX, dstY + dstHeight - rcParam.Bottom, rcParam.Left, rcParam.Bottom,
-                alphaValue);
+            if(srcHeight > rcParam.Bottom && dstHeight > rcParam.Bottom)
+            {
+                srcDrawHeight = std::min(rcParam.Bottom, srcHeight);
+                dstDrawHeight = std::min(rcParam.Bottom, dstHeight);
+                StretchDrawImage(image, frameIndex,
+                    srcX, srcY + srcHeight - rcParam.Bottom, srcDrawWidth, srcDrawHeight,
+                    dstX, dstY + dstHeight - rcParam.Bottom, dstDrawWidth, dstDrawHeight,
+                    alphaValue);
+            }
 
             // Top
+            srcDrawHeight = std::min(rcParam.Top, srcHeight);
+            dstDrawHeight = std::min(rcParam.Top, dstHeight);
             StretchDrawImage(image, frameIndex,
-                srcX + rcParam.Left, srcY, srcWidth - rcParam.Left - rcParam.Right, rcParam.Top,
-                dstX + rcParam.Left, dstY, dstWidth - rcParam.Left - rcParam.Right, rcParam.Top,
+                srcX + rcParam.Left, srcY, srcWidth - rcParam.Left - rcParam.Right, srcDrawHeight,
+                dstX + rcParam.Left, dstY, dstWidth - rcParam.Left - rcParam.Right, dstDrawHeight,
                 alphaValue);
             // Bottom
-            StretchDrawImage(image, frameIndex,
-                srcX + rcParam.Left, srcY + srcHeight - rcParam.Bottom, srcWidth - rcParam.Left - rcParam.Right, rcParam.Bottom,
-                dstX + rcParam.Left, dstY + dstHeight - rcParam.Bottom, dstWidth - rcParam.Left - rcParam.Right, rcParam.Bottom,
-                alphaValue);
+            if(srcHeight > rcParam.Bottom && dstHeight > rcParam.Bottom)
+            {
+                srcDrawHeight = std::min(rcParam.Bottom, srcHeight);
+                dstDrawHeight = std::min(rcParam.Bottom, dstHeight);
+                StretchDrawImage(image, frameIndex,
+                    srcX + rcParam.Left, srcY + srcHeight - rcParam.Bottom, srcWidth - rcParam.Left - rcParam.Right, rcParam.Bottom,
+                    dstX + rcParam.Left, dstY + dstHeight - rcParam.Bottom, dstWidth - rcParam.Left - rcParam.Right, rcParam.Bottom,
+                    alphaValue);
+            }
 
-            // RightTop
-            StretchDrawImage(image, frameIndex,
-                srcX + srcWidth - rcParam.Right, srcY, rcParam.Right, rcParam.Top,
-                dstX + dstWidth - rcParam.Right, dstY, rcParam.Right, rcParam.Top,
-                alphaValue);
-            // Right
-            StretchDrawImage(image, frameIndex,
-                srcX + srcWidth - rcParam.Right, srcY + rcParam.Top, rcParam.Right, srcHeight - rcParam.Top - rcParam.Bottom,
-                dstX + dstWidth - rcParam.Right, dstY + rcParam.Top, rcParam.Right, dstHeight - rcParam.Top - rcParam.Bottom,
-                alphaValue);
-            // RightBottom
-            StretchDrawImage(image, frameIndex,
-                srcX + srcWidth - rcParam.Right, srcY + srcHeight - rcParam.Bottom, rcParam.Right, rcParam.Bottom,
-                dstX + dstWidth - rcParam.Right, dstY + dstHeight - rcParam.Bottom, rcParam.Right, rcParam.Bottom,
-                alphaValue);
+            srcDrawWidth = std::min(rcParam.Right, srcWidth);
+            srcDrawHeight = std::min(rcParam.Top, srcHeight);
+            dstDrawWidth = std::min(rcParam.Right, dstWidth);
+            dstDrawHeight = std::min(rcParam.Top, dstHeight);
+            if(srcWidth > rcParam.Right && dstWidth > rcParam.Right)
+            {
+                // RightTop
+                StretchDrawImage(image, frameIndex,
+                    srcX + srcWidth - rcParam.Right, srcY, srcDrawWidth, srcDrawHeight,
+                    dstX + dstWidth - rcParam.Right, dstY, dstDrawWidth, dstDrawHeight,
+                    alphaValue);
+                // Right
+                StretchDrawImage(image, frameIndex,
+                    srcX + srcWidth - rcParam.Right, srcY + srcDrawHeight, rcParam.Right, srcHeight - rcParam.Top - rcParam.Bottom,
+                    dstX + dstWidth - rcParam.Right, dstY + dstDrawHeight, rcParam.Right, dstHeight - rcParam.Top - rcParam.Bottom,
+                    alphaValue);
+            }
+
+            if(srcWidth > rcParam.Right && srcHeight > rcParam.Bottom
+                && dstWidth > rcParam.Right && dstHeight > rcParam.Bottom)
+            {
+                // RightBottom
+                StretchDrawImage(image, frameIndex,
+                    srcX + srcWidth - rcParam.Right, srcY + srcHeight - rcParam.Bottom, rcParam.Right, rcParam.Bottom,
+                    dstX + dstWidth - rcParam.Right, dstY + dstHeight - rcParam.Bottom, rcParam.Right, rcParam.Bottom,
+                    alphaValue);
+            }
 
             // Center
+            srcDrawWidth = std::min(rcParam.Left, srcWidth);
+            srcDrawHeight = std::min(rcParam.Top, srcHeight);
+            dstDrawWidth = std::min(rcParam.Left, dstWidth);
+            dstDrawHeight = std::min(rcParam.Top, dstHeight);
             StretchDrawImage(image, frameIndex,
-                srcX + rcParam.Left, srcY + rcParam.Top, srcWidth - rcParam.Left - rcParam.Right, srcHeight - rcParam.Top - rcParam.Bottom,
-                dstX + rcParam.Left, dstY + rcParam.Top, dstWidth - rcParam.Left - rcParam.Right, dstHeight - rcParam.Top - rcParam.Bottom,
+                srcX + srcDrawWidth, srcY + srcDrawHeight, srcWidth - rcParam.Left - rcParam.Right, srcHeight - rcParam.Top - rcParam.Bottom,
+                dstX + dstDrawWidth, dstY + dstDrawHeight, dstWidth - rcParam.Left - rcParam.Right, dstHeight - rcParam.Top - rcParam.Bottom,
                 alphaValue);
         }
     }

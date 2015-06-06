@@ -37,7 +37,7 @@ TEST_F(TestGdiUtil, MemExtInfo)
     extInfo.rightParam = rand();
     extInfo.bottomParam = rand();
     std::string strData;
-    EXPECT_TRUE(Gdi::SetImageData(extInfo, strData));
+    Gdi::SetImageData(extInfo, strData);
 
     ASSERT_TRUE(TestUtil::AppendFile(tmpPath.GetData(), (LPCVOID)strData.c_str(), strData.size()));
 

@@ -47,6 +47,8 @@ namespace nui
 
             Base::NAutoPtr<NFrame> hoverFrame_;
             Base::NAutoPtr<NFrame> selectedFrame_;
+
+            Base::NRect sizableBorder_;
         END_USE_UNEXPORT_TEMPLATE()
         };
     }

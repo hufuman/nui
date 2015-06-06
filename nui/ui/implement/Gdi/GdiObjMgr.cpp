@@ -35,7 +35,7 @@ namespace nui
     {
         GdiObjMgr::GdiObjMgr()
         {
-            ;
+            defaultFont_ = NULL;
         }
 
         GdiObjMgr::~GdiObjMgr()
@@ -125,7 +125,7 @@ namespace nui
             info.LogFont.lfPitchAndFamily = DEFAULT_PITCH | FF_ROMAN;
             _tcsncpy(info.LogFont.lfFaceName, strFontName.GetData(), LF_FACESIZE - 1);
 
-            info.hFont = CreateFontIndirect(&info.LogFont);
+            info.hFont = ::CreateFontIndirect(&info.LogFont);
             NAssertError(info.hFont != NULL, _T("CreateFont Failed"));
             if(info.hFont == NULL)
                 return NULL;

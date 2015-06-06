@@ -31,8 +31,9 @@ namespace nui
             GdiObjMgr::Instance().Init();
         }
 
-        NImageDraw* GdiResourceLoader::LoadImage(LPCTSTR filePath)
+        NImageDraw* GdiResourceLoader::LoadImage(LPCTSTR filePath, bool& hasExtInfo)
         {
+            hasExtInfo = false;
             Base::NString path(filePath);
             path.MakeLower();
             ImageMap::iterator ite = imageMap_.find(path);
@@ -43,6 +44,7 @@ namespace nui
                 image->SetBitmaps(path, data.vctBitmaps, data.vctDelayTicks);
                 if(data.hasExtInfo)
                 {
+                    hasExtInfo = true;
                     image->SetDrawType(data.extInfo.drawType);
                     image->SetStretchParam(data.extInfo.leftParam, data.extInfo.topParam, data.extInfo.rightParam, data.extInfo.bottomParam);
                     image->SetCount(data.extInfo.horzCount, data.extInfo.vertCount);
@@ -72,6 +74,7 @@ namespace nui
             ImageData& imageData = result.first->second;
             imageData.extInfo.drawType = ImageDrawType::Stretch;
             imageData.hasExtInfo = Gdi::GetImageData((const BYTE*)buffer->GetBuffer(), buffer->GetSize(), imageData.extInfo);
+            hasExtInfo = imageData.hasExtInfo;
             for(;;)
             {
                 imageData.refCount = 1;
@@ -144,6 +147,13 @@ namespace nui
 
             GdiImageDraw* image = NNew(GdiImageDraw, this);
             image->SetBitmaps(path, imageData.vctBitmaps, imageData.vctDelayTicks);
+            if(imageData.hasExtInfo)
+            {
+                hasExtInfo = true;
+                image->SetDrawType(imageData.extInfo.drawType);
+                image->SetStretchParam(imageData.extInfo.leftParam, imageData.extInfo.topParam, imageData.extInfo.rightParam, imageData.extInfo.bottomParam);
+                image->SetCount(imageData.extInfo.horzCount, imageData.extInfo.vertCount);
+            }
             return dynamic_cast<NImageDraw*>(image);
         }
 

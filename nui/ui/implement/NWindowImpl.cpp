@@ -10,6 +10,7 @@ namespace nui
 
         NWindow::NWindow()
         {
+            sizableBorder_.SetRect(4, 4, 4, 4);
         }
 
         NWindow::~NWindow()
@@ -69,6 +70,38 @@ namespace nui
             case WM_NCHITTEST:
                 {
                     lResult = HTCLIENT;
+                    if((::GetWindowLongPtr(window_, GWL_STYLE) & WS_SIZEBOX) == WS_SIZEBOX)
+                    {
+                        Base::NRect rcWnd;
+                        GetRect(rcWnd);
+                        POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+                        if(pt.x <= rcWnd.Left + sizableBorder_.Left)
+                        {
+                            if(pt.y <= rcWnd.Top + sizableBorder_.Top)
+                                lResult = HTTOPLEFT;
+                            else if(pt.y >= rcWnd.Bottom - sizableBorder_.Bottom)
+                                lResult = HTBOTTOMLEFT;
+                            else
+                                lResult = HTLEFT;
+                        }
+                        else if(pt.x >= rcWnd.Right - sizableBorder_.Right)
+                        {
+                            if(pt.y <= rcWnd.Top + sizableBorder_.Top)
+                                lResult = HTTOPRIGHT;
+                            else if(pt.y >= rcWnd.Bottom - sizableBorder_.Bottom)
+                                lResult = HTBOTTOMRIGHT;
+                            else
+                                lResult = HTRIGHT;
+                        }
+                        else if(pt.y <= rcWnd.Top + sizableBorder_.Top)
+                        {
+                            lResult = HTTOP;
+                        }
+                        else if(pt.y >= rcWnd.Bottom - sizableBorder_.Bottom)
+                        {
+                            lResult = HTBOTTOM;
+                        }
+                    }
                     return true;
                 }
             case WM_NCPAINT:

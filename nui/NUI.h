@@ -31,6 +31,7 @@
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <shellapi.h>
+#include <windowsx.h>
 
 
 #include "./base/noncopyable.h"
