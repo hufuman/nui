@@ -54,7 +54,7 @@ namespace TestUtil
         return szTmpBuffer;
     }
 
-    __inline LPVOID GetFileContent(LPCTSTR filePath, DWORD& size)
+    __inline LPCVOID GetFileContent(LPCTSTR filePath, DWORD& size)
     {
         HANDLE fileHandle = ::CreateFile(filePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
         if(fileHandle == NULL)
@@ -74,20 +74,32 @@ namespace TestUtil
         return data;
     }
 
+    __inline bool AppendFile(LPCTSTR filePath, LPCVOID pData, DWORD dwSize)
+    {
+        HANDLE hFile = ::CreateFile(filePath, GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, NULL);
+        if(hFile == INVALID_HANDLE_VALUE)
+            return false;
+        ::SetFilePointer(hFile, 0, 0, FILE_END);
+        DWORD dwWritten;
+        bool result = ::WriteFile(hFile, pData, dwSize, &dwWritten, 0) && dwSize == dwWritten;
+        ::CloseHandle(hFile);
+        return result;
+    }
+
     __inline bool CompareFile(LPCTSTR filePath1, LPCTSTR filePath2)
     {
         DWORD size1, size2;
-        LPVOID data1 = GetFileContent(filePath1, size1);
-        LPVOID data2 = GetFileContent(filePath2, size2);
+        LPCVOID data1 = GetFileContent(filePath1, size1);
+        LPCVOID data2 = GetFileContent(filePath2, size2);
         bool result = false;
         if(data1 != NULL && data2 != NULL && size1 == size2)
         {
             result = (::memcmp(data1, data2, size1) == 0);
         }
         if(data1 != NULL)
-            ::free(data1);
+            ::free((LPVOID)data1);
         if(data2 != NULL)
-            ::free(data2);
+            ::free((LPVOID)data2);
         return result;
     }
 

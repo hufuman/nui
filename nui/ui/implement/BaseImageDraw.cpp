@@ -13,6 +13,7 @@ namespace nui
             horzCount_ = 1;
             vertCount_ = 1;
             loader_ = loader;
+            imageDrawType_ = ImageDrawType::Stretch;
         }
 
         BaseImageDraw::~BaseImageDraw()
@@ -60,6 +61,16 @@ namespace nui
         {
             horzCount = horzCount_;
             vertCount = vertCount_;
+        }
+
+        void BaseImageDraw::SetDrawType(ImageDrawType::Type drawType)
+        {
+            imageDrawType_ = drawType;
+        }
+
+        void BaseImageDraw::SetStretchParam(int left, int top, int right, int bottom)
+        {
+            drawParam_.SetRect(left, top, right, bottom);
         }
 
         void BaseImageDraw::InitForDynamicImage(int frameCount, const Base::NSize& size)

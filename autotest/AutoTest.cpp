@@ -5,6 +5,7 @@
 #include "TestUtil.h"
 
 
+#include "TestGdiUtil.h"
 
 // Base
 #include "TestDataTypes.h"
@@ -34,10 +35,18 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+    srand(static_cast<unsigned int>(time(0)));
+
+    ULONG_PTR token;
+    Gdiplus::GdiplusStartupInput input;
+    Gdiplus::GdiplusStartup(&token, &input, 0);
+
     testing::InitGoogleTest(&argc, argv);
     int result = RUN_ALL_TESTS();
     NInstPtr<NCore> core(MemToolParam);
     core->DestroyCore();
+
+    Gdiplus::GdiplusShutdown(token);
     return result;
 }
 

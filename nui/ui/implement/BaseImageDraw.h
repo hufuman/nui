@@ -23,6 +23,10 @@ namespace nui
             virtual bool SetCount(int horzCount, int vertCount);
             virtual void GetCount(int& horzCount, int& vertCount) const;
 
+            virtual void SetDrawType(ImageDrawType::Type drawType);
+            virtual void SetStretchParam(int left, int top, int right, int bottom);
+
+        public:
             void InitForDynamicImage(int frameCount, const Base::NSize& size);
             void InitForStaticImage(int horzCount, int vertCount, const Base::NSize& size);
             virtual void Destroy() = 0;
@@ -36,9 +40,12 @@ namespace nui
             Base::NSize size_;
             int frameIndex_;
             int frameCount_;
+            NResourceLoader* loader_;
+
             int horzCount_;
             int vertCount_;
-            NResourceLoader* loader_;
+            ImageDrawType::Type imageDrawType_;
+            Base::NRect drawParam_;
         };
     }
 }

@@ -285,6 +285,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestGdiUtil.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestMsgLoop.h"
 				>
 			</File>
@@ -294,6 +298,18 @@
 			</File>
 			<File
 				RelativePath=".\TestWindowBase.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="codes"
+			>
+			<File
+				RelativePath="..\nui\ui\implement\Gdi\GdiUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\nui\ui\implement\Gdi\GdiUtil.h"
 				>
 			</File>
 		</Filter>

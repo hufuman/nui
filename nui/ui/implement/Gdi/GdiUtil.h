@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "../../NImageDraw.h"
 
 namespace Gdi
 {
@@ -49,4 +49,7 @@ namespace Gdi
     };
 
     bool SaveBitmap(HBITMAP bitmap, LPCTSTR filePath);
+
+    bool GetImageData(const BYTE* pData, DWORD dwSize, nui::Ui::stImageExtInfo& extInfo);
+    bool SetImageData(const nui::Ui::stImageExtInfo& extInfo, std::string& strData);
 }

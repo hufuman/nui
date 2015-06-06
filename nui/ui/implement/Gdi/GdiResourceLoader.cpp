@@ -8,6 +8,7 @@
 #include "GdiFont.h"
 #include "StreamImpl.h"
 #include "GdiObjMgr.h"
+#include "GdiUtil.h"
 
 namespace nui
 {
@@ -40,6 +41,12 @@ namespace nui
                 GdiImageDraw* image = NNew(GdiImageDraw, this);
                 ImageData& data = ite->second;
                 image->SetBitmaps(path, data.vctBitmaps, data.vctDelayTicks);
+                if(data.hasExtInfo)
+                {
+                    image->SetDrawType(data.extInfo.drawType);
+                    image->SetStretchParam(data.extInfo.leftParam, data.extInfo.topParam, data.extInfo.rightParam, data.extInfo.bottomParam);
+                    image->SetCount(data.extInfo.horzCount, data.extInfo.vertCount);
+                }
                 ++ data.refCount;
                 return dynamic_cast<NImageDraw*>(image);
             }
@@ -63,6 +70,7 @@ namespace nui
                 return NULL;
 
             ImageData& imageData = result.first->second;
+            imageData.hasExtInfo = Gdi::GetImageData((const BYTE*)buffer->GetBuffer(), buffer->GetSize(), imageData.extInfo);
             for(;;)
             {
                 imageData.refCount = 1;

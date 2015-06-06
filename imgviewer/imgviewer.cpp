@@ -59,6 +59,7 @@ void ImgViewer::Show(LPCTSTR filePath)
     shape->SetFillColor(MakeArgb(255, 255, 0, 255));
     NInstPtr<NButton> button(MemToolParam);
     button->SetBkgDraw(shape);
+    button->SetForeDraw(loader->LoadImage(_T("@skin:images\\3.gif")));
     button->SetSize(100, 100);
     window_->GetRootFrame()->AddChild(button);
 

@@ -32,6 +32,8 @@ namespace nui
                 int refCount;
                 Data::NArrayT<HBITMAP> vctBitmaps;
                 Data::NArrayT<int> vctDelayTicks;
+                bool hasExtInfo;
+                stImageExtInfo extInfo;
             };
             typedef std::map<Base::NString, ImageData> ImageMap;
             ImageMap    imageMap_;

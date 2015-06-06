@@ -11,6 +11,11 @@
 #include <tchar.h>
 #include <windows.h>
 #include <process.h>
+#include <GdiPlus.h>
+#include <time.h>
+
+
+#pragma comment(lib, "gdiplus.lib")
 
 #include "gtest/gtest.h"
 #pragma comment(lib, "gtest.lib")

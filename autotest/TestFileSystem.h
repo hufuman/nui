@@ -19,12 +19,12 @@ public:
         nui::Base::NInstPtr<NBuffer> buffer(MemToolParam);
         ASSERT_TRUE(fs->LoadFile(relativePath, buffer));
         DWORD dwSize;
-        LPVOID pData = TestUtil::GetFileContent(realPath, dwSize);
+        LPCVOID pData = TestUtil::GetFileContent(realPath, dwSize);
         ASSERT_TRUE(pData != NULL);
         EXPECT_TRUE(dwSize == buffer->GetSize());
         if(dwSize == buffer->GetSize())
             EXPECT_TRUE(memcmp(pData, buffer->GetBuffer(), dwSize) == 0);
-        free(pData);
+        free((LPVOID)pData);
     }
 
     void TestImpl(nui::Base::NAutoPtr<nui::Data::NFileSystem> fs)

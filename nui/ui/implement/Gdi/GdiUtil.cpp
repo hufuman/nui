@@ -3,6 +3,18 @@
 
 #include "ImageDC.h"
 
+namespace
+{
+    /*
+        Image Ext Info
+        Version Format
+        1       |StartTag Version ExtInfo EndTag|
+    */
+    const DWORD g_dwImageExtInfoStartTag = 0xF28D6A40;
+    const DWORD g_dwImageExtInfoEndTag = 0xDA64F190;
+
+}
+
 namespace Gdi
 {
     CGdiHolder::CGdiHolder(HGDIOBJ obj, bool needDelete)
@@ -120,7 +132,6 @@ namespace Gdi
         {
             if(image->GetLastStatus() == Gdiplus::Ok)
             {
-                // µÃµ½CLSID
                 nui::Base::NString fileExt(filePath);
                 int pos = fileExt.LastIndexOf(_T("."));
                 if(pos >= 0)
@@ -131,7 +142,6 @@ namespace Gdi
                 nui::Base::NString format(_T("image/"));
                 format += fileExt;
 
-                // ±£´æ
                 CLSID imageClsid = {0};
                 if(GetEncoderClsid(format, &imageClsid) >= 0)
                 {
@@ -143,4 +153,32 @@ namespace Gdi
 
         return result;
     }
+
+    bool GetImageData(const BYTE* pData, DWORD dwSize, nui::Ui::stImageExtInfo& extInfo)
+    {
+        DWORD dwExtBodySize = sizeof(g_dwImageExtInfoStartTag) + sizeof(DWORD) + sizeof(nui::Ui::stImageExtInfo) + sizeof(g_dwImageExtInfoEndTag);
+        if(dwSize <= dwExtBodySize)
+            return false;
+        const BYTE* pStart = pData + dwSize - dwExtBodySize;
+        if(*((DWORD*)pStart) != g_dwImageExtInfoStartTag
+            || *((DWORD*)pStart + 1) != 1
+            || *((DWORD*)(pData + dwSize) - 1) != g_dwImageExtInfoEndTag)
+        {
+            return false;
+        }
+        memcpy(&extInfo, (LPCVOID)(pStart + sizeof(DWORD) + sizeof(DWORD)), sizeof(extInfo));
+        return true;
+    }
+
+    bool SetImageData(const nui::Ui::stImageExtInfo& extInfo, std::string& strData)
+    {
+        // |StartTag Version ExtInfo EndTag|
+        DWORD dwVersion = 1;
+        strData.append((const char*)&g_dwImageExtInfoStartTag, sizeof(g_dwImageExtInfoStartTag));
+        strData.append((const char*)&dwVersion, sizeof(dwVersion));
+        strData.append((const char*)&extInfo, sizeof(extInfo));
+        strData.append((const char*)&g_dwImageExtInfoEndTag, sizeof(g_dwImageExtInfoEndTag));
+        return true;
+    }
+
 }
