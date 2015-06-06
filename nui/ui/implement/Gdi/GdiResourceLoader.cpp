@@ -70,6 +70,7 @@ namespace nui
                 return NULL;
 
             ImageData& imageData = result.first->second;
+            imageData.extInfo.drawType = ImageDrawType::Stretch;
             imageData.hasExtInfo = Gdi::GetImageData((const BYTE*)buffer->GetBuffer(), buffer->GetSize(), imageData.extInfo);
             for(;;)
             {

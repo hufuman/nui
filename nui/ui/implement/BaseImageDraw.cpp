@@ -63,14 +63,26 @@ namespace nui
             vertCount = vertCount_;
         }
 
-        void BaseImageDraw::SetDrawType(ImageDrawType::Type drawType)
+        NImageDraw* BaseImageDraw::SetDrawType(ImageDrawType::Type drawType)
         {
             imageDrawType_ = drawType;
+            return this;
         }
 
-        void BaseImageDraw::SetStretchParam(int left, int top, int right, int bottom)
+        ImageDrawType::Type BaseImageDraw::GetDrawType() const
+        {
+            return imageDrawType_;
+        }
+
+        NImageDraw* BaseImageDraw::SetStretchParam(int left, int top, int right, int bottom)
         {
             drawParam_.SetRect(left, top, right, bottom);
+            return this;
+        }
+
+        Base::NRect BaseImageDraw::GetStretchParam() const
+        {
+            return drawParam_;
         }
 
         void BaseImageDraw::InitForDynamicImage(int frameCount, const Base::NSize& size)

@@ -23,8 +23,11 @@ namespace nui
             virtual bool SetCount(int horzCount, int vertCount);
             virtual void GetCount(int& horzCount, int& vertCount) const;
 
-            virtual void SetDrawType(ImageDrawType::Type drawType);
-            virtual void SetStretchParam(int left, int top, int right, int bottom);
+            virtual NImageDraw* SetDrawType(ImageDrawType::Type drawType);
+            virtual ImageDrawType::Type GetDrawType() const;
+
+            virtual NImageDraw* SetStretchParam(int left, int top, int right, int bottom);
+            virtual Base::NRect GetStretchParam() const;
 
         public:
             void InitForDynamicImage(int frameCount, const Base::NSize& size);

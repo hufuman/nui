@@ -43,8 +43,11 @@ namespace nui
             virtual bool SetCount(int horzCount, int vertCount) = 0;
             virtual void GetCount(int& horzCount, int& vertCount) const = 0;
 
-            virtual void SetDrawType(ImageDrawType::Type drawType) = 0;
-            virtual void SetStretchParam(int left, int top, int right, int bottom) = 0;
+            virtual NImageDraw* SetDrawType(ImageDrawType::Type drawType) = 0;
+            virtual ImageDrawType::Type GetDrawType() const = 0;
+
+            virtual NImageDraw* SetStretchParam(int left, int top, int right, int bottom) = 0;
+            virtual Base::NRect GetStretchParam() const = 0;
         };
     }
 }

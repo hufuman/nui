@@ -185,27 +185,20 @@ namespace nui
 
         void GdiRender::DrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
-            GdiImageDraw* gdiImageDraw = dynamic_cast<GdiImageDraw*>(image);
-            NAssertError(gdiImageDraw != NULL, _T("Not GdiImageDraw in GdiRender::DrawImage"));
-            if(gdiImageDraw == NULL)
-                return;
-            HBITMAP bitmap = gdiImageDraw->GetHBitmap(frameIndex);
-            NAssertError(bitmap != NULL, _T("GetHBitmap return NULL in GdiRender::DrawImage"));
-            if(bitmap == NULL)
-                return;
-            ImageDC imageDc(memDC_, bitmap);
-
-            BLENDFUNCTION BlendFunc = {0};
-            BlendFunc.BlendOp = AC_SRC_OVER;
-            BlendFunc.SourceConstantAlpha = alphaValue;
-            BlendFunc.AlphaFormat = AC_SRC_ALPHA;
-            NVerify(!!::AlphaBlend(memDC_,
-                dstX, dstY,
-                dstWidth, dstHeight,
-                imageDc,
-                srcX, srcY,
-                srcWidth, srcHeight,
-                BlendFunc), _T("AlphaBlend Failed in GdiRender::DrawImage"));
+            switch(image->GetDrawType())
+            {
+            case ImageDrawType::Stretch:
+                StretchDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, alphaValue);
+                break;
+            case ImageDrawType::Tile:
+                TileDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, alphaValue);
+                break;
+            case ImageDrawType::NineStretch:
+                NineStretchDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, alphaValue);
+                break;
+            default:
+                NAssertError(false, _T("Wrong DrawImageType: %d"), image->GetDrawType());
+            }
         }
 
         void GdiRender::DrawText(NText* text, NFont* font, const Base::NRect& rect)
@@ -369,6 +362,135 @@ namespace nui
             rcFill.Inflate(-borderWidth, -borderWidth);
             FillRectImpl(hDc, rcFill, fillColor);
             DrawRectImpl(hDc, rect, borderWidth, borderColor);
+        }
+
+        void GdiRender::StretchDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
+        {
+            if(srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0)
+                return;
+
+            GdiImageDraw* gdiImageDraw = dynamic_cast<GdiImageDraw*>(image);
+            NAssertError(gdiImageDraw != NULL, _T("Not GdiImageDraw in GdiRender::DrawImage"));
+            if(gdiImageDraw == NULL)
+                return;
+            HBITMAP bitmap = gdiImageDraw->GetHBitmap(frameIndex);
+            NAssertError(bitmap != NULL, _T("GetHBitmap return NULL in GdiRender::DrawImage"));
+            if(bitmap == NULL)
+                return;
+            ImageDC imageDc(memDC_, bitmap);
+
+            BLENDFUNCTION BlendFunc = {0};
+            BlendFunc.BlendOp = AC_SRC_OVER;
+            BlendFunc.SourceConstantAlpha = alphaValue;
+            BlendFunc.AlphaFormat = AC_SRC_ALPHA;
+            NVerify(!!::AlphaBlend(memDC_,
+                dstX, dstY,
+                dstWidth, dstHeight,
+                imageDc,
+                srcX, srcY,
+                srcWidth, srcHeight,
+                BlendFunc), _T("AlphaBlend Failed in GdiRender::DrawImage"));
+        }
+
+        void GdiRender::TileDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
+        {
+            if(srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0)
+                return;
+
+            int horzFullCount = dstWidth / srcWidth;
+            int vertFullCount = dstHeight / srcHeight;
+
+            // draw full image first
+            for(int x=0; x<horzFullCount; ++ x)
+            {
+                for(int y=0; y<vertFullCount; ++ y)
+                {
+                    StretchDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX + x * srcWidth, dstY + y * srcHeight, srcWidth, srcHeight, alphaValue);
+                }
+            }
+
+            // draw right most half image if need
+            int rightHalfWidth = dstWidth % srcWidth;
+            if(rightHalfWidth > 0)
+            {
+                for(int y=0; y<vertFullCount; ++ y)
+                {
+                    StretchDrawImage(image, frameIndex, srcX, srcY, rightHalfWidth, srcHeight, dstX + horzFullCount * srcWidth, dstY + y * srcHeight, rightHalfWidth, srcHeight, alphaValue);
+                }
+            }
+
+            // draw bottom half image if need
+            int bottomHalfHeight = dstHeight % srcHeight;
+            if(bottomHalfHeight > 0)
+            {
+                for(int x=0; x<horzFullCount; ++ x)
+                {
+                    StretchDrawImage(image, frameIndex, srcX, srcY, srcWidth, bottomHalfHeight, dstX + x * srcWidth, dstY + vertFullCount * srcHeight, srcWidth, bottomHalfHeight, alphaValue);
+                }
+            }
+
+            // draw right-bottom corner
+            if(rightHalfWidth > 0 && bottomHalfHeight > 0)
+            {
+                StretchDrawImage(image, frameIndex, srcX, srcY, rightHalfWidth, bottomHalfHeight, dstX + horzFullCount * srcWidth, dstY + vertFullCount * srcHeight, rightHalfWidth, bottomHalfHeight, alphaValue);
+            }
+        }
+
+        void GdiRender::NineStretchDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
+        {
+            if(srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0)
+                return;
+
+            Base::NRect rcParam = image->GetStretchParam();
+
+            // LeftTop
+            StretchDrawImage(image, frameIndex,
+                srcX, srcY, rcParam.Left, rcParam.Top,
+                dstX, dstY, rcParam.Left, rcParam.Top,
+                alphaValue);
+            // Left
+            StretchDrawImage(image, frameIndex,
+                srcX, srcY + rcParam.Top, rcParam.Left, srcHeight - rcParam.Top - rcParam.Bottom,
+                dstX, dstY + rcParam.Top, rcParam.Left, dstHeight - rcParam.Top - rcParam.Bottom,
+                alphaValue);
+            // LeftBottom
+            StretchDrawImage(image, frameIndex,
+                srcX, srcY + srcHeight - rcParam.Bottom, rcParam.Left, rcParam.Bottom,
+                dstX, dstY + dstHeight - rcParam.Bottom, rcParam.Left, rcParam.Bottom,
+                alphaValue);
+
+            // Top
+            StretchDrawImage(image, frameIndex,
+                srcX + rcParam.Left, srcY, srcWidth - rcParam.Left - rcParam.Right, rcParam.Top,
+                dstX + rcParam.Left, dstY, dstWidth - rcParam.Left - rcParam.Right, rcParam.Top,
+                alphaValue);
+            // Bottom
+            StretchDrawImage(image, frameIndex,
+                srcX + rcParam.Left, srcY + srcHeight - rcParam.Bottom, srcWidth - rcParam.Left - rcParam.Right, rcParam.Bottom,
+                dstX + rcParam.Left, dstY + dstHeight - rcParam.Bottom, dstWidth - rcParam.Left - rcParam.Right, rcParam.Bottom,
+                alphaValue);
+
+            // RightTop
+            StretchDrawImage(image, frameIndex,
+                srcX + srcWidth - rcParam.Right, srcY, rcParam.Right, rcParam.Top,
+                dstX + dstWidth - rcParam.Right, dstY, rcParam.Right, rcParam.Top,
+                alphaValue);
+            // Right
+            StretchDrawImage(image, frameIndex,
+                srcX + srcWidth - rcParam.Right, srcY + rcParam.Top, rcParam.Right, srcHeight - rcParam.Top - rcParam.Bottom,
+                dstX + dstWidth - rcParam.Right, dstY + rcParam.Top, rcParam.Right, dstHeight - rcParam.Top - rcParam.Bottom,
+                alphaValue);
+            // RightBottom
+            StretchDrawImage(image, frameIndex,
+                srcX + srcWidth - rcParam.Right, srcY + srcHeight - rcParam.Bottom, rcParam.Right, rcParam.Bottom,
+                dstX + dstWidth - rcParam.Right, dstY + dstHeight - rcParam.Bottom, rcParam.Right, rcParam.Bottom,
+                alphaValue);
+
+            // Center
+            StretchDrawImage(image, frameIndex,
+                srcX + rcParam.Left, srcY + rcParam.Top, srcWidth - rcParam.Left - rcParam.Right, srcHeight - rcParam.Top - rcParam.Bottom,
+                dstX + rcParam.Left, dstY + rcParam.Top, dstWidth - rcParam.Left - rcParam.Right, dstHeight - rcParam.Top - rcParam.Bottom,
+                alphaValue);
         }
     }
 }

@@ -182,6 +182,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TestDrawImage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\uitest.cpp"
 				>
 			</File>
@@ -201,6 +205,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestDrawImage.h"
 				>
 			</File>
 			<File
