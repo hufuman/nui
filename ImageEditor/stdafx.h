@@ -20,10 +20,18 @@
 #include <Unknwn.h>
 #include <GdiPlus.h>
 
-#pragma comment(lib, "gdiplus.lib")
 
+#pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "GdiPlus.lib")
+#pragma comment(lib, "Msimg32.lib")
+#pragma comment(lib, "comsupp.lib")
+#pragma comment(lib, "Urlmon.lib")
+
+
+#pragma warning(disable: 4996)
 
 #define _NOT_USE_NUI_NAMESPACE 1
+#define NUI_STATIC 1
 #include "../NUI/NUI.h"
 
 

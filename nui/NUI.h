@@ -33,6 +33,8 @@
 #include <shellapi.h>
 #include <windowsx.h>
 
+#pragma warning(push)
+#pragma warning(disable: 4996)
 
 #include "./base/noncopyable.h"
 #include "./base/NMacro.h"
@@ -81,6 +83,9 @@ using namespace fastdelegate;
 #include "./ui/NImageDraw.h"
 #include "./ui/NShapeDraw.h"
 #include "./ui/NText.h"
+
+#pragma warning(pop)
+
 
 #ifdef _NOT_USE_NUI_NAMESPACE
 using namespace nui;

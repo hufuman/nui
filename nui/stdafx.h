@@ -17,6 +17,7 @@
 #include <GdiPlus.h>
 
 
+#pragma warning(disable: 4996)
 #include "nui.h"
 
 

@@ -24,10 +24,7 @@ namespace nui
                 va_start(args, szFormat);
                 const int nDefaultBufferSize = 1024;
                 TCHAR szBuffer[nDefaultBufferSize];
-#pragma warning(push)
-#pragma warning(disable: 4996)
                 _vsntprintf(szBuffer, nDefaultBufferSize - 1, szFormat, args);
-#pragma warning(pop)
                 szBuffer[nDefaultBufferSize - 1] = 0;
                 return szBuffer;
             }
