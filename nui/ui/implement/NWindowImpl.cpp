@@ -153,10 +153,25 @@ namespace nui
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                     RefreshHoverItem(point);
                     if(hoverFrame_ == NULL)
+                    {
                         ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+                    }
+                    else
+                    {
+                        ::SetCapture(window_);
+                    }
                 }
                 break;
             case WM_LBUTTONUP:
+                if(::GetCapture() == window_)
+                {
+                    ::ReleaseCapture();
+                    if(hoverFrame_ != NULL)
+                    {
+                        Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
+                        hoverFrame_->OnClicked(point);
+                    }
+                }
                 break;
             case WM_MOUSELEAVE:
                 SetHoverItem(NULL);
@@ -205,13 +220,11 @@ namespace nui
 
         void NWindow::SetHoverItem(NFrame* frame)
         {
-            if(hoverFrame_ == frame)
-                return;
-            if(hoverFrame_)
-                hoverFrame_->CancelHover();
+            if(hoverFrame_ && hoverFrame_ != frame)
+                hoverFrame_->UpdateStatus(NFrame::StatusHover | NFrame::StatusPressed, false);
             hoverFrame_ = frame;
             if(hoverFrame_)
-                hoverFrame_->BeginHover();
+                hoverFrame_->UpdateStatus((Util::Shell::IsKeyPressed(VK_LBUTTON) ? NFrame::StatusPressed : NFrame::StatusHover), true);
         }
 
         void NWindow::RefreshHoverItem(const Base::NPoint& point)

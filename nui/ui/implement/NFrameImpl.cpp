@@ -287,6 +287,11 @@ namespace nui
             return frameId_;
         }
 
+        NWindow* NFrame::GetWindow()
+        {
+            return window_;
+        }
+
         const Base::NRect& NFrame::GetRect() const
         {
             return frameRect_;
@@ -307,6 +312,7 @@ namespace nui
         {
             if(frameRect_.Left == left && frameRect_.Top == top)
                 return;
+            Invalidate();
             frameRect_.Left = left;
             frameRect_.Top = top;
             Invalidate();
@@ -319,6 +325,7 @@ namespace nui
             if(frameRect_.Width() == width && frameRect_.Height() == height)
                 return;
 
+            Invalidate();
             frameRect_.SetSize(frameWidth, frameHeight);
             Invalidate();
         }
@@ -387,21 +394,16 @@ namespace nui
                 clickCallback_(this, point);
         }
 
-        void NFrame::CancelHover()
+        void NFrame::UpdateStatus(DWORD dwStatus, bool bAdd)
         {
-            if(!(frameStatus_ & StatusHover))
+            DWORD newStatus;
+            if(bAdd)
+                newStatus = frameStatus_ | dwStatus;
+            else
+                newStatus = frameStatus_ & (~dwStatus);
+            if(frameStatus_ == newStatus)
                 return;
-
-            frameStatus_ = frameFlags_ & (~StatusHover);
-            Invalidate();
-        }
-
-        void NFrame::BeginHover()
-        {
-            if((frameStatus_ & StatusHover) || !CanHover())
-                return;
-
-            frameStatus_ = frameFlags_ | StatusHover;
+            frameStatus_ = newStatus;
             Invalidate();
         }
 
@@ -459,7 +461,14 @@ namespace nui
 
         void NFrame::GetDrawIndex(int& horzIndex, int& vertIndex) const
         {
-            horzIndex = (frameStatus_ == StatusDisabled) ? 3 : (frameStatus_ & 0x0F) / 2;
+            if(frameStatus_ & StatusDisabled)
+                horzIndex = 3;
+            else if(frameStatus_ & StatusPressed)
+                horzIndex = 2;
+            else if(frameStatus_ & StatusHover)
+                horzIndex = 1;
+            else
+                horzIndex = 0;
             vertIndex = (frameStatus_ & StatusChecked) ? 1 : 0;
         }
 

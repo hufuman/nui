@@ -44,7 +44,10 @@ namespace nui
 
         Base::NSize BaseImageDraw::GetPreferSize() const
         {
-            return size_;
+            if(horzCount_ == 0 || vertCount_ == 0)
+                return size_;
+            Base::NSize result(size_.Width / horzCount_, size_.Height / vertCount_);
+            return result;
         }
 
         bool BaseImageDraw::SetCount(int horzCount, int vertCount)

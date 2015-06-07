@@ -121,6 +121,11 @@ namespace nui
                 ::SystemParametersInfo(SPI_GETWORKAREA, 0, rcWorkarea, 0);
                 return rcWorkarea;
             }
+
+            NUI_API BOOL IsKeyPressed(int virKey)
+            {
+                return ((::GetKeyState(virKey) & 0x80000000) == 0x80000000);
+            }
         }
     }
 }

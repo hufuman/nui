@@ -105,10 +105,10 @@ namespace nui
                 vertIndex = vertIndex % vertCount;
                 vertIndex = (vertIndex < 0) ? 0 : vertIndex;
 
-                int srcX = size.Width * horzIndex / horzCount;
-                int srcY = size.Height * vertIndex / vertCount;
-                int srcWidth = size.Width / horzCount;
-                int srcHeight = size.Height / vertCount;
+                int srcX = size.Width * horzIndex;
+                int srcY = size.Height * vertIndex;
+                int srcWidth = size.Width;
+                int srcHeight = size.Height;
 
                 DrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, 255);
             }

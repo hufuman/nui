@@ -94,6 +94,7 @@ namespace nui
             // data
             virtual void SetId(const Base::NString& id);
             virtual Base::NString GetId() const;
+            virtual NWindow* GetWindow();
 
             // pos / size
             virtual const Base::NRect& GetRect() const;
@@ -109,8 +110,7 @@ namespace nui
             virtual void OnClicked(const nui::Base::NPoint& point);
 
             // called by NWindow
-            virtual void CancelHover();
-            virtual void BeginHover();
+            virtual void UpdateStatus(DWORD dwStatus, bool bAdd);
             virtual bool CanHover() const;
 
             // Draw

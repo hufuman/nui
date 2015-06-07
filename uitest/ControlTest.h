@@ -9,4 +9,5 @@ public:
     void Test();
 
 private:
+    bool OnButtonClicked(NFrame* pButton, const Base::NPoint& point);
 };

@@ -21,12 +21,13 @@ void CControlTest::Test()
 
     // setup controls
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-    NAutoPtr<NShapeDraw> pBgkDraw = loader->CreateShape(MemToolParam);
-    pBgkDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
-    window->GetRootFrame()->SetBkgDraw(pBgkDraw);
+    NAutoPtr<NShapeDraw> pBkgDraw = loader->CreateShape(MemToolParam);
+    pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
+    window->GetRootFrame()->SetBkgDraw(pBkgDraw);
 
-    NInstPtr<NButton> pButton(MemToolParam);
-    window->GetRootFrame()->AddChild(pButton);
+    NInstPtr<NButton> pButton1(MemToolParam);
+    window->GetRootFrame()->AddChild(pButton1);
+    pButton1->SetClickCallback(MakeDelegate(this, &CControlTest::OnButtonClicked));
 
     // loop
     nui::Ui::NMsgLoop loop;
@@ -35,3 +36,10 @@ void CControlTest::Test()
     // destroy
     window = NULL;
 }
+
+bool CControlTest::OnButtonClicked(NFrame* pButton, const Base::NPoint& point)
+{
+    MessageBox(pButton->GetWindow()->GetNative(), _T("Button Clicked"), _T("Test"), MB_OK | MB_ICONINFORMATION);
+    return true;
+}
+
