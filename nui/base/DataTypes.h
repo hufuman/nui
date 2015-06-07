@@ -50,6 +50,7 @@ namespace nui
                 return reinterpret_cast<const POINT*>(this);
             }
 
+            static const NPoint g_EmptyPoint;
         public:
             INT X;
             INT Y;
@@ -90,6 +91,8 @@ namespace nui
             {
                 return reinterpret_cast<const SIZE*>(this);
             }
+
+            static const NSize g_EmptySize;
 
         public:
             INT Width;
@@ -270,6 +273,8 @@ namespace nui
                     && Right == rect.Right
                     && Bottom == rect.Bottom;
             }
+
+            static const NRect g_EmptyRect;
         public:
             INT     Left;
             INT     Top;

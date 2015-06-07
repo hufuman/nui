@@ -89,19 +89,27 @@ namespace nui
 
             __inline void DrawImage(NImageDraw* image, int horzIndex, int vertIndex, int dstX, int dstY, int frameIndex)
             {
-                Base::NSize size = image->GetSize();
+                Base::NSize size = image->GetPreferSize();
                 DrawImage(image, horzIndex, vertIndex, dstX, dstY, size.Width, size.Height, frameIndex);
             }
 
             __inline void DrawImage(NImageDraw* image, int horzIndex, int vertIndex, int dstX, int dstY, int dstWidth, int dstHeight, int frameIndex)
             {
-                Base::NSize size = image->GetSize();
+                Base::NSize size = image->GetPreferSize();
                 int horzCount, vertCount;
                 image->GetCount(horzCount, vertCount);
+
+                horzIndex = horzIndex % horzCount;
+                horzIndex = (horzIndex < 0) ? 0 : horzIndex;
+
+                vertIndex = vertIndex % vertCount;
+                vertIndex = (vertIndex < 0) ? 0 : vertIndex;
+
                 int srcX = size.Width * horzIndex / horzCount;
                 int srcY = size.Height * vertIndex / vertCount;
                 int srcWidth = size.Width / horzCount;
                 int srcHeight = size.Height / vertCount;
+
                 DrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, 255);
             }
         };

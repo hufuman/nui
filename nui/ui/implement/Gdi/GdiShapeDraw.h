@@ -16,6 +16,8 @@ namespace nui
             ~GdiShapeDraw();
 
         public:
+            virtual Base::NSize GetPreferSize() const;
+
             virtual NShapeDraw* SetStyle(Style style);
             virtual NShapeDraw* SetBorderColor(ArgbColor borderColor);
             virtual NShapeDraw* SetBorderWidth(int borderWidth);

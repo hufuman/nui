@@ -34,8 +34,6 @@ namespace nui
         class NUI_INTF NImageDraw : public NDraw
         {
         public:
-            virtual const Base::NSize& GetSize() const  = 0;
-
             virtual int NextDelayValue(int index) = 0;
             virtual NImageDraw* NextFrame() = 0;
             virtual int GetFrameCount() const = 0;

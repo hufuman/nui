@@ -20,6 +20,11 @@ namespace nui
             ;
         }
 
+        Base::NSize GdiShapeDraw::GetPreferSize() const
+        {
+            return Base::NSize::g_EmptySize;
+        }
+
         NShapeDraw* GdiShapeDraw::SetStyle(GdiShapeDraw::Style style)
         {
             style_ = style;

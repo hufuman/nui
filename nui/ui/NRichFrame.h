@@ -44,6 +44,7 @@ namespace nui
             virtual bool IsAutoSize() const;
 
         protected:
+            virtual void OnParentChanged();
 
             // Draw
             virtual void DrawBkg(NRender* render, const Base::NRect& rect) const;

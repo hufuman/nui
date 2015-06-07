@@ -63,6 +63,7 @@ using namespace fastdelegate;
 #include "./util/NShellUtil.h"
 #include "./util/NFileUtil.h"
 #include "./util/NMisc.h"
+#include "./util/NDiagnose.h"
 
 #include "./ui/NRenderDef.h"
 #include "./ui/NMsgLoop.h"

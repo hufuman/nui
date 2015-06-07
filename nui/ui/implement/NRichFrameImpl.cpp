@@ -12,11 +12,13 @@ namespace nui
         NRichFrame::NRichFrame()
         {
             bkgDraw_ = NULL;
+            Util::Misc::CheckFlag(frameFlags_, NRichFrame::FlagAutoSize, true);
         }
 
         NRichFrame::~NRichFrame()
         {
             bkgDraw_ = NULL;
+            foreDraw_ = NULL;
         }
 
         void NRichFrame::SetAutoSize(bool autosize)
@@ -31,6 +33,13 @@ namespace nui
         bool NRichFrame::IsAutoSize() const
         {
             return Util::Misc::IsFlagChecked(frameFlags_, NRichFrame::FlagAutoSize);
+        }
+
+        void NRichFrame::OnParentChanged()
+        {
+            __super::OnParentChanged();
+            if(GetParent() != NULL)
+                AutoSize();
         }
 
         void NRichFrame::SetText(const Base::NString& text)
@@ -63,11 +72,32 @@ namespace nui
         void NRichFrame::AutoSize()
         {
             NAssertError(window_ != NULL, _T("window is null"));
-            if(!window_ || text_ == NULL)
+            if(!window_ || (text_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL) || !IsAutoSize())
                 return;
-            Base::NSize txtSize;
-            window_->GetRender()->GetTextSize(text_, font_, txtSize);
-            SetSize(txtSize.Width, txtSize.Height);
+
+#undef max
+
+            Base::NSize auoSize;
+            if(text_ != NULL)
+            {
+                window_->GetRender()->GetTextSize(text_, font_, auoSize);
+            }
+
+            if(foreDraw_ != NULL)
+            {
+                Base::NSize foreSize = foreDraw_->GetPreferSize();
+                auoSize.Width = std::max(auoSize.Width, foreSize.Width);
+                auoSize.Height = std::max(auoSize.Height, foreSize.Height);
+            }
+
+            if(bkgDraw_ != NULL)
+            {
+                Base::NSize bkgSize = bkgDraw_->GetPreferSize();
+                auoSize.Width = std::max(auoSize.Width, bkgSize.Width);
+                auoSize.Height = std::max(auoSize.Height, bkgSize.Height);
+            }
+
+            SetSize(auoSize.Width, auoSize.Height);
         }
 
         void NRichFrame::SetBkgDraw(NDraw* bkgDraw)
@@ -80,7 +110,7 @@ namespace nui
 
         NDraw* NRichFrame::GetBkgDraw() const
         {
-            return foreDraw_;
+            return bkgDraw_;
         }
 
         void NRichFrame::SetForeDraw(NDraw* foreDraw)

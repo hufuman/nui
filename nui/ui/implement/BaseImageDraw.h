@@ -15,7 +15,7 @@ namespace nui
             ~BaseImageDraw();
 
             virtual INT Release();
-            virtual const Base::NSize& GetSize() const ;
+            virtual Base::NSize GetPreferSize() const ;
 
             virtual NImageDraw* NextFrame();
             virtual int GetFrameCount() const;

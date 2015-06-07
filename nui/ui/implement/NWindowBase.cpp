@@ -201,7 +201,7 @@ namespace nui
                 if(IsLayered())
                     ::PostMessage(window_, WM_PAINT, 0, 0);
                 else
-                    ::InvalidateRect(window_, NULL, TRUE);
+                    ::InvalidateRect(window_, NULL, FALSE);
             }
         }
 
@@ -213,7 +213,7 @@ namespace nui
                 if(IsLayered())
                     ::PostMessage(window_, WM_PAINT, 0, 0);
                 else
-                    ::InvalidateRect(window_, rect, TRUE);
+                    ::InvalidateRect(window_, rect, FALSE);
             }
         }
 

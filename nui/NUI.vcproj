@@ -219,6 +219,10 @@
 				Name="implement"
 				>
 				<File
+					RelativePath=".\base\implement\DataTypes.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\base\implement\MemRecorder.cpp"
 					>
 				</File>
@@ -437,6 +441,10 @@
 		<Filter
 			Name="util"
 			>
+			<File
+				RelativePath=".\util\NDiagnose.h"
+				>
+			</File>
 			<File
 				RelativePath=".\util\NFileUtil.h"
 				>

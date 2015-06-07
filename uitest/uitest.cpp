@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include "uitest.h"
+
+#include "ControlTest.h"
 #include "TestDrawImage.h"
 
 nui::Base::NString GetResourcePath();
@@ -19,8 +21,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     nui::Base::NInstPtr<nui::Base::NCore> core(MemToolParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);
 
+    /*
     CTestDrawImage testDrawImage;
-    testDrawImage.Test();
+    testDrawImage.Test();//*/
+
+    CControlTest controlTest;
+    controlTest.Test();
 
     core->DestroyCore();
 	return 0;

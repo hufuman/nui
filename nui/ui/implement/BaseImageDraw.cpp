@@ -42,7 +42,7 @@ namespace nui
             return frameCount_;
         }
 
-        const Base::NSize& BaseImageDraw::GetSize() const
+        Base::NSize BaseImageDraw::GetPreferSize() const
         {
             return size_;
         }

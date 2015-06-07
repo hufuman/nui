@@ -43,6 +43,7 @@ namespace nui
 
             childs_.push_back(child);
             SetParentHelper(child, this);
+
             return true;
         }
 

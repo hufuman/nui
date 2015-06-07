@@ -12,9 +12,11 @@ public:
     bool DrawCallback(NWindow*, NRender* render, const NRect& clipRect);
 
 private:
-    void UpdateDraw(NWindowBase* window, BOOL bReload);
+    void OffsetImageIndex(HWND hWnd, int horzOffset, int vertOffset);
+    void UpdateDraw(HWND hWnd, BOOL bReload);
     HWND CreateRealControl(HWND hWndParent, UINT uId, LPCTSTR szClassName, LPCTSTR szText, const NRect& rcEdit, DWORD dwStyle, DWORD dwExStyle);
 
+    void OnDropFiles(HWND hWnd, HDROP hDrop);
     void SaveExtInfo(HWND hWnd, NString strPath);
 
 private:
