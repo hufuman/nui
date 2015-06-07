@@ -149,7 +149,12 @@ namespace nui
                 }
                 break;
             case WM_LBUTTONDOWN:
-                ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+                {
+                    Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
+                    RefreshHoverItem(point);
+                    if(hoverFrame_ == NULL)
+                        ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+                }
                 break;
             case WM_LBUTTONUP:
                 break;

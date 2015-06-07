@@ -329,6 +329,10 @@
 						Name="implement"
 						>
 						<File
+							RelativePath="..\nui\base\implement\DataTypes.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\base\implement\MemRecorder.cpp"
 							>
 						</File>
@@ -487,58 +491,46 @@
 					</Filter>
 				</Filter>
 				<Filter
-					Name="ui"
+					Name="util"
 					>
 					<File
-						RelativePath="..\nui\ui\NButton.h"
+						RelativePath="..\nui\util\NDiagnose.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NDraw.h"
+						RelativePath="..\nui\util\NFileUtil.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NFont.h"
+						RelativePath="..\nui\util\NMisc.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NFrame.h"
+						RelativePath="..\nui\util\NShellUtil.h"
 						>
 					</File>
-					<File
-						RelativePath="..\nui\ui\NImageDraw.h"
+					<Filter
+						Name="implement"
 						>
-					</File>
+						<File
+							RelativePath="..\nui\util\implement\NFileUtil.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\util\implement\NShellUtil.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="ui"
+					>
 					<File
 						RelativePath="..\nui\ui\NMsgLoop.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NRender.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\ui\NRenderClip.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\ui\NRenderDef.h"
-						>
-					</File>
-					<File
 						RelativePath="..\nui\ui\NResourceLoader.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\ui\NRichFrame.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\ui\NShapeDraw.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\ui\NText.h"
 						>
 					</File>
 					<File
@@ -547,14 +539,6 @@
 					</File>
 					<File
 						RelativePath="..\nui\ui\NUiBus.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\ui\NWindow.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\ui\NWindowBase.h"
 						>
 					</File>
 					<Filter
@@ -725,31 +709,63 @@
 							</File>
 						</Filter>
 					</Filter>
-				</Filter>
-				<Filter
-					Name="util"
-					>
-					<File
-						RelativePath="..\nui\util\NFileUtil.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NMisc.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NShellUtil.h"
-						>
-					</File>
 					<Filter
-						Name="implement"
+						Name="draw"
 						>
 						<File
-							RelativePath="..\nui\util\implement\NFileUtil.cpp"
+							RelativePath="..\nui\ui\NDraw.h"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\util\implement\NShellUtil.cpp"
+							RelativePath="..\nui\ui\NFont.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NImageDraw.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NRender.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NRenderClip.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NRenderDef.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NShapeDraw.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NText.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="controls"
+						>
+						<File
+							RelativePath="..\nui\ui\NButton.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NFrame.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NRichFrame.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NWindow.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NWindowBase.h"
 							>
 						</File>
 					</Filter>

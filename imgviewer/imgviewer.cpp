@@ -57,11 +57,6 @@ void ImgViewer::Show(LPCTSTR filePath)
     NShapeDraw* shape = NULL;
     NReflectCreate(shape);
     shape->SetFillColor(MakeArgb(255, 255, 0, 255));
-    NInstPtr<NButton> button(MemToolParam);
-    button->SetBkgDraw(shape);
-    button->SetForeDraw(loader->LoadImage(_T("@skin:images\\3.gif")));
-    button->SetSize(100, 100);
-    window_->GetRootFrame()->AddChild(button);
 
     InitControls();
 
@@ -182,7 +177,7 @@ bool ImgViewer::DrawCallback(NWindow*, NRender* render, const NRect& clipRect)
     }
     else
     {
-        NSize size = image_->GetSize();
+        NSize size = image_->GetPreferSize();
         if(rate_ > 0)
         {
             size.Width *= rate_;
@@ -236,7 +231,7 @@ bool ImgViewer::OpenImage(LPCTSTR filePath)
     }
 
     NRect rcWorkarea = Shell::GetWorkareaRect();
-    NSize size = image_->GetSize();
+    NSize size = image_->GetPreferSize();
     if(size.Width < rcWorkarea.Width() && size.Height < rcWorkarea.Height())
     {
         rate_ = 1;
@@ -330,7 +325,7 @@ void ImgViewer::OnMouseWheel(short delta)
     if(rate_ == 0)
         return;
 
-    NSize size = image_->GetSize();
+    NSize size = image_->GetPreferSize();
     GetProperSize(size);
     window_->SetSize(size.Width, size.Height);
     window_->Invalidate();
