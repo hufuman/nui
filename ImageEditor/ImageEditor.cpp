@@ -6,7 +6,6 @@
 
 CImageEditor::CImageEditor(void)
 {
-    hasExtInfo_ = FALSE;
 }
 
 CImageEditor::~CImageEditor(void)
@@ -164,11 +163,10 @@ void CImageEditor::UpdateDraw(NWindowBase* window, BOOL bReload)
 
     if(bReload)
     {
-        hasExtInfo_ = false;
         NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
         // set to NULL first, to reload current image, because loader caches images
         image_ = NULL;
-        image_ = loader->LoadImage(filePath_, hasExtInfo_);
+        image_ = loader->LoadImage(filePath_);
 
         ImageDrawType::Type drawType = image_->GetDrawType();
         ::CheckDlgButton(window->GetNative(), IDC_RADIO_STRETCH, drawType == ImageDrawType::Stretch ? BST_CHECKED : BST_UNCHECKED);

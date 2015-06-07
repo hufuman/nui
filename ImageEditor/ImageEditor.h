@@ -19,7 +19,6 @@ private:
 
 private:
     NString filePath_;
-    bool hasExtInfo_;
     NAutoPtr<NImageDraw> image_;
     NAutoPtr<NShapeDraw> shape_;
     NAutoPtr<NWindow> window_;
