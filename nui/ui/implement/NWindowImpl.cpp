@@ -170,6 +170,8 @@ namespace nui
                     {
                         Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                         hoverFrame_->OnClicked(point);
+                        if(hoverFrame_)
+                            hoverFrame_->UpdateStatus(NFrame::StatusPressed, false);
                     }
                 }
                 break;
