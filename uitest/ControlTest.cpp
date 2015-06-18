@@ -36,10 +36,11 @@ void CControlTest::Test()
     window->GetRootFrame()->AddChild(pImg1);
 
     // Gif Image
-    for(int i=0; i<10; ++ i)
+    for(int i=0; i<50; ++ i)
     {
         NInstPtr<NImage> pImg2(MemToolParam);
         pImg2->LoadImage(_T("@skin:images\\3.gif"));
+        pImg2->SetPos(i * 10, i % 5 * 50);
         window->GetRootFrame()->AddChild(pImg2);
     }
 

@@ -5,6 +5,7 @@
 #include "NWindowBase.h"
 #include "NRender.h"
 #include "NRichFrame.h"
+#include "NRenderStatus.h"
 #include "../base/NInstPtr.h"
 #include "../base/NAutoPtr.h"
 
@@ -47,6 +48,8 @@ namespace nui
 
             Base::NAutoPtr<NFrame> hoverFrame_;
             Base::NAutoPtr<NFrame> selectedFrame_;
+
+            NRenderStatus renderStatus_;
 
             Base::NRect sizableBorder_;
         END_USE_UNEXPORT_TEMPLATE()

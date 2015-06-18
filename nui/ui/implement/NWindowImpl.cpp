@@ -194,13 +194,23 @@ namespace nui
 
         void NWindow::OnDraw(NRender* render, const Base::NRect& clipRect)
         {
+            renderStatus_.BeforeDraw();
+
+            Base::NRect rcClient;
+            GetRect(rcClient);
+            rcClient.Offset(-rcClient.Left, -rcClient.Top);
+
             if(drawCallback_ && drawCallback_(this, render, clipRect))
+            {
+                renderStatus_.DrawStatus(render, rcClient);
                 return;
+            }
 
             if(rootFrame_ != NULL)
             {
                 Base::NPoint pt;
                 rootFrame_->Draw(render, pt, clipRect);
+                renderStatus_.DrawStatus(render, rcClient);
             }
         }
 

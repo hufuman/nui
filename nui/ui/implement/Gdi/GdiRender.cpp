@@ -289,6 +289,13 @@ namespace nui
             size.Height = rcTmp.Height();
         }
 
+        void GdiRender::AddDrawRegion(const Base::NRect& rcRegion)
+        {
+            HRGN hRgn = ::CreateRectRgn(rcRegion.Left, rcRegion.Top, rcRegion.Right, rcRegion.Bottom);
+            ::ExtSelectClipRgn(memDC_, hRgn, RGN_OR);
+            ::DeleteObject(hRgn);
+        }
+
         nui::Base::NHolder GdiRender::ClipRect(const nui::Base::NRect& rect)
         {
             if(rect.Right <= rect.Left

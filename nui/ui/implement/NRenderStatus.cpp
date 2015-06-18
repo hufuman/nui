@@ -1,34 +1,48 @@
 #include "stdafx.h"
-#include "NRenderStatus.h"
+#include "../NRenderStatus.h"
 
-NRenderStatus::NRenderStatus()
+namespace nui
 {
-    lastTime_ = 0;
-}
-
-NRenderStatus::~NRenderStatus()
-{
-    ;
-}
-
-void NRenderStatus::BeforeDraw()
-{
-    lastTime_ = ::GetTickCount();
-}
-
-void NRenderStatus::DrawStatus(NRender* render, r)
-{
-    DWORD currentTime = ::GetTickCount();
-    NString status;
-
-    if(currentTime == lastTime_)
+    namespace Ui
     {
-        status = _T("max");
+        NRenderStatus::NRenderStatus()
+        {
+            lastTime_ = 0;
+            text_ = NUiBus::Instance().GetResourceLoader()->CreateText(_T(""), MemToolParam);
+        }
+
+        NRenderStatus::~NRenderStatus()
+        {
+            ;
+        }
+
+        void NRenderStatus::BeforeDraw()
+        {
+            lastTime_ = ::GetTickCount();
+        }
+
+        void NRenderStatus::DrawStatus(NRender* render, const Base::NRect& rcClient)
+        {
+            DWORD currentTime = ::GetTickCount();
+            Base::NString status;
+
+            if(currentTime == lastTime_)
+            {
+                status = _T("FPS: max");
+            }
+            else
+            {
+                status.Format(_T("FPS: %.2f"), (double)1000 / (currentTime - lastTime_));
+            }
+            text_->SetText(status.GetData());
+            Base::NSize size;
+            render->GetTextSize(text_, NULL, size);
+            Base::NRect rcText;
+            rcText.SetPos(rcClient.Right - size.Width - 20, 20);
+            rcText.SetSize(size.Width, size.Height);
+
+            render->AddDrawRegion(rcText);
+            render->DrawText(text_, NULL, rcText);
+        }
     }
-    else
-    {
-        status.Format(_T("FPS: %.2f"), 1000 / (currentTime - lastTime_));
-    }
-    text_->SetText(status.GetData());
-    render->DrawText(text_, NULL, 
 }
