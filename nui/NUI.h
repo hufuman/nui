@@ -81,6 +81,7 @@ using namespace fastdelegate;
 #include "./ui/NWindow.h"
 #include "./ui/NFont.h"
 #include "./ui/NImageDraw.h"
+#include "./ui/NImage.h"
 #include "./ui/NShapeDraw.h"
 #include "./ui/NText.h"
 

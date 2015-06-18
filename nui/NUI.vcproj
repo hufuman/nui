@@ -478,6 +478,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ui\NRenderStatus.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui\NResourceLoader.h"
 				>
 			</File>
@@ -509,7 +513,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NImageImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NMsgLoop.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NRenderStatus.cpp"
 					>
 				</File>
 				<File
@@ -702,6 +714,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\NFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NImage.h"
 					>
 				</File>
 				<File

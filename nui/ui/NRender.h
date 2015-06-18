@@ -113,5 +113,7 @@ namespace nui
                 DrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, 255);
             }
         };
+
+        NUI_API Base::NAutoPtr<NRender> GetGlobalRender();
     }
 }

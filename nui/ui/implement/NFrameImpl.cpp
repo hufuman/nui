@@ -320,14 +320,7 @@ namespace nui
 
         void NFrame::SetSize(int width, int height)
         {
-            int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
-            int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
-            if(frameRect_.Width() == width && frameRect_.Height() == height)
-                return;
-
-            Invalidate();
-            frameRect_.SetSize(frameWidth, frameHeight);
-            Invalidate();
+            SetSizeImpl(width, height);
         }
 
         void NFrame::SetMinSize(int minWidth, int minHeight)
@@ -500,6 +493,18 @@ namespace nui
                 child->Draw(render, ptOffset, clipRect);
             }
             ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
+        }
+
+        void NFrame::SetSizeImpl(int width, int height)
+        {
+            int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
+            int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
+            if(frameRect_.Width() == width && frameRect_.Height() == height)
+                return;
+
+            Invalidate();
+            frameRect_.SetSize(frameWidth, frameHeight);
+            Invalidate();
         }
     }
 }

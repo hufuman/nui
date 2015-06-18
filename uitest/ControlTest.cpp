@@ -25,9 +25,25 @@ void CControlTest::Test()
     pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
     window->GetRootFrame()->SetBkgDraw(pBkgDraw);
 
+    // Button
     NInstPtr<NButton> pButton1(MemToolParam);
     window->GetRootFrame()->AddChild(pButton1);
     pButton1->SetClickCallback(MakeDelegate(this, &CControlTest::OnButtonClicked));
+
+    // Static Image
+    NInstPtr<NImage> pImg1(MemToolParam);
+    pImg1->LoadImage(_T("@skin:images\\514540469.png"));
+    window->GetRootFrame()->AddChild(pImg1);
+
+    // Gif Image
+    for(int i=0; i<10; ++ i)
+    {
+        NInstPtr<NImage> pImg2(MemToolParam);
+        pImg2->LoadImage(_T("@skin:images\\3.gif"));
+        window->GetRootFrame()->AddChild(pImg2);
+    }
+
+    window->Invalidate();
 
     // loop
     nui::Ui::NMsgLoop loop;

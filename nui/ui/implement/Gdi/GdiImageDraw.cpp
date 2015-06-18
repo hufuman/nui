@@ -22,7 +22,8 @@ namespace nui
         int GdiImageDraw::NextDelayValue(int index)
         {
             NAssertError(index < vctDelayCount_->Count(), _T("Out of bound"));
-            return (*vctDelayCount_)[index];
+            int value = (*vctDelayCount_)[index];
+            return value < 100 ? 100 : value;
         }
 
         void GdiImageDraw::SetBitmaps(const Base::NString& imagePath, const Data::NArrayT<HBITMAP>& vctBitmaps, const Data::NArrayT<int>& vctDelayCount)

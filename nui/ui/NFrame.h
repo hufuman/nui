@@ -120,6 +120,8 @@ namespace nui
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
             virtual void DrawChilds(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
 
+            virtual void SetSizeImpl(int width, int height);
+
         private:
             static void SetParentHelper(NFrame* child, NFrame* newParent);
             FrameList::const_iterator GetChildHelper(NFrame* child, size_t& zorder) const;

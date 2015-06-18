@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<UI>
+
+  <!-- 游戏优化界面 -->
+  <Frame name="MainUI" layouttype="vfill;hfill" size="364,300" corner="4" >
+    <Button id="btnOk" pos="270,265" text="@Common:btnOk" textcolor="#426594" />
+  </Frame>
+
+</UI>

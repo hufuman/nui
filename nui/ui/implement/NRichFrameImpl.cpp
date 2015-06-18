@@ -71,33 +71,42 @@ namespace nui
 
         void NRichFrame::AutoSize()
         {
-            NAssertError(window_ != NULL, _T("window is null"));
-            if(!window_ || (text_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL) || !IsAutoSize())
+            if(!IsAutoSize())
                 return;
+            Base::NSize autoSize = GetAutoSize();
+            SetSizeImpl(autoSize.Width, autoSize.Height, true);
+        }
+
+        Base::NSize NRichFrame::GetAutoSize() const
+        {
+            if(text_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL)
+            {
+                Base::NSize autoSize(frameRect_.Width(), frameRect_.Height());
+                return autoSize;
+            }
 
 #undef max
 
-            Base::NSize auoSize;
-            if(text_ != NULL)
+            Base::NSize autoSize;
+            if(text_ != NULL && window_ != NULL)
             {
-                window_->GetRender()->GetTextSize(text_, font_, auoSize);
+                window_->GetRender()->GetTextSize(text_, font_, autoSize);
             }
 
             if(foreDraw_ != NULL)
             {
                 Base::NSize foreSize = foreDraw_->GetPreferSize();
-                auoSize.Width = std::max(auoSize.Width, foreSize.Width);
-                auoSize.Height = std::max(auoSize.Height, foreSize.Height);
+                autoSize.Width = std::max(autoSize.Width, foreSize.Width);
+                autoSize.Height = std::max(autoSize.Height, foreSize.Height);
             }
 
             if(bkgDraw_ != NULL)
             {
                 Base::NSize bkgSize = bkgDraw_->GetPreferSize();
-                auoSize.Width = std::max(auoSize.Width, bkgSize.Width);
-                auoSize.Height = std::max(auoSize.Height, bkgSize.Height);
+                autoSize.Width = std::max(autoSize.Width, bkgSize.Width);
+                autoSize.Height = std::max(autoSize.Height, bkgSize.Height);
             }
-
-            SetSize(auoSize.Width, auoSize.Height);
+            return autoSize;
         }
 
         void NRichFrame::SetBkgDraw(NDraw* bkgDraw)
@@ -149,6 +158,13 @@ namespace nui
         {
             if(text_ != NULL)
                 render->DrawText(text_, font_, rect);
+        }
+
+        void NRichFrame::SetSizeImpl(int width, int height, bool force)
+        {
+            if(!force && IsAutoSize())
+                return;
+            __super::SetSizeImpl(width, height);
         }
     }
 }
