@@ -282,7 +282,7 @@ namespace nui
             frameId_ = id;
         }
 
-        Base::NString NFrame::GetId() const
+        const Base::NString& NFrame::GetId() const
         {
             return frameId_;
         }

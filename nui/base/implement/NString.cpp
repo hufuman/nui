@@ -8,6 +8,8 @@ namespace nui
     namespace Base
     {
 
+        NString NString::EmptyString;;
+
         NString::NString()
         {
             argPos_ = 1;

@@ -35,7 +35,7 @@ namespace nui
             virtual bool GetItalic() const;
             virtual bool GetUnderline() const;
             virtual bool GetStrikeOut() const;
-            virtual Base::NString GetFontName() const;
+            virtual const Base::NString& GetFontName() const;
 
         public:
             HFONT   GetFont();

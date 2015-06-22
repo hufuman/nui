@@ -24,7 +24,7 @@ namespace nui
             virtual bool GetItalic() const= 0;
             virtual bool GetUnderline() const= 0;
             virtual bool GetStrikeOut() const= 0;
-            virtual Base::NString GetFontName() const= 0;
+            virtual const Base::NString& GetFontName() const= 0;
         };
     }
 }

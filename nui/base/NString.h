@@ -90,6 +90,8 @@ namespace nui
             NString arg(double d) const;
             NString arg(const NString& str) const;
 
+            static NString EmptyString;
+
         public:
             TCHAR& operator [] (int index);
             const TCHAR& operator [] (int index) const;

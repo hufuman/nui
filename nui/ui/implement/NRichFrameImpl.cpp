@@ -56,12 +56,13 @@ namespace nui
                     return;
                 text_->SetText(text);
             }
+            AutoSize();
             Invalidate();
         }
 
-        Base::NString NRichFrame::GetText() const
+        const Base::NString& NRichFrame::GetText() const
         {
-            return text_ == NULL ? _T("") : text_->GetText();
+            return text_ == NULL ? Base::NString::EmptyString : text_->GetText();
         }
 
         NText* NRichFrame::GetRichText() const

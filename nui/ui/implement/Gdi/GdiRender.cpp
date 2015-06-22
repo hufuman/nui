@@ -9,6 +9,8 @@
 #include "GdiText.h"
 #include "GdiFont.h"
 #include "GdiUtil.h"
+#include "TempDC.h"
+
 
 namespace nui
 {
@@ -76,6 +78,7 @@ namespace nui
 
         void GdiRender::DrawShape(NShapeDraw* shape, const Base::NRect& rect)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::DrawShape"));
             GdiShapeDraw* gdiShapeDraw = dynamic_cast<GdiShapeDraw*>(shape);
 
             BYTE penAlpha = gdiShapeDraw->GetBorderAlpha();
@@ -203,6 +206,8 @@ namespace nui
 
         void GdiRender::DrawText(NText* text, NFont* font, const Base::NRect& rect)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::DrawText"));
+
             GdiText* gdiText = dynamic_cast<GdiText*>(text);
             GdiFont* gdiFont = NULL;
             NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
@@ -263,8 +268,13 @@ namespace nui
 
         void GdiRender::GetTextSize(NText *text, NFont* font, nui::Base::NSize &size)
         {
+            NTempDC tmpDc;
+            HDC hDc = memDC_;
+            if(hDc == NULL)
+                hDc = tmpDc.Init();
+
             GdiText* gdiText = dynamic_cast<GdiText*>(text);
-            NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
+            NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::GetTextSize"));
             if(gdiText == NULL)
                 return;
 
@@ -275,7 +285,7 @@ namespace nui
                 gdiFont = dynamic_cast<GdiFont*>(font);
                 hFont = gdiFont->GetFont();
             }
-            Gdi::CGdiSelector selector(memDC_, hFont, false);
+            Gdi::CGdiSelector selector(hDc, hFont, false);
 
             DWORD flags = gdiText->GetDrawFlags();
             flags = (flags & (~DT_CENTER));
@@ -283,14 +293,25 @@ namespace nui
             flags = (flags & (~DT_END_ELLIPSIS));
             flags = (flags & (~DT_PATH_ELLIPSIS));
             flags = (flags & (~DT_WORD_ELLIPSIS));
-            Base::NRect rcTmp(0, 0, size.Width, size.Height);
-            ::DrawText(memDC_, text->GetText(), text->GetText().GetLength(), rcTmp, flags | DT_CALCRECT);
+            Base::NRect rcTmp;
+            if(size.Width == 0)
+            {
+                flags = (flags & (~DT_EDITCONTROL));
+                rcTmp.SetRect(0, 0, 1000, 1000);
+            }
+            else
+            {
+                rcTmp.SetRect(0, 0, size.Width, 1000);
+            }
+            ::DrawText(hDc, text->GetText(), text->GetText().GetLength(), rcTmp, flags | DT_CALCRECT);
             size.Width = rcTmp.Width();
             size.Height = rcTmp.Height();
         }
 
         void GdiRender::AddDrawRegion(const Base::NRect& rcRegion)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::AddDrawRegion"));
+
             HRGN hRgn = ::CreateRectRgn(rcRegion.Left, rcRegion.Top, rcRegion.Right, rcRegion.Bottom);
             ::ExtSelectClipRgn(memDC_, hRgn, RGN_OR);
             ::DeleteObject(hRgn);
@@ -298,6 +319,8 @@ namespace nui
 
         nui::Base::NHolder GdiRender::ClipRect(const nui::Base::NRect& rect)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::ClipRect"));
+
             if(rect.Right <= rect.Left
                 || rect.Bottom <= rect.Top)
             {
@@ -321,11 +344,15 @@ namespace nui
 
         MemDC& GdiRender::GetMemDC()
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::GetMemDC"));
+
             return memDC_;
         }
 
         void GdiRender::RestoreRgn(void* data)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::RestoreRgn"));
+
             if(data == NULL || memDC_ == NULL)
                 return;
 
@@ -337,6 +364,8 @@ namespace nui
 
         void GdiRender::FillRectImpl(HDC hDc, const Base::NRect& rect, ArgbColor fillColor)
         {
+            NAssertError(hDc != NULL, _T("hDc is null in GdiRender::FillRectImpl"));
+
             DWORD color = ::SetBkColor(hDc, fillColor & 0x00FFFFFF);
             ::ExtTextOut(hDc, 0, 0, ETO_OPAQUE, (const RECT*)rect, NULL, 0, NULL);
             ::SetBkColor(hDc, color);
@@ -344,6 +373,8 @@ namespace nui
 
         void GdiRender::DrawRectImpl(HDC hDc, const Base::NRect& rect, int width, ArgbColor borderColor)
         {
+            NAssertError(hDc != NULL, _T("hDc is null in GdiRender::DrawRectImpl"));
+
             Base::NRect rects[4];
 
             // left
@@ -365,6 +396,8 @@ namespace nui
 
         void GdiRender::DrawAndFillRectImpl(HDC hDc, const Base::NRect& rect, int borderWidth, ArgbColor borderColor, ArgbColor fillColor)
         {
+            NAssertError(hDc != NULL, _T("hDc is null in GdiRender::DrawAndFillRectImpl"));
+
             Base::NRect rcFill(rect);
             rcFill.Inflate(-borderWidth, -borderWidth);
             FillRectImpl(hDc, rcFill, fillColor);
@@ -373,6 +406,8 @@ namespace nui
 
         void GdiRender::StretchDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::StretchDrawImage"));
+
             if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
                 || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
             {
@@ -380,11 +415,11 @@ namespace nui
             }
 
             GdiImageDraw* gdiImageDraw = dynamic_cast<GdiImageDraw*>(image);
-            NAssertError(gdiImageDraw != NULL, _T("Not GdiImageDraw in GdiRender::DrawImage"));
+            NAssertError(gdiImageDraw != NULL, _T("Not GdiImageDraw in GdiRender::StretchDrawImage"));
             if(gdiImageDraw == NULL)
                 return;
             HBITMAP bitmap = gdiImageDraw->GetHBitmap(frameIndex);
-            NAssertError(bitmap != NULL, _T("GetHBitmap return NULL in GdiRender::DrawImage"));
+            NAssertError(bitmap != NULL, _T("GetHBitmap return NULL in GdiRender::StretchDrawImage"));
             if(bitmap == NULL)
                 return;
             ImageDC imageDc(memDC_, bitmap);
@@ -404,6 +439,8 @@ namespace nui
 
         void GdiRender::TileDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::TileDrawImage"));
+
             if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
                 || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
             {
@@ -451,6 +488,8 @@ namespace nui
 
         void GdiRender::NineStretchDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
         {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::NineStretchDrawImage"));
+
             if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
                 || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
             {

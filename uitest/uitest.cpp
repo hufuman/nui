@@ -17,6 +17,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
+    HRGN rgn1 = ::CreateRectRgn(100, 100, 105, 105);
+    HRGN rgn2 = ::CreateRectRgn(100, 100, 101, 101);
+    ::CombineRgn(rgn1, rgn2, rgn1, RGN_XOR);
+    Base::NRect rcBox;
+    ::GetRgnBox(rgn1, rcBox);
+
     nui::Base::NString resPath = GetResourcePath();
     nui::Base::NInstPtr<nui::Base::NCore> core(MemToolParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);

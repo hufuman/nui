@@ -60,6 +60,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				SubSystem="2"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"

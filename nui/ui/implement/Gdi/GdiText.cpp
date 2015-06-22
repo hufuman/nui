@@ -28,7 +28,7 @@ namespace nui
             return this;
         }
 
-        Base::NString GdiText::GetText() const
+        const Base::NString& GdiText::GetText() const
         {
             return text_;
         }

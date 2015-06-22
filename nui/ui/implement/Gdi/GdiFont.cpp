@@ -115,7 +115,7 @@ namespace nui
             return (fontFlags_ & StyleStrikeOut) == StyleStrikeOut;
         }
 
-        Base::NString GdiFont::GetFontName() const
+        const Base::NString& GdiFont::GetFontName() const
         {
             return fontName_;
         }

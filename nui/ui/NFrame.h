@@ -93,7 +93,7 @@ namespace nui
 
             // data
             virtual void SetId(const Base::NString& id);
-            virtual Base::NString GetId() const;
+            virtual const Base::NString& GetId() const;
             virtual NWindow* GetWindow();
 
             // pos / size

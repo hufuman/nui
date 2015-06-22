@@ -667,6 +667,10 @@
 						RelativePath=".\ui\implement\Gdi\StreamImpl.h"
 						>
 					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\TempDC.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

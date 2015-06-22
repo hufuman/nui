@@ -16,7 +16,7 @@ namespace nui
 
         public:
             virtual NText* SetText(LPCTSTR text);
-            virtual Base::NString GetText() const;
+            virtual const Base::NString& GetText() const;
             virtual NText* SetColor(ArgbColor color);
             virtual ArgbColor GetColor() const;
             virtual NText* SetBgColor(ArgbColor color);
