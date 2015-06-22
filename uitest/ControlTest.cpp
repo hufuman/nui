@@ -25,12 +25,14 @@ void CControlTest::Test()
     pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
     window->GetRootFrame()->SetBkgDraw(pBkgDraw);
 
-    /*
     // Button
     NInstPtr<NButton> pButton1(MemToolParam);
+    pButton1->SetLayout(NFrame::LayoutHCenter | NFrame::LayoutTop);
+    pButton1->SetMargin(10, 10, 20, 40);
     window->GetRootFrame()->AddChild(pButton1);
     pButton1->SetClickCallback(MakeDelegate(this, &CControlTest::OnButtonClicked));
 
+    /*
     // Static Image
     NInstPtr<NImage> pImg1(MemToolParam);
     pImg1->LoadImage(_T("@skin:images\\514540469.png"));
@@ -38,7 +40,7 @@ void CControlTest::Test()
     */
 
     // Gif Image
-    for(int i=0; i<50; ++ i)
+    for(int i=0; i<0; ++ i)
     {
         NInstPtr<NImage> pImg2(MemToolParam);
         pImg2->LoadImage(_T("@skin:images\\3.gif"));

@@ -16,6 +16,7 @@ namespace nui
             bottomMostCount_ = 0;
             frameFlags_ = FlagVisible | FlagValid | FlagEnabled;
             frameStatus_ = StatusNormal;
+            layout_ = LayoutNone;
         }
 
         NFrame::~NFrame()
@@ -310,23 +311,143 @@ namespace nui
 
         void NFrame::SetPos(int left, int top)
         {
-            if(frameRect_.Left == left && frameRect_.Top == top)
-                return;
-            Invalidate();
-            frameRect_.Left = left;
-            frameRect_.Top = top;
-            Invalidate();
+            SetPosImpl(left, top, false);
         }
 
         void NFrame::SetSize(int width, int height)
         {
-            SetSizeImpl(width, height);
+            SetSizeImpl(width, height, false);
         }
 
         void NFrame::SetMinSize(int minWidth, int minHeight)
         {
             minSize_.Width = minWidth;
             minSize_.Height = minHeight;
+        }
+
+        void NFrame::AutoSize()
+        {
+            if(!IsAutoSize() || layout_ != LayoutNone)
+                return;
+            Base::NSize autoSize = GetAutoSize();
+            SetSizeImpl(autoSize.Width, autoSize.Height, true);
+        }
+
+        void NFrame::SetAutoSize(bool autosize)
+        {
+            if(autosize == IsAutoSize())
+                return;
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, autosize);
+            if(autosize)
+                AutoSize();
+        }
+
+        Base::NSize NFrame::GetAutoSize() const
+        {
+            Base::NSize autoSize;
+            return autoSize;
+        }
+
+        bool NFrame::IsAutoSize() const
+        {
+            return Util::Misc::IsFlagChecked(frameFlags_, NRichFrame::FlagAutoSize);
+        }
+
+        void NFrame::SetMargin(int left, int top, int right, int bottom)
+        {
+            if(left == margin_.Left
+                && right == margin_.Right
+                && top == margin_.Top
+                && bottom == margin_.Bottom)
+            {
+                return;
+            }
+            margin_.SetRect(left, top, right, bottom);
+            ReLayout();
+        }
+
+        void NFrame::SetLayout(UINT layout)
+        {
+            if(layout_ == layout)
+                return;
+            layout_ = layout;
+            ReLayout();
+        }
+
+        void NFrame::ReLayout()
+        {
+            if(layout_ == LayoutNone)
+                return;
+
+            int width = 0;
+            int height = 0;
+
+            if(GetParent() != NULL)
+            {
+                Base::NRect rcParent = GetParent()->GetRect();
+                width = rcParent.Width();
+                height = rcParent.Height();
+            }
+            else if(window_ != NULL)
+            {
+                Base::NRect rcWnd;
+                window_->GetRect(rcWnd);
+                width = rcWnd.Width();
+                height = rcWnd.Height();
+            }
+            else
+            {
+                return;
+            }
+
+            Base::NSize size = GetAutoSize();
+
+            Base::NRect rcNew;
+
+            if(layout_ & LayoutLeft)
+            {
+                rcNew.Left = margin_.Left;
+                rcNew.Right = rcNew.Left + size.Width;
+            }
+            else if(layout_ & LayoutRight)
+            {
+                rcNew.Right = width - margin_.Right;
+                rcNew.Left = rcNew.Right - size.Width;
+            }
+            else if(layout_ & LayoutHCenter)
+            {
+                rcNew.Left = (width - margin_.Width() - size.Width) / 2;
+                rcNew.Right = rcNew.Left + size.Width;
+            }
+            else if(layout_ & LayoutHFill)
+            {
+                rcNew.Left = margin_.Left;
+                rcNew.Right = width - margin_.Right;
+            }
+
+            if(layout_ & LayoutTop)
+            {
+                rcNew.Top = margin_.Top;
+                rcNew.Bottom = rcNew.Top + size.Height;
+            }
+            else if(layout_ & LayoutBottom)
+            {
+                rcNew.Bottom = height - margin_.Bottom;
+                rcNew.Top = rcNew.Bottom - size.Height;
+            }
+            else if(layout_ & LayoutVCenter)
+            {
+                rcNew.Top = (height - margin_.Height() - size.Height) / 2;
+                rcNew.Bottom = rcNew.Top + size.Height;
+            }
+            else if(layout_ & LayoutVFill)
+            {
+                rcNew.Top = margin_.Top;
+                rcNew.Bottom = height - margin_.Bottom;
+            }
+
+            SetPosImpl(rcNew.Left, rcNew.Top, true);
+            SetSizeImpl(rcNew.Width(), rcNew.Height(), true);
         }
 
         void NFrame::Invalidate() const
@@ -365,6 +486,7 @@ namespace nui
                 OnWindowChanged(parentFrame_->window_);
             else
                 OnWindowChanged(NULL);
+            ReLayout();
         }
 
         void NFrame::OnWindowChanged(NWindow* window)
@@ -495,8 +617,23 @@ namespace nui
             ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
         }
 
-        void NFrame::SetSizeImpl(int width, int height)
+        void NFrame::SetPosImpl(int left, int top, bool force)
         {
+            if(layout_ != LayoutNone && !force)
+                return;
+            if(frameRect_.Left == left && frameRect_.Top == top)
+                return;
+            Invalidate();
+            frameRect_.Left = left;
+            frameRect_.Top = top;
+            Invalidate();
+        }
+
+        void NFrame::SetSizeImpl(int width, int height, bool force)
+        {
+            if(!force && (IsAutoSize() || layout_ != LayoutNone))
+                return;
+
             int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
             int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
             if(frameRect_.Width() == width && frameRect_.Height() == height)
@@ -505,6 +642,15 @@ namespace nui
             Invalidate();
             frameRect_.SetSize(frameWidth, frameHeight);
             Invalidate();
+
+            // Relayout all children
+            FrameList::const_iterator ite = childs_.begin();
+            while(ite != childs_.end())
+            {
+                NFrame* const& child = *ite;
+                child->ReLayout();
+                ++ ite;
+            }
         }
     }
 }

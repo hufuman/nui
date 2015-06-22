@@ -25,6 +25,7 @@ namespace nui
                 rootFrame_ = (NRichFrame*)rootFrame;
                 rootFrame_->SetId(_T("rootFrame"));
                 rootFrame_->window_ = this;
+                rootFrame->SetLayout(NFrame::LayoutHFill | NFrame::LayoutVFill);
                 Base::NRect rect;
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());

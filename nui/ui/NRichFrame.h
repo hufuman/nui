@@ -39,10 +39,7 @@ namespace nui
             virtual NDraw* GetForeDraw() const;
 
             // Pos & Size
-            virtual void SetAutoSize(bool autosize);
-            virtual void AutoSize();
             virtual Base::NSize GetAutoSize() const;
-            virtual bool IsAutoSize() const;
 
         protected:
             virtual void OnParentChanged();
@@ -51,8 +48,6 @@ namespace nui
             virtual void DrawBkg(NRender* render, const Base::NRect& rect) const;
             virtual void DrawFore(NRender* render, const Base::NRect& rect) const;
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
-
-            virtual void SetSizeImpl(int width, int height, bool force);
 
         private:
             Base::NAutoPtr<NDraw> bkgDraw_;

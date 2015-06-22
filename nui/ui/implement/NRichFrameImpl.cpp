@@ -21,20 +21,6 @@ namespace nui
             foreDraw_ = NULL;
         }
 
-        void NRichFrame::SetAutoSize(bool autosize)
-        {
-            if(autosize == IsAutoSize())
-                return;
-            Util::Misc::CheckFlag(frameFlags_, NRichFrame::FlagAutoSize, autosize);
-            if(autosize)
-                AutoSize();
-        }
-
-        bool NRichFrame::IsAutoSize() const
-        {
-            return Util::Misc::IsFlagChecked(frameFlags_, NRichFrame::FlagAutoSize);
-        }
-
         void NRichFrame::OnParentChanged()
         {
             __super::OnParentChanged();
@@ -68,14 +54,6 @@ namespace nui
         NText* NRichFrame::GetRichText() const
         {
             return text_;
-        }
-
-        void NRichFrame::AutoSize()
-        {
-            if(!IsAutoSize())
-                return;
-            Base::NSize autoSize = GetAutoSize();
-            SetSizeImpl(autoSize.Width, autoSize.Height, true);
         }
 
         Base::NSize NRichFrame::GetAutoSize() const
@@ -159,13 +137,6 @@ namespace nui
         {
             if(text_ != NULL)
                 render->DrawText(text_, font_, rect);
-        }
-
-        void NRichFrame::SetSizeImpl(int width, int height, bool force)
-        {
-            if(!force && IsAutoSize())
-                return;
-            __super::SetSizeImpl(width, height);
         }
     }
 }

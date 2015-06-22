@@ -57,6 +57,20 @@ namespace nui
                 StatusChecked = 0x0020,
             };
 
+            enum Layout
+            {
+                LayoutNone      = 0x0000,
+                LayoutLeft      = 0x0001,
+                LayoutTop       = 0x0002,
+                LayoutRight     = 0x0004,
+                LayoutBottom    = 0x0008,
+
+                LayoutHCenter   = 0x0010,
+                LayoutVCenter   = 0x0020,
+                LayoutHFill     = 0x0040,
+                LayoutVFill     = 0x0080,
+            };
+
             DECLARE_REFLECTION(TEXT("nui"), TEXT("frame"))
         public:
             NFrame();
@@ -103,6 +117,15 @@ namespace nui
             virtual void SetSize(int width, int height);
             virtual void SetMinSize(int minWidth, int minHeight);
 
+            virtual void SetAutoSize(bool autosize);
+            virtual void AutoSize();
+            virtual Base::NSize GetAutoSize() const;
+            virtual bool IsAutoSize() const;
+
+            virtual void SetMargin(int left, int top, int right, int bottom);
+            virtual void SetLayout(UINT layout);
+            virtual void ReLayout();
+
         protected:
             virtual void OnParentChanged();
             virtual void OnWindowChanged(NWindow* window);
@@ -120,7 +143,8 @@ namespace nui
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
             virtual void DrawChilds(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
 
-            virtual void SetSizeImpl(int width, int height);
+            virtual void SetPosImpl(int left, int top, bool force);
+            virtual void SetSizeImpl(int width, int height, bool force);
 
         private:
             static void SetParentHelper(NFrame* child, NFrame* newParent);
@@ -143,6 +167,8 @@ namespace nui
             Base::NString frameId_;
             Base::NRect frameRect_;
             Base::NSize minSize_;
+            Base::NRect margin_;
+            UINT layout_;
 
             ClickEventCallback clickCallback_;
         };
