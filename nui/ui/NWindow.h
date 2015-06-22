@@ -35,7 +35,7 @@ namespace nui
             virtual void OnSize(int width, int height);
             virtual void OnDraw(NRender* render, const Base::NRect& clipRect);
 
-            void Draw(HDC hDc);
+            virtual void Draw(HDC hDc);
             void SetHoverItem(NFrame* frame);
             void RefreshHoverItem(const Base::NPoint& point);
 

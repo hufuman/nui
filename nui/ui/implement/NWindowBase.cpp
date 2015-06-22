@@ -12,11 +12,15 @@ namespace nui
 {
     namespace Ui
     {
+        const Base::NRect g_StubRect(0, 0, 1, 1);
         NWindowBase::NWindowBase()
         {
             window_ = NULL;
             layered_ = false;
             mouseTracking_ = false;
+            invalidateRgn_ = NULL;
+            lastDrawTick_ = 0;
+            drawTimerId_ = 0;
         }
 
         NWindowBase::~NWindowBase()
@@ -195,25 +199,21 @@ namespace nui
 
         void NWindowBase::Invalidate()
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
-            if(window_ != NULL)
+            if(invalidateRgn_ != NULL)
             {
-                if(IsLayered())
-                    ::PostMessage(window_, WM_PAINT, 0, 0);
-                else
-                    ::InvalidateRect(window_, NULL, FALSE);
+                ::DeleteObject(invalidateRgn_);
+                invalidateRgn_ = NULL;
             }
         }
 
         void NWindowBase::InvalidateRect(const Base::NRect& rect)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
-            if(window_ != NULL)
+            // when invalidateRgn_ is null, the whole window need to be redrawn
+            if(invalidateRgn_ != NULL)
             {
-                if(IsLayered())
-                    ::PostMessage(window_, WM_PAINT, 0, 0);
-                else
-                    ::InvalidateRect(window_, rect, FALSE);
+                HRGN tempRgn = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
+                ::CombineRgn(invalidateRgn_, invalidateRgn_, tempRgn, RGN_OR);
+                ::DeleteObject(tempRgn);
             }
         }
 
@@ -281,6 +281,36 @@ namespace nui
             {
                 mouseTracking_ = false;
             }
+            else if(message == WM_TIMER && wParam == drawTimerId_)
+            {
+                if(invalidateRgn_ == NULL)
+                {
+                    Base::NRect rcClip;
+                    GetRect(rcClip);
+                    rcClip.Offset(-rcClip.Left, -rcClip.Top);
+                    HRGN tempRgn = ::CreateRectRgn(rcClip.Left, rcClip.Top, rcClip.Right, rcClip.Bottom);
+                    ::InvalidateRgn(window_, tempRgn, FALSE);
+                }
+                else
+                {
+                    ::InvalidateRgn(window_, invalidateRgn_, FALSE);
+                    ::DeleteObject(invalidateRgn_);
+                    invalidateRgn_ = NULL;
+                }
+                ::PostMessage(window_, WM_PAINT, 0, 0);
+            }
+            else if(message == WM_PAINT)
+            {
+                PAINTSTRUCT ps = {0};
+                HDC hDc = ::BeginPaint(window_, &ps);
+                Draw(hDc);
+                ::EndPaint(window_, &ps);
+            }
+            else if(message == WM_PRINT)
+            {
+                HDC hDc = (HDC)wParam;
+                Draw(hDc);
+            }
 
             if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
                 return true;
@@ -292,7 +322,11 @@ namespace nui
         void NWindowBase::OnCreate()
         {
             layered_ = ((::GetWindowLongPtr(window_, GWL_EXSTYLE) & WS_EX_LAYERED) == WS_EX_LAYERED);
-            Invalidate();
+        }
+
+        void NWindowBase::Draw(HDC hDc)
+        {
+            UNREFERENCED_PARAMETER(hDc);
         }
 
         bool NWindowBase::IsLayered() const

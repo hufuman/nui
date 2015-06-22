@@ -16,6 +16,11 @@ namespace nui
         class NUI_INTF NRender : public nui::Base::NBaseObj
         {
         public:
+            virtual ~NRender()
+            {
+                shapeDraw_ = NULL;
+            }
+
             virtual bool Init(HDC hDc, const Base::NRect& rcPaint) = 0;
             virtual void DrawBack(bool layered) = 0;
 
@@ -29,56 +34,49 @@ namespace nui
 
             __inline void DrawLine(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShapeDraw> shape = loader->CreateShape(MemToolParam);
+                NShapeDraw* shape = GetShape();
                 shape->SetStyle(NShapeDraw::Line)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder);
                 DrawShape(shape, rect);
             }
 
             __inline void DrawRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShapeDraw> shape = loader->CreateShape(MemToolParam);
+                NShapeDraw* shape = GetShape();
                 shape->SetStyle(NShapeDraw::RoundRect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder);
                 DrawShape(shape, rect);
             }
 
             __inline void DrawRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
             {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShapeDraw> shape = loader->CreateShape(MemToolParam);
+                NShapeDraw* shape = GetShape();
                 shape->SetStyle(NShapeDraw::RoundRect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder)->SetFillColor(clrFill);
                 DrawShape(shape, rect);
             }
 
             __inline void FillRoundRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrFill)
             {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShapeDraw> shape = loader->CreateShape(MemToolParam);
+                NShapeDraw* shape = GetShape();
                 shape->SetStyle(NShapeDraw::RoundRect)->SetFillColor(clrFill)->SetBorderWidth(borderWidth);
                 DrawShape(shape, rect);
             }
 
             __inline void DrawRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShapeDraw> shape = loader->CreateShape(MemToolParam);
+                NShapeDraw* shape = GetShape();
                 shape->SetStyle(NShapeDraw::Rect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder);
                 DrawShape(shape, rect);
             }
 
             __inline void FillRectangle(const Base::NRect& rect, ArgbColor clrFill)
             {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShapeDraw> shape = loader->CreateShape(MemToolParam);
+                NShapeDraw* shape = GetShape();
                 shape->SetStyle(NShapeDraw::Rect)->SetFillColor(clrFill);
                 DrawShape(shape, rect);
             }
 
             __inline void DrawRectangle(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder, ArgbColor clrFill)
             {
-                Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-                Base::NAutoPtr<NShapeDraw> shape = loader->CreateShape(MemToolParam);
+                NShapeDraw* shape = GetShape();
                 shape->SetStyle(NShapeDraw::Rect)->SetBorderWidth(borderWidth)->SetBorderColor(clrBorder)->SetFillColor(clrFill);
                 DrawShape(shape, rect);
             }
@@ -113,6 +111,20 @@ namespace nui
 
                 DrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, 255);
             }
+
+            __inline NShapeDraw* GetShape()
+            {
+                if(shapeDraw_ == NULL)
+                {
+                    Ui::NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+                    shapeDraw_ = loader->CreateShape(MemToolParam);
+                }
+                return shapeDraw_;
+            }
+
+            BEGIN_USE_UNEXPORT_TEMPLATE()
+            Base::NAutoPtr<NShapeDraw> shapeDraw_;
+            END_USE_UNEXPORT_TEMPLATE()
         };
 
         NUI_API Base::NAutoPtr<NRender> GetGlobalRender();

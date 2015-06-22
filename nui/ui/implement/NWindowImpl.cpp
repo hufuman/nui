@@ -28,6 +28,7 @@ namespace nui
                 Base::NRect rect;
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());
+                drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
             }
             return rootFrame_;
         }
@@ -110,20 +111,6 @@ namespace nui
                     lResult = 0;
                     return true;
                 }
-            case WM_PAINT:
-                {
-                    PAINTSTRUCT ps = {0};
-                    HDC hDc = ::BeginPaint(window_, &ps);
-                    Draw(hDc);
-                    ::EndPaint(window_, &ps);
-                }
-                break;
-            case WM_PRINT:
-                {
-                    HDC hDc = (HDC)wParam;
-                    Draw(hDc);
-                }
-                break;
             case WM_SIZE:
                 if(wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED)
                 {

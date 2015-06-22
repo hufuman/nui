@@ -55,6 +55,7 @@ namespace nui
             static LRESULT WINAPI _staticWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
             virtual void OnCreate();
+            virtual void Draw(HDC hDc);
 
             bool IsLayered() const;
             void GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const;
@@ -64,6 +65,10 @@ namespace nui
             bool    layered_;
             bool    mouseTracking_;
             MsgFilterCallback msgFilterCallback_;
+
+            HRGN    invalidateRgn_;
+            DWORD   lastDrawTick_;
+            DWORD   drawTimerId_;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

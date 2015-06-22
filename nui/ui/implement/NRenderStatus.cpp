@@ -24,16 +24,14 @@ namespace nui
         void NRenderStatus::DrawStatus(NRender* render, const Base::NRect& rcClient)
         {
             DWORD currentTime = ::GetTickCount();
-            Base::NString status;
 
-            if(currentTime == lastTime_)
-            {
-                status = _T("FPS: max");
-            }
+            Base::NString status;
+            if(currentTime <= lastTime_)
+                status.Format(_T("FPS: MAX"));
             else
-            {
                 status.Format(_T("FPS: %.2f"), (double)1000 / (currentTime - lastTime_));
-            }
+
+            lastTime_ = currentTime;
             text_->SetText(status.GetData());
             Base::NSize size;
             render->GetTextSize(text_, NULL, size);
