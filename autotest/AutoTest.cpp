@@ -50,6 +50,8 @@ int _tmain(int argc, _TCHAR* argv[])
     core->DestroyCore();
 
     Gdiplus::GdiplusShutdown(token);
+
+    getchar();
     return result;
 }
 

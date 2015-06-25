@@ -491,33 +491,21 @@
 					</Filter>
 				</Filter>
 				<Filter
-					Name="util"
+					Name="parser"
 					>
 					<File
-						RelativePath="..\nui\util\NDiagnose.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NFileUtil.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NMisc.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NShellUtil.h"
+						RelativePath="..\nui\parser\NParser.h"
 						>
 					</File>
 					<Filter
 						Name="implement"
 						>
 						<File
-							RelativePath="..\nui\util\implement\NFileUtil.cpp"
+							RelativePath="..\nui\parser\implement\NParserImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\util\implement\NShellUtil.cpp"
+							RelativePath="..\nui\parser\implement\NParserImpl.h"
 							>
 						</File>
 					</Filter>
@@ -527,6 +515,10 @@
 					>
 					<File
 						RelativePath="..\nui\ui\NMsgLoop.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\ui\NRenderStatus.h"
 						>
 					</File>
 					<File
@@ -561,7 +553,15 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NImageImpl.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NMsgLoop.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NRenderStatus.cpp"
 							>
 						</File>
 						<File
@@ -707,6 +707,10 @@
 								RelativePath="..\nui\ui\implement\Gdi\StreamImpl.h"
 								>
 							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\TempDC.h"
+								>
+							</File>
 						</Filter>
 					</Filter>
 					<Filter
@@ -757,6 +761,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\NImage.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\NRichFrame.h"
 							>
 						</File>
@@ -766,6 +774,38 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\NWindowBase.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="util"
+					>
+					<File
+						RelativePath="..\nui\util\NDiagnose.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NFileUtil.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NMisc.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NShellUtil.h"
+						>
+					</File>
+					<Filter
+						Name="implement"
+						>
+						<File
+							RelativePath="..\nui\util\implement\NFileUtil.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\util\implement\NShellUtil.cpp"
 							>
 						</File>
 					</Filter>

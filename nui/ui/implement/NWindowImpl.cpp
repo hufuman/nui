@@ -29,7 +29,6 @@ namespace nui
                 Base::NRect rect;
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());
-                drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
             }
             return rootFrame_;
         }

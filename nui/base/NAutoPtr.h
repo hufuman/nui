@@ -28,6 +28,7 @@ namespace nui
 
             NAutoPtr(int nullPtr)
             {
+                UNREFERENCED_PARAMETER(nullPtr);
                 NAssertError(nullPtr == 0, _T("only null acceptable"));
                 ptr_ = NULL;
             }

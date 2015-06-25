@@ -199,6 +199,8 @@ namespace nui
 
         void NWindowBase::Invalidate()
         {
+            if(drawTimerId_ == 0)
+                drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
             if(invalidateRgn_ != NULL)
             {
                 ::DeleteObject(invalidateRgn_);
@@ -208,6 +210,8 @@ namespace nui
 
         void NWindowBase::InvalidateRect(const Base::NRect& rect)
         {
+            if(drawTimerId_ == 0)
+                drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
             // when invalidateRgn_ is null, the whole window need to be redrawn
             if(invalidateRgn_ != NULL)
             {
@@ -311,6 +315,14 @@ namespace nui
                 HDC hDc = (HDC)wParam;
                 Draw(hDc);
             }
+            else if(message == WM_DESTROY)
+            {
+                if(drawTimerId_ != 0)
+                {
+                    ::KillTimer(window_, drawTimerId_);
+                    drawTimerId_ = 0;
+                }
+            }
 
             if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
                 return true;
@@ -322,6 +334,7 @@ namespace nui
         void NWindowBase::OnCreate()
         {
             layered_ = ((::GetWindowLongPtr(window_, GWL_EXSTYLE) & WS_EX_LAYERED) == WS_EX_LAYERED);
+            Invalidate();
         }
 
         void NWindowBase::Draw(HDC hDc)
