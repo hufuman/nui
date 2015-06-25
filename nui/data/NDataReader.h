@@ -42,14 +42,14 @@ namespace nui
             virtual bool ReadValue(LPCTSTR name, nui::Base::NSize& value);
             virtual bool ReadValue(LPCTSTR name, nui::Base::NRect& value);
 
-            virtual bool ReadValue(int index, nui::Base::NString& value) = 0;
-            virtual bool ReadValue(int index, INT32& value);
-            virtual bool ReadValue(int index, DWORD& value);
-            virtual bool ReadValue(int index, INT64& value);
-            virtual bool ReadValue(int index, bool& value);
-            virtual bool ReadValue(int index, nui::Base::NPoint& value);
-            virtual bool ReadValue(int index, nui::Base::NSize& value);
-            virtual bool ReadValue(int index, nui::Base::NRect& value);
+            virtual bool ReadValue(int index, nui::Base::NString& name, nui::Base::NString& value) = 0;
+            virtual bool ReadValue(int index, nui::Base::NString& name, INT32& value);
+            virtual bool ReadValue(int index, nui::Base::NString& name, DWORD& value);
+            virtual bool ReadValue(int index, nui::Base::NString& name, INT64& value);
+            virtual bool ReadValue(int index, nui::Base::NString& name, bool& value);
+            virtual bool ReadValue(int index, nui::Base::NString& name, nui::Base::NPoint& value);
+            virtual bool ReadValue(int index, nui::Base::NString& name, nui::Base::NSize& value);
+            virtual bool ReadValue(int index, nui::Base::NString& name, nui::Base::NRect& value);
         };
 
         NUI_API NDataReader* CreateDataReader(DataReaderType type);

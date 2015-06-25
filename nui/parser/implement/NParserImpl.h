@@ -11,5 +11,6 @@ public:
 
 private:
     bool GetStyleParam(LPCTSTR packFilePath, nui::Base::NString& filePath, nui::Base::NString& styleName);
-    nui::Base::NBaseObj* LoadObj(nui::Base::NAutoPtr<nui::Data::NDataReader> dataReader, LPCTSTR styleName);
+    nui::Base::NAutoPtr<nui::Base::NBaseObj> LoadObj(nui::Base::NAutoPtr<nui::Data::NDataReader> dataReader, LPCTSTR styleName);
+    bool FillObjectAttr(nui::Base::NAutoPtr<nui::Base::NBaseObj> baseObj, nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode);
 };

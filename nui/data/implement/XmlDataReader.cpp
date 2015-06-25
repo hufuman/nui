@@ -41,7 +41,7 @@ bool XmlDataReader::ReadValue(LPCTSTR valueName, NString& value)
     return ElementToString(root_, valueName, value);
 }
 
-bool XmlDataReader::ReadValue(int index, nui::Base::NString& value)
+bool XmlDataReader::ReadValue(int index, nui::Base::NString& name, nui::Base::NString& value)
 {
     if(!IsValid())
         return false;
@@ -54,10 +54,13 @@ bool XmlDataReader::ReadValue(int index, nui::Base::NString& value)
     if(attr == NULL)
         return false;
 
-    const char* data = attr->Value();
-    if(data == NULL)
+    const char* attrName = attr->Name();
+    const char* attrValue = attr->Value();
+    if(attrValue == NULL || attrName == NULL)
         return false;
-    value = utf82t(data).c_str();
+
+    name = utf82t(attrName).c_str();
+    value = utf82t(attrValue).c_str();
     return true;
 }
 

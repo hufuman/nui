@@ -53,11 +53,8 @@ bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString
     return true;
 }
 
-NBaseObj* NParserImpl::LoadObj(Base::NAutoPtr<Data::NDataReader> dataReader, LPCTSTR styleName)
+nui::Base::NAutoPtr<nui::Base::NBaseObj> NParserImpl::LoadObj(Base::NAutoPtr<Data::NDataReader> dataReader, LPCTSTR styleName)
 {
-    UNREFERENCED_PARAMETER(styleName);
-    UNREFERENCED_PARAMETER(dataReader);
-
     NAutoPtr<NDataReader> styleNode;
     for(int i=0;; ++i)
     {
@@ -74,9 +71,28 @@ NBaseObj* NParserImpl::LoadObj(Base::NAutoPtr<Data::NDataReader> dataReader, LPC
     NString objName = styleNode->GetNodeName();
     objName.MakeLower();
 
-    NBaseObj* obj = NReflect::GetInstance().Create(objName, MemToolParam);
+    nui::Base::NAutoPtr<nui::Base::NBaseObj> obj = NReflect::GetInstance().Create(objName, MemToolParam);
     if(obj == NULL)
         return NULL;
 
+    obj->Release();
+    if(!FillObjectAttr(obj,styleNode))
+        obj = NULL;
+
     return obj;
+}
+
+bool NParserImpl::FillObjectAttr(nui::Base::NAutoPtr<nui::Base::NBaseObj> baseObj, nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode)
+{
+    UNREFERENCED_PARAMETER(baseObj);
+
+    NString attrName;
+    NString attrValue;
+    for(int i=0; ; ++ i)
+    {
+        if(!styleNode->ReadValue(i, attrName, attrValue))
+            break;
+        baseObj->SetAttr(attrName.GetData(), attrValue.GetData());
+    }
+    return true;
 }

@@ -15,7 +15,7 @@ public:
     virtual bool ParseUtf8(const char* data, size_t length);
 
     virtual bool ReadValue(LPCTSTR valueName, nui::Base::NString& value);
-    virtual bool ReadValue(int index, nui::Base::NString& value);
+    virtual bool ReadValue(int index, nui::Base::NString& name, nui::Base::NString& value);
 
     virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value);
     virtual bool ReadNode(LPCTSTR nodeName, NDataReader*& value);

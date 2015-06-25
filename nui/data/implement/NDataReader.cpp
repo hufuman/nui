@@ -112,37 +112,37 @@ namespace nui
             return true;
         }
 
-        bool NDataReader::ReadValue(int index, INT32& value)
+        bool NDataReader::ReadValue(int index, nui::Base::NString& name, INT32& value)
         {
             nui::Base::NString data;
-            if(!ReadValue(index, data))
+            if(!ReadValue(index, name, data))
                 return false;
             value = _ttoi(data.GetData());
             return true;
         }
 
-        bool NDataReader::ReadValue(int index, DWORD& value)
+        bool NDataReader::ReadValue(int index, nui::Base::NString& name, DWORD& value)
         {
             nui::Base::NString data;
-            if(!ReadValue(index, data))
+            if(!ReadValue(index, name, data))
                 return false;
             _stscanf(data.GetData(), TEXT("%u"), &value);
             return true;
         }
 
-        bool NDataReader::ReadValue(int index, INT64& value)
+        bool NDataReader::ReadValue(int index, nui::Base::NString& name, INT64& value)
         {
             nui::Base::NString data;
-            if(!ReadValue(index, data))
+            if(!ReadValue(index, name, data))
                 return false;
             value = _tstoi64(data.GetData());
             return true;
         }
 
-        bool NDataReader::ReadValue(int index, bool& value)
+        bool NDataReader::ReadValue(int index, nui::Base::NString& name, bool& value)
         {
             nui::Base::NString data;
-            if(!ReadValue(index, data))
+            if(!ReadValue(index, name, data))
                 return false;
             data.MakeLower();
 
@@ -155,10 +155,10 @@ namespace nui
             return true;
         }
 
-        bool NDataReader::ReadValue(int index, nui::Base::NPoint& value)
+        bool NDataReader::ReadValue(int index, nui::Base::NString& name, nui::Base::NPoint& value)
         {
             nui::Base::NString data;
-            if(!ReadValue(index, data))
+            if(!ReadValue(index, name, data))
                 return false;
             size_t pos = data.IndexOf(TEXT(","));
             if(pos == -1)
@@ -170,10 +170,10 @@ namespace nui
             return true;
         }
 
-        bool NDataReader::ReadValue(int index, nui::Base::NSize& value)
+        bool NDataReader::ReadValue(int index, nui::Base::NString& name, nui::Base::NSize& value)
         {
             nui::Base::NString data;
-            if(!ReadValue(index, data))
+            if(!ReadValue(index, name, data))
                 return false;
 
             size_t pos = data.IndexOf(TEXT(","));
@@ -187,10 +187,10 @@ namespace nui
             return true;
         }
 
-        bool NDataReader::ReadValue(int index, nui::Base::NRect& value)
+        bool NDataReader::ReadValue(int index, nui::Base::NString& name, nui::Base::NRect& value)
         {
             nui::Base::NString data;
-            if(!ReadValue(index, data))
+            if(!ReadValue(index, name, data))
                 return false;
 
             int pos = 0;

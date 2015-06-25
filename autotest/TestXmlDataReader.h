@@ -176,42 +176,52 @@ TEST_F(TestXmlDataReader, MultipleAllTypesByIndex)
     using namespace TestXmlDataReaderData;
     ASSERT_TRUE(reader_->ParseUtf8(g_AllTypes));
 
+    NString name;
     int int32Data;
     DWORD dwordData;
     INT32 int32Data2;
 
-    EXPECT_TRUE(reader_->ReadValue(0, int32Data));
+    EXPECT_TRUE(reader_->ReadValue(0, name, int32Data));
+    EXPECT_TRUE(name == _T("int32"));
     EXPECT_EQ(int32Data, 1235);
-    EXPECT_TRUE(reader_->ReadValue(0, dwordData));
+    EXPECT_TRUE(reader_->ReadValue(0, name, dwordData));
+    EXPECT_TRUE(name == _T("int32"));
     EXPECT_EQ(dwordData, 1235);
-    EXPECT_TRUE(reader_->ReadValue(0, int32Data2));
+    EXPECT_TRUE(reader_->ReadValue(0, name, int32Data2));
+    EXPECT_TRUE(name == _T("int32"));
     EXPECT_EQ(int32Data2, 1235);
 
     INT64 int64Data;
-    EXPECT_TRUE(reader_->ReadValue(1, int64Data));
+    EXPECT_TRUE(reader_->ReadValue(1, name, int64Data));
+    EXPECT_TRUE(name == _T("int64"));
     EXPECT_EQ(int64Data, 595882823415132);
 
     bool bool1Data;
-    EXPECT_TRUE(reader_->ReadValue(2, bool1Data));
+    EXPECT_TRUE(reader_->ReadValue(2, name, bool1Data));
+    EXPECT_TRUE(name == _T("bool1"));
     EXPECT_EQ(bool1Data, true);
 
     bool bool2Data;
-    EXPECT_TRUE(reader_->ReadValue(3, bool2Data));
+    EXPECT_TRUE(reader_->ReadValue(3, name, bool2Data));
+    EXPECT_TRUE(name == _T("bool2"));
     EXPECT_EQ(bool2Data, false);
 
     NPoint pt;
-    EXPECT_TRUE(reader_->ReadValue(4, pt));
+    EXPECT_TRUE(reader_->ReadValue(4, name, pt));
+    EXPECT_TRUE(name == _T("tpoint"));
     EXPECT_TRUE(pt.X == 234 && pt.Y == 8897);
 
     NSize size;
-    EXPECT_TRUE(reader_->ReadValue(5, size));
+    EXPECT_TRUE(reader_->ReadValue(5, name, size));
+    EXPECT_TRUE(name == _T("tsize"));
     EXPECT_TRUE(size.Width == 378 && size.Height == 234);
 
     NRect rect;
-    EXPECT_TRUE(reader_->ReadValue(6, rect));
+    EXPECT_TRUE(reader_->ReadValue(6, name, rect));
+    EXPECT_TRUE(name == _T("trect"));
     EXPECT_TRUE(rect.Left == 356 && rect.Top == 325
         && rect.Right == 23 && rect.Bottom == 123);
 
-    EXPECT_FALSE(reader_->ReadValue(7, int32Data));
+    EXPECT_FALSE(reader_->ReadValue(7, name, int32Data));
 }
 
