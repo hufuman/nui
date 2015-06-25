@@ -77,6 +77,8 @@ TEST_F(TestXmlDataReader, ReadPath)
     NAutoPtr<NDataReader> data;
     ASSERT_TRUE(reader_->ReadNode(TEXT("node"), data));
 
+    ASSERT_EQ(data->GetNodeName(), _T("node"));
+
     EXPECT_TRUE(data->ReadValue(TEXT("id"), value));
     EXPECT_STREQ(value, TEXT("id10"));
 
@@ -113,6 +115,8 @@ TEST_F(TestXmlDataReader, MultipleReadNode)
     {
         NAutoPtr<NDataReader> node;
         ASSERT_TRUE(reader_->ReadNode(i, TEXT("node"), node));
+
+        ASSERT_EQ(node->GetNodeName(), _T("node"));
 
         tmp1.Format(TEXT("id%d"), 2 + i);
         EXPECT_TRUE(node->ReadValue(TEXT("id"), value));
@@ -165,3 +169,49 @@ TEST_F(TestXmlDataReader, MultipleAllTypes)
     EXPECT_TRUE(rect.Left == 356 && rect.Top == 325
         && rect.Right == 23 && rect.Bottom == 123);
 }
+
+TEST_F(TestXmlDataReader, MultipleAllTypesByIndex)
+{
+    // const char g_AllTypes[] = "<node int32=\"1235\" int64=\"595882823415132\" bool1=\"true\" bool2=\"false\" tpoint=\"234,8897\" tsize=\"378,234\" trect=\"356,325,23,123\"/>";
+    using namespace TestXmlDataReaderData;
+    ASSERT_TRUE(reader_->ParseUtf8(g_AllTypes));
+
+    int int32Data;
+    DWORD dwordData;
+    INT32 int32Data2;
+
+    EXPECT_TRUE(reader_->ReadValue(0, int32Data));
+    EXPECT_EQ(int32Data, 1235);
+    EXPECT_TRUE(reader_->ReadValue(0, dwordData));
+    EXPECT_EQ(dwordData, 1235);
+    EXPECT_TRUE(reader_->ReadValue(0, int32Data2));
+    EXPECT_EQ(int32Data2, 1235);
+
+    INT64 int64Data;
+    EXPECT_TRUE(reader_->ReadValue(1, int64Data));
+    EXPECT_EQ(int64Data, 595882823415132);
+
+    bool bool1Data;
+    EXPECT_TRUE(reader_->ReadValue(2, bool1Data));
+    EXPECT_EQ(bool1Data, true);
+
+    bool bool2Data;
+    EXPECT_TRUE(reader_->ReadValue(3, bool2Data));
+    EXPECT_EQ(bool2Data, false);
+
+    NPoint pt;
+    EXPECT_TRUE(reader_->ReadValue(4, pt));
+    EXPECT_TRUE(pt.X == 234 && pt.Y == 8897);
+
+    NSize size;
+    EXPECT_TRUE(reader_->ReadValue(5, size));
+    EXPECT_TRUE(size.Width == 378 && size.Height == 234);
+
+    NRect rect;
+    EXPECT_TRUE(reader_->ReadValue(6, rect));
+    EXPECT_TRUE(rect.Left == 356 && rect.Top == 325
+        && rect.Right == 23 && rect.Bottom == 123);
+
+    EXPECT_FALSE(reader_->ReadValue(7, int32Data));
+}
+

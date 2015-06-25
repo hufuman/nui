@@ -313,6 +313,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="parser"
+			>
+			<File
+				RelativePath=".\TestParser.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

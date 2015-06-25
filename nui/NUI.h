@@ -85,6 +85,8 @@ using namespace fastdelegate;
 #include "./ui/NShapeDraw.h"
 #include "./ui/NText.h"
 
+#include "./parser/NParser.h"
+
 #pragma warning(pop)
 
 
@@ -94,5 +96,6 @@ using namespace Base;
 using namespace Data;
 using namespace Util;
 using namespace Ui;
+using namespace Parser;
 #endif  // _NOT_USE_NUI_NAMESPACE
 

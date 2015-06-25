@@ -738,6 +738,26 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="parser"
+			>
+			<File
+				RelativePath=".\parser\NParser.h"
+				>
+			</File>
+			<Filter
+				Name="implement"
+				>
+				<File
+					RelativePath=".\parser\implement\NParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\NParserImpl.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

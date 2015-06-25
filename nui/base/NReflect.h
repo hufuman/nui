@@ -119,6 +119,24 @@ namespace nui
                 return false;
             }
 
+            NBaseObj* Create(LPCTSTR szFullName, LPCSTR filePath, int line)
+            {
+                tstring namespaceName;
+                tstring className;
+                LPCTSTR pos = _tcsstr(szFullName, _T("::"));
+                if(pos == NULL)
+                {
+                    namespaceName = _T("nui");
+                    className = szFullName;
+                }
+                else
+                {
+                    namespaceName.assign(szFullName, pos - szFullName);
+                    className = pos + 2;
+                }
+                return Create(namespaceName.c_str(), className.c_str(), filePath, line);
+            }
+
             NBaseObj* Create(LPCTSTR szNamespace, LPCTSTR szClassName, LPCSTR filePath, int line);
 
             void ReleaseData(NCore* core);

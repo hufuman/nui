@@ -3,6 +3,7 @@
     <xnc>
         <root name="skin" path="@root:skin" />
         <root name="data" path="@root:data" />
+        <root name="style" path="@root:style" />
     </xnc>
     <string>
         <bundle lang="2052" path="@root:StringBundle\2052" />

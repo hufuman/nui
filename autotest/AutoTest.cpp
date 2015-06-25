@@ -12,6 +12,9 @@
 #include "TestReflect.h"
 #include "TestCore.h"
 
+// Parser
+#include "TestParser.h"
+
 // Data
 #include "TestString.h"
 #include "TestXmlDataReader.h"

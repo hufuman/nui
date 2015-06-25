@@ -41,6 +41,26 @@ bool XmlDataReader::ReadValue(LPCTSTR valueName, NString& value)
     return ElementToString(root_, valueName, value);
 }
 
+bool XmlDataReader::ReadValue(int index, nui::Base::NString& value)
+{
+    if(!IsValid())
+        return false;
+
+    TiXmlAttribute* attr = root_->FirstAttribute();
+    for(int i=0; attr != NULL && i<index; ++ i)
+    {
+        attr = attr->Next();
+    }
+    if(attr == NULL)
+        return false;
+
+    const char* data = attr->Value();
+    if(data == NULL)
+        return false;
+    value = utf82t(data).c_str();
+    return true;
+}
+
 bool XmlDataReader::ReadPath(LPCTSTR path, LPCTSTR valueName, NString& value)
 {
     return ReadPath(0, path, valueName, value);
@@ -93,6 +113,14 @@ bool XmlDataReader::ReadNodeByPath(LPCTSTR path, NDataReader*& value)
     return true;
 }
 
+nui::Base::NString XmlDataReader::GetNodeName() const
+{
+    const char* name = root_->Value();
+    if(name == NULL)
+        return _T("");
+    return utf82t(name).c_str();
+}
+
 bool XmlDataReader::ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, NString& value)
 {
     NString token;
@@ -126,6 +154,28 @@ bool XmlDataReader::ReadNode(size_t index, LPCTSTR nodeName, NDataReader*& value
     for(size_t i=0; element !=NULL && i<index; ++ i)
     {
         element = element->NextSiblingElement(strNodeName.c_str());
+    }
+    if(element == NULL)
+        return false;
+
+    XmlDataReader* reader = NNew(XmlDataReader);
+    reader->AddRef();
+    reader->parent_ = this;
+    reader->root_ = element;
+    this->AddRef();
+
+    if(value != NULL)
+        NSafeRelease(value);
+    value = dynamic_cast<NDataReader*>(reader);
+    return true;
+}
+
+bool XmlDataReader::ReadNode(size_t index, NDataReader*& value)
+{
+    TiXmlElement* element = root_->FirstChildElement();
+    for(size_t i=0; element !=NULL && i<index; ++ i)
+    {
+        element = element->NextSiblingElement();
     }
     if(element == NULL)
         return false;
