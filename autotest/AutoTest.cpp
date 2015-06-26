@@ -51,6 +51,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
     Gdiplus::GdiplusShutdown(token);
 
+    printf("All Tests Finished.");
     getchar();
     return result;
 }

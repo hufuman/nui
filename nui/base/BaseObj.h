@@ -36,13 +36,6 @@ namespace nui
                 return refCount_;
             }
 
-            virtual bool SetAttr(LPCTSTR attrName, LPCTSTR attrValue)
-            {
-                UNREFERENCED_PARAMETER(attrName);
-                UNREFERENCED_PARAMETER(attrValue);
-                return false;
-            }
-
         private:
             INT refCount_;
         };

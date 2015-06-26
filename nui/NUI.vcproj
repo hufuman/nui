@@ -749,11 +749,39 @@
 				Name="implement"
 				>
 				<File
+					RelativePath=".\parser\implement\BaseParser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\ButtonParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\ButtonParserImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\FrameParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\FrameParserImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\parser\implement\NParserImpl.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\parser\implement\NParserImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\ParserUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\ParserUtil.h"
 					>
 				</File>
 			</Filter>

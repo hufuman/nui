@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "NParserImpl.h"
 
+#include "ParserUtil.h"
+
 using namespace nui;
 using namespace Base;
 using namespace Data;
@@ -26,7 +28,9 @@ NAutoPtr<NBaseObj> NParserImpl::Parse(LPCTSTR packFilePath)
     if(!reader->ParseUtf8(static_cast<const char*>(buffer->GetBuffer()), buffer->GetSize()))
         return NULL;
 
-    return LoadObj(reader, styleName);
+    NAutoPtr<NDataReader> styleNode = FindStyleNode(reader, styleName);
+
+    return ParserUtil::LoadObj(styleNode);
 }
 
 bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString& styleName)
@@ -49,11 +53,10 @@ bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString
         filePath.Assign(packFilePath, separator - packFilePath);
     }
 
-
     return true;
 }
 
-nui::Base::NAutoPtr<nui::Base::NBaseObj> NParserImpl::LoadObj(Base::NAutoPtr<Data::NDataReader> dataReader, LPCTSTR styleName)
+NAutoPtr<NDataReader> NParserImpl::FindStyleNode(Base::NAutoPtr<Data::NDataReader> dataReader, LPCTSTR styleName)
 {
     NAutoPtr<NDataReader> styleNode;
     for(int i=0;; ++i)
@@ -65,34 +68,5 @@ nui::Base::NAutoPtr<nui::Base::NBaseObj> NParserImpl::LoadObj(Base::NAutoPtr<Dat
             break;
         styleNode = NULL;
     }
-    if(styleNode == NULL)
-        return NULL;
-
-    NString objName = styleNode->GetNodeName();
-    objName.MakeLower();
-
-    nui::Base::NAutoPtr<nui::Base::NBaseObj> obj = NReflect::GetInstance().Create(objName, MemToolParam);
-    if(obj == NULL)
-        return NULL;
-
-    obj->Release();
-    if(!FillObjectAttr(obj,styleNode))
-        obj = NULL;
-
-    return obj;
-}
-
-bool NParserImpl::FillObjectAttr(nui::Base::NAutoPtr<nui::Base::NBaseObj> baseObj, nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode)
-{
-    UNREFERENCED_PARAMETER(baseObj);
-
-    NString attrName;
-    NString attrValue;
-    for(int i=0; ; ++ i)
-    {
-        if(!styleNode->ReadValue(i, attrName, attrValue))
-            break;
-        baseObj->SetAttr(attrName.GetData(), attrValue.GetData());
-    }
-    return true;
+    return styleNode;
 }
