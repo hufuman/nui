@@ -22,6 +22,7 @@ namespace nui
 
             virtual bool ParseUtf8(const char* data);
             virtual bool ParseUtf8(const char* data, size_t length) = 0;
+            virtual bool ParseFile(LPCTSTR filePath);
 
             virtual bool ReadPath(LPCTSTR path, LPCTSTR valueName, nui::Base::NString& value) = 0;
             virtual bool ReadNode(LPCTSTR nodeName, NDataReader*& value) = 0;

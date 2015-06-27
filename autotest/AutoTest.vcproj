@@ -261,6 +261,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestStringBundle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestXmlDataReader.h"
 				>
 			</File>

@@ -12,9 +12,6 @@
 #include "TestReflect.h"
 #include "TestCore.h"
 
-// Parser
-#include "TestParser.h"
-
 // Data
 #include "TestString.h"
 #include "TestXmlDataReader.h"
@@ -25,6 +22,7 @@
 #include "TestListT.h"
 #include "TestArrayT.h"
 #include "TestFileSystem.h"
+#include "TestStringBundle.h"
 
 // Util
 #include "TestFileUtil.h"
@@ -34,6 +32,9 @@
 #include "TestMsgLoop.h"
 #include "TestWindowBase.h"
 #include "TestTimerSrv.h"
+
+// Parser
+#include "TestParser.h"
 
 
 int _tmain(int argc, _TCHAR* argv[])

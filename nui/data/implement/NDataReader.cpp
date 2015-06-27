@@ -2,6 +2,8 @@
 #include "../NDataReader.h"
 #include "XmlDataReader.h"
 
+#include "../NFileSystem.h"
+
 namespace nui
 {
     namespace Data
@@ -10,6 +12,17 @@ namespace nui
         bool NDataReader::ParseUtf8(const char* data)
         {
             return ParseUtf8(data, strlen(data));
+        }
+
+        bool NDataReader::ParseFile(LPCTSTR filePath)
+        {
+            nui::Base::NInstPtr<nui::Data::NFileSystem> fs(MemToolParam);
+            if(!fs)
+                return false;
+            nui::Base::NInstPtr<nui::Data::NBuffer> buffer(MemToolParam);
+            if(!fs->LoadFile(filePath, buffer))
+                return false;
+            return ParseUtf8(static_cast<const char*>(buffer->GetBuffer()), buffer->GetSize());
         }
 
         bool NDataReader::ReadValue(LPCTSTR name, INT32& value)

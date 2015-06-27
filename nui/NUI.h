@@ -61,6 +61,7 @@ using namespace fastdelegate;
 #include "./data/NListT.h"
 #include "./data/NArrayT.h"
 #include "./data/NFileSystem.h"
+#include "./data/NStringBundle.h"
 
 #include "./util/NShellUtil.h"
 #include "./util/NFileUtil.h"

@@ -296,6 +296,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\data\NStringBundle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\data\NZip.h"
 				>
 			</File>
@@ -360,6 +364,14 @@
 				</File>
 				<File
 					RelativePath=".\data\implement\NRealFileSystemImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NStringBundleImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\data\implement\NStringBundleImpl.h"
 					>
 				</File>
 				<File

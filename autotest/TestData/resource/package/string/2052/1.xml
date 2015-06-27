@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<Bundle>
+    <string id="11" value="111" />
+    <string id="12" value="112" />
+    <string id="13" value="113" />
+    <string id="14" value="114" />
+    <string id="15" value="115" />
+    <string id="16" value="116" />
+    <string id="17" value="117" />
+    <string id="18" value="118" />
+    <string id="19" value="119" />
+    <string id="10" value="110" />
+    <string id="Test" value="我只是一个测试" />
+</Bundle>

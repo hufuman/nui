@@ -2,6 +2,7 @@
 #include "NCoreImpl.h"
 
 #include "../NMemTool.h"
+#include "../../data/NStringBundle.h"
 #include "../../data/NFileSystem.h"
 #include "../../util/NFileUtil.h"
 
@@ -21,9 +22,6 @@ NCoreImpl::~NCoreImpl(void)
 
 bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderType::Type type)
 {
-    UNREFERENCED_PARAMETER(packFilePath);
-    UNREFERENCED_PARAMETER(lang);
-
     Gdiplus::GdiplusStartupInput input;
     Gdiplus::Status status = Gdiplus::GdiplusStartup(&m_uGdiplusToken, &input, NULL);
     NAssertError(status == Gdiplus::Ok, _T("Failed to init Gdiplus"));
@@ -53,6 +51,16 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
     if(nui::Util::File::IsFileExists(packFilePath) || nui::Util::File::IsFolderExists(packFilePath))
         initResult = fileSystem->Init(packFilePath);
     NAssertError(initResult, _T("Failed to init NFileSystem"));
+    if(!initResult)
+        return false;
+
+    nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
+    NAssertError(stringBundle != NULL, _T("Failed to create NStringBundle"));
+    if(!stringBundle)
+        return false;
+
+    initResult = stringBundle->InitStringBundle(lang);
+    NAssertError(initResult, _T("Failed to init NStringBundle"));
     if(!initResult)
         return false;
 
