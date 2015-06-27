@@ -784,6 +784,14 @@
 					RelativePath=".\parser\implement\ParserUtil.h"
 					>
 				</File>
+				<File
+					RelativePath=".\parser\implement\RichFrameParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\RichFrameParserImpl.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

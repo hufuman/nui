@@ -4,8 +4,6 @@
 #include "ParserUtil.h"
 #include "../../ui/NFrame.h"
 
-IMPLEMENT_REFLECTION(FrameParserImpl);
-
 using namespace nui;
 using namespace Ui;
 using namespace Base;
