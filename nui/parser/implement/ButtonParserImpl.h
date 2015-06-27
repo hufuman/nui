@@ -1,11 +1,11 @@
 #pragma once
 
-#include "BaseParser.h"
+#include "FrameParserImpl.h"
 
 
-class ButtonParserImpl : public NBaseParser
+class ButtonParserImpl : public FrameParserImpl
 {
     DECLARE_REFLECTION(TEXT("nui"), TEXT("buttonparser"))
 public:
-    virtual bool SetAttr(LPCTSTR attrName, LPCTSTR attrValue);
+    virtual bool SetAttr(const nui::Base::NString& attrName, const nui::Base::NString& attrValue);
 };

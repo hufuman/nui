@@ -321,8 +321,13 @@ namespace nui
 
         void NFrame::SetMinSize(int minWidth, int minHeight)
         {
+            if(minSize_.Width == minWidth && minSize_.Height == minHeight)
+                return;
             minSize_.Width = minWidth;
             minSize_.Height = minHeight;
+            int width = frameRect_.Width() > minSize_.Width ? minSize_.Width : frameRect_.Width();
+            int height = frameRect_.Height() > minSize_.Height ? minSize_.Height : frameRect_.Height();
+            SetSizeImpl(width, height, true);
         }
 
         void NFrame::AutoSize()
@@ -364,6 +369,11 @@ namespace nui
             }
             margin_.SetRect(left, top, right, bottom);
             ReLayout();
+        }
+
+        const Base::NRect& NFrame::GetMargin() const
+        {
+            return margin_;
         }
 
         void NFrame::SetLayout(UINT layout)

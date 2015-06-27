@@ -2,7 +2,9 @@
 <UI>
 
   <!-- 游戏优化界面 -->
-  <Frame name="MainUI" layouttype="vfill;hfill" size="364,300" >
+  <Frame name="MainUI" id="TestFrame" visible="false" enabled="false"
+         pos="123,34" size="220,330" minSize="110,120" autoSize="false"
+         margin="6,9,3,2" layout="left;top" >
     <Button id="btnOk" pos="270,265" text="@Common:btnOk" textcolor="#426594" />
   </Frame>
 

@@ -29,7 +29,8 @@ public:
         styleNode_ = NULL;
     }
 
-    virtual bool SetAttr(LPCTSTR attrName, LPCTSTR attrValue) = 0;
+    // return false if not value not set, otherwise true;
+    virtual bool SetAttr(const nui::Base::NString& attrName, const nui::Base::NString& attrValue) = 0;
 
 protected:
     nui::Base::NBaseObj* targetObj_;

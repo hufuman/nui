@@ -44,4 +44,43 @@ namespace ParserUtil
         return true;
     }
 
+    bool ParseBool(LPCTSTR data)
+    {
+        if(_tcscmp(data, _T("true")) == 0)
+            return true;
+        return false;
+    }
+
+    INT32 ParseInt32(LPCTSTR data)
+    {
+        return _ttoi(data);
+    }
+
+    INT64 ParseInt64(LPCTSTR data)
+    {
+        return _tstoi64(data);
+    }
+
+    DWORD ParseDword(LPCTSTR data)
+    {
+        DWORD value = 0;
+        _stscanf(data, TEXT("%u"), &value);
+        return value;
+    }
+
+    bool ParsePoint(LPCTSTR data, nui::Base::NPoint& point)
+    {
+        return _stscanf(data, TEXT("%d,%d"), &point.X, &point.Y) == 2;
+    }
+
+    bool ParseSize(LPCTSTR data, nui::Base::NSize& size)
+    {
+        return _stscanf(data, TEXT("%d,%d"), &size.Width, &size.Height) == 2;
+    }
+
+    bool ParseRect(LPCTSTR data, nui::Base::NRect& rect)
+    {
+        return _stscanf(data, TEXT("%d,%d,%d,%d"), &rect.Left, &rect.Top, &rect.Right, &rect.Bottom) == 4;
+    }
+
 }

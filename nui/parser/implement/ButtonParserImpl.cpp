@@ -11,9 +11,11 @@ using namespace Ui;
 using namespace Base;
 using namespace Data;
 
-bool ButtonParserImpl::SetAttr(LPCTSTR attrName, LPCTSTR attrValue)
+bool ButtonParserImpl::SetAttr(const nui::Base::NString& attrName, const nui::Base::NString& attrValue)
 {
+    if(FrameParserImpl::SetAttr(attrName, attrValue))
+        return true;
     UNREFERENCED_PARAMETER(attrName);
     UNREFERENCED_PARAMETER(attrValue);
-    return true;
+    return false;
 }

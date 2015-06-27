@@ -123,6 +123,7 @@ namespace nui
             virtual bool IsAutoSize() const;
 
             virtual void SetMargin(int left, int top, int right, int bottom);
+            virtual const Base::NRect& GetMargin() const;
             virtual void SetLayout(UINT layout);
             virtual void ReLayout();
 
