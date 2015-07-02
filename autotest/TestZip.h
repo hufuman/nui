@@ -120,8 +120,7 @@ public:
 
                 zResult1 = UnzipItem(zipFile1, index1, buffer1->GetBuffer(entry1.unc_size), entry1.unc_size, ZIP_MEMORY);
                 zResult2 = UnzipItem(zipFile2, index2, buffer2->GetBuffer(entry2.unc_size), entry2.unc_size, ZIP_MEMORY);
-                if((zResult1 != ZR_OK && zResult1 != ZR_MORE)
-                    || (zResult2 != ZR_OK && zResult2 != ZR_MORE))
+                if(zResult1 != ZR_OK || zResult2 != ZR_OK)
                 {
                     break;
                 }
@@ -176,4 +175,31 @@ TEST_F(TestZip, UnZip)
 
     TestUnZip(correctFile.GetData(), zip1File.GetData());
     TestUnZip(correctFile.GetData(), zip2File.GetData());
+}
+
+TEST_F(TestZip, UnZipTwice)
+{
+    NString correctFile = TestUtil::GetTestFile(_T("Zip\\Data.zip"));
+
+    NInstPtr<NZip> zip1(MemToolParam), zip2(MemToolParam);
+    ASSERT_TRUE(zip1->LoadFile(correctFile.GetData()));
+    ASSERT_TRUE(zip2->LoadFile(correctFile.GetData()));
+
+    NInstPtr<NBuffer> buffer1(MemToolParam);
+    NInstPtr<NBuffer> buffer2(MemToolParam);
+    NInstPtr<NBuffer> buffer3(MemToolParam);
+    NInstPtr<NBuffer> buffer4(MemToolParam);
+
+    ASSERT_TRUE(zip1->GetFileContent(_T("1/11/111.txt"), buffer1));
+    ASSERT_TRUE(zip1->GetFileContent(_T("1/11/111.txt"), buffer2));
+    ASSERT_TRUE(zip2->GetFileContent(_T("1/11/111.txt"), buffer3));
+    ASSERT_TRUE(zip2->GetFileContent(_T("1/11/111.txt"), buffer4));
+
+    ASSERT_EQ(buffer1->GetSize(), buffer2->GetSize());
+    ASSERT_EQ(buffer2->GetSize(), buffer3->GetSize());
+    ASSERT_EQ(buffer3->GetSize(), buffer4->GetSize());
+
+    EXPECT_TRUE(memcmp(buffer1->GetBuffer(), buffer2->GetBuffer(), buffer1->GetSize()) == 0);
+    EXPECT_TRUE(memcmp(buffer2->GetBuffer(), buffer3->GetBuffer(), buffer1->GetSize()) == 0);
+    EXPECT_TRUE(memcmp(buffer3->GetBuffer(), buffer4->GetBuffer(), buffer1->GetSize()) == 0);
 }

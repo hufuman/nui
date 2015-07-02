@@ -321,7 +321,11 @@
 			Name="parser"
 			>
 			<File
-				RelativePath=".\TestParser.h"
+				RelativePath=".\TestFrameParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TestRichFrameParser.h"
 				>
 			</File>
 		</Filter>

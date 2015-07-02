@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<UI>
+
+  <!-- Test For NFrame -->
+  <Frame name="TestFrame" id="TestFrame" visible="false" enabled="false"
+         pos="123,34" size="220,330" minSize="110,120" autoSize="false"
+         margin="6,9,3,2" layout="left;top" >
+    <Button id="btnOk" pos="270,265" text="@Common:btnOk" textColor="#426594" />
+  </Frame>
+
+  <!-- Test For NRichFrame -->
+  <RichFrame name="TestRichFrame" id="TestRichFrame" text="@1:Test" textSingleLine=false
+         pos="123,34" size="220,330" minSize="110,120" autoSize="true" textVertCenter=true textHorzCenter=true
+         margin="6,9,3,2" layout="vfill;hfill" textColor="#426594" textBgColor="#726892">
+    <Button id="btnOk" pos="270,265" text="@Common:btnOk" />
+  </RichFrame>
+
+</UI>

@@ -491,26 +491,6 @@
 					</Filter>
 				</Filter>
 				<Filter
-					Name="parser"
-					>
-					<File
-						RelativePath="..\nui\parser\NParser.h"
-						>
-					</File>
-					<Filter
-						Name="implement"
-						>
-						<File
-							RelativePath="..\nui\parser\implement\NParserImpl.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\parser\implement\NParserImpl.h"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
 					Name="ui"
 					>
 					<File

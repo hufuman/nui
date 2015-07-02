@@ -34,7 +34,8 @@
 #include "TestTimerSrv.h"
 
 // Parser
-#include "TestParser.h"
+#include "TestFrameParser.h"
+#include "TestRichFrameParser.h"
 
 
 int _tmain(int argc, _TCHAR* argv[])

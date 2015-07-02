@@ -2,10 +2,10 @@
 
 
 
-class TestParser : public testing::Test
+class TestFrameParser : public testing::Test
 {
 public:
-    TestParser()
+    TestFrameParser()
     {
     }
     virtual void SetUp()
@@ -16,11 +16,11 @@ public:
     }
 };
 
-TEST_F(TestParser, Frame)
+TEST_F(TestFrameParser, Basic)
 {
     // Parse BaseObj
     NInstPtr<NParser> parser(MemToolParam);
-    NAutoPtr<NBaseObj> obj = parser->Parse(_T("@AboutUI:MainUI"));
+    NAutoPtr<NBaseObj> obj = parser->Parse(_T("@TestUI:TestFrame"));
     ASSERT_TRUE(obj != NULL);
 
     // Frame
@@ -34,8 +34,8 @@ TEST_F(TestParser, Frame)
     const NRect& rect = frame->GetRect();
     EXPECT_EQ(rect.Left, 123);
     EXPECT_EQ(rect.Top, 34);
-    EXPECT_EQ(rect.Width(), 110);
-    EXPECT_EQ(rect.Height(), 120);
+    EXPECT_EQ(rect.Width(), 220);
+    EXPECT_EQ(rect.Height(), 330);
     EXPECT_FALSE(frame->IsAutoSize());
 
     const NRect& margin = frame->GetMargin();
