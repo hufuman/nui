@@ -4063,7 +4063,9 @@ ZRESULT TUnzip::Unzip(int index,void *dst,unsigned int len,DWORD flags)
 			currentfile=index;
 		}
 		int res = unzReadCurrentFile(uf,dst,len);
-		if (res>0) 
+        if(ZIP_MEMORY == flags && res == (int)len)
+            res -= len;
+		if (res>0)
 			return ZR_MORE;
 		unzCloseCurrentFile(uf); 
 		currentfile=-1;
