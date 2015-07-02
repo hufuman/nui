@@ -26,7 +26,7 @@ namespace nui
             // data
             virtual void SetText(const Base::NString& text);
             virtual const Base::NString& GetText() const;
-            virtual NText* GetRichText() const;
+            virtual NText* GetRichText();
 
             // draw
             virtual void SetBkgDraw(NDraw* bkgDraw);

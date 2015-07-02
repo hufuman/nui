@@ -32,15 +32,19 @@ namespace nui
         {
             if(text.IsEmpty() && text_  == NULL)
                 return;
+            nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
+            nui::Base::NString readText = stringBundle->GetString(text.GetData());
+            if(readText.IsEmpty())
+                readText = text;
             if(text_ == NULL)
             {
-                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(text, MemToolParam);
+                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(readText, MemToolParam);
             }
             else
             {
-                if(text_->GetText() == text)
+                if(text_->GetText() == readText)
                     return;
-                text_->SetText(text);
+                text_->SetText(readText);
             }
             AutoSize();
             Invalidate();
@@ -51,8 +55,12 @@ namespace nui
             return text_ == NULL ? Base::NString::EmptyString : text_->GetText();
         }
 
-        NText* NRichFrame::GetRichText() const
+        NText* NRichFrame::GetRichText()
         {
+            if(text_ == NULL)
+            {
+                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(_T(""), MemToolParam);
+            }
             return text_;
         }
 

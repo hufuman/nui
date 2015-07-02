@@ -17,7 +17,7 @@ public:
         styleNode_ = NULL;
     }
 
-    void PreParse(nui::Data::NDataReader* styleNode, nui::Base::NBaseObj* target)
+    virtual void PreParse(nui::Data::NDataReader* styleNode, nui::Base::NBaseObj* target)
     {
         targetObj_ = target;
         styleNode_ = styleNode;

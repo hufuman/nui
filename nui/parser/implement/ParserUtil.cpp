@@ -29,8 +29,6 @@ namespace ParserUtil
 
     bool FillObjectAttr(NAutoPtr<NBaseParser> parser, NAutoPtr<NBaseObj> baseObj, NAutoPtr<nui::Data::NDataReader> styleNode)
     {
-        UNREFERENCED_PARAMETER(baseObj);
-
         parser->PreParse(styleNode, baseObj);
         NString attrName;
         NString attrValue;
@@ -38,7 +36,7 @@ namespace ParserUtil
         {
             if(!styleNode->ReadValue(i, attrName, attrValue))
                 break;
-            parser->SetAttr(attrName.GetData(), attrValue.GetData());
+            parser->SetAttr(attrName, attrValue);
         }
         parser->PostParse();
         return true;
@@ -83,4 +81,10 @@ namespace ParserUtil
         return _stscanf(data, TEXT("%d,%d,%d,%d"), &rect.Left, &rect.Top, &rect.Right, &rect.Bottom) == 4;
     }
 
+    nui::Ui::ArgbColor ParseArgb(LPCTSTR data)
+    {
+        nui::Ui::ArgbColor color;
+        NVerify(_sntscanf(data + 1, 6, _T("%x"), &color) == 1, _T("Wrong format for ParserArgb"));
+        return color;
+    }
 }

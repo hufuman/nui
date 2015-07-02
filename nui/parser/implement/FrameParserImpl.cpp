@@ -9,6 +9,8 @@ using namespace Ui;
 using namespace Base;
 using namespace Data;
 
+IMPLEMENT_REFLECTION(FrameParserImpl);
+
 bool FrameParserImpl::SetAttr(const nui::Base::NString& attrName, const nui::Base::NString& attrValue)
 {
     NFrame* targetFrame = dynamic_cast<NFrame*>(targetObj_);
@@ -106,4 +108,5 @@ void FrameParserImpl::PostParse()
         NAutoPtr<NFrame> frame = dynamic_cast<NFrame*>((NBaseObj*)ParserUtil::LoadObj(childNode));
         targetFrame->AddChild(frame);
     }
+    targetFrame->Invalidate();
 }

@@ -325,8 +325,8 @@ namespace nui
                 return;
             minSize_.Width = minWidth;
             minSize_.Height = minHeight;
-            int width = frameRect_.Width() > minSize_.Width ? minSize_.Width : frameRect_.Width();
-            int height = frameRect_.Height() > minSize_.Height ? minSize_.Height : frameRect_.Height();
+            int width = frameRect_.Width() < minSize_.Width ? minSize_.Width : frameRect_.Width();
+            int height = frameRect_.Height() < minSize_.Height ? minSize_.Height : frameRect_.Height();
             SetSizeImpl(width, height, true);
         }
 
@@ -462,7 +462,7 @@ namespace nui
 
         void NFrame::Invalidate() const
         {
-            if(!window_)
+            if(!window_ || !IsVisible() || !IsValid())
                 return;
             Base::NRect rootRect = GetRootRect();
             window_->InvalidateRect(rootRect);

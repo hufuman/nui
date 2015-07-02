@@ -18,4 +18,5 @@ namespace ParserUtil
     bool ParsePoint(LPCTSTR data, nui::Base::NPoint& point);
     bool ParseSize(LPCTSTR data, nui::Base::NSize& size);
     bool ParseRect(LPCTSTR data, nui::Base::NRect& rect);
+    nui::Ui::ArgbColor ParseArgb(LPCTSTR data);
 }
