@@ -30,7 +30,8 @@ namespace nui
 
         bool NModule::Init(HMODULE nuiModule)
         {
-            nuiModule_ = nuiModule;
+            if(nuiModule != NULL)
+                nuiModule_ = nuiModule;
 
             TCHAR tempPath[1024];
             ::GetModuleFileName(NULL, tempPath, 1024);
