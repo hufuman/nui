@@ -378,6 +378,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\nui\data\NStringBundle.h"
+						>
+					</File>
+					<File
 						RelativePath="..\nui\data\NZip.h"
 						>
 					</File>
@@ -445,6 +449,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\data\implement\NStringBundleImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\data\implement\NStringBundleImpl.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\data\implement\NZipImpl.cpp"
 							>
 						</File>
@@ -463,42 +475,14 @@
 					</Filter>
 				</Filter>
 				<Filter
-					Name="util"
-					>
-					<File
-						RelativePath="..\nui\util\NDiagnose.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NFileUtil.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NMisc.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NShellUtil.h"
-						>
-					</File>
-					<Filter
-						Name="implement"
-						>
-						<File
-							RelativePath="..\nui\util\implement\NFileUtil.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\util\implement\NShellUtil.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
 					Name="ui"
 					>
 					<File
 						RelativePath="..\nui\ui\NMsgLoop.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\ui\NRenderStatus.h"
 						>
 					</File>
 					<File
@@ -533,11 +517,23 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NImageImpl.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NMsgLoop.cpp"
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NRenderStatus.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NRichFrameImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NScrollImpl.cpp"
 							>
 						</File>
 						<File
@@ -679,6 +675,10 @@
 								RelativePath="..\nui\ui\implement\Gdi\StreamImpl.h"
 								>
 							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\TempDC.h"
+								>
+							</File>
 						</Filter>
 					</Filter>
 					<Filter
@@ -729,7 +729,15 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\NImage.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\NRichFrame.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NScroll.h"
 							>
 						</File>
 						<File
@@ -738,6 +746,38 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\NWindowBase.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="util"
+					>
+					<File
+						RelativePath="..\nui\util\NDiagnose.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NFileUtil.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NMisc.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NShellUtil.h"
+						>
+					</File>
+					<Filter
+						Name="implement"
+						>
+						<File
+							RelativePath="..\nui\util\implement\NFileUtil.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\util\implement\NShellUtil.cpp"
 							>
 						</File>
 					</Filter>

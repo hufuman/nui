@@ -105,7 +105,7 @@ void CImageEditor::Show()
     window = NULL;
 }
 
-bool CImageEditor::DrawCallback(NWindow* window, NRender* render, const NRect& clipRect)
+bool CImageEditor::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
 {
     NRect dstRect;
     window->GetRect(dstRect);
