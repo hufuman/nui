@@ -13,7 +13,7 @@ namespace nui
             ~NRenderStatus();
 
             void BeforeDraw(HWND hWnd);
-            void DrawStatus(NRender* render);
+            void DrawStatus();
 
         protected:
             DWORD lastTime_;

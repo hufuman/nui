@@ -216,7 +216,7 @@ namespace nui
 
             OnDraw(render_, clipRgn);
 
-            renderStatus_.DrawStatus(render_);
+            renderStatus_.DrawStatus();
             render_->DrawBack(IsLayered());
             ::DeleteObject(clipRgn);
 

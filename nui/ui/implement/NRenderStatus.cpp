@@ -25,7 +25,7 @@ namespace nui
             lastTime_ = ::GetTickCount();
         }
 
-        void NRenderStatus::DrawStatus(NRender* render)
+        void NRenderStatus::DrawStatus()
         {
             DWORD currentTime = ::GetTickCount();
 
