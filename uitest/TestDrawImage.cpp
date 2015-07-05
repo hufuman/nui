@@ -12,7 +12,7 @@ CTestDrawImage::~CTestDrawImage()
     ;
 }
 
-bool CTestDrawImage::DrawCallback(NWindow* window, NRender* render, const NRect& clipRect)
+bool CTestDrawImage::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
 {
     NRect dstRect;
     window->GetRect(dstRect);

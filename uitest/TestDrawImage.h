@@ -8,7 +8,7 @@ public:
     CTestDrawImage();
     ~CTestDrawImage();
 
-    bool DrawCallback(NWindow*, NRender* render, const NRect& clipRect);
+    bool DrawCallback(NWindow*, NRender* render, HRGN clipRgn);
 
 public:
     void Test();

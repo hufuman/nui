@@ -541,6 +541,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NScrollImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NTimerSrvImpl.cpp"
 					>
 				</File>
@@ -738,6 +742,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\NRichFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NScroll.h"
 					>
 				</File>
 				<File

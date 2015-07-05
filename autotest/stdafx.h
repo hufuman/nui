@@ -15,6 +15,9 @@
 #include <time.h>
 
 
+
+
+
 #pragma comment(lib, "gdiplus.lib")
 
 #include "gtest/gtest.h"

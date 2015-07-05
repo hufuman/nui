@@ -13,7 +13,7 @@ void CControlTest::Test()
 {
     // create window
     NInstPtr<NWindow> window(MemToolParam);
-    window->Create(NULL);
+    window->Create(NULL, WindowStyle::Layered);
     window->SetSize(520, 420);
     window->CenterWindow(NULL);
     window->SetText(_T("Test Window"));
@@ -24,6 +24,23 @@ void CControlTest::Test()
     NAutoPtr<NShapeDraw> pBkgDraw = loader->CreateShape(MemToolParam);
     pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
     window->GetRootFrame()->SetBkgDraw(pBkgDraw);
+//*
+    // VertScroll
+    NInstPtr<NScroll> pVertScroll(MemToolParam);
+    pVertScroll->SetPos(100, 100);
+    pVertScroll->SetSize(16, 200);
+    pVertScroll->SetScrollRange(4);
+    pVertScroll->SetScrollPos(3);
+    window->GetRootFrame()->AddChild(pVertScroll);
+
+    // HorzScroll
+    NInstPtr<NScroll> pHorzScroll(MemToolParam);
+    pHorzScroll->SetPos(100, 80);
+    pHorzScroll->SetSize(200, 16);
+    pHorzScroll->SetScrollType(true);
+    pHorzScroll->SetScrollRange(1);
+    pHorzScroll->SetScrollPos(1);
+    window->GetRootFrame()->AddChild(pHorzScroll);
 
     // Button
     NInstPtr<NButton> pButton1(MemToolParam);
@@ -31,13 +48,16 @@ void CControlTest::Test()
     pButton1->SetMargin(10, 10, 20, 40);
     window->GetRootFrame()->AddChild(pButton1);
     pButton1->SetClickCallback(MakeDelegate(this, &CControlTest::OnButtonClicked));
-
+//*/
     /*
     // Static Image
     NInstPtr<NImage> pImg1(MemToolParam);
     pImg1->LoadImage(_T("@skin:images\\514540469.png"));
     window->GetRootFrame()->AddChild(pImg1);
     */
+
+    ::CreateWindowEx(0, WC_EDIT, _T("TEST"), WS_VISIBLE | WS_CHILD, 0, 0, 100, 18, window->GetNative(), NULL, NULL, 0);
+    ::CreateWindowEx(0, WC_EDIT, _T("TEST"), WS_VISIBLE | WS_CHILD, 80, 80, 100, 18, window->GetNative(), NULL, NULL, 0);
 
     // Gif Image
     for(int i=0; i<0; ++ i)
