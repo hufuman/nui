@@ -57,6 +57,8 @@ namespace nui
             virtual void OnCreate();
             virtual void Draw(HDC hDc);
 
+            bool IsRegionEmpty(HRGN clipRgn);
+            void ResetInvalidRgn();
             bool IsLayered() const;
             void GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const;
 

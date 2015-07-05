@@ -27,7 +27,7 @@ namespace nui
             virtual ImageDrawType::Type GetDrawType() const;
 
             virtual NImageDraw* SetStretchParam(int left, int top, int right, int bottom);
-            virtual Base::NRect GetStretchParam() const;
+            const Base::NRect& GetStretchParam() const;
 
         public:
             void InitForDynamicImage(int frameCount, const Base::NSize& size);

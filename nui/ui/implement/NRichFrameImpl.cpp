@@ -146,5 +146,6 @@ namespace nui
             if(text_ != NULL)
                 render->DrawText(text_, font_, rect);
         }
+
     }
 }

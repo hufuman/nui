@@ -27,7 +27,7 @@ namespace nui
         bool GdiRender::Init(HDC hDc, const Base::NRect& rcPaint)
         {
             orgDc_ = hDc;
-            memDC_.Init(hDc, rcPaint, 255);
+            memDC_.Init(orgDc_, rcPaint, 255);
             return true;
         }
 
@@ -317,26 +317,21 @@ namespace nui
             ::DeleteObject(hRgn);
         }
 
-        nui::Base::NHolder GdiRender::ClipRect(const nui::Base::NRect& rect)
+        nui::Base::NHolder GdiRender::ClipRgn(HRGN clipRgn)
         {
             NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::ClipRect"));
 
-            if(rect.Right <= rect.Left
-                || rect.Bottom <= rect.Top)
+            HRGN oldClip = ::CreateRectRgn(0, 0, 0, 0);
+            if(clipRgn == NULL || ::EqualRgn(clipRgn, oldClip))
             {
+                ::DeleteObject(oldClip);
                 Base::NHolder holder;
                 return holder;
             }
 
-            HRGN oldClip = ::CreateRectRgn(0, 0, 0, 0);
             ::GetClipRgn(memDC_, oldClip);
 
-            HRGN hItemClip = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
-            if(hItemClip != NULL)
-            {
-                ::ExtSelectClipRgn(memDC_, hItemClip, RGN_AND);
-                ::DeleteObject(hItemClip);
-            }
+            ::ExtSelectClipRgn(memDC_, clipRgn, RGN_AND);
 
             Base::NHolder holder(reinterpret_cast<void*>(oldClip), MakeDelegate(this, &GdiRender::RestoreRgn));
             return holder;

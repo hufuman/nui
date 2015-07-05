@@ -95,7 +95,7 @@ namespace nui
 
             virtual NFrame* GetParent() const;
             virtual void Invalidate() const;
-            virtual void Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
+            virtual void Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn);
 
             // flags
             virtual void SetVisible(bool visible);
@@ -142,7 +142,7 @@ namespace nui
             virtual void DrawBkg(NRender* render, const Base::NRect& rect) const;
             virtual void DrawFore(NRender* render, const Base::NRect& rect) const;
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
-            virtual void DrawChilds(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect);
+            virtual void DrawChilds(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn);
 
             virtual void SetPosImpl(int left, int top, bool force);
             virtual void SetSizeImpl(int width, int height, bool force);

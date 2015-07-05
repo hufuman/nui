@@ -47,7 +47,7 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
     if(!fileSystem)
         return false;
 
-    bool initResult = true;
+    bool initResult = false;
     if(nui::Util::File::IsFileExists(packFilePath) || nui::Util::File::IsFolderExists(packFilePath))
         initResult = fileSystem->Init(packFilePath);
     NAssertError(initResult, _T("Failed to init NFileSystem"));

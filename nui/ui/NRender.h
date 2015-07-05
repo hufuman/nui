@@ -30,7 +30,7 @@ namespace nui
             virtual void GetTextSize(NText* text, NFont* font, Base::NSize& rect) = 0;
             virtual void AddDrawRegion(const Base::NRect& rcRegion) = 0;
 
-            virtual Base::NHolder ClipRect(const nui::Base::NRect& rect) = 0;
+            virtual Base::NHolder ClipRgn(HRGN clipRgn) = 0;
 
             __inline void DrawLine(const Base::NRect& rect, int borderWidth, ArgbColor clrBorder)
             {

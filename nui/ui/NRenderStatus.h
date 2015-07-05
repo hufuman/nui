@@ -13,7 +13,7 @@ namespace nui
             ~NRenderStatus();
 
             void BeforeDraw();
-            void DrawStatus(NRender* render, const Base::NRect& rcClient);
+            void DrawStatus(NRender* render, const Base::NRect& rcClient, HRGN clipRgn);
 
         protected:
             DWORD lastTime_;

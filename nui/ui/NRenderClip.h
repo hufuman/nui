@@ -10,32 +10,23 @@ namespace nui
         class NRenderClip
         {
         public:
-            NRenderClip(NRender* render, const nui::Base::NRect& rect1, const nui::Base::NRect& rect2)
+            NRenderClip(NRender* render, HRGN clipRgn, const nui::Base::NRect& rect)
             {
-                Base::NRect tmpClipRect(rect1);
-                tmpClipRect.Intersect(rect2);
-                Init(render, tmpClipRect);
-            }
-            NRenderClip(NRender* render, const nui::Base::NRect& clipRect)
-            {
-                Init(render, clipRect);
+                HRGN tempRgn = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
+                int result = ::CombineRgn(tempRgn, tempRgn, clipRgn, RGN_AND);
+                if(result != ERROR && result != NULLREGION)
+                {
+                    holder_ = render->ClipRgn(tempRgn);
+                }
             }
             ~NRenderClip()
             {
                 holder_.Release();
             }
 
-        protected:
-            void Init(NRender* render, const nui::Base::NRect& clipRect)
+            bool IsEmpty()
             {
-                if(render == NULL
-                    || clipRect.Right <= clipRect.Left
-                    || clipRect.Bottom <= clipRect.Top)
-                {
-                    return;
-                }
-
-                holder_ = render->ClipRect(clipRect);
+                return holder_.IsEmpty();
             }
 
         protected:

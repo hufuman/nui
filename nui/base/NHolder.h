@@ -20,6 +20,7 @@ namespace nui
             NHolder& operator = (const NHolder& holder);
             ~NHolder();
 
+            bool IsEmpty() const;
             void Release();
 
         private:

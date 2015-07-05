@@ -12,7 +12,6 @@ namespace nui
 {
     namespace Ui
     {
-        const Base::NRect g_StubRect(0, 0, 1, 1);
         NWindowBase::NWindowBase()
         {
             window_ = NULL;
@@ -201,11 +200,7 @@ namespace nui
         {
             if(drawTimerId_ == 0)
                 drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
-            if(invalidateRgn_ != NULL)
-            {
-                ::DeleteObject(invalidateRgn_);
-                invalidateRgn_ = NULL;
-            }
+            ResetInvalidRgn();
         }
 
         void NWindowBase::InvalidateRect(const Base::NRect& rect)
@@ -213,12 +208,10 @@ namespace nui
             if(drawTimerId_ == 0)
                 drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
             // when invalidateRgn_ is null, the whole window need to be redrawn
-            if(invalidateRgn_ != NULL)
-            {
-                HRGN tempRgn = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
-                ::CombineRgn(invalidateRgn_, invalidateRgn_, tempRgn, RGN_OR);
-                ::DeleteObject(tempRgn);
-            }
+
+            HRGN tempRgn = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
+            ::CombineRgn(invalidateRgn_, invalidateRgn_, tempRgn, RGN_OR);
+            ::DeleteObject(tempRgn);
         }
 
         void NWindowBase::SetText(LPCTSTR text)
@@ -287,28 +280,24 @@ namespace nui
             }
             else if(message == WM_TIMER && wParam == drawTimerId_)
             {
-                if(invalidateRgn_ == NULL)
+                if(!IsRegionEmpty(invalidateRgn_))
                 {
-                    Base::NRect rcClip;
-                    GetRect(rcClip);
-                    rcClip.Offset(-rcClip.Left, -rcClip.Top);
-                    HRGN tempRgn = ::CreateRectRgn(rcClip.Left, rcClip.Top, rcClip.Right, rcClip.Bottom);
-                    ::InvalidateRgn(window_, tempRgn, FALSE);
+                    ::PostMessage(window_, WM_PAINT, 0, 0);
                 }
-                else
-                {
-                    ::InvalidateRgn(window_, invalidateRgn_, FALSE);
-                    ::DeleteObject(invalidateRgn_);
-                    invalidateRgn_ = NULL;
-                }
-                ::PostMessage(window_, WM_PAINT, 0, 0);
             }
             else if(message == WM_PAINT)
             {
                 PAINTSTRUCT ps = {0};
                 HDC hDc = ::BeginPaint(window_, &ps);
+
+                if(!IsLayered() && !IsRegionEmpty(invalidateRgn_))
+                {
+                    ::SelectClipRgn(hDc, invalidateRgn_);
+                }
+
                 Draw(hDc);
                 ::EndPaint(window_, &ps);
+                ResetInvalidRgn();
             }
             else if(message == WM_PRINT)
             {
@@ -334,12 +323,28 @@ namespace nui
         void NWindowBase::OnCreate()
         {
             layered_ = ((::GetWindowLongPtr(window_, GWL_EXSTYLE) & WS_EX_LAYERED) == WS_EX_LAYERED);
+
+            ResetInvalidRgn();
             Invalidate();
         }
 
         void NWindowBase::Draw(HDC hDc)
         {
             UNREFERENCED_PARAMETER(hDc);
+        }
+
+        bool NWindowBase::IsRegionEmpty(HRGN clipRgn)
+        {
+            static HRGN emptyRegion = ::CreateRectRgn(0, 0, 0, 0);
+            return !!::EqualRgn(emptyRegion, clipRgn);
+        }
+
+        void NWindowBase::ResetInvalidRgn()
+        {
+            if(invalidateRgn_ != NULL)
+                ::DeleteObject(invalidateRgn_);
+
+            invalidateRgn_ = ::CreateRectRgn(0, 0, 0, 0);
         }
 
         bool NWindowBase::IsLayered() const

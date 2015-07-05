@@ -36,6 +36,11 @@ namespace nui
             return (*this);
         }
 
+        bool NHolder::IsEmpty() const
+        {
+            return data_ == NULL;
+        }
+
         void NHolder::Release()
         {
             if(data_ != NULL)

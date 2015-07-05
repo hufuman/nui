@@ -179,7 +179,7 @@ namespace nui
                 ::SetWindowRgn(GetNative(), rgn, FALSE);
         }
 
-        void NWindow::OnDraw(NRender* render, const Base::NRect& clipRect)
+        void NWindow::OnDraw(NRender* render, HRGN clipRgn)
         {
             renderStatus_.BeforeDraw();
 
@@ -187,34 +187,39 @@ namespace nui
             GetRect(rcClient);
             rcClient.Offset(-rcClient.Left, -rcClient.Top);
 
-            if(drawCallback_ && drawCallback_(this, render, clipRect))
+            if(drawCallback_ && drawCallback_(this, render, clipRgn))
             {
-                renderStatus_.DrawStatus(render, rcClient);
+                renderStatus_.DrawStatus(render, rcClient, clipRgn);
                 return;
             }
 
             if(rootFrame_ != NULL)
             {
                 Base::NPoint pt;
-                rootFrame_->Draw(render, pt, clipRect);
-                renderStatus_.DrawStatus(render, rcClient);
+                rootFrame_->Draw(render, pt, clipRgn);
+                renderStatus_.DrawStatus(render, rcClient, clipRgn);
             }
         }
 
         void NWindow::Draw(HDC hDc)
         {
             GUARD_SCOPE(false, _T("NWindow Draw takes too long"));
+            HRGN clipRgn = ::CreateRectRgn(0, 0, 0, 0);
+            int clipResult = ::GetClipRgn(hDc, clipRgn);
+
             Base::NRect clientRect;
             ::GetClientRect(window_, clientRect);
+
+            if(clipResult != 1 || clipRgn == NULL)
+            {
+                clipRgn = ::CreateRectRgn(clientRect.Left, clientRect.Top, clientRect.Right, clientRect.Bottom);
+            }
             render_->Init(hDc, clientRect);
 
-            Base::NRect clipRect;
-            int nResult = GetClipBox(hDc, clipRect);
-            if(nResult == NULLREGION)
-                ::GetClientRect(window_, clipRect);
-            OnDraw(render_, clipRect);
+            OnDraw(render_, clipRgn);
 
             render_->DrawBack(IsLayered());
+            ::DeleteObject(clipRgn);
         }
 
         void NWindow::SetHoverItem(NFrame* frame)

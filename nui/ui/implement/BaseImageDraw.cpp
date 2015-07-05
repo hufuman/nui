@@ -83,7 +83,7 @@ namespace nui
             return this;
         }
 
-        Base::NRect BaseImageDraw::GetStretchParam() const
+        const Base::NRect& BaseImageDraw::GetStretchParam() const
         {
             return drawParam_;
         }

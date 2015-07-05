@@ -468,7 +468,7 @@ namespace nui
             window_->InvalidateRect(rootRect);
         }
 
-        void NFrame::Draw(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect)
+        void NFrame::Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn)
         {
             if(!IsVisible() || !IsValid())
                 return;
@@ -476,16 +476,16 @@ namespace nui
             Base::NRect rect(frameRect_);
             rect.Offset(ptOffset.X, ptOffset.Y);
 
-            if(!clipRect.Overlap(rect))
+            if(!::RectInRegion(clipRgn, rect))
                 return;
 
-            NRenderClip clip(render, clipRect, rect);
+            NRenderClip clip(render, clipRgn, rect);
 
             DrawBkg(render, rect);
             DrawContent(render, rect);
             DrawFore(render, rect);
 
-            DrawChilds(render, ptOffset, clipRect);
+            DrawChilds(render, ptOffset, clipRgn);
         }
 
         void NFrame::OnParentChanged()
@@ -615,14 +615,14 @@ namespace nui
             UNREFERENCED_PARAMETER(rect);
         }
 
-        void NFrame::DrawChilds(NRender* render, Base::NPoint& ptOffset, const Base::NRect& clipRect)
+        void NFrame::DrawChilds(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn)
         {
             ptOffset.Offset(frameRect_.Left, frameRect_.Top);
             FrameList::const_iterator ite = childs_.begin();
             for(; ite != childs_.end(); ++ ite)
             {
                 NFrame* const & child = *ite;
-                child->Draw(render, ptOffset, clipRect);
+                child->Draw(render, ptOffset, clipRgn);
             }
             ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
         }

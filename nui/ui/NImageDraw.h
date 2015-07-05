@@ -45,7 +45,7 @@ namespace nui
             virtual ImageDrawType::Type GetDrawType() const = 0;
 
             virtual NImageDraw* SetStretchParam(int left, int top, int right, int bottom) = 0;
-            virtual Base::NRect GetStretchParam() const = 0;
+            virtual const Base::NRect& GetStretchParam() const = 0;
         };
     }
 }

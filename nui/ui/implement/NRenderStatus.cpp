@@ -9,6 +9,7 @@ namespace nui
         {
             lastTime_ = 0;
             text_ = NUiBus::Instance().GetResourceLoader()->CreateText(_T(""), MemToolParam);
+            text_->SetSingleLine(false);
         }
 
         NRenderStatus::~NRenderStatus()
@@ -21,15 +22,18 @@ namespace nui
             lastTime_ = ::GetTickCount();
         }
 
-        void NRenderStatus::DrawStatus(NRender* render, const Base::NRect& rcClient)
+        void NRenderStatus::DrawStatus(NRender* render, const Base::NRect& rcClient, HRGN clipRgn)
         {
             DWORD currentTime = ::GetTickCount();
 
+            Base::NRect invalidRect;
+            ::GetRgnBox(clipRgn, invalidRect);
+
             Base::NString status;
             if(currentTime <= lastTime_)
-                status.Format(_T("FPS: MAX"));
+                status.Format(_T("FPS: MAX\r\nClipRect: (%d, %d) - (%d, %d)"), invalidRect.Left, invalidRect.Top, invalidRect.Right, invalidRect.Bottom);
             else
-                status.Format(_T("FPS: %.2f"), (double)1000 / (currentTime - lastTime_));
+                status.Format(_T("FPS: %.2f\r\nClipRect: (%d, %d) - (%d, %d)"), (double)1000 / (currentTime - lastTime_), invalidRect.Left, invalidRect.Top, invalidRect.Right, invalidRect.Bottom);
 
             lastTime_ = currentTime;
             text_->SetText(status.GetData());
