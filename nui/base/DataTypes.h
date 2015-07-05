@@ -256,14 +256,11 @@ namespace nui
                 return *reinterpret_cast<NPoint*>(const_cast<NRect*>(this));
             }
 
-            NSize& GetSize()
+            NSize GetSize() const
             {
-                return *reinterpret_cast<NSize*>(const_cast<NRect*>(this));
-            }
-
-            const NSize& GetSize() const
-            {
-                return *reinterpret_cast<NSize*>(const_cast<NRect*>(this) + 1);
+                NSize size;
+                size.SetSize(Right - Left, Bottom - Top);
+                return size;
             }
 
             bool operator == (const NRect& rect) const

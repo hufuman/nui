@@ -292,7 +292,7 @@ namespace nui
 
                 if(!IsLayered() && !IsRegionEmpty(invalidateRgn_))
                 {
-                    ::SelectClipRgn(hDc, invalidateRgn_);
+                    ::ExtSelectClipRgn(hDc, invalidateRgn_, RGN_OR);
                 }
 
                 Draw(hDc);

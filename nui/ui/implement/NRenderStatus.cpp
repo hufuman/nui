@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "../NRenderStatus.h"
 
+#include "./Gdi/AlphaDC.h"
+
 namespace nui
 {
     namespace Ui
@@ -8,8 +10,8 @@ namespace nui
         NRenderStatus::NRenderStatus()
         {
             lastTime_ = 0;
-            text_ = NUiBus::Instance().GetResourceLoader()->CreateText(_T(""), MemToolParam);
-            text_->SetSingleLine(false);
+            index_ = 0;
+            hWnd_ = NULL;
         }
 
         NRenderStatus::~NRenderStatus()
@@ -17,34 +19,43 @@ namespace nui
             ;
         }
 
-        void NRenderStatus::BeforeDraw()
+        void NRenderStatus::BeforeDraw(HWND hWnd)
         {
+            hWnd_ = hWnd;
             lastTime_ = ::GetTickCount();
         }
 
-        void NRenderStatus::DrawStatus(NRender* render, const Base::NRect& rcClient, HRGN clipRgn)
+        void NRenderStatus::DrawStatus(NRender* render)
         {
             DWORD currentTime = ::GetTickCount();
 
-            Base::NRect invalidRect;
-            ::GetRgnBox(clipRgn, invalidRect);
-
             Base::NString status;
             if(currentTime <= lastTime_)
-                status.Format(_T("FPS: MAX\r\nClipRect: (%d, %d) - (%d, %d)"), invalidRect.Left, invalidRect.Top, invalidRect.Right, invalidRect.Bottom);
+                status.Format(_T("Index: %d\r\nFPS: MAX"), ++ index_);
             else
-                status.Format(_T("FPS: %.2f\r\nClipRect: (%d, %d) - (%d, %d)"), (double)1000 / (currentTime - lastTime_), invalidRect.Left, invalidRect.Top, invalidRect.Right, invalidRect.Bottom);
+                status.Format(_T("Index: %d\r\nFPS: %.2f"), ++ index_, (double)1000 / (currentTime - lastTime_));
 
             lastTime_ = currentTime;
-            text_->SetText(status.GetData());
-            Base::NSize size;
-            render->GetTextSize(text_, NULL, size);
-            Base::NRect rcText;
-            rcText.SetPos(rcClient.Right - size.Width - 20, 20);
-            rcText.SetSize(size.Width, size.Height);
 
-            render->AddDrawRegion(rcText);
-            render->DrawText(text_, NULL, rcText);
+            Base::NRect rcClient;
+            ::GetClientRect(hWnd_, rcClient);
+
+            HDC hDc = ::GetDC(hWnd_);
+
+            Base::NRect rcText(rcClient);
+            ::DrawText(hDc, status.GetData(), status.GetLength(), rcText, DT_EDITCONTROL | DT_CALCRECT);
+            rcText.Offset(rcClient.Width() - rcText.Width() - 8, 8);
+
+            CAlphaDC alphaDc;
+            if(alphaDc.Init(hDc, rcText, rcClient.GetSize(), true))
+            {
+                ::SetBkColor(alphaDc, RGB(255, 255, 0));
+                ::SetBkMode(alphaDc, OPAQUE);
+                ::DrawText(alphaDc, status.GetData(), status.GetLength(), rcText, DT_EDITCONTROL);
+
+                alphaDc.EndDraw(255);
+            }
+            ::ReleaseDC(hWnd_, hDc);
         }
     }
 }

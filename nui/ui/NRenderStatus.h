@@ -12,15 +12,14 @@ namespace nui
             NRenderStatus();
             ~NRenderStatus();
 
-            void BeforeDraw();
-            void DrawStatus(NRender* render, const Base::NRect& rcClient, HRGN clipRgn);
+            void BeforeDraw(HWND hWnd);
+            void DrawStatus(NRender* render);
 
         protected:
             DWORD lastTime_;
+            int index_;
 
-            BEGIN_USE_UNEXPORT_TEMPLATE()
-                Base::NAutoPtr<NText> text_;
-            END_USE_UNEXPORT_TEMPLATE()
+            HWND hWnd_;
         };
     }
 }

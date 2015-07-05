@@ -33,6 +33,13 @@ namespace nui
                 ptr_ = NULL;
             }
 
+            T* Create(LPCSTR filePath, int line)
+            {
+                nui::Base::NReflect::GetInstance().Create(ptr_, filePath, line);
+                NAssertError(ptr_ != NULL, _T("Failed to create obj"));
+                return ptr_;
+            }
+
             ~NAutoPtr()
             {
                 NSafeRelease(ptr_);

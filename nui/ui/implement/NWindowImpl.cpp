@@ -181,15 +181,12 @@ namespace nui
 
         void NWindow::OnDraw(NRender* render, HRGN clipRgn)
         {
-            renderStatus_.BeforeDraw();
-
             Base::NRect rcClient;
             GetRect(rcClient);
             rcClient.Offset(-rcClient.Left, -rcClient.Top);
 
             if(drawCallback_ && drawCallback_(this, render, clipRgn))
             {
-                renderStatus_.DrawStatus(render, rcClient, clipRgn);
                 return;
             }
 
@@ -197,12 +194,13 @@ namespace nui
             {
                 Base::NPoint pt;
                 rootFrame_->Draw(render, pt, clipRgn);
-                renderStatus_.DrawStatus(render, rcClient, clipRgn);
             }
         }
 
         void NWindow::Draw(HDC hDc)
         {
+            renderStatus_.BeforeDraw(window_);
+
             GUARD_SCOPE(false, _T("NWindow Draw takes too long"));
             HRGN clipRgn = ::CreateRectRgn(0, 0, 0, 0);
             int clipResult = ::GetClipRgn(hDc, clipRgn);
@@ -210,7 +208,7 @@ namespace nui
             Base::NRect clientRect;
             ::GetClientRect(window_, clientRect);
 
-            if(clipResult != 1 || clipRgn == NULL)
+            if(clipResult == ERROR || clipResult == NULLREGION)
             {
                 clipRgn = ::CreateRectRgn(clientRect.Left, clientRect.Top, clientRect.Right, clientRect.Bottom);
             }
@@ -218,8 +216,10 @@ namespace nui
 
             OnDraw(render_, clipRgn);
 
+            renderStatus_.DrawStatus(render_);
             render_->DrawBack(IsLayered());
             ::DeleteObject(clipRgn);
+
         }
 
         void NWindow::SetHoverItem(NFrame* frame)

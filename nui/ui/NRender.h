@@ -28,7 +28,6 @@ namespace nui
             virtual void DrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue) = 0;
             virtual void DrawText(NText* text, NFont* font, const Base::NRect& rect) = 0;
             virtual void GetTextSize(NText* text, NFont* font, Base::NSize& rect) = 0;
-            virtual void AddDrawRegion(const Base::NRect& rcRegion) = 0;
 
             virtual Base::NHolder ClipRgn(HRGN clipRgn) = 0;
 
