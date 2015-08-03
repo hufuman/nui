@@ -282,7 +282,10 @@ namespace nui
             {
                 if(!IsRegionEmpty(invalidateRgn_))
                 {
-                    ::PostMessage(window_, WM_PAINT, 0, 0);
+                    if(IsLayered())
+                        ::PostMessage(window_, WM_PAINT, 0, 0);
+                    else
+                        ::InvalidateRgn(window_, invalidateRgn_, FALSE);
                 }
             }
             else if(message == WM_PAINT)

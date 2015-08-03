@@ -10,4 +10,8 @@ public:
 
 private:
     bool OnButtonClicked(NFrame* pButton, const Base::NPoint& point);
+    void PaintTest();
+
+private:
+    NAutoPtr<NWindow> window_;
 };

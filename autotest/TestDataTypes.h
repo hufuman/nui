@@ -118,4 +118,17 @@ TEST_F(TestDataTypes, Rect)
     rect8.Top = testY;
     rect8.SetSize(testWidth, testHeight);
     EXPECT_EQ(rect8, rect7);
+
+    NRect rect9;
+    rect9.SetRect(100, 120, 140, 180);
+    EXPECT_EQ(rect9.GetLeftTop().X, 100);
+    EXPECT_EQ(rect9.GetLeftTop().Y, 120);
+    EXPECT_EQ(rect9.GetSize().Width, 40);
+    EXPECT_EQ(rect9.GetSize().Height, 60);
+
+    const NRect rect10(130, 180, 234, 334);
+    EXPECT_EQ(rect10.GetLeftTop().X, 130);
+    EXPECT_EQ(rect10.GetLeftTop().Y, 180);
+    EXPECT_EQ(rect10.GetSize().Width, 234 - 130);
+    EXPECT_EQ(rect10.GetSize().Height, 334 - 180);
 }

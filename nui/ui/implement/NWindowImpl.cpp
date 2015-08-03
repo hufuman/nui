@@ -208,7 +208,7 @@ namespace nui
             Base::NRect clientRect;
             ::GetClientRect(window_, clientRect);
 
-            if(clipResult == ERROR || clipResult == NULLREGION)
+            if(clipResult != 1)
             {
                 clipRgn = ::CreateRectRgn(clientRect.Left, clientRect.Top, clientRect.Right, clientRect.Bottom);
             }

@@ -36,7 +36,7 @@ namespace
         strParams = strParams.FormatArgs(format, params);
 
         strFormat =
-            _T("Assertion Failed£¡\r\n\r\n")
+            _T("Assertion Failed.\r\n\r\n")
             _T("File: %1\r\n")
             _T("Line: %2\r\n")
             _T("Message: %3\r\n\r\n");
