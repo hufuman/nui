@@ -7,6 +7,7 @@
 #include "WindowMap.h"
 
 #include "../NMsgLoop.h"
+#include "./Gdi/GdiObjMgr.h"
 
 namespace nui
 {
@@ -60,6 +61,10 @@ namespace nui
                 nui::Data::NModule::GetInst().GetNUIModule(),
                 static_cast<LPVOID>(this));
             NAssertError(window_ != NULL, _T("Failed to create window"));
+
+            // Set Font
+            HFONT hFont = GdiObjMgr::Instance().GetDefaultFont();
+            ::SendMessage(window_, WM_SETFONT, (WPARAM)hFont, 0);
 
             if(window_)
             {

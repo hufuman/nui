@@ -521,6 +521,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NEdit.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NFrameImpl.cpp"
 					>
 				</File>
@@ -730,6 +734,10 @@
 				>
 				<File
 					RelativePath=".\ui\NButton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NEdit.h"
 					>
 				</File>
 				<File

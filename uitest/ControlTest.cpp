@@ -60,8 +60,19 @@ void CControlTest::Test()
     window_->GetRootFrame()->AddChild(pImg1);
     */
 
-    ::CreateWindowEx(0, WC_EDIT, _T("TEST"), WS_VISIBLE | WS_CHILD, 0, 0, 100, 18, window_->GetNative(), NULL, NULL, 0);
-    ::CreateWindowEx(0, WC_EDIT, _T("TEST"), WS_VISIBLE | WS_CHILD, 80, 80, 100, 18, window_->GetNative(), NULL, NULL, 0);
+    NInstPtr<NEdit> pEdit1(MemToolParam);
+    pEdit1->SetLayout(NFrame::LayoutLeft | NFrame::LayoutTop);
+    pEdit1->SetMargin(10, 20, 0, 0);
+    pEdit1->SetAutoSize(false);
+    pEdit1->SetSize(100, 18);
+    window_->GetRootFrame()->AddChild(pEdit1);
+
+    NInstPtr<NEdit> pEdit2(MemToolParam);
+    pEdit2->SetLayout(NFrame::LayoutLeft | NFrame::LayoutTop);
+    pEdit2->SetMargin(10, 50, 0, 0);
+    pEdit2->SetAutoSize(false);
+    pEdit2->SetSize(100, 18);
+    window_->GetRootFrame()->AddChild(pEdit2);
 
     // Gif Image
     for(int i=0; i<0; ++ i)

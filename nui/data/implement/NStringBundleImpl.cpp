@@ -48,12 +48,12 @@ bool NStringBundleImpl::InitStringBundle(LPCTSTR stringLang)
 const NString& NStringBundleImpl::GetString(const NString& name)
 {
     if(name.GetLength() < 1 || name[0] != _T('@'))
-        return NString::EmptyString;
+        return name;
 
     // Find BundleName and stringId
     int pos = name.IndexOf(_T(':'));
     if(pos <= 1 || pos >= name.GetLength() - 1)
-        return NString::EmptyString;
+        return name;
 
     NString bundleName = name.SubString(1, pos - 1);
     NString stringId = name.SubString(pos + 1);
@@ -66,7 +66,7 @@ const NString& NStringBundleImpl::GetString(const NString& name)
         const StringBundle& stringBundle = iteBundle->second;
         StringBundle::const_iterator iteString = stringBundle.find(stringId);
         if(iteString == stringBundle.end())
-            return NString::EmptyString;
+            return name;
         return iteString->second;
     }
 
@@ -75,12 +75,12 @@ const NString& NStringBundleImpl::GetString(const NString& name)
     bundlePath += _T(".xml");
     NAutoPtr<NDataReader> reader = CreateDataReader(ReaderXml);
     if(!reader->ParseFile(bundlePath.GetData()))
-        return NString::EmptyString;
+        return name;
 
     StringBundle tmpBundle;
     std::pair<BundleMap::iterator, bool> result = bundleMap_.insert(std::make_pair(bundleName, tmpBundle));
     if(!result.second)
-        return NString::EmptyString;
+        return name;
 
     StringBundle& bundleData = result.first->second;
 
@@ -101,6 +101,6 @@ const NString& NStringBundleImpl::GetString(const NString& name)
 
     if(hasId)
         return bundleData[stringId];
-    return NString::EmptyString;
+    return name;
 }
 

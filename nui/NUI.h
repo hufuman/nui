@@ -86,6 +86,7 @@ using namespace fastdelegate;
 #include "./ui/NShapeDraw.h"
 #include "./ui/NText.h"
 #include "./ui/NScroll.h"
+#include "./ui/NEdit.h"
 
 #include "./parser/NParser.h"
 

@@ -627,27 +627,28 @@ namespace nui
             ptOffset.Offset(- frameRect_.Left, - frameRect_.Top);
         }
 
-        void NFrame::SetPosImpl(int left, int top, bool force)
+        bool NFrame::SetPosImpl(int left, int top, bool force)
         {
-            if(layout_ != LayoutNone && !force)
-                return;
+            if(layout_ > 0 && layout_ <= LayoutPosEnd && !force)
+                return false;
             if(frameRect_.Left == left && frameRect_.Top == top)
-                return;
+                return false;
             Invalidate();
             frameRect_.Left = left;
             frameRect_.Top = top;
             Invalidate();
+            return true;
         }
 
-        void NFrame::SetSizeImpl(int width, int height, bool force)
+        bool NFrame::SetSizeImpl(int width, int height, bool force)
         {
-            if(!force && (IsAutoSize() || layout_ != LayoutNone))
-                return;
+            if(!force && (IsAutoSize() || layout_ >= LayoutSizeStart))
+                return false;
 
             int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
             int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
             if(frameRect_.Width() == width && frameRect_.Height() == height)
-                return;
+                return false;
 
             Invalidate();
             frameRect_.SetSize(frameWidth, frameHeight);
@@ -661,6 +662,7 @@ namespace nui
                 child->ReLayout();
                 ++ ite;
             }
+            return true;
         }
     }
 }

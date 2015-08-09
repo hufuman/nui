@@ -23,6 +23,7 @@ namespace nui
             HFONT GetFont(LONG fontSize, BOOL bold, BOOL italic, BOOL underline, BOOL strikeOut, LPCTSTR fontName);
             void ReleaseFont(HFONT hFont);
 
+            HFONT GetDefaultFont();
             Base::NString GetDefaultFontName() const;
 
         protected:

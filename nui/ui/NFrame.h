@@ -67,6 +67,9 @@ namespace nui
 
                 LayoutHCenter   = 0x0010,
                 LayoutVCenter   = 0x0020,
+                LayoutPosEnd    = 0x0020,
+
+                LayoutSizeStart = 0x0040,
                 LayoutHFill     = 0x0040,
                 LayoutVFill     = 0x0080,
             };
@@ -144,8 +147,8 @@ namespace nui
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
             virtual void DrawChilds(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn);
 
-            virtual void SetPosImpl(int left, int top, bool force);
-            virtual void SetSizeImpl(int width, int height, bool force);
+            virtual bool SetPosImpl(int left, int top, bool force);
+            virtual bool SetSizeImpl(int width, int height, bool force);
 
         private:
             static void SetParentHelper(NFrame* child, NFrame* newParent);
