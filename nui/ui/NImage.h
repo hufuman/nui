@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "NRichFrame.h"
+#include "NFrame.h"
 
 namespace nui
 {
@@ -9,7 +9,7 @@ namespace nui
     {
         BEGIN_USE_UNEXPORT_TEMPLATE()
 
-        class NUI_CLASS NImage : public NRichFrame
+        class NUI_CLASS NImage : public NFrame
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("image"))
         public:

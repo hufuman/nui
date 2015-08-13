@@ -9,7 +9,7 @@ namespace nui
     namespace Ui
     {
         class NRender;
-        class NFrame;
+        class NFrameBase;
         class NResourceLoader;
 
         class NUI_CLASS NUiBus
@@ -27,13 +27,13 @@ namespace nui
             NRender* CreateRender();
             NResourceLoader* GetResourceLoader();
 
-            NFrame* GetCaptureFrame();
-            void SetCaptureFrame(NFrame* frame);
+            NFrameBase* GetCaptureFrame();
+            void SetCaptureFrame(NFrameBase* frame);
 
         private:
             NRenderType::Type renderType_;
             NResourceLoader* loader_;
-            NFrame* captureFrame_;
+            NFrameBase* captureFrame_;
         };
     }
 }

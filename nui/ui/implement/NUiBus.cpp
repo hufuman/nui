@@ -71,12 +71,12 @@ namespace nui
             return loader_;
         }
 
-        NFrame* NUiBus::GetCaptureFrame()
+        NFrameBase* NUiBus::GetCaptureFrame()
         {
             return captureFrame_;
         }
 
-        void NUiBus::SetCaptureFrame(NFrame* frame)
+        void NUiBus::SetCaptureFrame(NFrameBase* frame)
         {
             captureFrame_ = frame;
         }

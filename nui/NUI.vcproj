@@ -525,6 +525,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NFrameBaseImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NFrameImpl.cpp"
 					>
 				</File>
@@ -538,10 +542,6 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NRenderStatus.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ui\implement\NRichFrameImpl.cpp"
 					>
 				</File>
 				<File
@@ -745,11 +745,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ui\NImage.h"
+					RelativePath=".\ui\NFrameBase.h"
 					>
 				</File>
 				<File
-					RelativePath=".\ui\NRichFrame.h"
+					RelativePath=".\ui\NImage.h"
 					>
 				</File>
 				<File
@@ -793,6 +793,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\parser\implement\FrameBaseParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\FrameBaseParserImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\parser\implement\FrameParserImpl.cpp"
 					>
 				</File>
@@ -814,14 +822,6 @@
 				</File>
 				<File
 					RelativePath=".\parser\implement\ParserUtil.h"
-					>
-				</File>
-				<File
-					RelativePath=".\parser\implement\RichFrameParserImpl.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\parser\implement\RichFrameParserImpl.h"
 					>
 				</File>
 			</Filter>

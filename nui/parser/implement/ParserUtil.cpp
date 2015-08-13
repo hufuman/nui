@@ -32,10 +32,19 @@ namespace ParserUtil
         parser->PreParse(styleNode, baseObj);
         NString attrName;
         NString attrValue;
+
+        // Read autoSize first, or size=xx,xx will fail
+        if(styleNode->ReadValue(_T("autoSize"), attrValue))
+        {
+            parser->SetAttr(_T("autoSize"), attrValue);
+        }
+
         for(int i=0; ; ++ i)
         {
             if(!styleNode->ReadValue(i, attrName, attrValue))
                 break;
+            if(attrName == _T("autoSize"))
+                continue;
             parser->SetAttr(attrName, attrValue);
         }
         parser->PostParse();

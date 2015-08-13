@@ -545,6 +545,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NFrameBaseImpl.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NFrameImpl.cpp"
 							>
 						</File>
@@ -558,10 +562,6 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\implement\NRenderStatus.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NRichFrameImpl.cpp"
 							>
 						</File>
 						<File
@@ -765,11 +765,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\NImage.h"
+							RelativePath="..\nui\ui\NFrameBase.h"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\NRichFrame.h"
+							RelativePath="..\nui\ui\NImage.h"
 							>
 						</File>
 						<File

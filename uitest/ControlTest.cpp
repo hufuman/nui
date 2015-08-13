@@ -60,12 +60,12 @@ void CControlTest::Test()
     window_->GetRootFrame()->AddChild(pImg1);
     */
 
-    NInstPtr<NRichFrame> posLabel(MemToolParam);
+    NInstPtr<NFrame> posLabel(MemToolParam);
     posLabel->SetPos(10, 100);
     posLabel->SetText(_T("Pos: "));
     window_->GetRootFrame()->AddChild(posLabel);
 
-    NInstPtr<NRichFrame> rangeLabel(MemToolParam);
+    NInstPtr<NFrame> rangeLabel(MemToolParam);
     rangeLabel->SetPos(10, 130);
     rangeLabel->SetText(_T("Range: "));
     window_->GetRootFrame()->AddChild(rangeLabel);
@@ -96,7 +96,7 @@ void CControlTest::Test()
     }
 
     // Label
-    NInstPtr<NRichFrame> label(MemToolParam);
+    NInstPtr<NFrame> label(MemToolParam);
     label->SetText(_T("1111111111\r\n2222222222\r\n33333333333333\r\n444444444\r\n55555555555555555\r\n"));
     label->GetRichText()->SetSingleLine(false);
     window_->GetRootFrame()->AddChild(label);

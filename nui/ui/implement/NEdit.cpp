@@ -74,7 +74,7 @@ namespace nui
             textChangeCallback_ = callback;
         }
 
-        // NRichFrame
+        // NFrame
         // data
         void NEdit::SetText(const Base::NString& text)
         {
@@ -142,7 +142,7 @@ namespace nui
             return editWindow_ != NULL && ::IsWindow(editWindow_);
         }
 
-        // NFrame
+        // NFrameBase
         bool NEdit::SetPosImpl(int left, int top, bool force)
         {
             if(!__super::SetPosImpl(left, top, force) || !IsEditValid())

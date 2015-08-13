@@ -15,7 +15,7 @@ public:
         return count;
     }
 
-    bool EnumChildCount(NFrame*, LPARAM lParam)
+    bool EnumChildCount(NFrameBase*, LPARAM lParam)
     {
         int* count = reinterpret_cast<int*>(lParam);
         ++ (*count);

@@ -28,14 +28,14 @@
 #include "TestFileUtil.h"
 
 // Ui
-#include "TestFrame.h"
+#include "TestFrameBase.h"
 #include "TestMsgLoop.h"
 #include "TestWindowBase.h"
 #include "TestTimerSrv.h"
 
 // Parser
+#include "TestFrameBaseParser.h"
 #include "TestFrameParser.h"
-#include "TestRichFrameParser.h"
 
 
 int _tmain(int argc, _TCHAR* argv[])

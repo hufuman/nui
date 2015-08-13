@@ -4,7 +4,6 @@
 
 #include "NWindowBase.h"
 #include "NRender.h"
-#include "NRichFrame.h"
 #include "NRenderStatus.h"
 #include "../base/NInstPtr.h"
 #include "../base/NAutoPtr.h"
@@ -13,6 +12,7 @@ namespace nui
 {
     namespace Ui
     {
+        class NFrame;
         class NWindow;
         typedef FastDelegate3<NWindow*, NRender*, HRGN, bool> WindowDrawCallback;
 
@@ -24,7 +24,7 @@ namespace nui
             NWindow();
             ~NWindow();
 
-            NRichFrame* GetRootFrame();
+            NFrame* GetRootFrame();
             NRender* GetRender() const;
 
             void SetDrawCallback(WindowDrawCallback callback);
@@ -42,7 +42,7 @@ namespace nui
         protected:
 
         BEGIN_USE_UNEXPORT_TEMPLATE()
-            Base::NAutoPtr<NRichFrame> rootFrame_;
+            Base::NAutoPtr<NFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;
             WindowDrawCallback drawCallback_;
 

@@ -1,13 +1,13 @@
 #pragma once
 
 
-#include "NRichFrame.h"
+#include "NFrame.h"
 
 namespace nui
 {
     namespace Ui
     {
-        class NUI_CLASS NScroll : public NRichFrame
+        class NUI_CLASS NScroll : public NFrame
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("scroll"))
         public:

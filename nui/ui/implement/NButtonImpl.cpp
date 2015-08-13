@@ -11,7 +11,7 @@ namespace nui
 
         NButton::NButton()
         {
-            Util::Misc::CheckFlag(frameFlags_, NRichFrame::FlagCanHover, true);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagCanHover, true);
             NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
             SetForeDraw(loader->LoadImage(_T("@skin:common\\button.png")));
         }

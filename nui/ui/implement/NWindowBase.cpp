@@ -393,6 +393,7 @@ namespace nui
             {
                 style |= WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_MAXIMIZEBOX;
             }
+            style |= WS_CLIPCHILDREN;
         }
     }
 }

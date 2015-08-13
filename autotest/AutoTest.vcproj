@@ -285,7 +285,7 @@
 			Name="ui"
 			>
 			<File
-				RelativePath=".\TestFrame.h"
+				RelativePath=".\TestFrameBase.h"
 				>
 			</File>
 			<File
@@ -321,11 +321,11 @@
 			Name="parser"
 			>
 			<File
-				RelativePath=".\TestFrameParser.h"
+				RelativePath=".\TestFrameBaseParser.h"
 				>
 			</File>
 			<File
-				RelativePath=".\TestRichFrameParser.h"
+				RelativePath=".\TestFrameParser.h"
 				>
 			</File>
 		</Filter>

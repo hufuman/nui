@@ -1,16 +1,13 @@
 #pragma once
 
-#include "FrameParserImpl.h"
+#include "BaseParser.h"
 
 
-class RichFrameParserImpl : public FrameParserImpl
+class FrameBaseParserImpl : public NBaseParser
 {
-    DECLARE_REFLECTION(TEXT("nui"), TEXT("richframeparser"))
+    DECLARE_REFLECTION(TEXT("nui"), TEXT("framebaseparser"))
 public:
     virtual void PreParse(nui::Data::NDataReader* styleNode, nui::Base::NBaseObj* target);
-    virtual void PostParse();
     virtual bool SetAttr(const nui::Base::NString& attrName, const nui::Base::NString& attrValue);
-
-protected:
-    nui::Ui::NText* text_;
+    virtual void PostParse();
 };

@@ -18,8 +18,8 @@ namespace nui
 
         NScroll::NScroll()
         {
-            Util::Misc::CheckFlag(frameFlags_, NRichFrame::FlagCanHover, true);
-            Util::Misc::CheckFlag(frameFlags_, NRichFrame::FlagAutoSize, false);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagCanHover, true);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, false);
 
             scrollRange_ = 100;
             scrollPos_ = 0;

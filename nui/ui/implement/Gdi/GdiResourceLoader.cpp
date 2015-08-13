@@ -87,7 +87,7 @@ namespace nui
                     break;
 
                 // frame count
-                int nFrameCount = gdiplusImage->GetFrameCount(&pDimensionIDs[0]);
+                int NFrameBaseCount = gdiplusImage->GetFrameCount(&pDimensionIDs[0]);
 
                 // delay info
                 UINT totalSize = gdiplusImage->GetPropertyItemSize(PropertyTagFrameDelay);
@@ -96,16 +96,16 @@ namespace nui
 
                 if(status == Gdiplus::Ok)
                 {
-                    for(int i=0; i<nFrameCount; ++ i)
+                    for(int i=0; i<NFrameBaseCount; ++ i)
                     {
                         imageData.vctDelayTicks.AddItem(((long*)pFrameDelay->value)[i]*10);
                     }
                 }
 
                 // complete delay count
-                if(imageData.vctDelayTicks.Count() != nFrameCount)
+                if(imageData.vctDelayTicks.Count() != NFrameBaseCount)
                 {
-                    for(int i=imageData.vctDelayTicks.Count(); i < nFrameCount; ++ i)
+                    for(int i=imageData.vctDelayTicks.Count(); i < NFrameBaseCount; ++ i)
                     {
                         imageData.vctDelayTicks.AddItem(DefaultDelayCount);
                     }
@@ -114,7 +114,7 @@ namespace nui
                 // get all images
                 HBITMAP hBitmap = NULL;
                 GUID pageGuid = Gdiplus::FrameDimensionTime;
-                for(int i=0; i<nFrameCount; ++ i)
+                for(int i=0; i<NFrameBaseCount; ++ i)
                 {
                     status = gdiplusImage->SelectActiveFrame(&pageGuid, i);
                     NAssertError(status == Gdiplus::Ok, _T(""));

@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include "../NFrame.h"
 #include "../NWindow.h"
 
 
@@ -17,15 +19,15 @@ namespace nui
         {
         }
 
-        NRichFrame* NWindow::GetRootFrame()
+        NFrame* NWindow::GetRootFrame()
         {
             if(rootFrame_ == NULL)
             {
-                Base::NInstPtr<NRichFrame> rootFrame(MemToolParam);
-                rootFrame_ = (NRichFrame*)rootFrame;
+                Base::NInstPtr<NFrame> rootFrame(MemToolParam);
+                rootFrame_ = (NFrame*)rootFrame;
                 rootFrame_->SetId(_T("rootFrame"));
                 rootFrame_->window_ = this;
-                rootFrame->SetLayout(NFrame::LayoutHFill | NFrame::LayoutVFill);
+                rootFrame->SetLayout(NFrameBase::LayoutHFill | NFrameBase::LayoutVFill);
                 Base::NRect rect;
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());
@@ -158,7 +160,7 @@ namespace nui
                         Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                         hoverFrame_->OnClicked(point);
                         if(hoverFrame_)
-                            hoverFrame_->UpdateStatus(NFrame::StatusPressed, false);
+                            hoverFrame_->UpdateStatus(NFrameBase::StatusPressed, false);
                     }
                 }
                 break;
@@ -225,10 +227,10 @@ namespace nui
         void NWindow::SetHoverItem(NFrame* frame)
         {
             if(hoverFrame_ && hoverFrame_ != frame)
-                hoverFrame_->UpdateStatus(NFrame::StatusHover | NFrame::StatusPressed, false);
+                hoverFrame_->UpdateStatus(NFrameBase::StatusHover | NFrameBase::StatusPressed, false);
             hoverFrame_ = frame;
             if(hoverFrame_)
-                hoverFrame_->UpdateStatus((Util::Shell::IsKeyPressed(VK_LBUTTON) ? NFrame::StatusPressed : NFrame::StatusHover), true);
+                hoverFrame_->UpdateStatus((Util::Shell::IsKeyPressed(VK_LBUTTON) ? NFrameBase::StatusPressed : NFrameBase::StatusHover), true);
         }
 
         void NWindow::RefreshHoverItem(const Base::NPoint& point)
@@ -238,11 +240,11 @@ namespace nui
             NFrame* newHover = NULL;
             if(hoverFrame_)
             {
-                newHover = hoverFrame_->GetChildByPointAndFlag(point, NFrame::FlagCanHover);
+                newHover = dynamic_cast<NFrame*>(hoverFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover));
             }
             if(!newHover)
             {
-                newHover = rootFrame_->GetChildByPointAndFlag(point, NFrame::FlagCanHover);
+                newHover = dynamic_cast<NFrame*>(rootFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover));
             }
             SetHoverItem(newHover);
         }

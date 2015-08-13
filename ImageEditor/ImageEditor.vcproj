@@ -513,6 +513,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NEdit.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NFrameBaseImpl.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NFrameImpl.cpp"
 							>
 						</File>
@@ -526,10 +534,6 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\implement\NRenderStatus.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NRichFrameImpl.cpp"
 							>
 						</File>
 						<File
@@ -725,15 +729,19 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\NEdit.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\NFrame.h"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\NImage.h"
+							RelativePath="..\nui\ui\NFrameBase.h"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\NRichFrame.h"
+							RelativePath="..\nui\ui\NImage.h"
 							>
 						</File>
 						<File
@@ -746,6 +754,10 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\NWindowBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NWndUi.h"
 							>
 						</File>
 					</Filter>

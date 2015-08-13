@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "NRichFrame.h"
+#include "NFrame.h"
 
 namespace nui
 {
@@ -11,7 +11,7 @@ namespace nui
         class NUI_CLASS NEdit;
         typedef FastDelegate1<NEdit*, void> EditTextChangeEventCallback;
 
-        class NUI_CLASS NEdit : public NWndUi<NRichFrame>
+        class NUI_CLASS NEdit : public NWndUi<NFrame>
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("edit"))
         public:
@@ -35,7 +35,7 @@ namespace nui
             // Event
             virtual void SetTextChangeCallback(EditTextChangeEventCallback callback);
 
-            // NRichFrame
+            // NFrame
             // data
             virtual void SetText(const Base::NString& text);
             virtual Base::NString GetText() const;
@@ -47,7 +47,7 @@ namespace nui
             virtual void OnWindowChanged(NWindow* window);
             bool IsEditValid() const;
 
-            // NFrame
+            // NFrameBase
             virtual bool SetPosImpl(int left, int top, bool force);
             virtual bool SetSizeImpl(int width, int height, bool force);
 
