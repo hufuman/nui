@@ -205,15 +205,17 @@ namespace nui
         {
             if(drawTimerId_ == 0)
                 drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
-            ResetInvalidRgn();
+            Base::NRect rcClient;
+            ::GetClientRect(window_, rcClient);
+            InvalidateRect(rcClient);
         }
 
         void NWindowBase::InvalidateRect(const Base::NRect& rect)
         {
             if(drawTimerId_ == 0)
                 drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
-            // when invalidateRgn_ is null, the whole window need to be redrawn
 
+            // when invalidateRgn_ is null, the whole window need to be redrawn
             HRGN tempRgn = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
             ::CombineRgn(invalidateRgn_, invalidateRgn_, tempRgn, RGN_OR);
             ::DeleteObject(tempRgn);
@@ -277,6 +279,13 @@ namespace nui
                 if(::TrackMouseEvent(&_Event))
                 {
                     mouseTracking_ = true;
+                }
+            }
+            else if(message == WM_SHOWWINDOW)
+            {
+                if(wParam)
+                {
+                    Invalidate();
                 }
             }
             else if(message == WM_MOUSELEAVE)

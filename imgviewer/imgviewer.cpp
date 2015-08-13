@@ -158,7 +158,7 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
     return false;
 }
 
-bool ImgViewer::DrawCallback(NWindow*, NRender* render, const NRect& clipRect)
+bool ImgViewer::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
 {
     NRect rcWnd;
     window_->GetRect(rcWnd);

@@ -47,8 +47,9 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
     if(!fileSystem)
         return false;
 
-    bool initResult = false;
-    if(nui::Util::File::IsFileExists(packFilePath) || nui::Util::File::IsFolderExists(packFilePath))
+    bool initResult = true;
+    bool nonEmptyPackFile = (nui::Util::File::IsFileExists(packFilePath) || nui::Util::File::IsFolderExists(packFilePath));
+    if(nonEmptyPackFile)
         initResult = fileSystem->Init(packFilePath);
     NAssertError(initResult, _T("Failed to init NFileSystem"));
     if(!initResult)
@@ -59,10 +60,13 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
     if(!stringBundle)
         return false;
 
-    initResult = stringBundle->InitStringBundle(lang);
-    NAssertError(initResult, _T("Failed to init NStringBundle"));
-    if(!initResult)
-        return false;
+    if(nonEmptyPackFile)
+    {
+        initResult = stringBundle->InitStringBundle(lang);
+        NAssertError(initResult, _T("Failed to init NStringBundle"));
+        if(!initResult)
+            return false;
+    }
 
     nui::Ui::NUiBus::Instance().Init(type);
 

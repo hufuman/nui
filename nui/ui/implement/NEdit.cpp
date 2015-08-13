@@ -68,6 +68,12 @@ namespace nui
             ::SendMessage(editWindow_, EM_SHOWBALLOONTIP, 0, (LPARAM)&tip);
         }
 
+        // Event
+        void NEdit::SetTextChangeCallback(EditTextChangeEventCallback callback)
+        {
+            textChangeCallback_ = callback;
+        }
+
         // NRichFrame
         // data
         void NEdit::SetText(const Base::NString& text)
@@ -115,7 +121,20 @@ namespace nui
                 NULL,
                 ::GetModuleHandle(NULL),
                 0);
+            AttachWnd(editWindow_);
             ::SendMessage(editWindow_, WM_SETFONT, ::SendMessage(window->GetNative(), WM_GETFONT, 0, 0), TRUE);
+        }
+
+        bool NEdit::OnWndMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+        {
+            if(message == WM_CHAR)
+            {
+                lResult = DoDefault(message, wParam, lParam);
+                if(textChangeCallback_)
+                    textChangeCallback_(this);
+                return true;
+            }
+            return false;
         }
 
         bool NEdit::IsEditValid() const

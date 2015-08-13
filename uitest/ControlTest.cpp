@@ -31,7 +31,7 @@ void CControlTest::Test()
 //*
     // VertScroll
     NInstPtr<NScroll> pVertScroll(MemToolParam);
-    pVertScroll->SetPos(100, 100);
+    pVertScroll->SetPos(100, 200);
     pVertScroll->SetSize(16, 200);
     pVertScroll->SetScrollRange(4);
     pVertScroll->SetScrollPos(3);
@@ -39,7 +39,7 @@ void CControlTest::Test()
 
     // HorzScroll
     NInstPtr<NScroll> pHorzScroll(MemToolParam);
-    pHorzScroll->SetPos(100, 80);
+    pHorzScroll->SetPos(100, 180);
     pHorzScroll->SetSize(200, 16);
     pHorzScroll->SetScrollType(true);
     pHorzScroll->SetScrollRange(1);
@@ -60,18 +60,30 @@ void CControlTest::Test()
     window_->GetRootFrame()->AddChild(pImg1);
     */
 
+    NInstPtr<NRichFrame> posLabel(MemToolParam);
+    posLabel->SetPos(10, 100);
+    posLabel->SetText(_T("Pos: "));
+    window_->GetRootFrame()->AddChild(posLabel);
+
+    NInstPtr<NRichFrame> rangeLabel(MemToolParam);
+    rangeLabel->SetPos(10, 130);
+    rangeLabel->SetText(_T("Range: "));
+    window_->GetRootFrame()->AddChild(rangeLabel);
+
     NInstPtr<NEdit> pEdit1(MemToolParam);
     pEdit1->SetLayout(NFrame::LayoutLeft | NFrame::LayoutTop);
-    pEdit1->SetMargin(10, 20, 0, 0);
+    pEdit1->SetMargin(60, 100, 0, 0);
     pEdit1->SetAutoSize(false);
     pEdit1->SetSize(100, 18);
+    pEdit1->SetTextChangeCallback(MakeDelegate(this, &CControlTest::OnEditTextChanged));
     window_->GetRootFrame()->AddChild(pEdit1);
 
     NInstPtr<NEdit> pEdit2(MemToolParam);
     pEdit2->SetLayout(NFrame::LayoutLeft | NFrame::LayoutTop);
-    pEdit2->SetMargin(10, 50, 0, 0);
+    pEdit2->SetMargin(60, 130, 0, 0);
     pEdit2->SetAutoSize(false);
     pEdit2->SetSize(100, 18);
+    pEdit2->SetTextChangeCallback(MakeDelegate(this, &CControlTest::OnEditTextChanged));
     window_->GetRootFrame()->AddChild(pEdit2);
 
     // Gif Image
@@ -101,6 +113,11 @@ bool CControlTest::OnButtonClicked(NFrame* pButton, const Base::NPoint& point)
 {
     MessageBox(pButton->GetWindow()->GetNative(), _T("Button Clicked"), _T("Test"), MB_OK | MB_ICONINFORMATION);
     return true;
+}
+
+void CControlTest::OnEditTextChanged(NEdit* pEdit)
+{
+    ;
 }
 
 void CControlTest::PaintTest()

@@ -764,6 +764,10 @@
 					RelativePath=".\ui\NWindowBase.h"
 					>
 				</File>
+				<File
+					RelativePath=".\ui\NWndUi.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

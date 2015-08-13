@@ -16,7 +16,7 @@ public:
 
 private:
     bool MsgCallback(NWindowBase*, UINT, WPARAM, LPARAM, LRESULT&);
-    bool DrawCallback(NWindow*, NRender* render, const NRect& clipRect);
+    bool DrawCallback(NWindow* window, NRender* render, HRGN clipRgn);
     void DrawTimerFunc();
     bool OpenImage(LPCTSTR filePath);
     NString GetFileDlgExts();

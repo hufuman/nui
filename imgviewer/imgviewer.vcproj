@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="imgviewer"
+	Name="ImgViewer"
 	ProjectGUID="{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}"
 	RootNamespace="imgviewer"
 	Keyword="Win32Proj"
@@ -406,6 +406,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\nui\data\NStringBundle.h"
+						>
+					</File>
+					<File
 						RelativePath="..\nui\data\NZip.h"
 						>
 					</File>
@@ -473,6 +477,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\data\implement\NStringBundleImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\data\implement\NStringBundleImpl.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\data\implement\NZipImpl.cpp"
 							>
 						</File>
@@ -529,6 +541,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NEdit.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NFrameImpl.cpp"
 							>
 						</File>
@@ -546,6 +562,10 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\implement\NRichFrameImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NScrollImpl.cpp"
 							>
 						</File>
 						<File
@@ -737,6 +757,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\NEdit.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\NFrame.h"
 							>
 						</File>
@@ -749,11 +773,19 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\NScroll.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\NWindow.h"
 							>
 						</File>
 						<File
 							RelativePath="..\nui\ui\NWindowBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NWndUi.h"
 							>
 						</File>
 					</Filter>
