@@ -569,6 +569,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NWndUiImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\WindowDef.h"
 					>
 				</File>

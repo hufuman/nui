@@ -9,7 +9,7 @@ using namespace Data;
 
 IMPLEMENT_REFLECTION_EX(NParserImpl, NReflect::Singleton);
 
-NAutoPtr<NBaseObj> NParserImpl::Parse(LPCTSTR packFilePath)
+NAutoPtr<NBaseObj> NParserImpl::Parse(Ui::NFrame* parentFrame, LPCTSTR packFilePath)
 {
     NString filePath;
     NString styleName;
@@ -30,7 +30,7 @@ NAutoPtr<NBaseObj> NParserImpl::Parse(LPCTSTR packFilePath)
 
     NAutoPtr<NDataReader> styleNode = FindStyleNode(reader, styleName);
 
-    return ParserUtil::LoadObj(styleNode);
+    return ParserUtil::LoadObj(parentFrame, styleNode);
 }
 
 bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString& styleName)

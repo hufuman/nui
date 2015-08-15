@@ -5,61 +5,27 @@ namespace nui
 {
     namespace Ui
     {
+        class NUI_CLASS NWindow;
 
-        template < typename TBase >
-        class NWndUi : public TBase
+        class NUI_CLASS NWndUi : public NFrame
         {
+            friend class NWindow;
         public:
-            NWndUi()
-            {
-                realWindow_ = NULL;
-                oldWndProc_ = NULL;
-            }
-            virtual ~NWndUi(){}
+            NWndUi();
+            virtual ~NWndUi();
+
+            static NWndUi* GetWndUi(HWND hWnd);
 
         protected:
-            void AttachWnd(HWND hWnd)
-            {
-                NAssertError(hWnd != NULL && ::IsWindow(hWnd), _T("Not A Good Window"));
-                if(hWnd == NULL || !::IsWindow(hWnd))
-                    return;
-                NAssertError(realWindow_ == NULL && ::GetProp(hWnd, _T("NWndUiObj")) == NULL, _T("NWndUi Attached Already"));
-                realWindow_ = hWnd;
-                oldWndProc_ = reinterpret_cast<WNDPROC>(::GetWindowLongPtr(realWindow_, GWLP_WNDPROC));
-                ::SetProp(realWindow_, _T("NWndUiObj"), reinterpret_cast<HANDLE>(this));
-                ::SetWindowLongPtr(realWindow_, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&NWndUi::_WndUiProc));
-            }
 
-            static LRESULT WINAPI _WndUiProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-            {
-                NWndUi* pThis = reinterpret_cast<NWndUi*>(::GetProp(hWnd, _T("NWndUiObj")));
-                if(pThis == NULL)
-                    return ::CallWindowProc(&::DefWindowProc, hWnd, message, wParam, lParam);
+            virtual bool GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle) = 0;
+            virtual bool OnParentCommand(WORD notifyCode) = 0;
 
-                LRESULT lResult = false;
-                if(pThis->OnWndMessage(message, wParam, lParam, lResult))
-                    return lResult;
+            virtual void OnWindowChanged(NWindow* window);
 
-                return pThis->DoDefault(message, wParam, lParam);
-            }
-
-            LRESULT DoDefault(UINT message, WPARAM wParam, LPARAM lParam)
-            {
-                WNDPROC wndProd = oldWndProc_ == NULL ? ::DefWindowProc : oldWndProc_;
-                return ::CallWindowProc(wndProd, realWindow_, message, wParam, lParam);
-            }
-
-            virtual bool OnWndMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
-            {
-                UNREFERENCED_PARAMETER(message);
-                UNREFERENCED_PARAMETER(wParam);
-                UNREFERENCED_PARAMETER(lParam);
-                UNREFERENCED_PARAMETER(lResult);
-                return false;
-            }
+            void AttachWnd(HWND hWnd);
 
         private:
-            WNDPROC oldWndProc_;
             HWND realWindow_;
         };
 

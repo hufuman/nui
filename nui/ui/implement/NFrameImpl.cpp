@@ -23,6 +23,43 @@ namespace nui
             foreDraw_ = NULL;
         }
 
+        void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, UINT layout, LPCTSTR frameText)
+        {
+            NAssertError(parentFrame != NULL, _T("Create twice"));
+            SetId(frameId);
+            SetText(frameText);
+            SetLayout(layout);
+            if(parentFrame != NULL)
+                parentFrame->AddChild(this);
+            OnCreate();
+        }
+
+        void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NPoint& pos, LPCTSTR frameText)
+        {
+            SetId(frameId);
+            SetText(frameText);
+            SetPos(pos.X, pos.Y);
+            if(parentFrame != NULL)
+                parentFrame->AddChild(this);
+            OnCreate();
+        }
+
+        void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText)
+        {
+            SetId(frameId);
+            SetText(frameText);
+            SetPos(rect.Left, rect.Top);
+            SetSize(rect.Width(), rect.Height());
+            if(parentFrame != NULL)
+                parentFrame->AddChild(this);
+            OnCreate();
+        }
+
+        void NFrame::OnCreate()
+        {
+            ;
+        }
+
         void NFrame::OnParentChanged()
         {
             __super::OnParentChanged();

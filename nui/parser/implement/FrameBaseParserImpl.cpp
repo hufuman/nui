@@ -14,53 +14,34 @@ IMPLEMENT_REFLECTION(FrameBaseParserImpl);
 void FrameBaseParserImpl::PreParse(nui::Data::NDataReader* styleNode, nui::Base::NBaseObj* target)
 {
     NBaseParser::PreParse(styleNode, target);
-}
 
-bool FrameBaseParserImpl::SetAttr(const nui::Base::NString& attrName, const nui::Base::NString& attrValue)
-{
-    NFrameBase* targetFrame = dynamic_cast<NFrameBase*>(targetObj_);
+    NString strTmp;
+    NPoint pos;
+    NSize size;
+    NRect rect;
+    bool bFlag;
+    NFrameBase* targetFrame = dynamic_cast<NFrameBase*>(target);
 
-    if(attrName == _T("id"))
-    {
-        targetFrame->SetId(attrValue.GetData());
-    }
-    else if(attrName == _T("visible"))
-    {
-        targetFrame->SetVisible(ParserUtil::ParseBool(attrValue.GetData()));
-    }
-    else if(attrName == _T("enabled"))
-    {
-        targetFrame->SetEnabled(ParserUtil::ParseBool(attrValue.GetData()));
-    }
-    else if(attrName == _T("pos"))
-    {
-        NPoint point;
-        if(ParserUtil::ParsePoint(attrValue.GetData(), point))
-            targetFrame->SetPos(point.X, point.Y);
-    }
-    else if(attrName == _T("size"))
-    {
-        NSize size;
-        if(ParserUtil::ParseSize(attrValue.GetData(), size))
-            targetFrame->SetSize(size.Width, size.Height);
-    }
-    else if(attrName == _T("minSize"))
-    {
-        NSize size;
-        if(ParserUtil::ParseSize(attrValue.GetData(), size))
-            targetFrame->SetMinSize(size.Width, size.Height);
-    }
-    else if(attrName == _T("autoSize"))
-    {
-        targetFrame->SetAutoSize(ParserUtil::ParseBool(attrValue.GetData()));
-    }
-    else if(attrName == _T("margin"))
-    {
-        NRect rect;
-        if(ParserUtil::ParseRect(attrValue.GetData(), rect))
-            targetFrame->SetMargin(rect.Left, rect.Top, rect.Right, rect.Bottom);
-    }
-    else if(attrName == _T("layout"))
+    // parser autosize first, or size=xxx will fail
+    if(styleNode->ReadValue(_T("autoSize"), bFlag))
+        targetFrame->SetAutoSize(bFlag);
+
+    if(styleNode->ReadValue(_T("id"), strTmp))
+        targetFrame->SetId(strTmp.GetData());
+
+    if(styleNode->ReadValue(_T("pos"), pos))
+        targetFrame->SetPos(pos.X, pos.Y);
+
+    if(styleNode->ReadValue(_T("size"), size))
+        targetFrame->SetSize(size.Width, size.Height);
+
+    if(styleNode->ReadValue(_T("size"), size))
+        targetFrame->SetMinSize(size.Width, size.Height);
+
+    if(styleNode->ReadValue(_T("margin"), rect))
+        targetFrame->SetMargin(rect.Left, rect.Top, rect.Right, rect.Bottom);
+
+    if(styleNode->ReadValue(_T("layout"), strTmp))
     {
         NString token;
         UINT layout = NFrameBase::LayoutNone;
@@ -80,7 +61,7 @@ bool FrameBaseParserImpl::SetAttr(const nui::Base::NString& attrName, const nui:
             {   _T("hcenter"), NFrameBase::LayoutHCenter    },
             {   _T("vcenter"), NFrameBase::LayoutVCenter    },
         };
-        for(int i=0; attrValue.Tokenize(i, _T(","), false, token) ; ++i)
+        for(int i=0; strTmp.Tokenize(i, _T(","), false, token) ; ++i)
         {
             for(int j=0; j<_countof(layoutData); ++ j)
             {
@@ -93,25 +74,33 @@ bool FrameBaseParserImpl::SetAttr(const nui::Base::NString& attrName, const nui:
         }
         targetFrame->SetLayout(layout);
     }
-    else
-    {
-        return false;
-    }
+}
 
-    return true;
+void FrameBaseParserImpl::FillAttr()
+{
+    NFrameBase* targetFrame = dynamic_cast<NFrameBase*>(targetObj_);
+
+    bool bFlag;
+    if(styleNode_->ReadValue(_T("visible"), bFlag))
+        targetFrame->SetVisible(bFlag);
+
+    if(styleNode_->ReadValue(_T("enabled"), bFlag))
+        targetFrame->SetEnabled(bFlag);
 }
 
 void FrameBaseParserImpl::PostParse()
 {
     NAutoPtr<NFrameBase> targetFrame = dynamic_cast<NFrameBase*>(targetObj_);
 
+    bool result = false;
     for(int i=0; ; ++ i)
     {
         NAutoPtr<NDataReader> childNode;
         if(!styleNode_->ReadNode(i, childNode))
             break;
-        NAutoPtr<NFrameBase> frame = dynamic_cast<NFrameBase*>((NBaseObj*)ParserUtil::LoadObj(childNode));
-        targetFrame->AddChild(frame);
+        result = (ParserUtil::LoadObj(targetObj_, childNode) != NULL);
+        UNREFERENCED_PARAMETER(result);
+        NAssertError(result, _T("Failed to LoadObj in FrameBaseParser"));
     }
     targetFrame->Invalidate();
 }

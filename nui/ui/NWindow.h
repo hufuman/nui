@@ -32,6 +32,8 @@ namespace nui
         protected:
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
+            virtual bool OnWndCmd(WPARAM wParam);
+
             virtual void OnSize(int width, int height);
             virtual void OnDraw(NRender* render, HRGN clipRgn);
 

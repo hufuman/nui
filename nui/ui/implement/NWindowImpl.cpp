@@ -53,6 +53,13 @@ namespace nui
 
             switch(message)
             {
+            case WM_COMMAND:
+                if(OnWndCmd(wParam))
+                {
+                    lResult = 0;
+                    return true;
+                }
+                break;
             case WM_CREATE:
                 render_ = NUiBus::Instance().CreateRender();
                 break;
@@ -169,6 +176,16 @@ namespace nui
                 break;
             }
             return false;
+        }
+
+        bool NWindow::OnWndCmd(WPARAM wParam)
+        {
+            if(wParam == NULL || !::IsWindow(reinterpret_cast<HWND>(wParam)))
+                return false;
+            NWndUi* wndUi = NWndUi::GetWndUi(reinterpret_cast<HWND>(wParam));
+            if(wndUi == NULL)
+                return false;
+            return wndUi->OnParentCommand(HIWORD(wParam));
         }
 
         void NWindow::OnSize(int width, int height)

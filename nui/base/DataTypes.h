@@ -188,6 +188,16 @@ namespace nui
                     && (std::abs(y1 - y2) < (h1 + h2) / 2);
             }
 
+            bool IsEmpty() const
+            {
+                return Left == Right && Top == Bottom;
+            }
+
+            bool IsZero() const
+            {
+                return Left == 0 && Right == 0 && Top == 0 && Bottom == 0;
+            }
+
             void Intersect(const NRect& rect)
             {
                 ::IntersectRect(reinterpret_cast<LPRECT>(this), reinterpret_cast<const RECT*>(this), reinterpret_cast<const RECT*>(&rect));

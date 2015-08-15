@@ -9,6 +9,7 @@ public:
     NBaseParser()
     {
         targetObj_ = NULL;
+        styleNode_ = NULL;
     }
 
     virtual ~NBaseParser()
@@ -17,20 +18,21 @@ public:
         styleNode_ = NULL;
     }
 
+    virtual void Create(nui::Base::NBaseObj* parentObj)
+    {
+        UNREFERENCED_PARAMETER(parentObj);
+    }
+
+    // return false if not value not set, otherwise true;
+    virtual void FillAttr() = 0;
+
     virtual void PreParse(nui::Data::NDataReader* styleNode, nui::Base::NBaseObj* target)
     {
         targetObj_ = target;
         styleNode_ = styleNode;
     }
-
     virtual void PostParse()
-    {
-        targetObj_ = NULL;
-        styleNode_ = NULL;
-    }
-
-    // return false if not value not set, otherwise true;
-    virtual bool SetAttr(const nui::Base::NString& attrName, const nui::Base::NString& attrValue) = 0;
+    {}
 
 protected:
     nui::Base::NBaseObj* targetObj_;

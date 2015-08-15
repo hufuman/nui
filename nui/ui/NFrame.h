@@ -31,6 +31,10 @@ namespace nui
 
         public:
 
+            virtual void Create(NFrame* parentFrame, LPCTSTR frameId, UINT layout, LPCTSTR frameText);
+            virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NPoint& pos, LPCTSTR frameText);
+            virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText);
+
             // Event
             virtual void SetClickCallback(ClickEventCallback callback);
 
@@ -58,6 +62,7 @@ namespace nui
             virtual NFrame* GetParent() const;
 
         protected:
+            virtual void OnCreate();
             virtual void OnParentChanged();
 
             virtual void OnClicked(const nui::Base::NPoint& point);

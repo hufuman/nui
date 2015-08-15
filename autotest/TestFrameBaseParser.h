@@ -20,7 +20,7 @@ TEST_F(TestFrameBaseParser, Basic)
 {
     // Parse BaseObj
     NInstPtr<NParser> parser(MemToolParam);
-    NAutoPtr<NBaseObj> obj = parser->Parse(_T("@TestUI:TestFrameBase"));
+    NAutoPtr<NBaseObj> obj = parser->Parse(NULL, _T("@TestUI:TestFrameBase"));
     ASSERT_TRUE(obj != NULL);
 
     // Frame

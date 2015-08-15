@@ -39,7 +39,12 @@ namespace nui
             nui::Base::NString data;
             if(!ReadValue(name, data))
                 return false;
-            _stscanf(data.GetData(), TEXT("%u"), &value);
+            if(data.GetLength() == 0)
+                return false;
+            if(data[0] == _T('#'))
+                NVerify(_sntscanf(data.GetData() + 1, 6, _T("%x"), &value) == 1, _T("Wrong format for ParserArgb"));
+            else
+                _stscanf(data.GetData(), TEXT("%u"), &value);
             return true;
         }
 
@@ -139,7 +144,12 @@ namespace nui
             nui::Base::NString data;
             if(!ReadValue(index, name, data))
                 return false;
-            _stscanf(data.GetData(), TEXT("%u"), &value);
+            if(data.GetLength() == 0)
+                return false;
+            if(data[0] == _T('#'))
+                NVerify(_sntscanf(data.GetData() + 1, 6, _T("%x"), &value) == 1, _T("Wrong format for ParserArgb"));
+            else
+                _stscanf(data.GetData(), TEXT("%u"), &value);
             return true;
         }
 

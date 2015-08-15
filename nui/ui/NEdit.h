@@ -11,7 +11,7 @@ namespace nui
         class NUI_CLASS NEdit;
         typedef FastDelegate1<NEdit*, void> EditTextChangeEventCallback;
 
-        class NUI_CLASS NEdit : public NWndUi<NFrame>
+        class NUI_CLASS NEdit : public NWndUi
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("edit"))
         public:
@@ -42,9 +42,10 @@ namespace nui
             virtual NText* GetRichText();
 
         protected:
-            virtual bool OnWndMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
-            virtual void OnWindowChanged(NWindow* window);
+            virtual bool OnParentCommand(WORD notifyCode);
+            virtual bool GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle);
+
             bool IsEditValid() const;
 
             // NFrameBase

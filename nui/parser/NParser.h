@@ -2,6 +2,7 @@
 
 
 #include "../base/BaseObj.h"
+#include "../ui/NFrame.h"
 
 namespace nui
 {
@@ -11,7 +12,7 @@ namespace nui
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("parser"))
         public:
-            virtual Base::NAutoPtr<Base::NBaseObj> Parse(LPCTSTR packFilePath) = 0;
+            virtual Base::NAutoPtr<Base::NBaseObj> Parse(Ui::NFrame* parentFrame, LPCTSTR packFilePath) = 0;
         };
     }
 }

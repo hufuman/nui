@@ -104,37 +104,21 @@ namespace nui
             return pText;
         }
 
-        void NEdit::OnWindowChanged(NWindow* window)
+        bool NEdit::GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle)
         {
-            __super::OnWindowChanged(window);
-            if(window == NULL || editWindow_ != NULL)
-                return;
-
-            Base::NRect rcEdit = GetRootRect();
-            editWindow_ = ::CreateWindowEx(0,
-                WC_EDIT,
-                GetText().GetData(),
-                WS_TABSTOP | ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_CHILD | WS_VISIBLE,
-                rcEdit.Left, rcEdit.Top,
-                rcEdit.Width(), rcEdit.Height(),
-                window->GetNative(),
-                NULL,
-                ::GetModuleHandle(NULL),
-                0);
-            AttachWnd(editWindow_);
-            ::SendMessage(editWindow_, WM_SETFONT, ::SendMessage(window->GetNative(), WM_GETFONT, 0, 0), TRUE);
+            wndClassName = WC_EDIT;
+            style = WS_TABSTOP | ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_CHILD;
+            exStyle = 0;
+            return true;
         }
 
-        bool NEdit::OnWndMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+        bool NEdit::OnParentCommand(WORD notifyCode)
         {
-            if(message == WM_CHAR)
-            {
-                lResult = DoDefault(message, wParam, lParam);
-                if(textChangeCallback_)
-                    textChangeCallback_(this);
-                return true;
-            }
-            return false;
+            if(notifyCode != EN_CHANGE)
+                return false;
+            if(textChangeCallback_)
+                textChangeCallback_(this);
+            return true;
         }
 
         bool NEdit::IsEditValid() const
