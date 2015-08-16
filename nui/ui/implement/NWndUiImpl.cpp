@@ -10,12 +10,72 @@ namespace nui
         {
             realWindow_ = NULL;
         }
-        NWndUi::~NWndUi(){}
+        NWndUi::~NWndUi()
+        {
+            if(realWindow_)
+            {
+                ::DestroyWindow(realWindow_);
+                realWindow_ = NULL;
+            }
+        }
 
         NWndUi* NWndUi::GetWndUi(HWND hWnd)
         {
             NWndUi* wndUi = reinterpret_cast<NWndUi*>(::GetProp(hWnd, _T("NWndUiObj")));
             return wndUi;
+        }
+
+        bool NWndUi::SetPosImpl(int left, int top, bool force)
+        {
+            if(!__super::SetPosImpl(left, top, force) || realWindow_ == NULL)
+                return false;
+            Base::NRect rcWnd = GetRootRect();
+            ::SetWindowPos(realWindow_, NULL, rcWnd.Left, rcWnd.Top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+            return true;
+        }
+
+        bool NWndUi::SetSizeImpl(int width, int height, bool force)
+        {
+            if(!__super::SetSizeImpl(width, height, force) || realWindow_ == NULL)
+                return false;
+            Base::NRect rcWnd = GetRect();
+            ::SetWindowPos(realWindow_, NULL, 0, 0, rcWnd.Width(), rcWnd.Height(), SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+            return false;
+        }
+
+        bool NWndUi::IsWndValid() const
+        {
+            return realWindow_ != NULL && ::IsWindow(realWindow_);
+        }
+
+        // NFrame
+        // data
+        void NWndUi::SetText(const Base::NString& text)
+        {
+            __super::SetText(text);
+            if(IsWndValid())
+                ::SetWindowText(realWindow_, GetText().GetData());
+        }
+
+        Base::NString NWndUi::GetText() const
+        {
+            if(IsWndValid())
+            {
+                TCHAR szText[1000];
+                ::GetWindowText(realWindow_, szText, 999);
+                szText[1000] = 0;
+                return szText;
+            }
+            return __super::GetText();
+        }
+
+        NText* NWndUi::GetRichText()
+        {
+            NText* pText = __super::GetRichText();
+            if(pText == NULL)
+                return NULL;
+            pText->SetText(GetText().GetData());
+            return pText;
         }
 
         void NWndUi::OnWindowChanged(NWindow* window)
