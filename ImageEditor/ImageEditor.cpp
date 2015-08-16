@@ -239,7 +239,7 @@ void CImageEditor::UpdateDraw(HWND hWnd, BOOL bReload)
     filePath_ = _T("");
     if(bReload)
     {
-        ::SendMessage(hWnd, WM_SETREDRAW, FALSE, 0);
+        // ::SendMessage(hWnd, WM_SETREDRAW, FALSE, 0);
 
         NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
         // set to NULL first, to reload current image, because loader caches images
@@ -270,7 +270,8 @@ void CImageEditor::UpdateDraw(HWND hWnd, BOOL bReload)
         ::SetDlgItemInt(hWnd, IDC_EDIT_HORZ_COUNT, horzCount, FALSE);
         ::SetDlgItemInt(hWnd, IDC_EDIT_VERT_COUNT, vertCount, FALSE);
 
-        ::SendMessage(hWnd, WM_SETREDRAW, TRUE, 0);
+        // ::SendMessage(hWnd, WM_SETREDRAW, TRUE, 0);
+        // ::InvalidateRect(hWnd, NULL, FALSE);
     }
 
     ImageDrawType::Type drawType = ImageDrawType::Stretch;
