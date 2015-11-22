@@ -18,6 +18,7 @@ namespace nui
                 {
                     holder_ = render->ClipRgn(tempRgn);
                 }
+                ::DeleteObject(tempRgn);
             }
             ~NRenderClip()
             {

@@ -321,7 +321,6 @@ namespace nui
             }
 
             ::GetClipRgn(memDC_, oldClip);
-
             ::ExtSelectClipRgn(memDC_, clipRgn, RGN_AND);
 
             Base::NHolder holder(reinterpret_cast<void*>(oldClip), MakeDelegate(this, &GdiRender::RestoreRgn));

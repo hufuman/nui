@@ -46,10 +46,7 @@ public:
         {
             ::SelectClipRgn(memDC_, rgn);
         }
-        else
-        {
-            ::DeleteObject(rgn);
-        }
+        ::DeleteObject(rgn);
     }
 
     void Destroy()

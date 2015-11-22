@@ -229,6 +229,7 @@ namespace nui
 
             if(clipResult != 1)
             {
+                ::DeleteObject(clipRgn);
                 clipRgn = ::CreateRectRgn(clientRect.Left, clientRect.Top, clientRect.Right, clientRect.Bottom);
             }
             render_->Init(hDc, clientRect);
