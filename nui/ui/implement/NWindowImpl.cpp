@@ -54,7 +54,7 @@ namespace nui
             switch(message)
             {
             case WM_COMMAND:
-                if(OnWndCmd(wParam))
+                if(OnWndCmd(wParam, lParam))
                 {
                     lResult = 0;
                     return true;
@@ -178,11 +178,11 @@ namespace nui
             return false;
         }
 
-        bool NWindow::OnWndCmd(WPARAM wParam)
+        bool NWindow::OnWndCmd(WPARAM wParam, LPARAM lParam)
         {
-            if(wParam == NULL || !::IsWindow(reinterpret_cast<HWND>(wParam)))
+            if(wParam == NULL || !::IsWindow(reinterpret_cast<HWND>(lParam)))
                 return false;
-            NWndUi* wndUi = NWndUi::GetWndUi(reinterpret_cast<HWND>(wParam));
+            NWndUi* wndUi = NWndUi::GetWndUi(reinterpret_cast<HWND>(lParam));
             if(wndUi == NULL)
                 return false;
             return wndUi->OnParentCommand(HIWORD(wParam));

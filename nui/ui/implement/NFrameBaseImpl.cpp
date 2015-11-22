@@ -403,7 +403,7 @@ namespace nui
                 return;
             }
 
-            Base::NSize size = GetAutoSize();
+            Base::NSize size = IsAutoSize() ? GetAutoSize() : frameRect_.GetSize();
 
             Base::NRect rcNew;
 

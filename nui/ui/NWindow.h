@@ -32,7 +32,7 @@ namespace nui
         protected:
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
-            virtual bool OnWndCmd(WPARAM wParam);
+            virtual bool OnWndCmd(WPARAM wParam, LPARAM lParam);
 
             virtual void OnSize(int width, int height);
             virtual void OnDraw(NRender* render, HRGN clipRgn);

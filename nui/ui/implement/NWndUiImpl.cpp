@@ -29,8 +29,7 @@ namespace nui
         {
             if(!__super::SetPosImpl(left, top, force) || realWindow_ == NULL)
                 return false;
-            Base::NRect rcWnd = GetRootRect();
-            ::SetWindowPos(realWindow_, NULL, rcWnd.Left, rcWnd.Top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+            ::SetWindowPos(realWindow_, NULL, left, top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
             return true;
         }
 
@@ -38,8 +37,7 @@ namespace nui
         {
             if(!__super::SetSizeImpl(width, height, force) || realWindow_ == NULL)
                 return false;
-            Base::NRect rcWnd = GetRect();
-            ::SetWindowPos(realWindow_, NULL, 0, 0, rcWnd.Width(), rcWnd.Height(), SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+            ::SetWindowPos(realWindow_, NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
             return false;
         }
 
@@ -62,8 +60,8 @@ namespace nui
             if(IsWndValid())
             {
                 TCHAR szText[1000];
-                ::GetWindowText(realWindow_, szText, 999);
-                szText[1000] = 0;
+                ::GetWindowText(realWindow_, szText, _countof(szText) - 1);
+                szText[_countof(szText) - 1] = 0;
                 return szText;
             }
             return __super::GetText();

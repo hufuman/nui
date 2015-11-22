@@ -47,8 +47,8 @@ namespace nui
 
         void NScroll::SetScrollPos(int pos)
         {
-            NAssertError(pos >= 0 && pos <= scrollRange_, _T("wrong pos in NScroll?"));
-            if(pos < 0 || pos > scrollRange_)
+            NAssertError(pos >= 0 && pos < scrollRange_, _T("wrong pos in NScroll?"));
+            if(pos < 0 || pos >= scrollRange_)
                 return;
             if(scrollPos_ == pos)
                 return;
@@ -110,7 +110,7 @@ namespace nui
             {
                 int foreWidth = bkgRect.Width() / scrollRange_;
                 foreWidth = std::max(g_minForeWidth, foreWidth);
-                int pos = scrollPos_ * (bkgRect.Width() - foreWidth) / scrollRange_;
+                int pos = scrollPos_ * (bkgRect.Width() - foreWidth) / (scrollRange_ - 1);
                 drawRect.SetPos(bkgRect.Left + pos, rect.Top);
                 drawRect.SetSize(foreWidth, rect.Height());
             }
@@ -118,7 +118,7 @@ namespace nui
             {
                 int foreHeight = bkgRect.Height() / scrollRange_;
                 foreHeight = std::max(g_minForeWidth, foreHeight);
-                int pos = scrollPos_ * (bkgRect.Height() - foreHeight) / scrollRange_;
+                int pos = scrollPos_ * (bkgRect.Height() - foreHeight) / (scrollRange_ - 1);
                 drawRect.SetPos(rect.Left, bkgRect.Top + pos);
                 drawRect.SetSize(rect.Width(), foreHeight);
             }

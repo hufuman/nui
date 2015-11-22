@@ -15,4 +15,8 @@ private:
 
 private:
     NAutoPtr<NWindow> window_;
+    NAutoPtr<NScroll> horzScroll_;
+    NAutoPtr<NScroll> vertScroll_;
+    NAutoPtr<NEdit> editPos_;
+    NAutoPtr<NEdit> editRange_;
 };

@@ -36,15 +36,17 @@ void CControlTest::Test()
     pVertScroll->SetScrollRange(4);
     pVertScroll->SetScrollPos(3);
     window_->GetRootFrame()->AddChild(pVertScroll);
+    vertScroll_ = pVertScroll;
 
     // HorzScroll
     NInstPtr<NScroll> pHorzScroll(MemToolParam);
     pHorzScroll->SetPos(100, 180);
     pHorzScroll->SetSize(200, 16);
     pHorzScroll->SetScrollType(true);
-    pHorzScroll->SetScrollRange(1);
-    pHorzScroll->SetScrollPos(1);
+    pHorzScroll->SetScrollRange(4);
+    pHorzScroll->SetScrollPos(3);
     window_->GetRootFrame()->AddChild(pHorzScroll);
+    horzScroll_ = pHorzScroll;
 
     // Button
     NInstPtr<NButton> pButton1(MemToolParam);
@@ -75,16 +77,20 @@ void CControlTest::Test()
     pEdit1->SetMargin(60, 100, 0, 0);
     pEdit1->SetAutoSize(false);
     pEdit1->SetSize(100, 18);
+    pEdit1->SetText(_T("3"));
     pEdit1->SetTextChangeCallback(MakeDelegate(this, &CControlTest::OnEditTextChanged));
     window_->GetRootFrame()->AddChild(pEdit1);
+    editPos_ = pEdit1;
 
     NInstPtr<NEdit> pEdit2(MemToolParam);
     pEdit2->SetLayout(NFrame::LayoutLeft | NFrame::LayoutTop);
     pEdit2->SetMargin(60, 130, 0, 0);
     pEdit2->SetAutoSize(false);
     pEdit2->SetSize(100, 18);
+    pEdit2->SetText(_T("4"));
     pEdit2->SetTextChangeCallback(MakeDelegate(this, &CControlTest::OnEditTextChanged));
     window_->GetRootFrame()->AddChild(pEdit2);
+    editRange_ = pEdit2;
 
     // Gif Image
     for(int i=0; i<0; ++ i)
@@ -95,17 +101,15 @@ void CControlTest::Test()
         window_->GetRootFrame()->AddChild(pImg2);
     }
 
-    // Label
-    NInstPtr<NFrame> label(MemToolParam);
-    label->SetText(_T("1111111111\r\n2222222222\r\n33333333333333\r\n444444444\r\n55555555555555555\r\n"));
-    label->GetRichText()->SetSingleLine(false);
-    window_->GetRootFrame()->AddChild(label);
-
     // loop
     nui::Ui::NMsgLoop loop;
     loop.Loop(window_->GetNative());
 
     // destroy
+    editPos_ = NULL;
+    editRange_ = NULL;
+    horzScroll_ = NULL;
+    vertScroll_ = NULL;
     window_ = NULL;
 }
 
@@ -117,7 +121,17 @@ bool CControlTest::OnButtonClicked(NFrame* pButton, const Base::NPoint& point)
 
 void CControlTest::OnEditTextChanged(NEdit* pEdit)
 {
-    ;
+    NString strPos = editPos_->GetText();
+    NString strRange = editRange_->GetText();
+
+    int pos = _ttoi(strPos);
+    int range = _ttoi(strRange);
+
+    horzScroll_->SetScrollRange(range);
+    horzScroll_->SetScrollPos(pos);
+
+    vertScroll_->SetScrollRange(range);
+    vertScroll_->SetScrollPos(pos);
 }
 
 void CControlTest::PaintTest()
