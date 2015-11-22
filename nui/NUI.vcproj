@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="nui"
 	ProjectGUID="{5196231A-50E6-4E92-AAEB-0C20725CD387}"
-	RootNamespace="NUI"
+	RootNamespace="nui"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196608"
 	>
