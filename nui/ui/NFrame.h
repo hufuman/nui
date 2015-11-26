@@ -80,7 +80,7 @@ namespace nui
             Base::NAutoPtr<NFont> font_;
 
             ClickEventCallback clickCallback_;
-         };
+        };
         END_USE_UNEXPORT_TEMPLATE()
     }
 }

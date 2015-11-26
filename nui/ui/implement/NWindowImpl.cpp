@@ -133,6 +133,8 @@ namespace nui
                     BOOL bActive = (LOWORD(wParam) != WA_INACTIVE);
                     if(!bActive)
                     {
+                        if(hoverFrame_ && hoverFrame_->IsInStatus(NFrameBase::StatusPressed))
+                            hoverFrame_->OnMouseUp();
                         SetHoverItem(NULL);
                         NUiBus::Instance().SetCaptureFrame(NULL);
                     }
@@ -141,13 +143,19 @@ namespace nui
             case WM_MOUSEMOVE:
                 {
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
-                    RefreshHoverItem(point);
+                    NFrame* newFrame = RefreshHoverItem(point);
+                    SetHoverItem(newFrame);
+                    if(hoverFrame_)
+                        hoverFrame_->OnMouseMove(point.X, point.Y);
                 }
                 break;
             case WM_LBUTTONDOWN:
                 {
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
-                    RefreshHoverItem(point);
+                    NFrame* newFrame = RefreshHoverItem(point);
+                    SetHoverItem(newFrame);
+                    if(hoverFrame_)
+                        hoverFrame_->OnMouseDown(point.X, point.Y);
                     if(hoverFrame_ == NULL)
                     {
                         ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
@@ -155,8 +163,12 @@ namespace nui
                     else
                     {
                         ::SetCapture(window_);
+                        NUiBus::Instance().SetCaptureFrame(hoverFrame_);
                     }
                 }
+                break;
+            case WM_CAPTURECHANGED:
+                NUiBus::Instance().SetCaptureFrame(NULL);
                 break;
             case WM_LBUTTONUP:
                 if(::GetCapture() == window_)
@@ -166,8 +178,6 @@ namespace nui
                     {
                         Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                         hoverFrame_->OnClicked(point);
-                        if(hoverFrame_)
-                            hoverFrame_->UpdateStatus(NFrameBase::StatusPressed, false);
                     }
                 }
                 break;
@@ -245,16 +255,29 @@ namespace nui
         void NWindow::SetHoverItem(NFrame* frame)
         {
             if(hoverFrame_ && hoverFrame_ != frame)
-                hoverFrame_->UpdateStatus(NFrameBase::StatusHover | NFrameBase::StatusPressed, false);
+            {
+                hoverFrame_->OnMouseLeave();
+                if(hoverFrame_->IsInStatus(NFrameBase::StatusPressed))
+                    hoverFrame_->OnMouseUp();
+            }
+
+            NFrameBase* capturedFrame = NUiBus::Instance().GetCaptureFrame();
+            if(frame != NULL && capturedFrame != frame && capturedFrame != NULL)
+                return;
+
             hoverFrame_ = frame;
             if(hoverFrame_)
-                hoverFrame_->UpdateStatus((Util::Shell::IsKeyPressed(VK_LBUTTON) ? NFrameBase::StatusPressed : NFrameBase::StatusHover), true);
+            {
+                hoverFrame_->OnMouseHover();
+                if(capturedFrame == hoverFrame_)
+                    hoverFrame_->OnMouseDown(0, 0);
+            }
         }
 
-        void NWindow::RefreshHoverItem(const Base::NPoint& point)
+        NFrame* NWindow::RefreshHoverItem(const Base::NPoint& point)
         {
             if(rootFrame_ == NULL)
-                return;
+                return NULL;
             NFrame* newHover = NULL;
             if(hoverFrame_)
             {
@@ -264,7 +287,7 @@ namespace nui
             {
                 newHover = dynamic_cast<NFrame*>(rootFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover));
             }
-            SetHoverItem(newHover);
+            return newHover;
         }
     }
 }

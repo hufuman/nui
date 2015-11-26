@@ -271,6 +271,11 @@ namespace nui
             return Util::Misc::IsFlagChecked(frameFlags_, NFrameBase::FlagValid);
         }
 
+        bool NFrameBase::IsInStatus(Status status) const
+        {
+            return (frameStatus_ & status) == static_cast<DWORD>(status);
+        }
+
         void NFrameBase::SetId(const Base::NString& id)
         {
             frameId_ = id;
@@ -506,16 +511,35 @@ namespace nui
             }
         }
 
-        void NFrameBase::UpdateStatus(DWORD dwStatus, bool bAdd)
+        void NFrameBase::OnMouseDown(int x, int y)
         {
-            DWORD newStatus;
-            if(bAdd)
-                newStatus = frameStatus_ | dwStatus;
-            else
-                newStatus = frameStatus_ & (~dwStatus);
-            if(frameStatus_ == newStatus)
-                return;
-            frameStatus_ = newStatus;
+            UNREFERENCED_PARAMETER(x);
+            UNREFERENCED_PARAMETER(y);
+            frameStatus_ |= StatusPressed;
+            frameStatus_ |= StatusHover;
+        }
+
+        void NFrameBase::OnMouseUp()
+        {
+            frameStatus_ = frameStatus_ & (~StatusPressed);
+            Invalidate();
+        }
+
+        void NFrameBase::OnMouseMove(int x, int y)
+        {
+            UNREFERENCED_PARAMETER(x);
+            UNREFERENCED_PARAMETER(y);
+        }
+
+        void NFrameBase::OnMouseHover()
+        {
+            frameStatus_ |= StatusHover;
+            Invalidate();
+        }
+
+        void NFrameBase::OnMouseLeave()
+        {
+            frameStatus_ = frameStatus_ & (~StatusHover);
             Invalidate();
         }
 

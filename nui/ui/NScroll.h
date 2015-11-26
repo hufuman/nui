@@ -24,7 +24,6 @@ namespace nui
 
             // Draw
             virtual void DrawFore(NRender* render, const Base::NRect& rect) const;
-
         private:
             void requireDraws();
 

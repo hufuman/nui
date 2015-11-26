@@ -71,6 +71,7 @@ namespace nui
         {
             if(clickCallback_)
                 clickCallback_(this, point);
+            OnMouseUp();
         }
 
         void NFrame::SetClickCallback(ClickEventCallback callback)

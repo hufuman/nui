@@ -14,15 +14,15 @@ namespace nui
     namespace Ui
     {
         /**
-         *note: child don't increase refCount of parent
-         * consider such situation:
-         *  NInstPtr<NFrameBase> parent;
-         *  NInstPtr<NFrameBase> child;
-         *  parent->AddChild(child);
-         *  parent = NULL;
-         *  Expect: these two NFrameBases are released.
-         *  In fact, they are not, because refCount of them are 1 at last.
-         */
+        *note: child don't increase refCount of parent
+        * consider such situation:
+        *  NInstPtr<NFrameBase> parent;
+        *  NInstPtr<NFrameBase> child;
+        *  parent->AddChild(child);
+        *  parent = NULL;
+        *  Expect: these two NFrameBases are released.
+        *  In fact, they are not, because refCount of them are 1 at last.
+        */
 
         BEGIN_USE_UNEXPORT_TEMPLATE()
         class NUI_CLASS NWindow;
@@ -103,6 +103,7 @@ namespace nui
             virtual bool IsEnabled() const;
             virtual void SetValid(bool valid);
             virtual bool IsValid() const;
+            virtual bool IsInStatus(Status status) const;
 
             // data
             virtual void SetId(const Base::NString& id);
@@ -126,12 +127,16 @@ namespace nui
             virtual void SetLayout(UINT layout);
             virtual void ReLayout();
 
+            virtual void OnMouseDown(int x, int y);
+            virtual void OnMouseUp();
+            virtual void OnMouseMove(int x, int y);
+            virtual void OnMouseHover();
+            virtual void OnMouseLeave();
+
         protected:
             virtual void OnParentChanged();
             virtual void OnWindowChanged(NWindow* window);
 
-            // called by NWindow
-            virtual void UpdateStatus(DWORD dwStatus, bool bAdd);
             virtual bool CanHover() const;
 
             // Draw
