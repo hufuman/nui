@@ -135,7 +135,7 @@ namespace nui
                     {
                         if(hoverFrame_ && hoverFrame_->IsInStatus(NFrameBase::StatusPressed))
                             hoverFrame_->OnMouseUp();
-                        SetHoverItem(NULL);
+                        SetHoverItem(NULL, 0, 0);
                         NUiBus::Instance().SetCaptureFrame(NULL);
                     }
                     break;
@@ -144,7 +144,7 @@ namespace nui
                 {
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                     NFrame* newFrame = RefreshHoverItem(point);
-                    SetHoverItem(newFrame);
+                    SetHoverItem(newFrame, point.X, point.Y);
                     if(hoverFrame_)
                         hoverFrame_->OnMouseMove(point.X, point.Y);
                 }
@@ -153,7 +153,7 @@ namespace nui
                 {
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                     NFrame* newFrame = RefreshHoverItem(point);
-                    SetHoverItem(newFrame);
+                    SetHoverItem(newFrame, point.X, point.Y);
                     if(hoverFrame_)
                         hoverFrame_->OnMouseDown(point.X, point.Y);
                     if(hoverFrame_ == NULL)
@@ -182,7 +182,7 @@ namespace nui
                 }
                 break;
             case WM_MOUSELEAVE:
-                SetHoverItem(NULL);
+                SetHoverItem(NULL, 0, 0);
                 break;
             }
             return false;
@@ -252,7 +252,7 @@ namespace nui
 
         }
 
-        void NWindow::SetHoverItem(NFrame* frame)
+        void NWindow::SetHoverItem(NFrame* frame, int x, int y)
         {
             if(hoverFrame_ && hoverFrame_ != frame)
             {
@@ -270,7 +270,7 @@ namespace nui
             {
                 hoverFrame_->OnMouseHover();
                 if(capturedFrame == hoverFrame_)
-                    hoverFrame_->OnMouseDown(0, 0);
+                    hoverFrame_->OnMouseDown(x, y);
             }
         }
 

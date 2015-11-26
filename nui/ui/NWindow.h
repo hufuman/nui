@@ -38,7 +38,7 @@ namespace nui
             virtual void OnDraw(NRender* render, HRGN clipRgn);
 
             virtual void Draw(HDC hDc);
-            void SetHoverItem(NFrame* frame);
+            void SetHoverItem(NFrame* frame, int x, int y);
             NFrame* RefreshHoverItem(const Base::NPoint& point);
 
         protected:
