@@ -58,6 +58,10 @@ namespace nui
             virtual void OnMouseLeave();
             virtual void OnMouseMove(int x, int y);
 
+            virtual void SetBlockDraw(LPCTSTR filePath);
+            virtual void SetSliderDraw(LPCTSTR filePath);
+            virtual void SetBkgDraw(LPCTSTR filePath);
+
             void PosChangeTimerProc();
 
         private:

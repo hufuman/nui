@@ -256,6 +256,39 @@ namespace nui
             RefreshHoverPart(x, y);
         }
 
+        void NScroll::SetBlockDraw(LPCTSTR filePath)
+        {
+            NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+            Base::NAutoPtr<NImageDraw> tmpDraw = loader->LoadImage(filePath);
+            if(tmpDraw != NULL)
+            {
+                blockDraw_ = tmpDraw;
+                AutoSize();
+            }
+        }
+
+        void NScroll::SetSliderDraw(LPCTSTR filePath)
+        {
+            NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+            Base::NAutoPtr<NImageDraw> tmpDraw = loader->LoadImage(filePath);
+            if(tmpDraw != NULL)
+            {
+                sliderDraw_ = tmpDraw;
+                AutoSize();
+            }
+        }
+
+        void NScroll::SetBkgDraw(LPCTSTR filePath)
+        {
+            NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+            Base::NAutoPtr<NImageDraw> tmpDraw = loader->LoadImage(filePath);
+            if(tmpDraw != NULL)
+            {
+                scrollBkgDraw_ = tmpDraw;
+                AutoSize();
+            }
+        }
+
         void NScroll::PosChangeTimerProc()
         {
             if(capturedPart_ == ScrollPartNone)
