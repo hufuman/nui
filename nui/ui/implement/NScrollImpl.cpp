@@ -67,70 +67,144 @@ namespace nui
 
         Base::NSize NScroll::GetAutoSize() const
         {
+            if(horzScroll_)
+                return GetHorzAutoSize();
+            return GetVertAutoSize();
+        }
+
+        Base::NSize NScroll::GetHorzAutoSize() const
+        {
             Base::NSize autoSize;
 
-            NDraw* foreDraw = GetForeDraw();
-            if(foreDraw != NULL)
-                autoSize = foreDraw->GetPreferSize();
-            NDraw* bkgDraw = GetBkgDraw();
-            if(bkgDraw != NULL)
-            {
-                Base::NSize size = bkgDraw->GetPreferSize();
-                autoSize.Width = std::max(autoSize.Width, size.Width);
-                autoSize.Height = std::max(autoSize.Height, size.Height);
-            }
+            Base::NSize blockSize;
+            Base::NSize bkgSize;
+            Base::NSize sliderSize;
+
+            if(blockDraw_)
+                blockSize = blockDraw_->GetPreferSize();
+            if(scrollBkgDraw_)
+                bkgSize = scrollBkgDraw_->GetPreferSize();
+            if(sliderDraw_)
+                sliderSize = sliderDraw_->GetPreferSize();
+
+            autoSize.Width += blockSize.Width * 2;
+            autoSize.Width += std::max(bkgSize.Width, sliderSize.Width);
+            autoSize.Height = std::max(std::max(blockSize.Height, bkgSize.Height), sliderSize.Height);
             return autoSize;
         }
 
-        void NScroll::DrawFore(NRender* render, const Base::NRect& rect) const
+        Base::NSize NScroll::GetVertAutoSize() const
         {
-            NAssertError(GetForeDraw() != NULL, _T("No Fore Draw"));
+            Base::NSize autoSize;
 
+            Base::NSize blockSize;
+            Base::NSize bkgSize;
+            Base::NSize sliderSize;
+
+            if(blockDraw_)
+                blockSize = blockDraw_->GetPreferSize();
+            if(scrollBkgDraw_)
+                bkgSize = scrollBkgDraw_->GetPreferSize();
+            if(sliderDraw_)
+                sliderSize = sliderDraw_->GetPreferSize();
+
+            autoSize.Height += blockSize.Height * 2;
+            autoSize.Height += std::max(bkgSize.Height, sliderSize.Height);
+            autoSize.Width = std::max(std::max(blockSize.Width, bkgSize.Width), sliderSize.Width);
+            return autoSize;
+        }
+
+        void NScroll::DrawContent(NRender* render, const Base::NRect& rect) const
+        {
+            if(horzScroll_)
+                DrawHorzContent(render, rect);
+            else
+                DrawVertContent(render, rect);
+            __super::DrawContent(render, rect);
+        }
+
+        void NScroll::DrawHorzContent(NRender* render, const Base::NRect& rect) const
+        {
             Base::NRect bkgRect(rect);
-            NDraw* bkgDraw = GetBkgDraw();
-            NImageDraw* bkgImgDraw = dynamic_cast<NImageDraw*>(bkgDraw);
-            if(bkgImgDraw != NULL)
+            if(blockDraw_)
             {
-                const Base::NRect& rcParam = bkgImgDraw->GetStretchParam();
-                if(horzScroll_)
-                {
-                    bkgRect.Left += rcParam.Left;
-                    bkgRect.Right -= rcParam.Right;
-                }
-                else
-                {
-                    bkgRect.Top += rcParam.Top;
-                    bkgRect.Bottom -= rcParam.Bottom;
-                }
+                Base::NRect blockRect;
+                Base::NSize blockSize = blockDraw_->GetPreferSize();
+
+                // Left
+                blockRect.SetRect(rect.Left, rect.Top, rect.Left + blockSize.Width, rect.Bottom);
+                blockDraw_->Draw(render, 0, 0, blockRect);
+
+                // Right
+                blockRect.SetRect(rect.Right - blockSize.Width, rect.Top, rect.Right, rect.Bottom);
+                blockDraw_->Draw(render, 1, 0, blockRect);
+
+                bkgRect.Left += blockSize.Width;
+                bkgRect.Right -= blockSize.Width;
             }
 
-            Base::NRect drawRect;
-
-            if(horzScroll_)
+            if(scrollBkgDraw_)
             {
+                scrollBkgDraw_->Draw(render, 0, 0, bkgRect);
+            }
+
+            if(sliderDraw_)
+            {
+                Base::NRect drawRect;
+
                 int foreWidth = bkgRect.Width() / scrollRange_;
                 foreWidth = std::max(g_minForeWidth, foreWidth);
                 int pos = scrollPos_ * (bkgRect.Width() - foreWidth) / (scrollRange_ - 1);
                 drawRect.SetPos(bkgRect.Left + pos, rect.Top);
                 drawRect.SetSize(foreWidth, rect.Height());
+                sliderDraw_->Draw(render, 0, 0, drawRect);
             }
-            else
+        }
+
+        void NScroll::DrawVertContent(NRender* render, const Base::NRect& rect) const
+        {
+            Base::NRect bkgRect(rect);
+            if(blockDraw_)
             {
+                Base::NRect blockRect;
+                Base::NSize blockSize = blockDraw_->GetPreferSize();
+
+                // Top
+                blockRect.SetRect(rect.Left, rect.Top, rect.Right, rect.Top + blockSize.Height);
+                blockDraw_->Draw(render, 0, 0, blockRect);
+
+                // Bottom
+                blockRect.SetRect(rect.Left, rect.Bottom - blockSize.Height, rect.Right, rect.Bottom);
+                blockDraw_->Draw(render, 1, 0, blockRect);
+
+                bkgRect.Top += blockSize.Height;
+                bkgRect.Bottom -= blockSize.Height;
+            }
+
+            if(scrollBkgDraw_)
+            {
+                scrollBkgDraw_->Draw(render, 0, 0, bkgRect);
+            }
+
+            if(sliderDraw_)
+            {
+                Base::NRect drawRect;
+
                 int foreHeight = bkgRect.Height() / scrollRange_;
                 foreHeight = std::max(g_minForeWidth, foreHeight);
                 int pos = scrollPos_ * (bkgRect.Height() - foreHeight) / (scrollRange_ - 1);
-                drawRect.SetPos(rect.Left, bkgRect.Top + pos);
+                drawRect.SetPos(bkgRect.Left, bkgRect.Top + pos);
                 drawRect.SetSize(rect.Width(), foreHeight);
+                sliderDraw_->Draw(render, 0, 0, drawRect);
             }
-
-            __super::DrawFore(render, drawRect);
         }
 
         void NScroll::requireDraws()
         {
             NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-            SetForeDraw(loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollFore.png") : _T("@skin:common\\vertScrollFore.png")));
-            SetBkgDraw(loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBkg.png") : _T("@skin:common\\vertScrollBkg.png")));
+            blockDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBlock.png") : _T("@skin:common\\vertScrollBlock.png"));
+            sliderDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollSlider.png") : _T("@skin:common\\vertScrollSlider.png"));
+            scrollBkgDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBkg.png") : _T("@skin:common\\vertScrollBkg.png"));
             AutoSize();
         }
     }

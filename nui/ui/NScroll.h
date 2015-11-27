@@ -23,14 +23,26 @@ namespace nui
             virtual Base::NSize GetAutoSize() const;
 
             // Draw
-            virtual void DrawFore(NRender* render, const Base::NRect& rect) const;
+            virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
         private:
             void requireDraws();
+
+            Base::NSize GetHorzAutoSize() const;
+            Base::NSize GetVertAutoSize() const;
+
+            void DrawHorzContent(NRender* render, const Base::NRect& rect) const;
+            void DrawVertContent(NRender* render, const Base::NRect& rect) const;
 
         private:
             int scrollRange_;
             int scrollPos_;
             bool horzScroll_;
+
+            BEGIN_USE_UNEXPORT_TEMPLATE()
+            Base::NAutoPtr<NImageDraw> blockDraw_;
+            Base::NAutoPtr<NImageDraw> sliderDraw_;
+            Base::NAutoPtr<NImageDraw> scrollBkgDraw_;
+            END_USE_UNEXPORT_TEMPLATE()
         };
     }
 }
