@@ -307,6 +307,18 @@ namespace nui
             return result;
         }
 
+        Base::NRect NFrameBase::GetScreenRect() const
+        {
+            if(window_ == NULL)
+                return GetRootRect();
+            Base::NRect windowRect;
+            if(!window_->GetRect(windowRect))
+                return GetRootRect();
+            Base::NRect rootRect = GetRootRect();
+            rootRect.Offset(windowRect.Left, windowRect.Top);
+            return rootRect;
+        }
+
         void NFrameBase::SetPos(int left, int top)
         {
             SetPosImpl(left, top, false);
@@ -534,12 +546,15 @@ namespace nui
         void NFrameBase::OnMouseHover()
         {
             frameStatus_ |= StatusHover;
+            if(NUiBus::Instance().GetCaptureFrame() == this)
+                frameStatus_ |= StatusPressed;
             Invalidate();
         }
 
         void NFrameBase::OnMouseLeave()
         {
             frameStatus_ = frameStatus_ & (~StatusHover);
+            frameStatus_ = frameStatus_ & (~StatusPressed);
             Invalidate();
         }
 

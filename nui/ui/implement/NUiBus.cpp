@@ -78,6 +78,8 @@ namespace nui
 
         void NUiBus::SetCaptureFrame(NFrameBase* frame)
         {
+            if(captureFrame_)
+                captureFrame_->OnMouseUp();
             captureFrame_ = frame;
         }
     }

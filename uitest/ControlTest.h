@@ -11,6 +11,7 @@ public:
 private:
     bool OnButtonClicked(NFrame* pButton, const Base::NPoint& point);
     void OnEditTextChanged(NEdit* pEdit);
+    void OnScrollEvent(NScroll* pScroll, int scrollPos);
     void PaintTest();
 
 private:

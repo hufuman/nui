@@ -113,6 +113,7 @@ namespace nui
             // pos / size
             virtual const Base::NRect& GetRect() const;
             virtual Base::NRect GetRootRect() const;
+            virtual Base::NRect GetScreenRect() const;
             virtual void SetPos(int left, int top);
             virtual void SetSize(int width, int height);
             virtual void SetMinSize(int minWidth, int minHeight);

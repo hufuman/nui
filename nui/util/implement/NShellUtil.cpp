@@ -126,6 +126,13 @@ namespace nui
             {
                 return ((::GetKeyState(virKey) & 0x80000000) == 0x80000000);
             }
+
+            NUI_API Base::NPoint GetCurrentPos()
+            {
+                POINT pt;
+                ::GetCursorPos(&pt);
+                return Base::NPoint(pt.x, pt.y);
+            }
         }
     }
 }

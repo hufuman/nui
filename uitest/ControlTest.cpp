@@ -28,7 +28,7 @@ void CControlTest::Test()
     NAutoPtr<NShapeDraw> pBkgDraw = loader->CreateShape(MemToolParam);
     pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
     window_->GetRootFrame()->SetBkgDraw(pBkgDraw);
-//*
+    //*
     // VertScroll
     NInstPtr<NScroll> pVertScroll(MemToolParam);
     pVertScroll->SetPos(100, 200);
@@ -37,6 +37,7 @@ void CControlTest::Test()
     pVertScroll->SetScrollPos(3);
     window_->GetRootFrame()->AddChild(pVertScroll);
     vertScroll_ = pVertScroll;
+    vertScroll_->SetScrollCallback(MakeDelegate(this, &CControlTest::OnScrollEvent));
 
     // HorzScroll
     NInstPtr<NScroll> pHorzScroll(MemToolParam);
@@ -47,6 +48,7 @@ void CControlTest::Test()
     pHorzScroll->SetScrollPos(3);
     window_->GetRootFrame()->AddChild(pHorzScroll);
     horzScroll_ = pHorzScroll;
+    horzScroll_->SetScrollCallback(MakeDelegate(this, &CControlTest::OnScrollEvent));
 
     // Button
     NInstPtr<NButton> pButton1(MemToolParam);
@@ -54,7 +56,7 @@ void CControlTest::Test()
     pButton1->SetMargin(10, 10, 20, 40);
     window_->GetRootFrame()->AddChild(pButton1);
     pButton1->SetClickCallback(MakeDelegate(this, &CControlTest::OnButtonClicked));
-//*/
+    //*/
     /*
     // Static Image
     NInstPtr<NImage> pImg1(MemToolParam);
@@ -132,6 +134,16 @@ void CControlTest::OnEditTextChanged(NEdit* pEdit)
 
     vertScroll_->SetScrollRange(range);
     vertScroll_->SetScrollPos(pos);
+}
+
+void CControlTest::OnScrollEvent(NScroll* pScroll, int scrollPos)
+{
+    horzScroll_->SetScrollPos(scrollPos);
+    vertScroll_->SetScrollPos(scrollPos);
+
+    NString posText;
+    posText.Format(_T("%d"), scrollPos);
+    editPos_->SetText(posText.GetData());
 }
 
 void CControlTest::PaintTest()

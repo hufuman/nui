@@ -23,6 +23,11 @@ namespace nui
             bool IsEmpty() const;
             void Release();
 
+            operator bool() const
+            {
+                return !IsEmpty();
+            }
+
         private:
             HolderData* data_;
         };

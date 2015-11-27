@@ -2,6 +2,7 @@
 #include "../NScroll.h"
 
 #include "../NRenderClip.h"
+#include "../../util/NShellUtil.h"
 
 
 #undef max
@@ -23,9 +24,15 @@ namespace nui
 
             scrollRange_ = 100;
             scrollPos_ = 0;
+
+            scrollLine_ = 1;
+            scrollPage_ = 1;
             horzScroll_ = false;
 
-            requireDraws();
+            hoverPart_ = ScrollPartNone;
+            capturedPart_ = ScrollPartNone;
+
+            RequireDraws();
         }
 
         NScroll::~NScroll()
@@ -36,8 +43,8 @@ namespace nui
         {
             if(scrollRange_ == range)
                 return;
-            NAssertError(range > 0, _T("why you use scroll since range is zero?"));
-            if(range < 0)
+            NAssertError(range > 1, _T("why you use scroll since range is zero?"));
+            if(range <= 1)
                 return;
             if(scrollPos_ >= range)
                 scrollPos_ = range - 1;
@@ -53,7 +60,26 @@ namespace nui
             if(scrollPos_ == pos)
                 return;
             scrollPos_ = pos;
+            if(scrollCallback_)
+                scrollCallback_(this, scrollPos_);
             Invalidate();
+        }
+
+        void NScroll::SetScrollLine(int line)
+        {
+            if(line > 0)
+                scrollLine_ = line;
+        }
+
+        void NScroll::SetScrollPage(int page)
+        {
+            if(page > 0)
+                scrollPage_ = page;
+        }
+
+        void NScroll::SetScrollCallback(ScrollEventCallback callback)
+        {
+            scrollCallback_ = callback;
         }
 
         void NScroll::SetScrollType(bool horzScroll)
@@ -61,8 +87,27 @@ namespace nui
             if(horzScroll_ == horzScroll)
                 return;
             horzScroll_ = horzScroll;
-            requireDraws();
             Invalidate();
+        }
+
+        int NScroll::GetScrollPos() const
+        {
+            return scrollPos_;
+        }
+
+        int NScroll::GetScrollRange() const
+        {
+            return scrollRange_;
+        }
+
+        int NScroll::GetScrollLine() const
+        {
+            return scrollLine_;
+        }
+
+        int NScroll::GetScrollPage() const
+        {
+            return scrollPage_;
         }
 
         Base::NSize NScroll::GetAutoSize() const
@@ -116,90 +161,290 @@ namespace nui
 
         void NScroll::DrawContent(NRender* render, const Base::NRect& rect) const
         {
+            Base::NRect leftBlock;
+            Base::NRect rightBlock;
+            Base::NRect bkg;
+            Base::NRect slider;
+
             if(horzScroll_)
-                DrawHorzContent(render, rect);
+                GetHorzPartRect(rect, leftBlock, rightBlock, bkg, slider);
             else
-                DrawVertContent(render, rect);
+                GetVertPartRect(rect, leftBlock, rightBlock, bkg, slider);
+
+            ScrollPart capturedPart = hoverPart_ == ScrollPartNone ? ScrollPartNone : capturedPart_;
+            ScrollPart hoverPart = hoverPart_;
+
+            if(blockDraw_)
+            {
+                // Left
+                int index = capturedPart == ScrollPartLeftBlock ? 2 : (hoverPart == ScrollPartLeftBlock ? 1 : 0);
+                blockDraw_->Draw(render, 0, index, leftBlock);
+
+                // Right
+                index = capturedPart == ScrollPartRightBlock ? 2 : (hoverPart == ScrollPartRightBlock ? 1 : 0);
+                blockDraw_->Draw(render, 1, index, rightBlock);
+            }
+
+            if(scrollBkgDraw_)
+            {
+                int index = 0;
+                if(capturedPart == ScrollPartLeftBkg || capturedPart == ScrollPartRightBkg)
+                    index = 2;
+                else if(hoverPart == ScrollPartLeftBkg || hoverPart == ScrollPartRightBkg)
+                    index = 1;
+                scrollBkgDraw_->Draw(render, 0, index, bkg);
+            }
+
+            if(sliderDraw_)
+            {
+                int index = capturedPart_ == ScrollPartSlider ? 2 : (hoverPart == ScrollPartSlider ? 1 : 0);
+                sliderDraw_->Draw(render, 0, index, slider);
+            }
+
             __super::DrawContent(render, rect);
         }
 
-        void NScroll::DrawHorzContent(NRender* render, const Base::NRect& rect) const
+        void NScroll::OnMouseDown(int x, int y)
         {
-            Base::NRect bkgRect(rect);
-            if(blockDraw_)
+            __super::OnMouseDown(x, y);
+            RefreshCapturePart(x, y);
+
+            if(capturedPart_ == ScrollPartNone)
+                return;
+
+            firstTimer_.Release();
+            continousTimer_.Release();
+
+            if(capturedPart_ == ScrollPartSlider)
             {
-                Base::NRect blockRect;
-                Base::NSize blockSize = blockDraw_->GetPreferSize();
+                Base::NRect itemRect = GetRect();
+                Base::NRect leftBlock, rightBlock, bkg, slider;
+                if(horzScroll_)
+                    GetHorzPartRect(itemRect, leftBlock, rightBlock, bkg, slider);
+                else
+                    GetVertPartRect(itemRect, leftBlock, rightBlock, bkg, slider);
 
-                // Left
-                blockRect.SetRect(rect.Left, rect.Top, rect.Left + blockSize.Width, rect.Bottom);
-                blockDraw_->Draw(render, 0, 0, blockRect);
-
-                // Right
-                blockRect.SetRect(rect.Right - blockSize.Width, rect.Top, rect.Right, rect.Bottom);
-                blockDraw_->Draw(render, 1, 0, blockRect);
-
-                bkgRect.Left += blockSize.Width;
-                bkgRect.Right -= blockSize.Width;
+                startPoint_.SetPoint(x - slider.Left, y - slider.Top);
             }
 
-            if(scrollBkgDraw_)
+            PosChangeTimerProc();
+
+            Base::NInstPtr<Ui::NTimerSrv> timerSrv(MemToolParam);
+            if(capturedPart_ == ScrollPartSlider)
+                continousTimer_ = timerSrv->startTimer(50, MakeDelegate(this, &NScroll::PosChangeTimerProc));
+            else
+                firstTimer_ = timerSrv->startTimer(500, MakeDelegate(this, &NScroll::PosChangeTimerProc));
+        }
+
+        void NScroll::OnMouseUp()
+        {
+            __super::OnMouseUp();
+            ResetCapturePart();
+            firstTimer_.Release();
+            continousTimer_.Release();
+        }
+
+        void NScroll::OnMouseLeave()
+        {
+            __super::OnMouseLeave();
+            ResetHoverPart();
+        }
+
+        void NScroll::OnMouseMove(int x, int y)
+        {
+            __super::OnMouseMove(x, y);
+            RefreshHoverPart(x, y);
+        }
+
+        void NScroll::PosChangeTimerProc()
+        {
+            if(capturedPart_ == ScrollPartNone)
             {
-                scrollBkgDraw_->Draw(render, 0, 0, bkgRect);
+                firstTimer_.Release();
+                continousTimer_.Release();
+                return;
             }
 
-            if(sliderDraw_)
-            {
-                Base::NRect drawRect;
+            Base::NPoint point = Util::Shell::GetCurrentPos();
+            Base::NRect screenRect;
+            if(window_ == NULL)
+                screenRect = GetRootRect();
+            else
+                window_->GetRect(screenRect);
 
-                int foreWidth = bkgRect.Width() / scrollRange_;
-                foreWidth = std::max(g_minForeWidth, foreWidth);
-                int pos = scrollPos_ * (bkgRect.Width() - foreWidth) / (scrollRange_ - 1);
-                drawRect.SetPos(bkgRect.Left + pos, rect.Top);
-                drawRect.SetSize(foreWidth, rect.Height());
-                sliderDraw_->Draw(render, 0, 0, drawRect);
+            point.X -= screenRect.Left;
+            point.Y -= screenRect.Top;
+
+            ScrollPart part = FindPart(point.X, point.Y);
+
+            int pos = GetScrollPos();
+            if(capturedPart_ == ScrollPartLeftBlock && part == capturedPart_)
+            {
+                pos -= scrollLine_;
+            }
+            else if(capturedPart_ == ScrollPartLeftBkg && part == capturedPart_)
+            {
+                pos -= scrollPage_;
+            }
+            else if(capturedPart_ == ScrollPartSlider)
+            {
+                Base::NRect leftBlock;
+                Base::NRect rightBlock;
+                Base::NRect bkg;
+                Base::NRect slider;
+
+                Base::NRect rootRect = GetRootRect();
+
+                if(horzScroll_)
+                    GetHorzPartRect(GetRootRect(), leftBlock, rightBlock, bkg, slider);
+                else
+                    GetVertPartRect(GetRootRect(), leftBlock, rightBlock, bkg, slider);
+
+                if(horzScroll_)
+                    pos = (scrollRange_ - 1) * (point.X - rootRect.Left - startPoint_.X) / (bkg.Width() - slider.Width());
+                else
+                    pos = (scrollRange_ - 1) * (point.Y - rootRect.Top - startPoint_.Y) / (bkg.Height() - slider.Height());
+            }
+            else if(capturedPart_ == ScrollPartRightBkg && part == capturedPart_)
+            {
+                pos += scrollPage_;
+            }
+            else if(capturedPart_ == ScrollPartRightBlock && part == capturedPart_)
+            {
+                pos += scrollLine_;
+            }
+
+            if(pos < 0)
+                pos = 0;
+            if(pos >= scrollRange_)
+                pos = scrollRange_ - 1;
+            SetScrollPos(pos);
+
+            if(firstTimer_)
+            {
+                firstTimer_.Release();
+                Base::NInstPtr<Ui::NTimerSrv> timerSrv(MemToolParam);
+                continousTimer_ = timerSrv->startTimer(50, MakeDelegate(this, &NScroll::PosChangeTimerProc));
             }
         }
 
-        void NScroll::DrawVertContent(NRender* render, const Base::NRect& rect) const
+        void NScroll::GetHorzPartRect(const Base::NRect& rect, Base::NRect& leftBlock, Base::NRect& rightBlock, Base::NRect& bkg, Base::NRect& slider) const
         {
-            Base::NRect bkgRect(rect);
+            Base::NSize blockSize = blockDraw_->GetPreferSize();
+
+            bkg = rect;
             if(blockDraw_)
             {
-                Base::NRect blockRect;
+                // Left
+                leftBlock.SetRect(rect.Left, rect.Top, rect.Left + blockSize.Width, rect.Bottom);
+
+                // Right
+                rightBlock.SetRect(rect.Right - blockSize.Width, rect.Top, rect.Right, rect.Bottom);
+
+                // Bkg
+                bkg.Left += blockSize.Width;
+                bkg.Right -= blockSize.Width;
+            }
+
+            // Slider
+            int foreWidth = bkg.Width() / scrollRange_;
+            foreWidth = std::max(g_minForeWidth, foreWidth);
+            int pos = scrollPos_ * (bkg.Width() - foreWidth) / (scrollRange_ - 1);
+            slider.SetPos(bkg.Left + pos, rect.Top);
+            slider.SetSize(foreWidth, rect.Height());
+        }
+
+        void NScroll::GetVertPartRect(const Base::NRect& rect, Base::NRect& topBlock, Base::NRect& bottomBlock, Base::NRect& bkg, Base::NRect& slider) const
+        {
+            bkg = rect;
+            if(blockDraw_)
+            {
                 Base::NSize blockSize = blockDraw_->GetPreferSize();
 
                 // Top
-                blockRect.SetRect(rect.Left, rect.Top, rect.Right, rect.Top + blockSize.Height);
-                blockDraw_->Draw(render, 0, 0, blockRect);
+                topBlock.SetRect(rect.Left, rect.Top, rect.Right, rect.Top + blockSize.Height);
 
                 // Bottom
-                blockRect.SetRect(rect.Left, rect.Bottom - blockSize.Height, rect.Right, rect.Bottom);
-                blockDraw_->Draw(render, 1, 0, blockRect);
+                bottomBlock.SetRect(rect.Left, rect.Bottom - blockSize.Height, rect.Right, rect.Bottom);
 
-                bkgRect.Top += blockSize.Height;
-                bkgRect.Bottom -= blockSize.Height;
-            }
-
-            if(scrollBkgDraw_)
-            {
-                scrollBkgDraw_->Draw(render, 0, 0, bkgRect);
+                bkg.Top += blockSize.Height;
+                bkg.Bottom -= blockSize.Height;
             }
 
             if(sliderDraw_)
             {
-                Base::NRect drawRect;
-
-                int foreHeight = bkgRect.Height() / scrollRange_;
+                int foreHeight = bkg.Height() / scrollRange_;
                 foreHeight = std::max(g_minForeWidth, foreHeight);
-                int pos = scrollPos_ * (bkgRect.Height() - foreHeight) / (scrollRange_ - 1);
-                drawRect.SetPos(bkgRect.Left, bkgRect.Top + pos);
-                drawRect.SetSize(rect.Width(), foreHeight);
-                sliderDraw_->Draw(render, 0, 0, drawRect);
+                int pos = scrollPos_ * (bkg.Height() - foreHeight) / (scrollRange_ - 1);
+                slider.SetPos(bkg.Left, bkg.Top + pos);
+                slider.SetSize(rect.Width(), foreHeight);
             }
         }
 
-        void NScroll::requireDraws()
+        void NScroll::RefreshCapturePart(int x, int y)
+        {
+            ScrollPart part = FindPart(x, y);
+            if(part == capturedPart_)
+                return;
+            hoverPart_ = part;
+            capturedPart_ = part;
+            Invalidate();
+        }
+
+        void NScroll::ResetCapturePart()
+        {
+            if(capturedPart_ == ScrollPartNone)
+                return;
+            capturedPart_ = ScrollPartNone;
+            Invalidate();
+        }
+
+        void NScroll::RefreshHoverPart(int x, int y)
+        {
+            // when capturedPart_ available, hoverPart_ can only be capturedPart_
+            ScrollPart part = FindPart(x, y);
+            if(capturedPart_ != ScrollPartNone && part != capturedPart_)
+                part = ScrollPartNone;
+            if(part == hoverPart_)
+                return;
+            hoverPart_ = part;
+            Invalidate();
+        }
+
+        void NScroll::ResetHoverPart()
+        {
+            if(hoverPart_ == ScrollPartNone)
+                return;
+            hoverPart_ = ScrollPartNone;
+            Invalidate();
+        }
+
+        NScroll::ScrollPart NScroll::FindPart(int x, int y)
+        {
+            Base::NRect itemRect = GetRect();
+            Base::NRect leftBlock, rightBlock, bkg, slider;
+            if(horzScroll_)
+                GetHorzPartRect(itemRect, leftBlock, rightBlock, bkg, slider);
+            else
+                GetVertPartRect(itemRect, leftBlock, rightBlock, bkg, slider);
+
+            if(leftBlock.Contains(x, y))
+                return ScrollPartLeftBlock;
+            if(rightBlock.Contains(x, y))
+                return ScrollPartRightBlock;
+            if(slider.Contains(x, y))
+                return ScrollPartSlider;
+            if(bkg.Contains(x, y))
+            {
+                if(horzScroll_)
+                    return x < slider.Left ? ScrollPartLeftBkg : ScrollPartRightBkg;
+                else
+                    return y < slider.Top ? ScrollPartLeftBkg : ScrollPartRightBkg;
+            }
+            return ScrollPartNone;
+        }
+
+        void NScroll::RequireDraws()
         {
             NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
             blockDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBlock.png") : _T("@skin:common\\vertScrollBlock.png"));

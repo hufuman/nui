@@ -15,6 +15,7 @@ namespace nui
             NUI_API BOOL FilterWindowMessage(UINT message, DWORD dwValue);
             NUI_API Base::NRect GetWorkareaRect();
             NUI_API BOOL IsKeyPressed(int virKey);
+            NUI_API Base::NPoint GetCurrentPos();
         }
     }
 }

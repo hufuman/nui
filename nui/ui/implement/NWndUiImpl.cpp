@@ -52,7 +52,7 @@ namespace nui
         {
             __super::SetText(text);
             if(IsWndValid())
-                ::SetWindowText(realWindow_, GetText().GetData());
+                ::SetWindowText(realWindow_, __super::GetText().GetData());
         }
 
         Base::NString NWndUi::GetText() const
