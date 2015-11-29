@@ -216,7 +216,7 @@ namespace nui
                 return true;
             }
 
-            void RemoveAllItems()
+            void Clear()
             {
                 count_ = 0;
                 capacity_ = 0;

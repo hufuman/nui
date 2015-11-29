@@ -42,6 +42,7 @@ namespace nui
             virtual void SetText(const Base::NString& text);
             virtual Base::NString GetText() const;
             virtual NText* GetRichText();
+            virtual NCursor* GetCursor() const;
 
             // draw
             virtual void SetBkgDraw(NDraw* bkgDraw);

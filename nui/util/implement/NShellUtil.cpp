@@ -127,11 +127,19 @@ namespace nui
                 return ((::GetKeyState(virKey) & 0x80000000) == 0x80000000);
             }
 
-            NUI_API Base::NPoint GetCurrentPos()
+            NUI_API Base::NPoint GetCurrentPos(Ui::NWindow* window)
             {
                 POINT pt;
                 ::GetCursorPos(&pt);
-                return Base::NPoint(pt.x, pt.y);
+                Base::NPoint point(pt.x, pt.y);
+                if(window)
+                {
+                    Base::NRect rcWnd;
+                    window->GetRect(rcWnd);
+                    point.X -= rcWnd.Left;
+                    point.Y -= rcWnd.Top;
+                }
+                return point;
             }
         }
     }

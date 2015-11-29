@@ -12,7 +12,7 @@ private:
     bool OnButtonClicked(NFrame* pButton, const Base::NPoint& point);
     void OnEditTextChanged(NEdit* pEdit);
     void OnScrollEvent(NScroll* pScroll, int scrollPos);
-    void PaintTest();
+    bool PaintTest(NWindow* window, NRender* render, HRGN clipRgn);
 
 private:
     NAutoPtr<NWindow> window_;

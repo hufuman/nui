@@ -19,15 +19,14 @@ void CControlTest::Test()
     window_->CenterWindow(NULL);
     window_->SetText(_T("Test Window"));
     window_->SetVisible(true);
-
-    NInstPtr<NTimerSrv> timerSrv(MemToolParam);
-    timerSrv->startTimer(100, MakeDelegate(this, &CControlTest::PaintTest));
+    window_->SetPostDrawCallback(MakeDelegate(this, &CControlTest::PaintTest));
 
     // setup controls
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
     NAutoPtr<NShapeDraw> pBkgDraw = loader->CreateShape(MemToolParam);
     pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
     window_->GetRootFrame()->SetBkgDraw(pBkgDraw);
+
     //*
     // VertScroll
     NInstPtr<NScroll> pVertScroll(MemToolParam);
@@ -52,19 +51,29 @@ void CControlTest::Test()
     horzScroll_ = pHorzScroll;
     horzScroll_->SetScrollCallback(MakeDelegate(this, &CControlTest::OnScrollEvent));
 
+    // Header
+    NInstPtr<NHeader> pHeader1(MemToolParam);
+    pHeader1->SetPos(20, 20);
+    for(int i=0; i<5; ++ i)
+    {
+        NString text;
+        text.Format(_T("Item %d"), i);
+        pHeader1->AddItem(0, text.GetData(), 80);
+    }
+    window_->GetRootFrame()->AddChild(pHeader1);
+
     // Button
     NInstPtr<NButton> pButton1(MemToolParam);
     pButton1->SetLayout(NFrame::LayoutHCenter | NFrame::LayoutTop);
     pButton1->SetMargin(10, 10, 20, 40);
     window_->GetRootFrame()->AddChild(pButton1);
     pButton1->SetClickCallback(MakeDelegate(this, &CControlTest::OnButtonClicked));
-    //*/
-    /*
+
     // Static Image
     NInstPtr<NImage> pImg1(MemToolParam);
     pImg1->LoadImage(_T("@skin:images\\514540469.png"));
+    pImg1->SetLayout(NFrame::LayoutRight | NFrame::LayoutBottom);
     window_->GetRootFrame()->AddChild(pImg1);
-    */
 
     NInstPtr<NFrame> posLabel(MemToolParam);
     posLabel->SetPos(10, 100);
@@ -101,7 +110,8 @@ void CControlTest::Test()
     {
         NInstPtr<NImage> pImg2(MemToolParam);
         pImg2->LoadImage(_T("@skin:images\\3.gif"));
-        pImg2->SetPos(i * 10, i % 5 * 50);
+        pImg2->SetMargin(i * 8, 0, 0, 0);
+        pImg2->SetLayout(NFrame::LayoutLeft | NFrame::LayoutBottom);
         window_->GetRootFrame()->AddChild(pImg2);
     }
 
@@ -148,16 +158,7 @@ void CControlTest::OnScrollEvent(NScroll* pScroll, int scrollPos)
     editPos_->SetText(posText.GetData());
 }
 
-void CControlTest::PaintTest()
+bool CControlTest::PaintTest(NWindow* window, NRender* render, HRGN clipRgn)
 {
-    /*
-    HWND hWnd = window_->GetNative();
-    HDC hDc = ::GetDC(hWnd);
-
-    NRect rcTest(0, 0, 200, 200);
-    ::FillRect(hDc, rcTest, (HBRUSH)::GetStockObject(BLACK_BRUSH));
-
-    ::ReleaseDC(hWnd, hDc);
-
-    */
+    return false;
 }

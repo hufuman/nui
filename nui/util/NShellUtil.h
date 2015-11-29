@@ -2,6 +2,7 @@
 
 
 #include "../data/NArrayT.h"
+#include "../ui/NWindow.h"
 
 namespace nui
 {
@@ -15,7 +16,7 @@ namespace nui
             NUI_API BOOL FilterWindowMessage(UINT message, DWORD dwValue);
             NUI_API Base::NRect GetWorkareaRect();
             NUI_API BOOL IsKeyPressed(int virKey);
-            NUI_API Base::NPoint GetCurrentPos();
+            NUI_API Base::NPoint GetCurrentPos(Ui::NWindow* window = NULL);
         }
     }
 }

@@ -68,6 +68,7 @@ using namespace fastdelegate;
 #include "./util/NMisc.h"
 #include "./util/NDiagnose.h"
 
+#include "./ui/NCursor.h"
 #include "./ui/NRenderDef.h"
 #include "./ui/NMsgLoop.h"
 #include "./ui/NWindowBase.h"
@@ -75,6 +76,7 @@ using namespace fastdelegate;
 #include "./ui/NFrameBase.h"
 #include "./ui/NFrame.h"
 #include "./ui/NButton.h"
+#include "./ui/NHeader.h"
 #include "./ui/NResourceLoader.h"
 #include "./ui/NUiBus.h"
 #include "./ui/NRender.h"

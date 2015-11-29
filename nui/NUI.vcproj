@@ -533,6 +533,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NHeaderImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NImageImpl.cpp"
 					>
 				</File>
@@ -601,6 +605,14 @@
 					</File>
 					<File
 						RelativePath=".\ui\implement\Gdi\AlphaDC.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiCursor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\Gdi\GdiCursor.h"
 						>
 					</File>
 					<File
@@ -753,6 +765,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\NHeader.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\NImage.h"
 					>
 				</File>
@@ -770,6 +786,14 @@
 				</File>
 				<File
 					RelativePath=".\ui\NWndUi.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Component"
+				>
+				<File
+					RelativePath=".\ui\NCursor.h"
 					>
 				</File>
 			</Filter>

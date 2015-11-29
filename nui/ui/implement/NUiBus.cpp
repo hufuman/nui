@@ -78,7 +78,7 @@ namespace nui
 
         void NUiBus::SetCaptureFrame(NFrameBase* frame)
         {
-            if(captureFrame_)
+            if(captureFrame_ && captureFrame_->IsInStatus(NFrame::StatusPressed))
                 captureFrame_->OnMouseUp();
             captureFrame_ = frame;
         }

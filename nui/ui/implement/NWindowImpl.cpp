@@ -2,6 +2,7 @@
 
 #include "../NFrame.h"
 #include "../NWindow.h"
+#include "./Gdi/GdiCursor.h"
 
 
 namespace nui
@@ -82,6 +83,21 @@ namespace nui
                         return false;
                     lResult = (wParam == 0) ? TRUE : FALSE;
                     return true;
+                }
+            case WM_SETCURSOR:
+                {
+                    if(hoverFrame_ != NULL)
+                    {
+                        NCursor* cursor = hoverFrame_->GetCursor();
+                        if(cursor != NULL)
+                        {
+                            Gdi::GdiCursor* gdiCursor = dynamic_cast<Gdi::GdiCursor*>(cursor);
+                            ::SetCursor(gdiCursor->GetCursor());
+                            lResult = TRUE;
+                            return true;
+                        }
+                    }
+                    break;
                 }
             case WM_NCHITTEST:
                 {
@@ -167,11 +183,21 @@ namespace nui
                 }
             case WM_MOUSEMOVE:
                 {
+                    NFrame* frame = NULL;
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
-                    NFrame* newFrame = RefreshHoverItem(point);
-                    SetHoverItem(newFrame);
-                    if(hoverFrame_)
-                        hoverFrame_->OnMouseMove(point.X, point.Y);
+                    NFrameBase* capturedFrame = NUiBus::Instance().GetCaptureFrame();
+                    if(capturedFrame != NULL)
+                    {
+                        frame = dynamic_cast<NFrame*>(capturedFrame);
+                    }
+                    else
+                    {
+                        NFrame* newFrame = RefreshHoverItem(point);
+                        SetHoverItem(newFrame);
+                        frame = hoverFrame_;
+                    }
+                    if(frame)
+                        frame->OnMouseMove(point.X, point.Y);
                 }
                 break;
             case WM_LBUTTONDBLCLK:
@@ -288,6 +314,9 @@ namespace nui
 
         void NWindow::SetHoverItem(NFrame* frame)
         {
+            if(hoverFrame_ == frame)
+                return;
+
             if(hoverFrame_ && hoverFrame_ != frame)
             {
                 hoverFrame_->OnMouseLeave();

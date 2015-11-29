@@ -529,6 +529,7 @@ namespace nui
             UNREFERENCED_PARAMETER(y);
             frameStatus_ |= StatusPressed;
             frameStatus_ |= StatusHover;
+            Invalidate();
         }
 
         void NFrameBase::OnMouseUp()

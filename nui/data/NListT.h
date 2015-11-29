@@ -111,7 +111,7 @@ public:
         return true;
     }
 
-    void RemoveAllItems()
+    void Clear()
     {
         NListItemT* item = head_;
         head_ = tail_ = NULL;

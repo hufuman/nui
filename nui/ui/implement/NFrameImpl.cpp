@@ -114,6 +114,11 @@ namespace nui
             return text_;
         }
 
+        NCursor* NFrame::GetCursor() const
+        {
+            return NULL;
+        }
+
         Base::NSize NFrame::GetAutoSize() const
         {
             if(text_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL)

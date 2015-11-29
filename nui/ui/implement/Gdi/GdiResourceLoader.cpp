@@ -162,7 +162,8 @@ namespace nui
         NText* GdiResourceLoader::CreateText(LPCTSTR text, LPCSTR filePath, int line)
         {
             NText* result = dynamic_cast<NText*>(NNewEx(GdiText, filePath, line));
-            result->SetText(text);
+            if(text)
+                result->SetText(text);
             return result;
         }
 
