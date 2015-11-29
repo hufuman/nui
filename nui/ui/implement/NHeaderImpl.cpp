@@ -179,13 +179,21 @@ namespace nui
                 int itemIndex = RefreshCurrentItem(point.X, point.Y, inDragArea);
                 if(itemIndex == hoverItemIndex_)
                 {
-                    UINT& flags = listItems_.GetAt(hoverItemIndex_).flags_;
-                    if((flags & HeaderFlagNoSort) == HeaderFlagNoSort)
+                    int count = listItems_.Count();
+                    for(int i=0; i<count; ++ i)
+                    {
+                        if(i == itemIndex)
+                            continue;
+                        UINT& flags = listItems_[i].flags_;
+                        flags = flags & (~HeaderFlagSortAsc) & (~HeaderFlagSortDesc);
+                    }
+                    UINT& itemFlags = listItems_.GetAt(hoverItemIndex_).flags_;
+                    if((itemFlags & HeaderFlagNoSort) == HeaderFlagNoSort)
                         ;
-                    else if((flags & HeaderFlagSortAsc) == HeaderFlagSortAsc)
-                        flags = (flags & (~HeaderFlagSortAsc)) | HeaderFlagSortDesc;
+                    else if((itemFlags & HeaderFlagSortAsc) == HeaderFlagSortAsc)
+                        itemFlags = (itemFlags & (~HeaderFlagSortAsc)) | HeaderFlagSortDesc;
                     else // asc is default sort
-                        flags = (flags & (~HeaderFlagSortDesc)) | HeaderFlagSortAsc;
+                        itemFlags = (itemFlags & (~HeaderFlagSortDesc)) | HeaderFlagSortAsc;
                 }
             }
 
