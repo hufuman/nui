@@ -123,8 +123,22 @@ namespace nui
                     return true;
                 }
             case WM_NCPAINT:
+                {
+                    lResult = 0;
+                    return true;
+                }
             case WM_NCCALCSIZE:
                 {
+                    NCCALCSIZE_PARAMS* params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
+                    if(::IsZoomed(window_))
+                    {
+                        params->rgrc[0].right += params->rgrc[0].left;
+                        params->rgrc[0].bottom += params->rgrc[0].top;
+                        params->rgrc[0].left = 0;
+                        params->rgrc[0].top = 0;
+                        lResult = 0;
+                        return true;
+                    }
                     lResult = 0;
                     return true;
                 }
@@ -211,7 +225,9 @@ namespace nui
             if(rootFrame_)
                 rootFrame_->SetSize(width, height);
 
-            HRGN rgn = ::CreateRectRgn(0, 0, width, height);
+            Base::NRect rcWnd;
+            GetRect(rcWnd);
+            HRGN rgn = ::CreateRectRgn(0, 0, rcWnd.Width(), rcWnd.Height());
             if(rgn != NULL)
                 ::SetWindowRgn(GetNative(), rgn, FALSE);
         }
