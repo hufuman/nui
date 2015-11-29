@@ -18,15 +18,15 @@ namespace nui
                 || ((flags & NFrameBase::LayoutHFill) != NFrameBase::LayoutHFill);
         }
 
-        void NHorzLayoutArranger::RelayoutChild(NFrameBase* child, Base::NSize& size) const
+        void NHorzLayoutArranger::RelayoutChild(NFrameBase* child, NLayoutArrangerParam& param) const
         {
             if(!IfCouldLayout(child))
                 return;
 
-            size.Width += child->GetMargin().Left;
-            child->SetPos(size.Width, child->GetRect().Top);
-            size.Height = std::max(child->GetRect().Height(), size.Height);
-            size.Width += child->GetRect().Width() + child->GetMargin().Right;
+            param.maxSize_.Width += child->GetMargin().Left;
+            child->SetPos(param.maxSize_.Width, child->GetRect().Top);
+            param.maxSize_.Height = std::max(child->GetRect().Height(), param.maxSize_.Height);
+            param.maxSize_.Width += child->GetRect().Width() + child->GetMargin().Right;
         }
     }
 }

@@ -106,12 +106,13 @@ namespace nui
 
         void NLayout::RelayoutChilds()
         {
-            Base::NSize size;
-            innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&size));
-            innerFrame_->SetSize(size.Width, size.Height);
+            NLayoutArrangerParam param;
+            param.data_ = 0;
+            param.frameSize_ = frameRect_.GetSize();
+            innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&param));
 
             Base::NRect rcLayout = GetRect();
-            if(rcLayout.Width() >= size.Width && rcLayout.Height() >= size.Height)
+            if(rcLayout.Width() >= param.maxSize_.Width && rcLayout.Height() >= param.maxSize_.Height)
             {
                 // both hide
                 if(horzScroll_)
@@ -119,7 +120,7 @@ namespace nui
                 if(vertScroll_)
                     vertScroll_->SetVisible(false);
             }
-            else if(size.Width + GetVertScroll()->GetRect().Width() <= frameRect_.Width() && size.Height > frameRect_.Height())
+            else if(param.maxSize_.Width + GetVertScroll()->GetRect().Width() <= frameRect_.Width() && param.maxSize_.Height > frameRect_.Height())
             {
                 // horz hide, vert show
                 if(horzScroll_)
@@ -127,9 +128,9 @@ namespace nui
                 NScroll* vertScroll = GetVertScroll();
                 vertScroll->SetVisible(true);
                 vertScroll->SetScrollPage(GetRect().Height());
-                vertScroll->SetScrollRange(innerFrame_->GetRect().Height() - GetRect().Height());
+                vertScroll->SetScrollRange(param.maxSize_.Height - GetRect().Height());
             }
-            else if(size.Height + GetHorzScroll()->GetRect().Height() <= frameRect_.Height() && size.Width > frameRect_.Width())
+            else if(param.maxSize_.Height + GetHorzScroll()->GetRect().Height() <= frameRect_.Height() && param.maxSize_.Width > frameRect_.Width())
             {
                 // vert hide, horz show
                 if(vertScroll_)
@@ -137,7 +138,7 @@ namespace nui
                 NScroll* horzScroll = GetHorzScroll();
                 horzScroll->SetMargin(0, 0, 0, 0);
                 horzScroll->SetScrollPage(GetRect().Width());
-                horzScroll->SetScrollRange(innerFrame_->GetRect().Width() - GetRect().Width());
+                horzScroll->SetScrollRange(param.maxSize_.Width - GetRect().Width());
             }
             else
             {
@@ -148,20 +149,22 @@ namespace nui
                 horzScroll->SetMargin(0, 0, vertScroll->GetRect().Width(), 0);
                 int horzPage = GetRect().Width() - vertScroll->GetRect().Width();
                 horzScroll->SetScrollPage(horzPage);
-                horzScroll->SetScrollRange(innerFrame_->GetRect().Width() - horzPage);
+                horzScroll->SetScrollRange(param.maxSize_.Width - horzPage);
 
                 vertScroll->SetVisible(true);
                 int vertPage = GetRect().Height() - horzScroll->GetRect().Height();
                 vertScroll->SetScrollPage(vertPage);
-                vertScroll->SetScrollRange(innerFrame_->GetRect().Height() - vertPage);
+                vertScroll->SetScrollRange(param.maxSize_.Height - vertPage);
             }
+
+            innerFrame_->SetSize(param.maxSize_.Width, param.maxSize_.Height);
         }
 
         bool NLayout::OnEnumChild(NFrameBase* child, LPARAM lParam)
         {
-            Base::NSize* size = reinterpret_cast<Base::NSize*>(lParam);
+            NLayoutArrangerParam* param = reinterpret_cast<NLayoutArrangerParam*>(lParam);
 
-            layoutArranger_->RelayoutChild(child, *size);
+            layoutArranger_->RelayoutChild(child, *param);
             return true;
         }
 

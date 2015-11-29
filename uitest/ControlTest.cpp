@@ -33,14 +33,15 @@ void CControlTest::Test()
     NInstPtr<NLayout> pLayout1(MemToolParam);
     pLayout1->SetPos(150, 50);
     pLayout1->SetAutoSize(false);
-    pLayout1->SetSize(90, 180);
+    pLayout1->SetSize(310, 300);
+    pLayout1->SetLayoutType(NLayout::LayoutTile);
 
     pBkgDraw = loader->CreateShape(MemToolParam);
     pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 0, 255, 255));
     pLayout1->SetBkgDraw(pBkgDraw);
 
     NString msg;
-    for(int i=0; i<2; ++ i)
+    for(int i=0; i<200; ++ i)
     {
         NInstPtr<NButton> pChild(MemToolParam);
         pChild->SetAutoSize(false);
@@ -49,6 +50,8 @@ void CControlTest::Test()
         msg.Format(_T("Item %d"), i);
         pChild->SetText(msg.GetData());
         pChild->GetRichText()->SetColor(MakeArgb(255, 255, 255, 0));
+        if(i == 8)
+            printf("");
         pLayout1->AddChild(pChild);
     }
     window_->GetRootFrame()->AddChild(pLayout1);

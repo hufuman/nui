@@ -299,15 +299,7 @@ namespace nui
                 return;
             }
 
-            Base::NPoint point = Util::Shell::GetCurrentPos();
-            Base::NRect screenRect;
-            if(window_ == NULL)
-                screenRect = GetRootRect();
-            else
-                window_->GetRect(screenRect);
-
-            point.X -= screenRect.Left;
-            point.Y -= screenRect.Top;
+            Base::NPoint point = Util::Shell::GetCurrentPos(window_);
 
             ScrollPart part = FindPart(point.X, point.Y);
 
