@@ -372,7 +372,7 @@ namespace nui
         void NWindowBase::GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const
         {
             style = 0;
-            exStyle = 0;
+            exStyle = WS_EX_APPWINDOW;
             if(styleValue & WindowStyle::Child)
             {
                 style |= WS_CHILD;
@@ -391,7 +391,7 @@ namespace nui
             }
             if((styleValue & WindowStyle::Top) || styleValue == 0)
             {
-                style |= WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_MAXIMIZEBOX;
+                style |= WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_THICKFRAME;
             }
             style |= WS_CLIPCHILDREN;
         }

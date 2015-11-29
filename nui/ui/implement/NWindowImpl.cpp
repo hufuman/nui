@@ -27,7 +27,8 @@ namespace nui
                 rootFrame_ = (NFrame*)rootFrame;
                 rootFrame_->SetId(_T("rootFrame"));
                 rootFrame_->window_ = this;
-                rootFrame->SetLayout(NFrameBase::LayoutHFill | NFrameBase::LayoutVFill);
+                rootFrame_->SetAutoSize(false);
+                // rootFrame->SetLayout(NFrameBase::LayoutHFill | NFrameBase::LayoutVFill);
                 Base::NRect rect;
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());
@@ -111,6 +112,13 @@ namespace nui
                         {
                             lResult = HTBOTTOM;
                         }
+                    }
+                    if(lResult == HTCLIENT)
+                    {
+                        Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
+                        ::ScreenToClient(window_, reinterpret_cast<LPPOINT>(&point));
+                        NFrame* newFrame = RefreshHoverItem(point);
+                        lResult = newFrame == NULL ? HTCAPTION : HTCLIENT;
                     }
                     return true;
                 }

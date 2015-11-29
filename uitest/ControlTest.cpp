@@ -14,7 +14,7 @@ void CControlTest::Test()
     // create window
     window_.Create(MemToolParam);
     // window_->Create(NULL, WindowStyle::Layered);
-    window_->Create(NULL, WindowStyle::Sizable);
+    window_->Create(NULL, WindowStyle::Sizable | WindowStyle::Top);
     window_->SetSize(520, 420);
     window_->CenterWindow(NULL);
     window_->SetText(_T("Test Window"));
@@ -35,6 +35,7 @@ void CControlTest::Test()
     pVertScroll->SetSize(16, 200);
     pVertScroll->SetScrollRange(4);
     pVertScroll->SetScrollPos(3);
+    pVertScroll->SetLayout(NFrame::LayoutVFill);
     window_->GetRootFrame()->AddChild(pVertScroll);
     vertScroll_ = pVertScroll;
     vertScroll_->SetScrollCallback(MakeDelegate(this, &CControlTest::OnScrollEvent));
@@ -46,6 +47,7 @@ void CControlTest::Test()
     pHorzScroll->SetScrollType(true);
     pHorzScroll->SetScrollRange(4);
     pHorzScroll->SetScrollPos(3);
+    pHorzScroll->SetLayout(NFrame::LayoutHFill);
     window_->GetRootFrame()->AddChild(pHorzScroll);
     horzScroll_ = pHorzScroll;
     horzScroll_->SetScrollCallback(MakeDelegate(this, &CControlTest::OnScrollEvent));

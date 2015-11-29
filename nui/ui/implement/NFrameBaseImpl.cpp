@@ -422,7 +422,7 @@ namespace nui
 
             Base::NSize size = IsAutoSize() ? GetAutoSize() : frameRect_.GetSize();
 
-            Base::NRect rcNew;
+            Base::NRect rcNew(frameRect_);
 
             if(layout_ & LayoutLeft)
             {

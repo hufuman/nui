@@ -334,9 +334,9 @@ namespace nui
                     GetVertPartRect(GetRootRect(), leftBlock, rightBlock, bkg, slider);
 
                 if(horzScroll_)
-                    pos = (scrollRange_ - 1) * (point.X - rootRect.Left - startPoint_.X) / (bkg.Width() - slider.Width());
+                    pos = (scrollRange_) * (point.X - rootRect.Left - startPoint_.X - leftBlock.Width()) / (bkg.Width() - slider.Width());
                 else
-                    pos = (scrollRange_ - 1) * (point.Y - rootRect.Top - startPoint_.Y) / (bkg.Height() - slider.Height());
+                    pos = (scrollRange_) * (point.Y - rootRect.Top - startPoint_.Y - leftBlock.Height()) / (bkg.Height() - slider.Height());
             }
             else if(capturedPart_ == ScrollPartRightBkg && part == capturedPart_)
             {
