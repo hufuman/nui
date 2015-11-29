@@ -20,9 +20,9 @@ namespace nui
         NScroll::NScroll()
         {
             Util::Misc::CheckFlag(frameFlags_, NFrame::FlagCanHover, true);
-            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, false);
+            Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, true);
 
-            scrollRange_ = 100;
+            scrollRange_ = 10;
             scrollPos_ = 0;
 
             scrollLine_ = 1;
@@ -87,6 +87,7 @@ namespace nui
             if(horzScroll_ == horzScroll)
                 return;
             horzScroll_ = horzScroll;
+            AutoSize();
             Invalidate();
         }
 
@@ -326,17 +327,15 @@ namespace nui
                 Base::NRect bkg;
                 Base::NRect slider;
 
-                Base::NRect rootRect = GetRootRect();
-
                 if(horzScroll_)
                     GetHorzPartRect(GetRootRect(), leftBlock, rightBlock, bkg, slider);
                 else
                     GetVertPartRect(GetRootRect(), leftBlock, rightBlock, bkg, slider);
 
                 if(horzScroll_)
-                    pos = (scrollRange_) * (point.X - rootRect.Left - startPoint_.X - leftBlock.Width()) / (bkg.Width() - slider.Width());
+                    pos = (scrollRange_) * (point.X - startPoint_.X - leftBlock.Width()) / (bkg.Width() - slider.Width());
                 else
-                    pos = (scrollRange_) * (point.Y - rootRect.Top - startPoint_.Y - leftBlock.Height()) / (bkg.Height() - slider.Height());
+                    pos = (scrollRange_) * (point.Y - startPoint_.Y - leftBlock.Height()) / (bkg.Height() - slider.Height());
             }
             else if(capturedPart_ == ScrollPartRightBkg && part == capturedPart_)
             {
@@ -454,7 +453,7 @@ namespace nui
 
         NScroll::ScrollPart NScroll::FindPart(int x, int y)
         {
-            Base::NRect itemRect = GetRect();
+            Base::NRect itemRect = GetRootRect();
             Base::NRect leftBlock, rightBlock, bkg, slider;
             if(horzScroll_)
                 GetHorzPartRect(itemRect, leftBlock, rightBlock, bkg, slider);

@@ -31,8 +31,10 @@ namespace nui
 
         class NUI_CLASS NFrameBase : public nui::Base::NBaseObj
         {
-            typedef std::list<NFrameBase*> FrameList;
             friend class NWindow;
+
+        public:
+            typedef std::list<NFrameBase*> FrameList;
 
         protected:
             enum Flag
@@ -126,6 +128,7 @@ namespace nui
             virtual void SetMargin(int left, int top, int right, int bottom);
             virtual const Base::NRect& GetMargin() const;
             virtual void SetLayout(UINT layout);
+            virtual UINT GetLayout() const;
             virtual void ReLayout();
 
             virtual void OnMouseDown(int x, int y);

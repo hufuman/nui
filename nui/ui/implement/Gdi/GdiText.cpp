@@ -13,7 +13,7 @@ namespace nui
             bgColor_ = MakeArgb(0, 0, 0, 0);
             text_ = _T("");
             singleLine_ = true;
-            alignFlags_ = TextAlignLeft | TextAlignTop;
+            alignFlags_ = TextAlignCenter;
         }
 
         GdiText::~GdiText()

@@ -12,7 +12,7 @@ namespace nui
             parentFrame_ = NULL;
             topMostCount_ = 0;
             bottomMostCount_ = 0;
-            frameFlags_ = FlagVisible | FlagValid | FlagEnabled;
+            frameFlags_ = FlagVisible | FlagValid | FlagEnabled | FlagAutoSize;
             frameStatus_ = StatusNormal;
             layout_ = LayoutNone;
         }
@@ -214,14 +214,20 @@ namespace nui
             if(!frameRect_.Contains(pt))
                 return NULL;
 
+            pt.X -= frameRect_.Left;
+            pt.Y -= frameRect_.Top;
+
             NFrameBase* result = NULL;
-            FrameList::const_iterator ite = childs_.begin();
-            while(result == NULL && ite != childs_.end())
+            FrameList::const_reverse_iterator ite = childs_.rbegin();
+            while(result == NULL && ite != childs_.rend())
             {
                 NFrameBase* const& child = *ite;
                 result = child->GetChildByPointAndFlag(pt, flags);
                 ++ ite;
             }
+
+            pt.X += frameRect_.Left;
+            pt.Y += frameRect_.Top;
             if(result == NULL && (frameFlags_ & flags))
                 result = this;
             return result;
@@ -394,6 +400,11 @@ namespace nui
             ReLayout();
         }
 
+        UINT NFrameBase::GetLayout() const
+        {
+            return layout_;
+        }
+
         void NFrameBase::ReLayout()
         {
             if(layout_ == LayoutNone)
@@ -424,7 +435,17 @@ namespace nui
 
             Base::NRect rcNew(frameRect_);
 
-            if(layout_ & LayoutLeft)
+            if(layout_ & LayoutHFill)
+            {
+                rcNew.Left = margin_.Left;
+                rcNew.Right = width - margin_.Right;
+            }
+            else if(layout_ & LayoutHCenter)
+            {
+                rcNew.Left = (width - margin_.Width() - size.Width) / 2;
+                rcNew.Right = rcNew.Left + size.Width;
+            }
+            else if(layout_ & LayoutLeft)
             {
                 rcNew.Left = margin_.Left;
                 rcNew.Right = rcNew.Left + size.Width;
@@ -434,18 +455,18 @@ namespace nui
                 rcNew.Right = width - margin_.Right;
                 rcNew.Left = rcNew.Right - size.Width;
             }
-            else if(layout_ & LayoutHCenter)
-            {
-                rcNew.Left = (width - margin_.Width() - size.Width) / 2;
-                rcNew.Right = rcNew.Left + size.Width;
-            }
-            else if(layout_ & LayoutHFill)
-            {
-                rcNew.Left = margin_.Left;
-                rcNew.Right = width - margin_.Right;
-            }
 
-            if(layout_ & LayoutTop)
+            if(layout_ & LayoutVFill)
+            {
+                rcNew.Top = margin_.Top;
+                rcNew.Bottom = height - margin_.Bottom;
+            }
+            else if(layout_ & LayoutVCenter)
+            {
+                rcNew.Top = (height - margin_.Height() - size.Height) / 2;
+                rcNew.Bottom = rcNew.Top + size.Height;
+            }
+            else if(layout_ & LayoutTop)
             {
                 rcNew.Top = margin_.Top;
                 rcNew.Bottom = rcNew.Top + size.Height;
@@ -454,16 +475,6 @@ namespace nui
             {
                 rcNew.Bottom = height - margin_.Bottom;
                 rcNew.Top = rcNew.Bottom - size.Height;
-            }
-            else if(layout_ & LayoutVCenter)
-            {
-                rcNew.Top = (height - margin_.Height() - size.Height) / 2;
-                rcNew.Bottom = rcNew.Top + size.Height;
-            }
-            else if(layout_ & LayoutVFill)
-            {
-                rcNew.Top = margin_.Top;
-                rcNew.Bottom = height - margin_.Bottom;
             }
 
             SetPosImpl(rcNew.Left, rcNew.Top, true);
@@ -490,6 +501,8 @@ namespace nui
                 return;
 
             NRenderClip clip(render, clipRgn, rect);
+            if(clip.IsEmpty())
+                return;
 
             DrawBkg(render, rect);
             DrawContent(render, rect);
@@ -661,8 +674,7 @@ namespace nui
             if(frameRect_.Left == left && frameRect_.Top == top)
                 return false;
             Invalidate();
-            frameRect_.Left = left;
-            frameRect_.Top = top;
+            frameRect_.SetPos(left, top);
             Invalidate();
             return true;
         }

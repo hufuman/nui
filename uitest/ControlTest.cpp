@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "ControlTest.h"
 
+#include "F:\VCProjects\nui\nui\ui\NLayout.h"
+
 CControlTest::CControlTest(void)
 {
 }
@@ -27,6 +29,30 @@ void CControlTest::Test()
     pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 0));
     window_->GetRootFrame()->SetBkgDraw(pBkgDraw);
 
+    // Layout
+    NInstPtr<NLayout> pLayout1(MemToolParam);
+    pLayout1->SetPos(150, 50);
+    pLayout1->SetAutoSize(false);
+    pLayout1->SetSize(90, 180);
+
+    pBkgDraw = loader->CreateShape(MemToolParam);
+    pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 0, 255, 255));
+    pLayout1->SetBkgDraw(pBkgDraw);
+
+    NString msg;
+    for(int i=0; i<2; ++ i)
+    {
+        NInstPtr<NButton> pChild(MemToolParam);
+        pChild->SetAutoSize(false);
+        pChild->SetSize(100, 20);
+        pChild->SetMargin(5, 10, 15, 20);
+        msg.Format(_T("Item %d"), i);
+        pChild->SetText(msg.GetData());
+        pChild->GetRichText()->SetColor(MakeArgb(255, 255, 255, 0));
+        pLayout1->AddChild(pChild);
+    }
+    window_->GetRootFrame()->AddChild(pLayout1);
+
     //*
     // VertScroll
     NInstPtr<NScroll> pVertScroll(MemToolParam);
@@ -50,30 +76,6 @@ void CControlTest::Test()
     window_->GetRootFrame()->AddChild(pHorzScroll);
     horzScroll_ = pHorzScroll;
     horzScroll_->SetScrollCallback(MakeDelegate(this, &CControlTest::OnScrollEvent));
-
-    // Header
-    NInstPtr<NHeader> pHeader1(MemToolParam);
-    pHeader1->SetPos(20, 20);
-    for(int i=0; i<5; ++ i)
-    {
-        NString text;
-        text.Format(_T("Item %d"), i);
-        pHeader1->AddItem(0, text.GetData(), 80);
-    }
-    window_->GetRootFrame()->AddChild(pHeader1);
-
-    // Button
-    NInstPtr<NButton> pButton1(MemToolParam);
-    pButton1->SetLayout(NFrame::LayoutHCenter | NFrame::LayoutTop);
-    pButton1->SetMargin(10, 10, 20, 40);
-    window_->GetRootFrame()->AddChild(pButton1);
-    pButton1->SetClickCallback(MakeDelegate(this, &CControlTest::OnButtonClicked));
-
-    // Static Image
-    NInstPtr<NImage> pImg1(MemToolParam);
-    pImg1->LoadImage(_T("@skin:images\\514540469.png"));
-    pImg1->SetLayout(NFrame::LayoutRight | NFrame::LayoutBottom);
-    window_->GetRootFrame()->AddChild(pImg1);
 
     NInstPtr<NFrame> posLabel(MemToolParam);
     posLabel->SetPos(10, 100);
@@ -106,7 +108,7 @@ void CControlTest::Test()
     editRange_ = pEdit2;
 
     // Gif Image
-    for(int i=0; i<0; ++ i)
+    for(int i=0; i<10; ++ i)
     {
         NInstPtr<NImage> pImg2(MemToolParam);
         pImg2->LoadImage(_T("@skin:images\\3.gif"));
@@ -114,6 +116,12 @@ void CControlTest::Test()
         pImg2->SetLayout(NFrame::LayoutLeft | NFrame::LayoutBottom);
         window_->GetRootFrame()->AddChild(pImg2);
     }
+
+    // Static Image
+    NInstPtr<NImage> pImg1(MemToolParam);
+    pImg1->LoadImage(_T("@skin:images\\514540469.png"));
+    pImg1->SetLayout(NFrame::LayoutRight | NFrame::LayoutBottom);
+    window_->GetRootFrame()->AddChild(pImg1);
 
     // loop
     nui::Ui::NMsgLoop loop;
@@ -129,7 +137,7 @@ void CControlTest::Test()
 
 bool CControlTest::OnButtonClicked(NFrame* pButton, const Base::NPoint& point)
 {
-    MessageBox(pButton->GetWindow()->GetNative(), _T("Button Clicked"), _T("Test"), MB_OK | MB_ICONINFORMATION);
+    // MessageBox(pButton->GetWindow()->GetNative(), _T("Button Clicked"), _T("Test"), MB_OK | MB_ICONINFORMATION);
     return true;
 }
 

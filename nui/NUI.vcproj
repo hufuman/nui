@@ -541,6 +541,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NLayoutImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NMsgLoop.cpp"
 					>
 				</File>
@@ -708,6 +712,34 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="NLayutArranger"
+					>
+					<File
+						RelativePath=".\ui\implement\NHorzLayoutArranger.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\NHorzLayoutArranger.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\NTileLayoutArranger.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\NTileLayoutArranger.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\NVertLayoutArranger.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ui\implement\NVertLayoutArranger.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="draw"
@@ -770,6 +802,14 @@
 				</File>
 				<File
 					RelativePath=".\ui\NImage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NLayout.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NLayoutArranger.h"
 					>
 				</File>
 				<File
