@@ -23,21 +23,20 @@ namespace nui
             virtual ArgbColor GetBgColor() const;
             virtual NText* SetSingleLine(bool singleLine);
             virtual bool GetSingleLine() const;
-            virtual NText* SetHorzCenter(bool center);
-            virtual bool GetHorzCenter() const;
-            virtual NText* SetVertCenter(bool center);
-            virtual bool GetVertCenter() const;
+            virtual NText* SetAlignFlags(UINT alignFlags);
+            virtual UINT GetAlignFlags() const;
 
         public:
             DWORD GetDrawFlags() const;
+            bool IsHorzAlign() const;
+            bool IsVertAlign() const;
 
         private:
             ArgbColor color_;
             ArgbColor bgColor_;
             Base::NString text_;
             bool singleLine_;
-            bool horzCenter_;
-            bool vertCenter_;
+            UINT alignFlags_;
         };
     }
 }

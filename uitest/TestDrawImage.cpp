@@ -42,7 +42,7 @@ void CTestDrawImage::Test()
 
     m_pImage->SetDrawType(ImageDrawType::NineStretch)->SetStretchParam(60, 50, 60, 50);
 
-    window->SetDrawCallback(MakeDelegate(this, &CTestDrawImage::DrawCallback));
+    window->SetPreDrawCallback(MakeDelegate(this, &CTestDrawImage::DrawCallback));
 
     nui::Ui::NMsgLoop loop;
     loop.Loop(window->GetNative());

@@ -13,8 +13,7 @@ namespace nui
             bgColor_ = MakeArgb(0, 0, 0, 0);
             text_ = _T("");
             singleLine_ = true;
-            horzCenter_ = false;
-            vertCenter_ = false;
+            alignFlags_ = TextAlignLeft | TextAlignTop;
         }
 
         GdiText::~GdiText()
@@ -66,35 +65,47 @@ namespace nui
             return singleLine_;
         }
 
-        NText* GdiText::SetHorzCenter(bool center)
+        NText* GdiText::SetAlignFlags(UINT alignFlags)
         {
-            horzCenter_ = center;
+            alignFlags_ = alignFlags;
             return this;
         }
 
-        bool GdiText::GetHorzCenter() const
+        UINT GdiText::GetAlignFlags() const
         {
-            return horzCenter_;
-        }
-
-        NText* GdiText::SetVertCenter(bool center)
-        {
-            vertCenter_ = center;
-            return this;
-        }
-
-        bool GdiText::GetVertCenter() const
-        {
-            return vertCenter_;
+            return alignFlags_;
         }
 
         DWORD GdiText::GetDrawFlags() const
         {
             DWORD result = 0;
             result |= (singleLine_ ? DT_SINGLELINE : (DT_EDITCONTROL | DT_WORDBREAK));
-            result |= (horzCenter_ ? DT_CENTER : 0);
-            result |= (singleLine_ && vertCenter_ ? DT_VCENTER : 0);
+
+            if(alignFlags_ & TextAlignHCenter)
+                result |= DT_CENTER;
+            else if(alignFlags_ & TextAlignRight)
+                result |= DT_RIGHT;
+            else
+                result |= DT_LEFT;
+
+            if((alignFlags_ & TextAlignVCenter) && singleLine_)
+                result |= DT_VCENTER;
+            else if(alignFlags_ & TextAlignBottom)
+                result |= DT_BOTTOM;
+            else
+                result |= DT_TOP;
+
             return result;
+        }
+
+        bool GdiText::IsHorzAlign() const
+        {
+            return (alignFlags_ & TextAlignHCenter) == TextAlignHCenter;
+        }
+
+        bool GdiText::IsVertAlign() const
+        {
+            return (alignFlags_ & TextAlignVCenter) == TextAlignVCenter;
         }
     }
 }

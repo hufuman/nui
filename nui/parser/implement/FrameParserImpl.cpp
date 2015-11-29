@@ -67,10 +67,4 @@ void FrameParserImpl::FillAttr()
 
     if(styleNode_->ReadValue(_T("textSingleLine"), bFlag))
         text_->SetSingleLine(bFlag);
-
-    if(styleNode_->ReadValue(_T("textVertCenter"), bFlag))
-        text_->SetVertCenter(bFlag);
-
-    if(styleNode_->ReadValue(_T("textHorzCenter"), bFlag))
-        text_->SetHorzCenter(bFlag);
 }

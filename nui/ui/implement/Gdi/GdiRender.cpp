@@ -226,17 +226,16 @@ namespace nui
             Base::NSize size(rect.Width(), rect.Height());
             GetTextSize(text, font, size);
 
-            if(gdiText->GetVertCenter())
+            if(gdiText->IsVertAlign())
             {
-                if(gdiText->GetHorzCenter())
+                if(gdiText->IsHorzAlign())
                     textRect.Inflate(-(rect.Width() - size.Width) / 2, -(rect.Height() - size.Height) / 2);
                 else
                     textRect.Inflate(0, -(rect.Height() - size.Height) / 2);
             }
             else
             {
-                textRect.SetRect(0, 0, size.Width, size.Height);
-                textRect.Offset(rect.Left, rect.Top);
+                textRect = rect;
             }
 
             // limit rect to be valid
@@ -249,7 +248,8 @@ namespace nui
             if(textRect.Bottom > rect.Bottom)
                 textRect.Bottom = rect.Bottom;
 
-            FillRectangle(textRect, gdiText->GetBgColor());
+            if(GetAlpha(gdiText->GetBgColor()) > 0)
+                FillRectangle(textRect, gdiText->GetBgColor());
 
             CAlphaDC alphaDc;
             if(alphaDc.Init(memDC_, textRect, memDC_.GetSize(), true))
@@ -290,6 +290,8 @@ namespace nui
             DWORD flags = gdiText->GetDrawFlags();
             flags = (flags & (~DT_CENTER));
             flags = (flags & (~DT_VCENTER));
+            flags = (flags & (~DT_BOTTOM));
+            flags = (flags & (~DT_RIGHT));
             flags = (flags & (~DT_END_ELLIPSIS));
             flags = (flags & (~DT_PATH_ELLIPSIS));
             flags = (flags & (~DT_WORD_ELLIPSIS));

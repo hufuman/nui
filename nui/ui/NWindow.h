@@ -27,7 +27,8 @@ namespace nui
             NFrame* GetRootFrame();
             NRender* GetRender() const;
 
-            void SetDrawCallback(WindowDrawCallback callback);
+            void SetPreDrawCallback(WindowDrawCallback callback);
+            void SetPostDrawCallback(WindowDrawCallback callback);
 
         protected:
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
@@ -46,7 +47,9 @@ namespace nui
             BEGIN_USE_UNEXPORT_TEMPLATE()
                 Base::NAutoPtr<NFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;
-            WindowDrawCallback drawCallback_;
+
+            WindowDrawCallback preDrawCallback_;
+            WindowDrawCallback postDrawCallback_;
 
             Base::NAutoPtr<NFrame> hoverFrame_;
 

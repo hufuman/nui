@@ -41,9 +41,14 @@ namespace nui
             return render_;
         }
 
-        void NWindow::SetDrawCallback(WindowDrawCallback callback)
+        void NWindow::SetPreDrawCallback(WindowDrawCallback callback)
         {
-            drawCallback_ = callback;
+            preDrawCallback_ = callback;
+        }
+
+        void NWindow::SetPostDrawCallback(WindowDrawCallback callback)
+        {
+            postDrawCallback_ = callback;
         }
 
         // WindowMsgFilter
@@ -238,7 +243,7 @@ namespace nui
             GetRect(rcClient);
             rcClient.Offset(-rcClient.Left, -rcClient.Top);
 
-            if(drawCallback_ && drawCallback_(this, render, clipRgn))
+            if(preDrawCallback_ && preDrawCallback_(this, render, clipRgn))
             {
                 return;
             }
@@ -247,6 +252,11 @@ namespace nui
             {
                 Base::NPoint pt;
                 rootFrame_->Draw(render, pt, clipRgn);
+            }
+
+            if(postDrawCallback_ && postDrawCallback_(this, render, clipRgn))
+            {
+                return;
             }
         }
 
