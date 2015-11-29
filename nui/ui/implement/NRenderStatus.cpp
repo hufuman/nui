@@ -31,9 +31,9 @@ namespace nui
 
             Base::NString status;
             if(currentTime <= lastTime_)
-                status.Format(_T("Index: %d\r\nFPS: MAX"), ++ index_);
+                status.Format(_T("Index: %d\r\nFPS: MAX\r\nInterval: %d"), ++ index_, 0);
             else
-                status.Format(_T("Index: %d\r\nFPS: %.2f"), ++ index_, (double)1000 / (currentTime - lastTime_));
+                status.Format(_T("Index: %d\r\nFPS: %.2f\r\nInterval: %d"), ++ index_, (double)1000 / (currentTime - lastTime_), currentTime - lastTime_);
 
             lastTime_ = currentTime;
 
