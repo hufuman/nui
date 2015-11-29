@@ -41,6 +41,7 @@ void CControlTest::Test()
     pLayout1->SetBkgDraw(pBkgDraw);
 
     NString msg;
+    pLayout1->SetLayoutable(false);
     for(int i=0; i<200; ++ i)
     {
         NInstPtr<NButton> pChild(MemToolParam);
@@ -54,6 +55,7 @@ void CControlTest::Test()
             printf("");
         pLayout1->AddChild(pChild);
     }
+    pLayout1->SetLayoutable(true);
     window_->GetRootFrame()->AddChild(pLayout1);
 
     //*

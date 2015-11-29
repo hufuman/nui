@@ -12,7 +12,7 @@ namespace nui
             parentFrame_ = NULL;
             topMostCount_ = 0;
             bottomMostCount_ = 0;
-            frameFlags_ = FlagVisible | FlagValid | FlagEnabled | FlagAutoSize;
+            frameFlags_ = FlagVisible | FlagValid | FlagEnabled | FlagAutoSize | FlagLayoutable;
             frameStatus_ = StatusNormal;
             layout_ = LayoutNone;
         }
@@ -407,7 +407,7 @@ namespace nui
 
         void NFrameBase::ReLayout()
         {
-            if(layout_ == LayoutNone)
+            if(layout_ == LayoutNone || !IsLayoutable())
                 return;
 
             int width = 0;
@@ -479,6 +479,20 @@ namespace nui
 
             SetPosImpl(rcNew.Left, rcNew.Top, true);
             SetSizeImpl(rcNew.Width(), rcNew.Height(), true);
+        }
+
+        void NFrameBase::SetLayoutable(bool layoutable)
+        {
+            if(layoutable == IsLayoutable())
+                return;
+            Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagLayoutable, layoutable);
+            if(layoutable)
+                Layout();
+        }
+
+        bool NFrameBase::IsLayoutable() const
+        {
+            return Util::Misc::IsFlagChecked(frameFlags_, NFrameBase::FlagLayoutable);
         }
 
         void NFrameBase::Invalidate() const

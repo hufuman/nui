@@ -45,6 +45,7 @@ namespace nui
                 FlagAutoSize    = 0x0004,
                 FlagValid       = 0x0008,
                 FlagCanHover    = 0x0010,
+                FlagLayoutable  = 0x0020,
             };
 
         public:
@@ -130,6 +131,8 @@ namespace nui
             virtual void SetLayout(UINT layout);
             virtual UINT GetLayout() const;
             virtual void ReLayout();
+            virtual void SetLayoutable(bool layoutable);
+            virtual bool IsLayoutable() const;
 
             virtual void OnMouseDown(int x, int y);
             virtual void OnMouseUp();

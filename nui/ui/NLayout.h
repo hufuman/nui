@@ -33,8 +33,10 @@ namespace nui
             virtual bool RemoveChild(NFrameBase* child);
             virtual void RemoveAllChilds();
 
+        public:
+            virtual void SetLayoutable(bool layoutable);
+
         protected:
-            virtual void Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn);
             virtual Base::NSize GetAutoSize() const;
 
         private:

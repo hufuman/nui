@@ -90,11 +90,6 @@ namespace nui
             AutoSize();
         }
 
-        void NLayout::Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn)
-        {
-            __super::Draw(render, ptOffset, clipRgn);
-        }
-
         Base::NSize NLayout::GetAutoSize() const
         {
             Base::NSize size = innerFrame_->GetAutoSize();
@@ -104,8 +99,19 @@ namespace nui
             return size;
         }
 
+        void NLayout::SetLayoutable(bool layoutable)
+        {
+            bool oldValue = IsLayoutable();
+            __super::SetLayoutable(layoutable);
+            if(!oldValue && layoutable)
+                RelayoutChilds();
+        }
+
         void NLayout::RelayoutChilds()
         {
+            if(!IsLayoutable())
+                return;
+
             NLayoutArrangerParam param;
             param.data_ = 0;
             param.frameSize_ = frameRect_.GetSize();
