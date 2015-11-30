@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "ControlTest.h"
 
-#include "F:\VCProjects\nui\nui\ui\NLayout.h"
 
 CControlTest::CControlTest(void)
 {
