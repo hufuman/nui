@@ -8,8 +8,6 @@ namespace nui
     namespace Ui
     {
         BEGIN_USE_UNEXPORT_TEMPLATE()
-        class NUI_CLASS NEdit;
-        typedef FastDelegate1<NEdit*, void> EditTextChangeEventCallback;
 
         class NUI_CLASS NEdit : public NWndUi
         {
@@ -32,9 +30,6 @@ namespace nui
             void SelectAll();
             void ShowTooltip(TooltipIconType iconType, LPCTSTR szTitle, LPCTSTR szText);
 
-            // Event
-            virtual void SetTextChangeCallback(EditTextChangeEventCallback callback);
-
         protected:
 
             virtual bool OnParentCommand(WORD notifyCode);
@@ -44,8 +39,12 @@ namespace nui
             virtual bool SetPosImpl(int left, int top, bool force);
             virtual bool SetSizeImpl(int width, int height, bool force);
 
-        protected:
-            EditTextChangeEventCallback textChangeCallback_;
+        public:
+            // Event
+            class TextChangeEventData : public NEventData
+            {
+            };
+            NEvent TextChangeEvent;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

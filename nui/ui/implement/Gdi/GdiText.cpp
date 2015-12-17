@@ -79,7 +79,7 @@ namespace nui
         DWORD GdiText::GetDrawFlags() const
         {
             DWORD result = 0;
-            result |= (singleLine_ ? DT_SINGLELINE : (DT_EDITCONTROL | DT_WORDBREAK));
+            result |= (singleLine_ ? (DT_SINGLELINE | DT_END_ELLIPSIS) : (DT_EDITCONTROL | DT_WORDBREAK));
 
             if(alignFlags_ & TextAlignHCenter)
                 result |= DT_CENTER;

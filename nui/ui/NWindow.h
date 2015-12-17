@@ -5,6 +5,7 @@
 #include "NWindowBase.h"
 #include "NRender.h"
 #include "NRenderStatus.h"
+#include "NEvent.h"
 #include "../base/NInstPtr.h"
 #include "../base/NAutoPtr.h"
 
@@ -13,8 +14,6 @@ namespace nui
     namespace Ui
     {
         class NFrame;
-        class NWindow;
-        typedef FastDelegate3<NWindow*, NRender*, HRGN, bool> WindowDrawCallback;
 
         class NUI_CLASS NWindow : public Base::NBaseObj, public NWindowBase
         {
@@ -26,9 +25,6 @@ namespace nui
 
             NFrame* GetRootFrame();
             NRender* GetRender() const;
-
-            void SetPreDrawCallback(WindowDrawCallback callback);
-            void SetPostDrawCallback(WindowDrawCallback callback);
 
         protected:
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
@@ -42,14 +38,21 @@ namespace nui
             void SetHoverItem(NFrame* frame);
             NFrame* RefreshHoverItem(const Base::NPoint& point);
 
+        public:
+            // Event
+            class WindowDrawEventData : public NEventData
+            {
+            public:
+                HRGN region;
+                NRender* render;
+            };
+            NEvent PreDrawEvent;
+            NEvent PostDrawEvent;
+
         protected:
-
             BEGIN_USE_UNEXPORT_TEMPLATE()
-                Base::NAutoPtr<NFrame> rootFrame_;
+            Base::NAutoPtr<NFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;
-
-            WindowDrawCallback preDrawCallback_;
-            WindowDrawCallback postDrawCallback_;
 
             Base::NAutoPtr<NFrame> hoverFrame_;
 

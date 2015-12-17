@@ -22,17 +22,18 @@ namespace nui
             Util::Misc::CheckFlag(frameFlags_, NFrame::FlagCanHover, true);
             Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, true);
 
-            scrollRange_ = 10;
+            scrollRange_ = 100;
             scrollPos_ = 0;
 
             scrollLine_ = 1;
-            scrollPage_ = 1;
+            scrollPage_ = 10;
             horzScroll_ = false;
 
             hoverPart_ = ScrollPartNone;
             capturedPart_ = ScrollPartNone;
 
             RequireDraws();
+            ReLayout();
         }
 
         NScroll::~NScroll()
@@ -60,8 +61,10 @@ namespace nui
             if(scrollPos_ == pos)
                 return;
             scrollPos_ = pos;
-            if(scrollCallback_)
-                scrollCallback_(this, scrollPos_);
+
+            ScrollEventData eventData;
+            eventData.scrollPos = scrollPos_;
+            ScrollEvent.Invoke(this, &eventData);
             Invalidate();
         }
 
@@ -77,18 +80,19 @@ namespace nui
                 scrollPage_ = page;
         }
 
-        void NScroll::SetScrollCallback(ScrollEventCallback callback)
-        {
-            scrollCallback_ = callback;
-        }
-
         void NScroll::SetScrollType(bool horzScroll)
         {
             if(horzScroll_ == horzScroll)
                 return;
             horzScroll_ = horzScroll;
+
+            blockDraw_ = NULL;
+            sliderDraw_ = NULL;
+            scrollBkgDraw_ = NULL;
+
+            RequireDraws();
             AutoSize();
-            Invalidate();
+            ReLayout();
         }
 
         int NScroll::GetScrollPos() const
@@ -109,6 +113,17 @@ namespace nui
         int NScroll::GetScrollPage() const
         {
             return scrollPage_;
+        }
+
+        bool NScroll::SetVisible(bool visible)
+        {
+            bool result = __super::SetVisible(visible);
+
+            ScrollEventData eventData;
+            eventData.scrollPos = scrollPos_;
+            ScrollEvent.Invoke(this, &eventData);
+
+            return result;
         }
 
         Base::NSize NScroll::GetAutoSize() const
@@ -474,7 +489,6 @@ namespace nui
             blockDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBlock.png") : _T("@skin:common\\vertScrollBlock.png"));
             sliderDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollSlider.png") : _T("@skin:common\\vertScrollSlider.png"));
             scrollBkgDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBkg.png") : _T("@skin:common\\vertScrollBkg.png"));
-            AutoSize();
         }
     }
 }

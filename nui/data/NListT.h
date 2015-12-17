@@ -29,7 +29,7 @@ public:
 
     ~NListT()
     {
-        RemoveAllItems();
+        Clear();
     }
 
     Position AddItem(const Elem& value)

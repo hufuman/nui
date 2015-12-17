@@ -486,6 +486,10 @@
 			Name="ui"
 			>
 			<File
+				RelativePath=".\ui\NEvent.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui\NMsgLoop.h"
 				>
 			</File>
@@ -505,6 +509,10 @@
 				RelativePath=".\ui\NUiBus.h"
 				>
 			</File>
+			<File
+				RelativePath=".\ui\UiDef.h"
+				>
+			</File>
 			<Filter
 				Name="implement"
 				>
@@ -522,6 +530,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NEdit.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NEvent.cpp"
 					>
 				</File>
 				<File
@@ -545,6 +557,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NListImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NMsgLoop.cpp"
 					>
 				</File>
@@ -554,6 +570,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NScrollImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NShapeDrawImpl.cpp"
 					>
 				</File>
 				<File
@@ -813,6 +833,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\NList.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\NScroll.h"
 					>
 				</File>
@@ -830,7 +854,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Component"
+				Name="component"
 				>
 				<File
 					RelativePath=".\ui\NCursor.h"

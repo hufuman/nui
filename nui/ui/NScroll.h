@@ -7,11 +7,6 @@ namespace nui
 {
     namespace Ui
     {
-        BEGIN_USE_UNEXPORT_TEMPLATE()
-            class NUI_CLASS NScroll;
-            typedef FastDelegate2<NScroll*, int, void> ScrollEventCallback;
-        END_USE_UNEXPORT_TEMPLATE()
-
         class NUI_CLASS NScroll : public NFrame
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("scroll"))
@@ -30,9 +25,6 @@ namespace nui
             NScroll();
             ~NScroll();
 
-            // Event
-            virtual void SetScrollCallback(ScrollEventCallback callback);
-
             // Data
             virtual void SetScrollType(bool horzScroll);
 
@@ -45,6 +37,8 @@ namespace nui
             virtual int GetScrollRange() const;
             virtual int GetScrollLine() const;
             virtual int GetScrollPage() const;
+
+            virtual bool SetVisible(bool visible);
 
         protected:
             // Pos & Size
@@ -79,6 +73,15 @@ namespace nui
             void ResetHoverPart();
             ScrollPart FindPart(int x, int y);
 
+        public:
+            // Event
+            class ScrollEventData : public NEventData
+            {
+            public:
+                int scrollPos;
+            };
+            NEvent ScrollEvent;
+
         private:
             int scrollRange_;
             int scrollPos_;
@@ -92,14 +95,12 @@ namespace nui
             nui::Base::NHolder firstTimer_;
             nui::Base::NHolder continousTimer_;
 
-            BEGIN_USE_UNEXPORT_TEMPLATE()
-
-            ScrollEventCallback scrollCallback_;
             Base::NPoint startPoint_;
+
+            BEGIN_USE_UNEXPORT_TEMPLATE()
             Base::NAutoPtr<NImageDraw> blockDraw_;
             Base::NAutoPtr<NImageDraw> sliderDraw_;
             Base::NAutoPtr<NImageDraw> scrollBkgDraw_;
-
             END_USE_UNEXPORT_TEMPLATE()
         };
     }

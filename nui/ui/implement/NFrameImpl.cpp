@@ -26,6 +26,8 @@ namespace nui
         void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, UINT layout, LPCTSTR frameText)
         {
             NAssertError(parentFrame != NULL, _T("Create twice"));
+            frameId = frameId == NULL ? _T("") : frameId;
+            frameText = frameText == NULL ? _T("") : frameText;
             SetId(frameId);
             SetText(frameText);
             SetLayout(layout);
@@ -46,6 +48,10 @@ namespace nui
 
         void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText)
         {
+            frameId = frameId == NULL ? _T("") : frameId;
+            frameText = frameText == NULL ? _T("") : frameText;
+
+            SetAutoSize(false);
             SetId(frameId);
             SetText(frameText);
             SetPos(rect.Left, rect.Top);
@@ -69,14 +75,9 @@ namespace nui
 
         void NFrame::OnClicked(const nui::Base::NPoint& point)
         {
-            if(clickCallback_)
-                clickCallback_(this, point);
+            ClickEventData eventData(point);
+            ClickEvent.Invoke(this, &eventData);
             OnMouseUp();
-        }
-
-        void NFrame::SetClickCallback(ClickEventCallback callback)
-        {
-            clickCallback_ = callback;
         }
 
         void NFrame::SetText(const Base::NString& text)
@@ -123,7 +124,7 @@ namespace nui
         {
             if(text_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL)
             {
-                Base::NSize autoSize(frameRect_.Width(), frameRect_.Height());
+                Base::NSize autoSize;
                 return autoSize;
             }
 
@@ -154,6 +155,16 @@ namespace nui
         NFrame* NFrame::GetChildById(const Base::NString& id, bool recursive)
         {
             return dynamic_cast<NFrame*>(__super::GetChildById(id, recursive));
+        }
+
+        NFrame* NFrame::GetChildAtIndex(size_t index)
+        {
+            if(index >= childs_.size())
+                return NULL;
+            FrameList::iterator ite = childs_.begin();
+            for(size_t i=0; i<index; ++ i)
+                ++ ite;
+            return dynamic_cast<NFrame*>(*ite);
         }
 
         NFrame* NFrame::GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags)

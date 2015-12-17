@@ -28,9 +28,14 @@ namespace nui
 
         int NHeader::AddItem(int index, LPCTSTR text, int width)
         {
+            return AddItem(index, text, width, HeaderFlagNone);
+        }
+
+        int NHeader::AddItem(int index, LPCTSTR text, int width, UINT flags)
+        {
             NHeaderItem item;
             item.data_ = 0;
-            item.flags_ = HeaderFlagNone;
+            item.flags_ = flags;
             item.text_ = NUiBus::Instance().GetResourceLoader()->CreateText(text, MemToolParam);
             item.width_ = width;
             bool isAppend = index < 0 || index > listItems_.Count();
@@ -65,6 +70,18 @@ namespace nui
             return 0;
         }
 
+        int NHeader::GetTotalWidth() const
+        {
+            int totalWidth = 0;
+            int count = listItems_.Count();
+            for(int i=0; i<count; ++ i)
+            {
+                const NHeaderItem& item = listItems_.GetAt(i);
+                totalWidth += item.width_;
+            }
+            return totalWidth;
+        }
+
         void NHeader::ClearAllItems()
         {
             listItems_.Clear();
@@ -86,6 +103,13 @@ namespace nui
             return 0;
         }
 
+        void NHeader::DrawBkg(NRender* render, const Base::NRect& rect) const
+        {
+            __super::DrawBkg(render, rect);
+
+            headerDraw_->Draw(render, 0, 0, rect);
+        }
+
         void NHeader::DrawContent(NRender* render, const Base::NRect& rect) const
         {
             int count = listItems_.Count();
@@ -97,21 +121,15 @@ namespace nui
             Base::NRect rcArrow;
             if(rect.Height() - 2 < sizeArrow.Height)
                 sizeArrow.Height = rect.Height() - 2;
-            rcArrow.SetPos(0, rect.Left + (rect.Height() - sizeArrow.Height) / 2);
+            rcArrow.SetPos(rect.Left, rect.Top + (rect.Height() - sizeArrow.Height) / 2);
             rcArrow.SetSize(sizeArrow.Width, sizeArrow.Height);
 
             for(int i=0; i<count; ++ i)
             {
                 const NHeaderItem& item = listItems_.GetAt(i);
 
-                if(rcItem.Width() >= frameRect_.Right)
-                    break;
-
-                // bkg
                 int index = 0;
-                if(headerDragging_)
-                    index = 0;
-                else if(hoverItemIndex_ == i)
+                if(!headerDragging_ && hoverItemIndex_ == i)
                     index = IsInStatus(NFrame::StatusPressed) ? 2 : 1;
                 rcItem.Right = rcItem.Left + item.width_;
                 headerDraw_->Draw(render, 0, index, rcItem);
@@ -123,6 +141,8 @@ namespace nui
                     arrowDraw_->Draw(render, 0, 0, rcArrow);
                 else if(item.flags_ & HeaderFlagSortDesc)
                     arrowDraw_->Draw(render, 0, 1, rcArrow);
+                else
+                    rcArrow.Left = rcArrow.Right;
 
                 // text
                 if(item.text_ != NULL)
@@ -188,12 +208,18 @@ namespace nui
                         flags = flags & (~HeaderFlagSortAsc) & (~HeaderFlagSortDesc);
                     }
                     UINT& itemFlags = listItems_.GetAt(hoverItemIndex_).flags_;
-                    if((itemFlags & HeaderFlagNoSort) == HeaderFlagNoSort)
-                        ;
-                    else if((itemFlags & HeaderFlagSortAsc) == HeaderFlagSortAsc)
-                        itemFlags = (itemFlags & (~HeaderFlagSortAsc)) | HeaderFlagSortDesc;
-                    else // asc is default sort
-                        itemFlags = (itemFlags & (~HeaderFlagSortDesc)) | HeaderFlagSortAsc;
+                    if((itemFlags & HeaderFlagNoSort) != HeaderFlagNoSort)
+                    {
+                        if((itemFlags & HeaderFlagSortAsc) == HeaderFlagSortAsc)
+                            itemFlags = (itemFlags & (~HeaderFlagSortAsc)) | HeaderFlagSortDesc;
+                        else // asc is default sort
+                            itemFlags = (itemFlags & (~HeaderFlagSortDesc)) | HeaderFlagSortAsc;
+
+                        SortEventData data;
+                        data.itemIndex = hoverItemIndex_;
+                        data.sortAsc = (itemFlags & HeaderFlagSortAsc);
+                        SortEvent.Invoke(this, &data);
+                    }
                 }
             }
 
@@ -220,7 +246,15 @@ namespace nui
 
                 if(width >= minItemWidth && width != listItems_[hoverItemIndex_].width_)
                 {
+                    int oldWidth = listItems_[hoverItemIndex_].width_;
                     listItems_[hoverItemIndex_].width_ = width;
+
+                    ItemWidthChangeEventData eventData;
+                    eventData.itemOldWidth = oldWidth;
+                    eventData.itemIndex = hoverItemIndex_;
+                    eventData.itemWidth = width;
+                    ItemWidthChangeEvent.Invoke(this, &eventData);
+
                     AutoSize();
                     Invalidate();
                 }
@@ -229,7 +263,8 @@ namespace nui
             {
                 bool inDragArea = false;
                 int newHoverItem = RefreshCurrentItem(x, y, inDragArea);
-                static int flag = 0;
+                if(inDragArea)
+                    newHoverItem = -1;
                 if(hoverItemIndex_ != newHoverItem)
                 {
                     hoverItemIndex_ = newHoverItem;
@@ -249,7 +284,9 @@ namespace nui
                 RefreshCurrentItem(point.X, point.Y, dragging);
             }
             if(dragging)
+            {
                 return GetCursorByType(NCursor::CursorLeftRight);
+            }
             return NULL;
         }
 
@@ -277,12 +314,12 @@ namespace nui
                 {
                     if(x < rcItem.Left + dragMargin)
                     {
-                        inDragArea = i - 1 >= 0;
+                        inDragArea = i - 1 >= 0 && ((item.flags_ & HeaderFlagFixedWidth) != HeaderFlagFixedWidth);
                         return i - 1;
                     }
                     else if(x >= rcItem.Right - dragMargin)
                     {
-                        inDragArea = true;
+                        inDragArea = ((item.flags_ & HeaderFlagFixedWidth) != HeaderFlagFixedWidth);;
                         return i;
                     }
                     else

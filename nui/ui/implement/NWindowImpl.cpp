@@ -42,16 +42,6 @@ namespace nui
             return render_;
         }
 
-        void NWindow::SetPreDrawCallback(WindowDrawCallback callback)
-        {
-            preDrawCallback_ = callback;
-        }
-
-        void NWindow::SetPostDrawCallback(WindowDrawCallback callback)
-        {
-            postDrawCallback_ = callback;
-        }
-
         // WindowMsgFilter
         bool NWindow::OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
         {
@@ -269,10 +259,10 @@ namespace nui
             GetRect(rcClient);
             rcClient.Offset(-rcClient.Left, -rcClient.Top);
 
-            if(preDrawCallback_ && preDrawCallback_(this, render, clipRgn))
-            {
-                return;
-            }
+            WindowDrawEventData eventData;
+            eventData.render = render;
+            eventData.region = clipRgn;
+            PreDrawEvent.Invoke(this, &eventData);
 
             if(rootFrame_ != NULL)
             {
@@ -280,10 +270,7 @@ namespace nui
                 rootFrame_->Draw(render, pt, clipRgn);
             }
 
-            if(postDrawCallback_ && postDrawCallback_(this, render, clipRgn))
-            {
-                return;
-            }
+            PostDrawEvent.Invoke(this, &eventData);
         }
 
         void NWindow::Draw(HDC hDc)

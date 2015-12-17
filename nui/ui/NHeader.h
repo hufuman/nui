@@ -12,14 +12,17 @@ namespace nui
 
         class NUI_CLASS NHeader : public NFrame
         {
+        public:
             enum NHeaderFlag
             {
                 HeaderFlagNone      = 0x00,
                 HeaderFlagSortAsc   = 0x01,
                 HeaderFlagSortDesc  = 0x02,
                 HeaderFlagNoSort    = 0x04,
+                HeaderFlagFixedWidth = 0x08,
             };
 
+        private:
             class NHeaderItem
             {
             public:
@@ -60,15 +63,18 @@ namespace nui
             ~NHeader();
 
             virtual int AddItem(int index, LPCTSTR text, int width);
+            virtual int AddItem(int index, LPCTSTR text, int width, UINT flags);
             virtual void RemoveItem(int index);
             virtual int GetItemCount() const;
             virtual int GetItemWidth(int index) const;
+            virtual int GetTotalWidth() const;
             virtual void ClearAllItems();
 
             virtual void SetItemData(int index, DWORD data);
             virtual DWORD GetItemData(int index) const;
 
         protected:
+            virtual void DrawBkg(NRender* render, const Base::NRect& rect) const;
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
             virtual Base::NSize GetAutoSize() const;
 
@@ -78,6 +84,24 @@ namespace nui
             virtual void OnMouseMove(int x, int y);
 
             virtual NCursor* GetCursor() const;
+
+        public:
+            class ItemWidthChangeEventData : public NEventData
+            {
+            public:
+                int itemOldWidth;
+                int itemWidth;
+                int itemIndex;
+            };
+            NEvent ItemWidthChangeEvent;
+
+            class SortEventData : public NEventData
+            {
+            public:
+                int itemIndex;
+                bool sortAsc;
+            };
+            NEvent SortEvent;
 
         private:
             void RequireDraws();

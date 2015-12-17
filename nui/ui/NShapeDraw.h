@@ -29,5 +29,7 @@ namespace nui
 
             virtual Style GetStyle() const = 0;
         };
+
+        NUI_API Base::NAutoPtr<NShapeDraw> CreateRectDraw(ArgbColor fillColor);
     }
 }

@@ -21,8 +21,15 @@ namespace nui
             currentLayoutType_ = LayoutNone;
             SetLayoutType(LayoutVert);
 
+            innerFrame_->Create(this, _NUI_INNER_FRAME_ID_, 0, _T(""));
             innerFrame_->SetAutoSize(false);
-            AddChild(innerFrame_);
+            NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+            Base::NAutoPtr<Ui::NShapeDraw> pBkgDraw = loader->CreateShape(MemToolParam);
+            pBkgDraw->SetStyle(Ui::NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 0, 255, 0));
+            innerFrame_->SetBkgDraw(pBkgDraw);
+
+            GetHorzScroll();
+            GetVertScroll();
         }
 
         NLayout::~NLayout()
@@ -60,6 +67,7 @@ namespace nui
             else
             {
                 bool result = innerFrame_->AddChild(child);
+                child->SizeEvent.AddHandler(MakeDelegate(this, &NLayout::OnChildSizeChanged));
                 if(result)
                     RelayoutChilds();
                 AutoSize();
@@ -74,7 +82,8 @@ namespace nui
                 return __super::AddChild(child);
             }
             else
-                {
+            {
+                child->SizeEvent.RemoveHandler(MakeDelegate(this, &NLayout::OnChildSizeChanged));
                 bool result = innerFrame_->RemoveChild(child);
                 if(result)
                     RelayoutChilds();
@@ -99,6 +108,13 @@ namespace nui
             return size;
         }
 
+        void NLayout::OnSize(int width, int height)
+        {
+            UNREFERENCED_PARAMETER(width);
+            UNREFERENCED_PARAMETER(height);
+            RelayoutChilds();
+        }
+
         void NLayout::SetLayoutable(bool layoutable)
         {
             bool oldValue = IsLayoutable();
@@ -117,7 +133,21 @@ namespace nui
             param.frameSize_ = frameRect_.GetSize();
             innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&param));
 
-            Base::NRect rcLayout = GetRect();
+            innerFrame_->SetSize(param.maxSize_.Width, param.maxSize_.Height);
+
+            const Base::NRect &rcLayout = GetRect();
+            const Base::NRect &innerFrameRect = innerFrame_->GetRect();
+            int innerFrameLeft = innerFrameRect.Left;
+            int innerFrameTop = innerFrameRect.Top;
+            if(innerFrameRect.Width() < rcLayout.Width())
+                innerFrameLeft = 0;
+            else if(innerFrameRect.Right + innerFrameRect.Left < rcLayout.Width())
+                innerFrameLeft = rcLayout.Width() - innerFrameRect.Width();
+            if(innerFrameRect.Height() < rcLayout.Height())
+                innerFrameTop = 0;
+            else if(innerFrameRect.Bottom + innerFrameRect.Top < rcLayout.Height())
+                innerFrameTop = rcLayout.Height() - innerFrameRect.Height();
+
             if(rcLayout.Width() >= param.maxSize_.Width && rcLayout.Height() >= param.maxSize_.Height)
             {
                 // both hide
@@ -125,16 +155,22 @@ namespace nui
                     horzScroll_->SetVisible(false);
                 if(vertScroll_)
                     vertScroll_->SetVisible(false);
+                innerFrameLeft = 0;
+                innerFrameTop = 0;
             }
             else if(param.maxSize_.Width + GetVertScroll()->GetRect().Width() <= frameRect_.Width() && param.maxSize_.Height > frameRect_.Height())
             {
                 // horz hide, vert show
                 if(horzScroll_)
                     horzScroll_->SetVisible(false);
+
                 NScroll* vertScroll = GetVertScroll();
+                vertScroll->SetScrollPage(rcLayout.Height());
+                vertScroll->SetScrollRange(param.maxSize_.Height - rcLayout.Height());
                 vertScroll->SetVisible(true);
-                vertScroll->SetScrollPage(GetRect().Height());
-                vertScroll->SetScrollRange(param.maxSize_.Height - GetRect().Height());
+
+                innerFrameLeft = 0;
+                innerFrameTop = - vertScroll_->GetScrollPos();
             }
             else if(param.maxSize_.Height + GetHorzScroll()->GetRect().Height() <= frameRect_.Height() && param.maxSize_.Width > frameRect_.Width())
             {
@@ -143,27 +179,33 @@ namespace nui
                     vertScroll_->SetVisible(false);
                 NScroll* horzScroll = GetHorzScroll();
                 horzScroll->SetMargin(0, 0, 0, 0);
-                horzScroll->SetScrollPage(GetRect().Width());
-                horzScroll->SetScrollRange(param.maxSize_.Width - GetRect().Width());
+                horzScroll->SetScrollPage(rcLayout.Width());
+                horzScroll->SetScrollRange(param.maxSize_.Width - rcLayout.Width());
+                horzScroll->SetVisible(true);
+
+                innerFrameTop = 0;
+                innerFrameLeft = - horzScroll_->GetScrollPos();
             }
             else
             {
                 NScroll* horzScroll = GetHorzScroll();
                 NScroll* vertScroll = GetVertScroll();
-
-                horzScroll->SetVisible(true);
                 horzScroll->SetMargin(0, 0, vertScroll->GetRect().Width(), 0);
-                int horzPage = GetRect().Width() - vertScroll->GetRect().Width();
+                int horzPage = rcLayout.Width() - vertScroll->GetRect().Width();
                 horzScroll->SetScrollPage(horzPage);
                 horzScroll->SetScrollRange(param.maxSize_.Width - horzPage);
+                horzScroll->SetVisible(true);
 
-                vertScroll->SetVisible(true);
-                int vertPage = GetRect().Height() - horzScroll->GetRect().Height();
+                int vertPage = rcLayout.Height() - horzScroll->GetRect().Height();
                 vertScroll->SetScrollPage(vertPage);
                 vertScroll->SetScrollRange(param.maxSize_.Height - vertPage);
+                vertScroll->SetVisible(true);
+
+                innerFrameLeft = - horzScroll_->GetScrollPos();
+                innerFrameTop = - vertScroll_->GetScrollPos();
             }
 
-            innerFrame_->SetSize(param.maxSize_.Width, param.maxSize_.Height);
+            innerFrame_->SetPos(innerFrameLeft, innerFrameTop);
         }
 
         bool NLayout::OnEnumChild(NFrameBase* child, LPARAM lParam)
@@ -174,26 +216,35 @@ namespace nui
             return true;
         }
 
-        void NLayout::OnHorzScrolled(NScroll*, int scrollPos)
+        bool NLayout::OnHorzScrolled(Base::NBaseObj*, NEventData* eventData)
         {
-            innerFrame_->SetPos(-scrollPos, innerFrame_->GetRect().Top);
+            NScroll::ScrollEventData* data = static_cast<NScroll::ScrollEventData*>(eventData);
+            innerFrame_->SetPos(-data->scrollPos, innerFrame_->GetRect().Top);
+            return true;
         }
 
-        void NLayout::OnVertScrolled(NScroll*, int scrollPos)
+        bool NLayout::OnVertScrolled(Base::NBaseObj*, NEventData* eventData)
         {
-            innerFrame_->SetPos(innerFrame_->GetRect().Left, -scrollPos);
+            NScroll::ScrollEventData* data = static_cast<NScroll::ScrollEventData*>(eventData);
+            innerFrame_->SetPos(innerFrame_->GetRect().Left, -data->scrollPos);
+            return true;
+        }
+
+        bool NLayout::OnChildSizeChanged(Base::NBaseObj*, NEventData*)
+        {
+            RelayoutChilds();
+            return true;
         }
 
         NScroll* NLayout::GetHorzScroll()
         {
             if(horzScroll_)
                 return horzScroll_;
-            Base::NInstPtr<NScroll> scroll(MemToolParam);
-            horzScroll_ = scroll;
+            horzScroll_.Create(MemToolParam);
+            horzScroll_->SetVisible(false);
+            horzScroll_->Create(this, _NUI_HORZ_SCROLL_ID_, NFrame::LayoutHFill | NFrame::LayoutBottom, NULL);
             horzScroll_->SetScrollType(true);
-            AddChild(horzScroll_);
-            horzScroll_->SetLayout(NFrame::LayoutHFill | NFrame::LayoutBottom);
-            horzScroll_->SetScrollCallback(MakeDelegate(this, &NLayout::OnHorzScrolled));
+            horzScroll_->ScrollEvent.AddHandler(MakeDelegate(this, &NLayout::OnHorzScrolled));
             return horzScroll_;
         }
 
@@ -201,12 +252,11 @@ namespace nui
         {
             if(vertScroll_)
                 return vertScroll_;
-            Base::NInstPtr<NScroll> scroll(MemToolParam);
-            vertScroll_ = scroll;
+            vertScroll_.Create(MemToolParam);
+            vertScroll_->SetVisible(false);
+            vertScroll_->Create(this, _NUI_VERT_SCROLL_ID_, NFrame::LayoutVFill | NFrame::LayoutRight, NULL);
             vertScroll_->SetScrollType(false);
-            AddChild(vertScroll_);
-            vertScroll_->SetLayout(NFrame::LayoutVFill | NFrame::LayoutRight);
-            vertScroll_->SetScrollCallback(MakeDelegate(this, &NLayout::OnVertScrolled));
+            vertScroll_->ScrollEvent.AddHandler(MakeDelegate(this, &NLayout::OnVertScrolled));
             return vertScroll_;
         }
 

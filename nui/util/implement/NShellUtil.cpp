@@ -135,7 +135,9 @@ namespace nui
                 if(window)
                 {
                     Base::NRect rcWnd;
-                    window->GetRect(rcWnd);
+                    ::GetClientRect(window->GetNative(), rcWnd);
+                    ::ClientToScreen(window->GetNative(), reinterpret_cast<LPPOINT>(&rcWnd));
+                    ::ClientToScreen(window->GetNative(), reinterpret_cast<LPPOINT>(&rcWnd) + 1);
                     point.X -= rcWnd.Left;
                     point.Y -= rcWnd.Top;
                 }

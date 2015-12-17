@@ -8,7 +8,7 @@ namespace nui
 
         typedef std::basic_string<TCHAR> tstring;
 
-        class NPoint
+        class NUI_CLASS NPoint
         {
         public:
             NPoint() : X(0), Y(0)
@@ -56,7 +56,7 @@ namespace nui
             INT Y;
         };
 
-        class NSize
+        class NUI_CLASS NSize
         {
         public:
             NSize() : Width(0), Height(0)
@@ -99,7 +99,7 @@ namespace nui
             INT Height;
         };
 
-        class NRect
+        class NUI_CLASS NRect
         {
         public:
             NRect()

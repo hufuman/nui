@@ -62,12 +62,6 @@ namespace nui
             ::SendMessage(realWindow_, EM_SHOWBALLOONTIP, 0, (LPARAM)&tip);
         }
 
-        // Event
-        void NEdit::SetTextChangeCallback(EditTextChangeEventCallback callback)
-        {
-            textChangeCallback_ = callback;
-        }
-
         bool NEdit::GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle)
         {
             wndClassName = WC_EDIT;
@@ -80,8 +74,8 @@ namespace nui
         {
             if(notifyCode != EN_CHANGE)
                 return false;
-            if(textChangeCallback_)
-                textChangeCallback_(this);
+            TextChangeEventData eventData;
+            TextChangeEvent.Invoke(this, &eventData);
             return true;
         }
 

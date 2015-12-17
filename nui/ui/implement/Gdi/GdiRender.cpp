@@ -395,7 +395,7 @@ namespace nui
         {
             NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::StretchDrawImage"));
 
-            if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
+            if(srcX < 0 || srcY < 0
                 || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
             {
                 return;
@@ -477,7 +477,7 @@ namespace nui
         {
             NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::NineStretchDrawImage"));
 
-            if(srcX < 0 || srcY < 0 || dstX < 0 || dstY < 0
+            if(srcX < 0 || srcY < 0
                 || srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
             {
                 return;

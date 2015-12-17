@@ -94,13 +94,15 @@ namespace nui
             virtual bool EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const;
             virtual NFrameBase* GetChildById(const Base::NString& id, bool recursive);
             virtual NFrameBase* GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags);
+            virtual size_t GetChildCount() const;
 
             virtual NFrameBase* GetParent() const;
             virtual void Invalidate() const;
+            virtual void ForceInvalidate() const;
             virtual void Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn);
 
             // flags
-            virtual void SetVisible(bool visible);
+            virtual bool SetVisible(bool visible);
             virtual bool IsVisible() const;
             virtual void SetEnabled(bool enabled);
             virtual bool IsEnabled() const;
@@ -111,18 +113,20 @@ namespace nui
             // data
             virtual void SetId(const Base::NString& id);
             virtual const Base::NString& GetId() const;
+            virtual void SetData(DWORD data);
+            virtual DWORD GetData() const;
             virtual NWindow* GetWindow();
 
             // pos / size
             virtual const Base::NRect& GetRect() const;
             virtual Base::NRect GetRootRect() const;
             virtual Base::NRect GetScreenRect() const;
-            virtual void SetPos(int left, int top);
-            virtual void SetSize(int width, int height);
-            virtual void SetMinSize(int minWidth, int minHeight);
+            virtual bool SetPos(int left, int top);
+            virtual bool SetSize(int width, int height);
+            virtual bool SetMinSize(int minWidth, int minHeight);
 
             virtual void SetAutoSize(bool autosize);
-            virtual void AutoSize();
+            virtual bool AutoSize();
             virtual Base::NSize GetAutoSize() const;
             virtual bool IsAutoSize() const;
 
@@ -145,6 +149,7 @@ namespace nui
             virtual void OnWindowChanged(NWindow* window);
 
             virtual bool CanHover() const;
+            virtual void OnSize(int width, int height);
 
             // Draw
             virtual void GetDrawIndex(int& horzIndex, int& vertIndex) const;
@@ -159,6 +164,16 @@ namespace nui
         private:
             static void SetParentHelper(NFrameBase* child, NFrameBase* newParent);
             FrameList::const_iterator GetChildHelper(NFrameBase* child, size_t& zorder) const;
+
+        public:
+            // Event
+            class SizeEventData : public NEventData
+            {
+            public:
+                int width;
+                int height;
+            };
+            NEvent SizeEvent;
 
         protected:
             size_t topMostCount_;
@@ -179,6 +194,7 @@ namespace nui
             Base::NSize minSize_;
             Base::NRect margin_;
             UINT layout_;
+            DWORD frameData_;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

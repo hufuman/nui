@@ -15,6 +15,7 @@ namespace nui
             frameFlags_ = FlagVisible | FlagValid | FlagEnabled | FlagAutoSize | FlagLayoutable;
             frameStatus_ = StatusNormal;
             layout_ = LayoutNone;
+            frameData_ = 0;
         }
 
         NFrameBase::~NFrameBase()
@@ -31,9 +32,8 @@ namespace nui
 
             // check if exists
             size_t zorder;
+            UNREFERENCED_PARAMETER(zorder);
             NAssertError(GetChildHelper(child, zorder) == childs_.end(), _T("child already exists"));
-            if(GetChildHelper(child, zorder) != childs_.end())
-                return true;
 
             childs_.push_back(child);
             SetParentHelper(child, this);
@@ -233,17 +233,23 @@ namespace nui
             return result;
         }
 
+        size_t NFrameBase::GetChildCount() const
+        {
+            return childs_.size();
+        }
+
         NFrameBase* NFrameBase::GetParent() const
         {
             return parentFrame_;
         }
 
-        void NFrameBase::SetVisible(bool visible)
+        bool NFrameBase::SetVisible(bool visible)
         {
             if(visible == IsVisible())
-                return;
+                return false;
+            ForceInvalidate();
             Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagVisible, visible);
-            Invalidate();
+            return true;
         }
 
         bool NFrameBase::IsVisible() const
@@ -292,6 +298,16 @@ namespace nui
             return frameId_;
         }
 
+        void NFrameBase::SetData(DWORD data)
+        {
+            frameData_ = data;
+        }
+
+        DWORD NFrameBase::GetData() const
+        {
+            return frameData_;
+        }
+
         NWindow* NFrameBase::GetWindow()
         {
             return window_;
@@ -325,33 +341,41 @@ namespace nui
             return rootRect;
         }
 
-        void NFrameBase::SetPos(int left, int top)
+        bool NFrameBase::SetPos(int left, int top)
         {
-            SetPosImpl(left, top, false);
+            return SetPosImpl(left, top, false);
         }
 
-        void NFrameBase::SetSize(int width, int height)
+        bool NFrameBase::SetSize(int width, int height)
         {
-            SetSizeImpl(width, height, false);
+            return SetSizeImpl(width, height, false);
         }
 
-        void NFrameBase::SetMinSize(int minWidth, int minHeight)
+        bool NFrameBase::SetMinSize(int minWidth, int minHeight)
         {
             if(minSize_.Width == minWidth && minSize_.Height == minHeight)
-                return;
+                return false;
             minSize_.Width = minWidth;
             minSize_.Height = minHeight;
-            int width = frameRect_.Width() < minSize_.Width ? minSize_.Width : frameRect_.Width();
-            int height = frameRect_.Height() < minSize_.Height ? minSize_.Height : frameRect_.Height();
-            SetSizeImpl(width, height, true);
+            if(IsAutoSize())
+            {
+                return AutoSize();
+            }
+            else if(frameRect_.Width() < minSize_.Width || frameRect_.Height() < minSize_.Height)
+            {
+                int width = frameRect_.Width() < minSize_.Width ? minSize_.Width : frameRect_.Width();
+                int height = frameRect_.Height() < minSize_.Height ? minSize_.Height : frameRect_.Height();
+                return SetSizeImpl(width, height, true);
+            }
+            return false;
         }
 
-        void NFrameBase::AutoSize()
+        bool NFrameBase::AutoSize()
         {
             if(!IsAutoSize() || layout_ != LayoutNone)
-                return;
+                return false;
             Base::NSize autoSize = GetAutoSize();
-            SetSizeImpl(autoSize.Width, autoSize.Height, true);
+            return SetSizeImpl(autoSize.Width, autoSize.Height, true);
         }
 
         void NFrameBase::SetAutoSize(bool autosize)
@@ -499,6 +523,13 @@ namespace nui
         {
             if(!window_ || !IsVisible() || !IsValid())
                 return;
+            ForceInvalidate();
+        }
+
+        void NFrameBase::ForceInvalidate() const
+        {
+            if(!window_)
+                return;
             Base::NRect rootRect = GetRootRect();
             window_->InvalidateRect(rootRect);
         }
@@ -591,6 +622,12 @@ namespace nui
             return !!(FlagCanHover & frameFlags_);
         }
 
+        void NFrameBase::OnSize(int width, int height)
+        {
+            UNREFERENCED_PARAMETER(width);
+            UNREFERENCED_PARAMETER(height);
+        }
+
         void NFrameBase::SetParentHelper(NFrameBase* child, NFrameBase* newParent)
         {
             if(newParent == child->parentFrame_)
@@ -604,18 +641,23 @@ namespace nui
                 child->parentFrame_ = NULL;
                 parent->Invalidate();
             }
+
+            bool childValid = true;
             if(newParent == NULL)
             {
-                child->Release();
+                childValid = child->Release() > 0;
             }
             else
             {
                 child->parentFrame_ = newParent;
                 child->AddRef();
             }
-            child->OnParentChanged();
-            if(child->parentFrame_)
-                child->parentFrame_->Invalidate();
+            if(childValid)
+            {
+                child->OnParentChanged();
+                if(child->parentFrame_)
+                    child->parentFrame_->Invalidate();
+            }
         }
 
         NFrameBase::FrameList::const_iterator NFrameBase::GetChildHelper(NFrameBase* child, size_t& zorder) const
@@ -700,12 +742,18 @@ namespace nui
 
             int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
             int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
-            if(frameRect_.Width() == width && frameRect_.Height() == height)
+            if(frameRect_.Width() == frameWidth && frameRect_.Height() == frameHeight)
                 return false;
 
             Invalidate();
             frameRect_.SetSize(frameWidth, frameHeight);
             Invalidate();
+
+            OnSize(frameWidth, frameHeight);
+            SizeEventData eventData;
+            eventData.width = width;
+            eventData.height = height;
+            SizeEvent.Invoke(this, &eventData);
 
             // Relayout all children
             FrameList::const_iterator ite = childs_.begin();
@@ -715,6 +763,7 @@ namespace nui
                 child->ReLayout();
                 ++ ite;
             }
+
             return true;
         }
     }

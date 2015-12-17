@@ -15,9 +15,7 @@ namespace nui
 
         BEGIN_USE_UNEXPORT_TEMPLATE()
 
-        class NUI_CLASS NFrame;
         class NUI_CLASS NWindow;
-        typedef FastDelegate2<NFrame*, const Base::NPoint&, bool> ClickEventCallback;
 
         class NUI_CLASS NFrame : public NFrameBase
         {
@@ -34,9 +32,6 @@ namespace nui
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, UINT layout, LPCTSTR frameText);
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NPoint& pos, LPCTSTR frameText);
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText);
-
-            // Event
-            virtual void SetClickCallback(ClickEventCallback callback);
 
             // data
             virtual void SetText(const Base::NString& text);
@@ -58,7 +53,14 @@ namespace nui
             virtual Base::NSize GetAutoSize() const;
 
             // Childs
+            template < typename T >
+            T GetChildById(const Base::NString& id, bool recursive)
+            {
+                return dynamic_cast<T>(GetChildById(id, recursive));
+            }
+
             virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
+            virtual NFrame* GetChildAtIndex(size_t index);
             virtual NFrame* GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags);
             virtual NFrame* GetParent() const;
 
@@ -80,7 +82,18 @@ namespace nui
             Base::NAutoPtr<NText> text_;
             Base::NAutoPtr<NFont> font_;
 
-            ClickEventCallback clickCallback_;
+        public:
+            // Event
+            class ClickEventData : public NEventData
+            {
+            public:
+                ClickEventData(const Base::NPoint& p) : point(p)
+                {
+                }
+                ClickEventData& operator = (const ClickEventData& d);
+                const Base::NPoint& point;;
+            };
+            NEvent ClickEvent;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

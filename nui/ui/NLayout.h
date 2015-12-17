@@ -38,12 +38,14 @@ namespace nui
 
         protected:
             virtual Base::NSize GetAutoSize() const;
+            virtual void OnSize(int width, int height);
 
         private:
             void RelayoutChilds();
             bool OnEnumChild(NFrameBase* child, LPARAM lParam);
-            void OnHorzScrolled(NScroll*, int scrollPos);
-            void OnVertScrolled(NScroll*, int scrollPos);
+            bool OnHorzScrolled(Base::NBaseObj*, NEventData* eventData);
+            bool OnVertScrolled(Base::NBaseObj*, NEventData* eventData);
+            bool OnChildSizeChanged(Base::NBaseObj*, NEventData* eventData);
 
             NScroll* GetHorzScroll();
             NScroll* GetVertScroll();
