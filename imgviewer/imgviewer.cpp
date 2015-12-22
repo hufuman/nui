@@ -42,13 +42,12 @@ void ImgViewer::Show(LPCTSTR filePath)
     font_ = loader->CreateFont(24, MemToolParam);
     font_->SetBold(true);
 
-    text_->SetHorzCenter(true)
-        ->SetVertCenter(TRUE)
-        ->SetSingleLine(TRUE)
+    text_->SetAlignFlags(NText::TextAlignHCenter | NText::TextAlignVCenter)
+        ->SetSingleLine(true)
         ->SetColor(MakeArgb(255, 255, 255, 0));
 
     NReflectCreate(window_);
-    window_->SetDrawCallback(MakeDelegate(this, &ImgViewer::DrawCallback));
+    window_->PostDrawEvent.AddHandler(MakeDelegate(this, &ImgViewer::PostDrawCallback));
     window_->SetMsgFilterCallback(MakeDelegate(this, &ImgViewer::MsgCallback));
     window_->Create(NULL, WindowStyle::Layered | WindowStyle::Sizable);
     window_->SetSize(500, 400);
@@ -158,22 +157,23 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
     return false;
 }
 
-bool ImgViewer::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
+bool ImgViewer::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
 {
+    NWindow::WindowDrawEventData* data = static_cast<NWindow::WindowDrawEventData*>(eventData);
     NRect rcWnd;
     window_->GetRect(rcWnd);
     rcWnd.Offset(-rcWnd.Left, -rcWnd.Top);
-    render->FillRectangle(rcWnd, MakeArgb(180, 125, 125, 125));
+    data->render->FillRectangle(rcWnd, MakeArgb(180, 125, 125, 125));
     if(image_ == NULL)
     {
         NSize size;
-        render->GetTextSize(text_, font_, size);
+        data->render->GetTextSize(text_, font_, size);
         NRect txtRect;
         const int margin = 4;
         txtRect.SetPos((rcWnd.Width() - size.Width) / 2 - margin, (rcWnd.Height() - size.Height) / 2 - margin);
         txtRect.SetSize(size.Width + 2 * margin, size.Height + 2 * margin);
-        render->FillRoundRectangle(txtRect, margin, MakeArgb(180, 58, 58, 58));
-        render->DrawText(text_, font_, rcWnd);
+        data->render->FillRoundRectangle(txtRect, margin, MakeArgb(180, 58, 58, 58));
+        data->render->DrawText(text_, font_, rcWnd);
     }
     else
     {
@@ -192,11 +192,11 @@ bool ImgViewer::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
         {
             rcWnd.GetLeftTop().SetPoint((rcWnd.Width() - size.Width) / 2, (rcWnd.Height() - size.Height) / 2);
             rcWnd.SetSize(size.Width, size.Height);
-            render->DrawImage(image_, 0, 0, rcWnd, frameIndex_);
+            data->render->DrawImage(image_, 0, 0, rcWnd, frameIndex_);
         }
         else
         {
-            render->DrawImage(image_, 0, 0, rcWnd, frameIndex_);
+            data->render->DrawImage(image_, 0, 0, rcWnd, frameIndex_);
         }
     }
     return false;

@@ -44,22 +44,29 @@ namespace nui
         {
             if(scrollRange_ == range)
                 return;
-            NAssertError(range > 1, _T("why you use scroll since range is zero?"));
-            if(range <= 1)
+            NAssertError(range > 0, _T("why you use scroll since range is zero?"));
+            if(range < 1)
                 return;
             if(scrollPos_ >= range)
                 scrollPos_ = range - 1;
             scrollRange_ = range;
+            if(scrollPage_ > scrollRange_)
+                SetScrollPage(scrollRange_ / 2);
             Invalidate();
         }
 
         void NScroll::SetScrollPos(int pos)
         {
             NAssertError(pos >= 0 && pos < scrollRange_, _T("wrong pos in NScroll?"));
-            if(pos < 0 || pos >= scrollRange_)
-                return;
+            if(pos < 0)
+                pos = 0;
+            if(pos >= scrollRange_)
+                pos = scrollRange_ - 1;
+            if(scrollPage_ == scrollRange_)
+                pos = 0;
             if(scrollPos_ == pos)
                 return;
+
             scrollPos_ = pos;
 
             ScrollEventData eventData;
@@ -76,8 +83,16 @@ namespace nui
 
         void NScroll::SetScrollPage(int page)
         {
-            if(page > 0)
-                scrollPage_ = page;
+            if(page > scrollRange_)
+                page = scrollRange_;
+            if(page < 1)
+                page = 1;
+            if(scrollPage_ == page)
+                return;
+            scrollPage_ = page;
+            if(scrollPage_ == scrollRange_)
+                SetScrollPos(0);
+            Invalidate();
         }
 
         void NScroll::SetScrollType(bool horzScroll)
@@ -340,9 +355,19 @@ namespace nui
                     GetVertPartRect(GetRootRect(), leftBlock, rightBlock, bkg, slider);
 
                 if(horzScroll_)
-                    pos = (scrollRange_) * (point.X - startPoint_.X - leftBlock.Width()) / (bkg.Width() - slider.Width());
+                {
+                    if(bkg.Width() == slider.Width())
+                        pos = 0;
+                    else
+                        pos = (scrollRange_ - scrollPage_) * (point.X - startPoint_.X - leftBlock.Width()) / (bkg.Width() - slider.Width());
+                }
                 else
-                    pos = (scrollRange_) * (point.Y - startPoint_.Y - leftBlock.Height()) / (bkg.Height() - slider.Height());
+                {
+                    if(bkg.Height() == slider.Height())
+                        pos = 0;
+                    else
+                        pos = (scrollRange_ - scrollPage_) * (point.Y - startPoint_.Y - leftBlock.Height()) / (bkg.Height() - slider.Height());
+                }
             }
             else if(capturedPart_ == ScrollPartRightBkg && part == capturedPart_)
             {
@@ -386,7 +411,7 @@ namespace nui
             }
 
             // Slider
-            int foreWidth = bkg.Width() / scrollRange_;
+            int foreWidth = bkg.Width() * scrollPage_ / scrollRange_;
             foreWidth = std::max(g_minForeWidth, foreWidth);
             int pos = scrollPos_ * (bkg.Width() - foreWidth) / (scrollRange_ - 1);
             slider.SetPos(bkg.Left + pos, rect.Top);
@@ -412,10 +437,10 @@ namespace nui
 
             if(sliderDraw_)
             {
-                int foreHeight = bkg.Height() / scrollRange_;
+                int foreHeight = bkg.Height() * scrollPage_ / scrollRange_;
                 foreHeight = std::max(g_minForeWidth, foreHeight);
                 int pos = scrollPos_ * (bkg.Height() - foreHeight) / (scrollRange_ - 1);
-                slider.SetPos(bkg.Left, bkg.Top + pos);
+                slider.SetPos(rect.Left, bkg.Top + pos);
                 slider.SetSize(rect.Width(), foreHeight);
             }
         }
@@ -489,6 +514,7 @@ namespace nui
             blockDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBlock.png") : _T("@skin:common\\vertScrollBlock.png"));
             sliderDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollSlider.png") : _T("@skin:common\\vertScrollSlider.png"));
             scrollBkgDraw_ = loader->LoadImage(horzScroll_ ? _T("@skin:common\\horzScrollBkg.png") : _T("@skin:common\\vertScrollBkg.png"));
+            AutoSize();
         }
     }
 }

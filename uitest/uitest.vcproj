@@ -59,6 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				GenerateMapFile="true"
 				SubSystem="2"
 			/>
 			<Tool

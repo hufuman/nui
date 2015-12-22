@@ -9,7 +9,7 @@ public:
     void Show();
 
     bool MsgCallback(NWindowBase*, UINT, WPARAM, LPARAM, LRESULT&);
-    bool DrawCallback(NWindow*, NRender* render, HRGN clipRgn);
+    bool PostDrawCallback(NBaseObj*, NEventData* eventData);
 
 private:
     void OffsetImageIndex(HWND hWnd, int horzOffset, int vertOffset);

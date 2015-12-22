@@ -239,105 +239,413 @@
 				Name="nui"
 				>
 				<Filter
-					Name="base"
+					Name="ui"
 					>
 					<File
-						RelativePath="..\nui\base\BaseObj.h"
+						RelativePath="..\nui\ui\NEvent.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\base\DataTypes.h"
+						RelativePath="..\nui\ui\NMsgLoop.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\base\FastDelegate.h"
+						RelativePath="..\nui\ui\NRenderStatus.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\base\NAssert.h"
+						RelativePath="..\nui\ui\NResourceLoader.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\base\NAutoPtr.h"
+						RelativePath="..\nui\ui\NTimerSrv.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\base\NCore.h"
+						RelativePath="..\nui\ui\NUiBus.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\base\NHolder.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\base\NInstPtr.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\base\NMacro.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\base\NMemTool.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\base\noncopyable.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\base\NReflect.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\base\NString.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\base\NThread.h"
+						RelativePath="..\nui\ui\UiDef.h"
 						>
 					</File>
 					<Filter
 						Name="implement"
 						>
 						<File
-							RelativePath="..\nui\base\implement\DataTypes.cpp"
+							RelativePath="..\nui\ui\implement\BaseImageDraw.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\MemRecorder.cpp"
+							RelativePath="..\nui\ui\implement\BaseImageDraw.h"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\MemRecorder.h"
+							RelativePath="..\nui\ui\implement\NButtonImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\NAssert.cpp"
+							RelativePath="..\nui\ui\implement\NEdit.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\NCoreImpl.cpp"
+							RelativePath="..\nui\ui\implement\NEvent.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\NCoreImpl.h"
+							RelativePath="..\nui\ui\implement\NFrameBaseImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\NHolder.cpp"
+							RelativePath="..\nui\ui\implement\NFrameImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\NReflect.cpp"
+							RelativePath="..\nui\ui\implement\NHeaderImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\NString.cpp"
+							RelativePath="..\nui\ui\implement\NImageImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\base\implement\NThread.cpp"
+							RelativePath="..\nui\ui\implement\NLayoutImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NListImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NMsgLoop.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NRenderStatus.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NScrollImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NShapeDrawImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NTimerSrvImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NTimerSrvImpl.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NUiBus.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NWindowBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NWindowImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\NWndUiImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\WindowDef.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\WindowMap.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\WindowMap.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\WindowUtil.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\implement\WindowUtil.h"
+							>
+						</File>
+						<Filter
+							Name="Gdi"
+							>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\AlphaDC.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\AlphaDC.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiCursor.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiCursor.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiFont.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiFont.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiImageDraw.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiImageDraw.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiObjMgr.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiObjMgr.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiRender.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiRender.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiResourceLoader.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiResourceLoader.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiShapeDraw.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiShapeDraw.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiText.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiText.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiUtil.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\GdiUtil.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\ImageDC.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\MemDC.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\SSE.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\SSE.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\StreamImpl.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\StreamImpl.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\Gdi\TempDC.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="NLayutArranger"
+							>
+							<File
+								RelativePath="..\nui\ui\implement\NHorzLayoutArranger.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\NHorzLayoutArranger.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\NTileLayoutArranger.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\NTileLayoutArranger.h"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\NVertLayoutArranger.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\nui\ui\implement\NVertLayoutArranger.h"
+								>
+							</File>
+						</Filter>
+					</Filter>
+					<Filter
+						Name="draw"
+						>
+						<File
+							RelativePath="..\nui\ui\NDraw.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NFont.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NImageDraw.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NRender.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NRenderClip.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NRenderDef.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NShapeDraw.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NText.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="controls"
+						>
+						<File
+							RelativePath="..\nui\ui\NButton.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NEdit.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NFrame.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NFrameBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NHeader.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NImage.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NLayout.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NLayoutArranger.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NList.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NScroll.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NWindow.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NWindowBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\ui\NWndUi.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="component"
+						>
+						<File
+							RelativePath="..\nui\ui\NCursor.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="util"
+					>
+					<File
+						RelativePath="..\nui\util\NDiagnose.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NFileUtil.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NMisc.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\util\NShellUtil.h"
+						>
+					</File>
+					<Filter
+						Name="implement"
+						>
+						<File
+							RelativePath="..\nui\util\implement\NFileUtil.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\nui\util\implement\NShellUtil.cpp"
 							>
 						</File>
 					</Filter>
@@ -475,321 +783,105 @@
 					</Filter>
 				</Filter>
 				<Filter
-					Name="ui"
+					Name="base"
 					>
 					<File
-						RelativePath="..\nui\ui\NMsgLoop.h"
+						RelativePath="..\nui\base\BaseObj.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NRenderStatus.h"
+						RelativePath="..\nui\base\DataTypes.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NResourceLoader.h"
+						RelativePath="..\nui\base\FastDelegate.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NTimerSrv.h"
+						RelativePath="..\nui\base\NAssert.h"
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NUiBus.h"
+						RelativePath="..\nui\base\NAutoPtr.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NCore.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NHolder.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NInstPtr.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NMacro.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NMemTool.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\noncopyable.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NReflect.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NString.h"
+						>
+					</File>
+					<File
+						RelativePath="..\nui\base\NThread.h"
 						>
 					</File>
 					<Filter
 						Name="implement"
 						>
 						<File
-							RelativePath="..\nui\ui\implement\BaseImageDraw.cpp"
+							RelativePath="..\nui\base\implement\DataTypes.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\BaseImageDraw.h"
+							RelativePath="..\nui\base\implement\MemRecorder.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NButtonImpl.cpp"
+							RelativePath="..\nui\base\implement\MemRecorder.h"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NEdit.cpp"
+							RelativePath="..\nui\base\implement\NAssert.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NFrameBaseImpl.cpp"
+							RelativePath="..\nui\base\implement\NCoreImpl.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NFrameImpl.cpp"
+							RelativePath="..\nui\base\implement\NCoreImpl.h"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NImageImpl.cpp"
+							RelativePath="..\nui\base\implement\NHolder.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NMsgLoop.cpp"
+							RelativePath="..\nui\base\implement\NReflect.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NRenderStatus.cpp"
+							RelativePath="..\nui\base\implement\NString.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NScrollImpl.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NTimerSrvImpl.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NTimerSrvImpl.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NUiBus.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NWindowBase.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NWindowImpl.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\WindowDef.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\WindowMap.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\WindowMap.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\WindowUtil.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\WindowUtil.h"
-							>
-						</File>
-						<Filter
-							Name="Gdi"
-							>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\AlphaDC.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\AlphaDC.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiFont.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiFont.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiImageDraw.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiImageDraw.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiObjMgr.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiObjMgr.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiRender.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiRender.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiResourceLoader.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiResourceLoader.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiShapeDraw.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiShapeDraw.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiText.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiText.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiUtil.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\GdiUtil.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\ImageDC.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\MemDC.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\SSE.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\SSE.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\StreamImpl.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\StreamImpl.h"
-								>
-							</File>
-							<File
-								RelativePath="..\nui\ui\implement\Gdi\TempDC.h"
-								>
-							</File>
-						</Filter>
-					</Filter>
-					<Filter
-						Name="draw"
-						>
-						<File
-							RelativePath="..\nui\ui\NDraw.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NFont.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NImageDraw.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NRender.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NRenderClip.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NRenderDef.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NShapeDraw.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NText.h"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="controls"
-						>
-						<File
-							RelativePath="..\nui\ui\NButton.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NEdit.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NFrame.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NFrameBase.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NImage.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NScroll.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NWindow.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NWindowBase.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NWndUi.h"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="util"
-					>
-					<File
-						RelativePath="..\nui\util\NDiagnose.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NFileUtil.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NMisc.h"
-						>
-					</File>
-					<File
-						RelativePath="..\nui\util\NShellUtil.h"
-						>
-					</File>
-					<Filter
-						Name="implement"
-						>
-						<File
-							RelativePath="..\nui\util\implement\NFileUtil.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\util\implement\NShellUtil.cpp"
+							RelativePath="..\nui\base\implement\NThread.cpp"
 							>
 						</File>
 					</Filter>

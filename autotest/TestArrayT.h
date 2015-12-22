@@ -50,7 +50,7 @@ TEST_F(TestArrayT, Basic)
     EXPECT_TRUE(array.AddItem(45));
     EXPECT_TRUE(array.Count() == 4);
     EXPECT_TRUE(ValidateArray(array, 12, 23, 34, 45)) << GetArrayData(array).GetData();
-    array.RemoveAllItems();
+    array.Clear();
     EXPECT_TRUE(array.Count() == 0);
 
     EXPECT_TRUE(array.InsertAt(0, 12));
@@ -74,7 +74,7 @@ TEST_F(TestArrayT, Basic)
     EXPECT_TRUE(array.InsertAt(array.Count(), 55));
     EXPECT_TRUE(array.Count() == 7);
     EXPECT_TRUE(ValidateArray(array, 10, 33, 22, 11, 12, 44, 55)) << GetArrayData(array).GetData();
-    array.RemoveAllItems();
+    array.Clear();
     EXPECT_TRUE(array.Count() == 0);
 
     EXPECT_TRUE(array.InsertAt(0, 12));
@@ -89,7 +89,7 @@ TEST_F(TestArrayT, Basic)
     EXPECT_TRUE(array.AddItem(13));
     EXPECT_TRUE(array.Count() == 4);
     EXPECT_TRUE(ValidateArray(array, 12, 12, 13, 13)) << GetArrayData(array).GetData();
-    array.RemoveAllItems();
+    array.Clear();
     EXPECT_TRUE(array.Count() == 0);
 
     EXPECT_TRUE(array.AddItem(11));

@@ -33,7 +33,7 @@ void CImageEditor::Show()
     shape_->SetBorderWidth(2)->SetFillColor(::GetSysColor(CTLCOLOR_DLG) | 0xFF000000)->SetStyle(NShapeDraw::Rect)->SetBorderColor(MakeArgb(255, 0, 0, 0));
 
     window->SetMsgFilterCallback(MakeDelegate(this, &CImageEditor::MsgCallback));
-    window->SetDrawCallback(MakeDelegate(this, &CImageEditor::DrawCallback));
+    window->PostDrawEvent.AddHandler(MakeDelegate(this, &CImageEditor::PostDrawCallback));
 
     // Create controls
     NRect rcTmp;
@@ -105,12 +105,14 @@ void CImageEditor::Show()
     window = NULL;
 }
 
-bool CImageEditor::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
+bool CImageEditor::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
 {
+    NWindow::WindowDrawEventData* data = static_cast<NWindow::WindowDrawEventData*>(eventData);
+    NWindow* window = dynamic_cast<NWindow*>(baseObj);
     NRect dstRect;
     window->GetRect(dstRect);
     dstRect.Offset(-dstRect.Left, -dstRect.Top);
-    render->DrawShape(shape_, dstRect);
+    data->render->DrawShape(shape_, dstRect);
     if(image_ != NULL)
     {
         dstRect.Inflate(-10, -10);
@@ -119,7 +121,7 @@ bool CImageEditor::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
         int curHorzIndex = ::GetDlgItemInt(window->GetNative(), IDC_LABEL_HORZ_INDEX, NULL, FALSE);
         int curVertIndex = ::GetDlgItemInt(window->GetNative(), IDC_LABEL_VERT_INDEX, NULL, FALSE);
 
-        render->DrawImage(image_, curHorzIndex, curVertIndex, dstRect, 0);
+        data->render->DrawImage(image_, curHorzIndex, curVertIndex, dstRect, 0);
     }
     return true;
 }

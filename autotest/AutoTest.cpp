@@ -28,6 +28,7 @@
 #include "TestFileUtil.h"
 
 // Ui
+#include "TestEvent.h"
 #include "TestFrameBase.h"
 #include "TestMsgLoop.h"
 #include "TestWindowBase.h"

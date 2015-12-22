@@ -285,6 +285,10 @@
 			Name="ui"
 			>
 			<File
+				RelativePath=".\TestEvent.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestFrameBase.h"
 				>
 			</File>

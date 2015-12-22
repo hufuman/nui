@@ -8,7 +8,7 @@ public:
     CTestDrawImage();
     ~CTestDrawImage();
 
-    bool DrawCallback(NWindow*, NRender* render, HRGN clipRgn);
+    bool DrawCallback(NBaseObj* baseObj, NEventData* eventData);
 
 public:
     void Test();

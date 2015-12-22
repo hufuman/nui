@@ -234,7 +234,9 @@ namespace nui
 
         void NList::ResetLineFrameWidth()
         {
+            layout_->SetLayoutable(false);
             layout_->GetChildById(_NUI_INNER_FRAME_ID_, false)->EnumChilds(MakeDelegate(this, &NList::OnAdjustLinewWidths), 0);
+            layout_->SetLayoutable(true);
         }
 
         int NList::GetLineFrameWidth() const

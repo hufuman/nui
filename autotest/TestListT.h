@@ -101,7 +101,7 @@ TEST_F(TestListT, Basic)
     list.AddItem(45);
     EXPECT_TRUE(list.Count() == 4);
     EXPECT_TRUE(ValidateList(list, 12, 23, 34, 45));
-    list.RemoveAllItems();
+    list.Clear();
     EXPECT_TRUE(list.Count() == 0);
 
     list.InsertItem(NULL, 12);
@@ -113,7 +113,7 @@ TEST_F(TestListT, Basic)
     list.InsertItem(NULL, 45);
     EXPECT_TRUE(list.Count() == 4);
     EXPECT_TRUE(ValidateList(list, 45, 34, 23, 12));
-    list.RemoveAllItems();
+    list.Clear();
     EXPECT_TRUE(list.Count() == 0);
 
     list.InsertItem(NULL, 12);

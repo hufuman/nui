@@ -12,13 +12,15 @@ CTestDrawImage::~CTestDrawImage()
     ;
 }
 
-bool CTestDrawImage::DrawCallback(NWindow* window, NRender* render, HRGN clipRgn)
+bool CTestDrawImage::DrawCallback(NBaseObj* baseObj, NEventData* eventData)
 {
+    NWindow* window = dynamic_cast<NWindow*>(baseObj);
+    NWindow::WindowDrawEventData* data = static_cast<NWindow::WindowDrawEventData*>(eventData);
     NRect dstRect;
     window->GetRect(dstRect);
     dstRect.Offset(-dstRect.Left, -dstRect.Top);
-    render->DrawShape(m_pShape, dstRect);
-    render->DrawImage(m_pImage, 0, 0, dstRect, 0);
+    data->render->DrawShape(m_pShape, dstRect);
+    data->render->DrawImage(m_pImage, 0, 0, dstRect, 0);
     return true;
 }
 
@@ -42,7 +44,7 @@ void CTestDrawImage::Test()
 
     m_pImage->SetDrawType(ImageDrawType::NineStretch)->SetStretchParam(60, 50, 60, 50);
 
-    window->SetPreDrawCallback(MakeDelegate(this, &CTestDrawImage::DrawCallback));
+    window->PreDrawEvent.AddHandler(MakeDelegate(this, &CTestDrawImage::DrawCallback));
 
     nui::Ui::NMsgLoop loop;
     loop.Loop(window->GetNative());

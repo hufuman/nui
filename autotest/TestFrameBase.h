@@ -48,8 +48,6 @@ TEST_F(TestFrame, AddRemoveChilds)
     NInstPtr<NFrame> child1(MemToolParam);
     NInstPtr<NFrame> child2(MemToolParam);
 
-    NAssertTempDisable();
-
     parent1->AddChild(child1);
     EXPECT_TRUE(parent1->GetChildZOrder(child1) >= 0);
     EXPECT_EQ(GetChildCount(parent1), 1);
@@ -60,11 +58,17 @@ TEST_F(TestFrame, AddRemoveChilds)
 
     parent1->RemoveChild(child1);
     EXPECT_EQ(GetChildCount(parent1), 0);
-    EXPECT_TRUE(parent1->GetChildZOrder(child1) == -1);
+    {
+        NAssertTempDisable();
+        EXPECT_TRUE(parent1->GetChildZOrder(child1) == -1);
+    }
 
     parent2->RemoveChild(child2);
     EXPECT_EQ(GetChildCount(parent2), 0);
-    EXPECT_TRUE(parent1->GetChildZOrder(child2) == -1);
+    {
+        NAssertTempDisable();
+        EXPECT_TRUE(parent1->GetChildZOrder(child2) == -1);
+    }
 }
 
 TEST_F(TestFrame, Parent)
@@ -73,8 +77,6 @@ TEST_F(TestFrame, Parent)
     NInstPtr<NFrame> parent2(MemToolParam);
     NInstPtr<NFrame> child1(MemToolParam);
     NInstPtr<NFrame> child2(MemToolParam);
-
-    NAssertTempDisable();
 
     // add & remove
     parent1->AddChild(child1);
@@ -89,19 +91,29 @@ TEST_F(TestFrame, Parent)
     EXPECT_TRUE(parent1->GetChildZOrder(child1) >= 0);
     EXPECT_EQ(parent1, child1->GetParent());
     parent1->RemoveChild(child1);
-    EXPECT_TRUE(parent1->GetChildZOrder(child1) == -1);
+
+    {
+        NAssertTempDisable();
+        EXPECT_TRUE(parent1->GetChildZOrder(child1) == -1);
+    }
     EXPECT_EQ(reinterpret_cast<NFrame*>(NULL), child1->GetParent());
 
     // add & readd
     parent1->AddChild(child1);
     parent2->AddChild(child1);
     EXPECT_EQ(parent2, child1->GetParent());
-    EXPECT_TRUE(parent1->GetChildZOrder(child1) == -1);
+    {
+        NAssertTempDisable();
+        EXPECT_TRUE(parent1->GetChildZOrder(child1) == -1);
+    }
     EXPECT_TRUE(parent2->GetChildZOrder(child1) >= 0);
 
     parent1->AddChild(child1);
     EXPECT_EQ(parent1, child1->GetParent());
-    EXPECT_TRUE(parent2->GetChildZOrder(child1) == -1);
+    {
+        NAssertTempDisable();
+        EXPECT_TRUE(parent2->GetChildZOrder(child1) == -1);
+    }
     EXPECT_TRUE(parent1->GetChildZOrder(child1) >= 0);
     parent1->RemoveChild(child1);
 }
@@ -112,15 +124,11 @@ TEST_F(TestFrame, ZOrder)
     NInstPtr<NFrame> child1(MemToolParam);
     NInstPtr<NFrame> child2(MemToolParam);
 
-    NAssertTempDisable();
-
     parent->AddChild(child1);
     parent->AddChild(child2);
     EXPECT_EQ(parent->GetChildZOrder(child1), 0);
     EXPECT_EQ(parent->GetChildZOrder(child2), 1);
-    parent->AddChild(child1);
-    EXPECT_EQ(2, GetChildCount(parent));
-    EXPECT_EQ(parent->GetChildZOrder(child1), 0);
+
     parent->RemoveChild(child1);
     parent->RemoveChild(child2);
 
@@ -137,6 +145,9 @@ TEST_F(TestFrame, ZOrder)
     EXPECT_EQ(parent->SetChildZOrder(child1, 9999), 1);
     EXPECT_EQ(2, GetChildCount(parent));
     EXPECT_EQ(parent->GetChildZOrder(child1), 1);
+
+    parent->RemoveChild(child1);
+    parent->RemoveChild(child2);
 
     // top most
     parent->AddChild(child1);

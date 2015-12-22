@@ -13,7 +13,7 @@ FileAssoc::~FileAssoc(void)
 
 bool FileAssoc::Start()
 {
-    fileExts_.RemoveAllItems();
+    fileExts_.Clear();
     return false;
 }
 

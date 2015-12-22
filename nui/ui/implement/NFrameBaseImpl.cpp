@@ -372,7 +372,12 @@ namespace nui
 
         bool NFrameBase::AutoSize()
         {
-            if(!IsAutoSize() || layout_ != LayoutNone)
+            if(layout_ != LayoutNone)
+            {
+                ReLayout();
+                return true;
+            }
+            if(!IsAutoSize())
                 return false;
             Base::NSize autoSize = GetAutoSize();
             return SetSizeImpl(autoSize.Width, autoSize.Height, true);
