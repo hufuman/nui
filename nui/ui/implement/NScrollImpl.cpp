@@ -47,11 +47,9 @@ namespace nui
             NAssertError(range > 0, _T("why you use scroll since range is zero?"));
             if(range < 1)
                 return;
-            if(scrollPos_ >= range)
-                scrollPos_ = range - 1;
             scrollRange_ = range;
-            if(scrollPage_ > scrollRange_)
-                SetScrollPage(scrollRange_ / 2);
+            if(scrollPos_ + scrollPage_ > scrollRange_)
+                SetScrollPos(scrollRange_ - scrollPage_);
             Invalidate();
         }
 
@@ -60,10 +58,8 @@ namespace nui
             NAssertError(pos >= 0 && pos < scrollRange_, _T("wrong pos in NScroll?"));
             if(pos < 0)
                 pos = 0;
-            if(pos >= scrollRange_)
-                pos = scrollRange_ - 1;
-            if(scrollPage_ == scrollRange_)
-                pos = 0;
+            if(pos + scrollPage_ > scrollRange_)
+                pos = scrollRange_ - scrollPage_;
             if(scrollPos_ == pos)
                 return;
 
@@ -90,8 +86,8 @@ namespace nui
             if(scrollPage_ == page)
                 return;
             scrollPage_ = page;
-            if(scrollPage_ == scrollRange_)
-                SetScrollPos(0);
+            if(scrollPage_ + scrollPos_ > scrollRange_)
+                SetScrollPos(scrollRange_ - scrollPage_);
             Invalidate();
         }
 
@@ -235,7 +231,7 @@ namespace nui
             __super::DrawContent(render, rect);
         }
 
-        void NScroll::OnMouseDown(int x, int y)
+        void NScroll::OnMouseDown(short x, short y)
         {
             __super::OnMouseDown(x, y);
             RefreshCapturePart(x, y);
@@ -281,7 +277,7 @@ namespace nui
             ResetHoverPart();
         }
 
-        void NScroll::OnMouseMove(int x, int y)
+        void NScroll::OnMouseMove(short x, short y)
         {
             __super::OnMouseMove(x, y);
             RefreshHoverPart(x, y);
@@ -331,7 +327,7 @@ namespace nui
 
             Base::NPoint point = Util::Shell::GetCurrentPos(window_);
 
-            ScrollPart part = FindPart(point.X, point.Y);
+            ScrollPart part = FindPart(static_cast<short>(point.X), static_cast<short>(point.Y));
 
             int pos = GetScrollPos();
             if(capturedPart_ == ScrollPartLeftBlock && part == capturedPart_)
@@ -445,7 +441,7 @@ namespace nui
             }
         }
 
-        void NScroll::RefreshCapturePart(int x, int y)
+        void NScroll::RefreshCapturePart(short x, short y)
         {
             ScrollPart part = FindPart(x, y);
             if(part == capturedPart_)
@@ -463,7 +459,7 @@ namespace nui
             Invalidate();
         }
 
-        void NScroll::RefreshHoverPart(int x, int y)
+        void NScroll::RefreshHoverPart(short x, short y)
         {
             // when capturedPart_ available, hoverPart_ can only be capturedPart_
             ScrollPart part = FindPart(x, y);
@@ -483,7 +479,7 @@ namespace nui
             Invalidate();
         }
 
-        NScroll::ScrollPart NScroll::FindPart(int x, int y)
+        NScroll::ScrollPart NScroll::FindPart(short x, short y)
         {
             Base::NRect itemRect = GetRootRect();
             Base::NRect leftBlock, rightBlock, bkg, slider;

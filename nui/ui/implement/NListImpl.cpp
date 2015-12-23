@@ -190,6 +190,7 @@ namespace nui
 
             int lineFrameWidth = GetLineFrameWidth();
 
+            layout_->SetLayoutable(false);
             for(int i=0; i<lineCount; ++ i)
             {
                 NFrame* lineFrame = innerFrame->GetChildAtIndex(static_cast<size_t>(i));
@@ -207,6 +208,7 @@ namespace nui
                     subFrame->SetPos(frameRect.Left + offsetWidth, frameRect.Top);
                 }
             }
+            layout_->SetLayoutable(true);
 
             return true;
         }

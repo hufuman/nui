@@ -47,10 +47,10 @@ namespace nui
             // Draw
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
 
-            virtual void OnMouseDown(int x, int y);
+            virtual void OnMouseDown(short x, short y);
             virtual void OnMouseUp();
             virtual void OnMouseLeave();
-            virtual void OnMouseMove(int x, int y);
+            virtual void OnMouseMove(short x, short y);
 
             virtual void SetBlockDraw(LPCTSTR filePath);
             virtual void SetSliderDraw(LPCTSTR filePath);
@@ -67,11 +67,11 @@ namespace nui
             Base::NSize GetVertAutoSize() const;
             void GetVertPartRect(const Base::NRect& rect, Base::NRect& topBlock, Base::NRect& bottomBlock, Base::NRect& bkg, Base::NRect& slider) const;
 
-            void RefreshCapturePart(int x, int y);
+            void RefreshCapturePart(short x, short y);
             void ResetCapturePart();
-            void RefreshHoverPart(int x, int y);
+            void RefreshHoverPart(short x, short y);
             void ResetHoverPart();
-            ScrollPart FindPart(int x, int y);
+            ScrollPart FindPart(short x, short y);
 
         public:
             // Event

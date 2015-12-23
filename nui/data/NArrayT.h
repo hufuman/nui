@@ -118,36 +118,18 @@ namespace nui
                     pos = 0;
                 else if(pos >= count_)
                     pos = count_;
-                if(buffer_ == NULL)
+                if(buffer_ == NULL || count_ + 1 >= capacity_)
                 {
                     return AddItem(value);
                 }
                 else if(count_ + 1 < capacity_)
                 {
-                    for(int i=count_-1; i>=pos; -- i)
+                    for(int i=count_; i>=pos; -- i)
                     {
                         buffer_[i+1] = buffer_[i];
                     }
                     buffer_[pos] = value;
                     ++count_;
-                }
-                else
-                {
-                    Elem* data = NNewArray(Elem, capacity_ + GrowCount);
-                    if(data == NULL)
-                        return false;
-                    for(int i=0; i<count_; ++ i)
-                    {
-                        if(i < pos)
-                            data[i] = buffer_[i];
-                        else if(i == pos)
-                            data[i] = value;
-                        else
-                            data[i] = buffer_[i - 1];
-                    }
-                    buffer_ = data;
-                    capacity_ += GrowCount;
-                    ++ count_;
                 }
                 return true;
             }

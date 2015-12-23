@@ -29,7 +29,7 @@ namespace nui
                 Y = y;
                 return (*this);
             }
-            NPoint& Offset(INT xOffset, int yOffset)
+            NPoint& Offset(INT xOffset, INT yOffset)
             {
                 X += xOffset;
                 Y += yOffset;

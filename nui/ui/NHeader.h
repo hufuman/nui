@@ -78,10 +78,10 @@ namespace nui
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
             virtual Base::NSize GetAutoSize() const;
 
-            virtual void OnMouseDown(int x, int y);
+            virtual void OnMouseDown(short x, short y);
             virtual void OnMouseUp();
             virtual void OnMouseLeave();
-            virtual void OnMouseMove(int x, int y);
+            virtual void OnMouseMove(short x, short y);
 
             virtual NCursor* GetCursor() const;
 
@@ -105,7 +105,7 @@ namespace nui
 
         private:
             void RequireDraws();
-            int RefreshCurrentItem(int x, int y, bool& inDragArea) const;
+            int RefreshCurrentItem(short x, short y, bool& inDragArea) const;
 
         private:
             Data::NArrayT<NHeaderItem> listItems_;

@@ -172,7 +172,7 @@ namespace nui
             return size;
         }
 
-        void NHeader::OnMouseDown(int x, int y)
+        void NHeader::OnMouseDown(short x, short y)
         {
             bool inDragArea = false;
             int itemIndex = RefreshCurrentItem(x, y, inDragArea);
@@ -196,7 +196,7 @@ namespace nui
                 point.Y -= rcWnd.Top;
 
                 bool inDragArea = false;
-                int itemIndex = RefreshCurrentItem(point.X, point.Y, inDragArea);
+                int itemIndex = RefreshCurrentItem(static_cast<short>(point.X), static_cast<short>(point.Y), inDragArea);
                 if(itemIndex == hoverItemIndex_)
                 {
                     int count = listItems_.Count();
@@ -234,7 +234,7 @@ namespace nui
             __super::OnMouseLeave();
         }
 
-        void NHeader::OnMouseMove(int x, int y)
+        void NHeader::OnMouseMove(short x, short y)
         {
             if(headerDragging_)
             {
@@ -281,7 +281,7 @@ namespace nui
             if(!dragging)
             {
                 Base::NPoint point = Util::Shell::GetCurrentPos(window_);
-                RefreshCurrentItem(point.X, point.Y, dragging);
+                RefreshCurrentItem(static_cast<short>(point.X), static_cast<short>(point.Y), dragging);
             }
             if(dragging)
             {
@@ -298,7 +298,7 @@ namespace nui
             AutoSize();
         }
 
-        int NHeader::RefreshCurrentItem(int x, int y, bool& inDragArea) const
+        int NHeader::RefreshCurrentItem(short x, short y, bool& inDragArea) const
         {
             Base::NRect rcItem = GetRootRect();
             if(!rcItem.Contains(x, y))

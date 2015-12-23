@@ -138,9 +138,9 @@ namespace nui
             virtual void SetLayoutable(bool layoutable);
             virtual bool IsLayoutable() const;
 
-            virtual void OnMouseDown(int x, int y);
+            virtual void OnMouseDown(short x, short y);
             virtual void OnMouseUp();
-            virtual void OnMouseMove(int x, int y);
+            virtual void OnMouseMove(short x, short y);
             virtual void OnMouseHover();
             virtual void OnMouseLeave();
 

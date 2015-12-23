@@ -187,7 +187,7 @@ namespace nui
                         frame = hoverFrame_;
                     }
                     if(frame)
-                        frame->OnMouseMove(point.X, point.Y);
+                        frame->OnMouseMove(static_cast<short>(point.X), static_cast<short>(point.Y));
                 }
                 break;
             case WM_LBUTTONDBLCLK:
@@ -197,7 +197,7 @@ namespace nui
                     NFrame* newFrame = RefreshHoverItem(point);
                     SetHoverItem(newFrame);
                     if(hoverFrame_)
-                        hoverFrame_->OnMouseDown(point.X, point.Y);
+                        hoverFrame_->OnMouseDown(static_cast<short>(point.X), static_cast<short>(point.Y));
                     if(hoverFrame_ == NULL)
                     {
                         ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);

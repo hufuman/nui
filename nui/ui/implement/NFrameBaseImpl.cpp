@@ -586,7 +586,7 @@ namespace nui
             }
         }
 
-        void NFrameBase::OnMouseDown(int x, int y)
+        void NFrameBase::OnMouseDown(short x, short y)
         {
             UNREFERENCED_PARAMETER(x);
             UNREFERENCED_PARAMETER(y);
@@ -601,7 +601,7 @@ namespace nui
             Invalidate();
         }
 
-        void NFrameBase::OnMouseMove(int x, int y)
+        void NFrameBase::OnMouseMove(short x, short y)
         {
             UNREFERENCED_PARAMETER(x);
             UNREFERENCED_PARAMETER(y);
