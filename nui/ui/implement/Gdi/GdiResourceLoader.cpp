@@ -167,6 +167,12 @@ namespace nui
             return result;
         }
 
+        NFont* GdiResourceLoader::CreateFont(LPCSTR filePath, int line)
+        {
+            NFont* result = dynamic_cast<NFont*>(NNewEx(GdiFont, filePath, line));
+            return result;
+        }
+
         NFont* GdiResourceLoader::CreateFont(int fontSize, LPCSTR filePath, int line)
         {
             NFont* result = dynamic_cast<NFont*>(NNewEx(GdiFont, filePath, line));

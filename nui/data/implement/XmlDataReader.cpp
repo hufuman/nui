@@ -30,6 +30,19 @@ bool XmlDataReader::ParseUtf8(const char* data, size_t length)
     {
         return true;
     }
+#ifdef _DEBUG
+    if(document_->Error())
+    {
+        nui::Base::NString errorDesc = nui::Data::a2t(document_->ErrorDesc()).c_str();
+        int row = document_->ErrorRow();
+        int column = document_->ErrorCol();
+        NAssertError(false, _T("Failed to parse xml\r\n\trow: %d, col: %d\r\n\tReason: %s"), row, column, errorDesc.GetData());
+    }
+    else
+    {
+        NAssertError(false, _T("No root element found"));
+    }
+#endif // _DEBUG
     Clear();
     return false;
 }

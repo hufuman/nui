@@ -41,11 +41,27 @@ namespace nui
                 return false;
             if(data.GetLength() == 0)
                 return false;
+
+            bool result = false;
             if(data[0] == _T('#'))
-                NVerify(_sntscanf(data.GetData() + 1, 6, _T("%x"), &value) == 1, _T("Wrong format for ParserArgb"));
+            {
+                if(data.GetLength() == 7)
+                {
+                    result = _sntscanf(data.GetData() + 1, 6, _T("%x"), &value) == 1;
+                    value = Ui::MakeArgb(0xFF, (BYTE)((value & 0xFF0000) >> 16), (BYTE)((value & 0xFF00) >> 8), (BYTE)(value & 0xFF));
+                }
+                else if(data.GetLength() == 9)
+                {
+                    result = _sntscanf(data.GetData() + 1, 8, _T("%x"), &value) == 1;
+                    value = Ui::MakeArgb((BYTE)((value & 0xFF000000) >> 24), (BYTE)((value & 0xFF0000) >> 16), (BYTE)((value & 0xFF00) >> 8), (BYTE)(value & 0xFF));
+                }
+            }
             else
-                _stscanf(data.GetData(), TEXT("%u"), &value);
-            return true;
+            {
+                result = _stscanf(data.GetData(), TEXT("%u"), &value) == 8;
+            }
+            NAssertError(result, _T("Wrong format for ParserArgb"));
+            return result;
         }
 
         bool NDataReader::ReadValue(LPCTSTR name, INT64& value)
@@ -240,6 +256,7 @@ namespace nui
             NDataReader* reader = NULL;
             if(type == ReaderJson)
             {
+                NAssertError(false, _T("json reader not implemented yet"));
             }
             else if(type == ReaderXml)
             {

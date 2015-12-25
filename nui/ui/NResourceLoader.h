@@ -19,6 +19,7 @@ namespace nui
             virtual NShapeDraw* CreateShape(LPCSTR filePath, int line) = 0;
             virtual NText* CreateText(LPCTSTR text, LPCSTR filePath, int line) = 0;
             virtual NFont* CreateFont(int fontSize, LPCSTR filePath, int line) = 0;
+            virtual NFont* CreateFont(LPCSTR filePath, int line) = 0;
         };
     }
 }

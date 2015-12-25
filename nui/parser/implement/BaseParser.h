@@ -6,35 +6,44 @@
 class NBaseParser : public nui::Base::NBaseObj
 {
 public:
+    typedef nui::Base::NBaseObj* (*ObjectCreator)();
+
+    template <typename TObjType>
+    static nui::Base::NBaseObj* BaseCreator()
+    {
+        Base::NInstPtr<TObjType> targetObj(MemToolParam);
+        if(targetObj)
+        {
+            targetObj->AddRef();
+        }
+        return targetObj;
+    }
+
     NBaseParser()
     {
-        targetObj_ = NULL;
-        styleNode_ = NULL;
+        creator_ = NULL;
     }
+    virtual ~NBaseParser() {}
 
-    virtual ~NBaseParser()
+    virtual nui::Base::NBaseObj* Alloc()
     {
-        targetObj_ = NULL;
-        styleNode_ = NULL;
+        return creator_();
     }
+    virtual void Create(nui::Base::NBaseObj* parentObj, nui::Base::NBaseObj* targetObj) = 0;
+    virtual void FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode) = 0;
 
-    virtual void Create(nui::Base::NBaseObj* parentObj)
+    virtual void PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
     {
-        UNREFERENCED_PARAMETER(parentObj);
+        UNREFERENCED_PARAMETER(targetObj);
+        UNREFERENCED_PARAMETER(styleNode);
     }
 
-    // return false if not value not set, otherwise true;
-    virtual void FillAttr() = 0;
-
-    virtual void PreParse(nui::Data::NDataReader* styleNode, nui::Base::NBaseObj* target)
+    virtual void PostParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
     {
-        targetObj_ = target;
-        styleNode_ = styleNode;
+        UNREFERENCED_PARAMETER(targetObj);
+        UNREFERENCED_PARAMETER(styleNode);
     }
-    virtual void PostParse()
-    {}
 
 protected:
-    nui::Base::NBaseObj* targetObj_;
-    nui::Data::NDataReader* styleNode_;
+    ObjectCreator creator_;
 };

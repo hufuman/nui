@@ -1,9 +1,13 @@
 #include "stdafx.h"
 
-#include "../NFrameBase.h"
 #include "../NFrame.h"
 
 #include "../NRenderClip.h"
+#include "../../base/NInstPtr.h"
+
+#ifndef _NO_NUI_PARSER_
+#include "../../parser/implement/ParserUtil.h"
+#endif // _NO_NUI_PARSER_
 
 namespace nui
 {
@@ -33,17 +37,19 @@ namespace nui
             SetLayout(layout);
             if(parentFrame != NULL)
                 parentFrame->AddChild(this);
+            AutoSize();
             OnCreate();
+        }
+
+        void NFrame::Create(NFrame* parentFrame)
+        {
+            Create(parentFrame, frameId_, frameRect_, GetText());
         }
 
         void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NPoint& pos, LPCTSTR frameText)
         {
-            SetId(frameId);
-            SetText(frameText);
             SetPos(pos.X, pos.Y);
-            if(parentFrame != NULL)
-                parentFrame->AddChild(this);
-            OnCreate();
+            Create(parentFrame, frameId, frameRect_, frameText);
         }
 
         void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText)
@@ -51,13 +57,13 @@ namespace nui
             frameId = frameId == NULL ? _T("") : frameId;
             frameText = frameText == NULL ? _T("") : frameText;
 
-            SetAutoSize(false);
             SetId(frameId);
             SetText(frameText);
             SetPos(rect.Left, rect.Top);
             SetSize(rect.Width(), rect.Height());
             if(parentFrame != NULL)
                 parentFrame->AddChild(this);
+            AutoSize();
             OnCreate();
         }
 
@@ -119,6 +125,29 @@ namespace nui
         {
             return NULL;
         }
+
+        NFont* NFrame::GetFont()
+        {
+            if(font_ == NULL)
+            {
+                font_ = NUiBus::Instance().GetResourceLoader()->CreateFont(MemToolParam);
+            }
+            return font_;
+        }
+
+        void NFrame::SetFont(NFont* font)
+        {
+            font_ = font;
+        }
+
+#ifndef _NO_NUI_PARSER_
+        void NFrame::SetFont(const Base::NString& fontName)
+        {
+            Base::NInstPtr<Parser::NParser> parser(MemToolParam);
+            nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode = parser->FindStyleNode(fontName);
+            SetFont(ParserUtil::ParseFont(styleNode));
+        }
+#endif // _NO_NUI_PARSER_
 
         Base::NSize NFrame::GetAutoSize() const
         {
@@ -185,6 +214,13 @@ namespace nui
             Invalidate();
         }
 
+#ifndef _NO_NUI_PARSER_
+        void NFrame::SetBkgDraw(const Base::NString& drawName)
+        {
+            SetBkgDraw(ParserUtil::ParseDraw(drawName));
+        }
+#endif  // _NO_NUI_PARSER_
+
         NDraw* NFrame::GetBkgDraw() const
         {
             return bkgDraw_;
@@ -197,6 +233,13 @@ namespace nui
             foreDraw_ = foreDraw;
             Invalidate();
         }
+
+#ifndef _NO_NUI_PARSER_
+        void NFrame::SetForeDraw(const Base::NString& drawName)
+        {
+            SetForeDraw(ParserUtil::ParseDraw(drawName));
+        }
+#endif // _NO_NUI_PARSER_
 
         NDraw* NFrame::GetForeDraw() const
         {

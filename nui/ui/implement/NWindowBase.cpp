@@ -21,6 +21,7 @@ namespace nui
             invalidateRgn_ = NULL;
             lastDrawTick_ = 0;
             drawTimerId_ = 0;
+            privateData_ = NULL;
         }
 
         NWindowBase::~NWindowBase()
@@ -60,6 +61,7 @@ namespace nui
                 NULL,
                 nui::Data::NModule::GetInst().GetNUIModule(),
                 static_cast<LPVOID>(this));
+            NEnsureRelease(privateData_);
             NAssertError(window_ != NULL, _T("Failed to create window"));
 
             // Set Font
@@ -82,9 +84,22 @@ namespace nui
                 ::EnableWindow(parentWindow, FALSE);
             }
 
+            if(privateData_)
+                privateData_->AddRef();
+
             bool result = Create(parentWindow);
             if(result)
             {
+                if(privateData_)
+                {
+                    SetText(privateData_->text);
+                    SetRect(privateData_->rect);
+                    SetStyle(privateData_->style);
+                    if(privateData_->centerWindow)
+                        CenterWindow(privateData_->centerRelativeWindow);
+                    SetVisible(privateData_->visible);
+                    NEnsureRelease(privateData_);
+                }
                 nui::Ui::NMsgLoop loop;
                 result = loop.Loop(window_);
             }
@@ -108,10 +123,31 @@ namespace nui
             }
         }
 
-        void NWindowBase::SetVisible(BOOL visible)
+        void NWindowBase::SetStyle(DWORD styleValue)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::ShowWindow"));
-            if(window_ != NULL)
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::ShowWindow"));
+            if(window_ == NULL)
+            {
+                GetPrivateData()->style = styleValue;
+            }
+            else
+            {
+                DWORD dwStyle;
+                DWORD dwExStyle;
+                GetStyle(styleValue, dwStyle, dwExStyle);
+                ::SetWindowLongPtr(window_, GWL_STYLE, dwStyle);
+                ::SetWindowLongPtr(window_, GWL_EXSTYLE, dwExStyle);
+            }
+        }
+
+        void NWindowBase::SetVisible(bool visible)
+        {
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::ShowWindow"));
+            if(window_ == NULL)
+            {
+                GetPrivateData()->visible = visible;
+            }
+            else
             {
                 if(visible)
                 {
@@ -128,24 +164,38 @@ namespace nui
 
         bool NWindowBase::GetRect(nui::Base::NRect& rect)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::GetRect"));
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::GetRect"));
+
             if(window_ != NULL)
                 return !!::GetWindowRect(window_, rect);
+
+            if(privateData_)
+            {
+                rect = privateData_->rect;
+                return true;
+            }
             return false;
         }
 
         void NWindowBase::SetSize(int width, int height)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetSize"));
-            if(window_ != NULL)
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetSize"));
+
+            if(window_ == NULL)
+                GetPrivateData()->rect.SetSize(width, height);
+            else
                 ::SetWindowPos(window_, NULL, 0, 0, width, height, SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOMOVE);
         }
 
         void NWindowBase::CenterWindow(HWND relativeWindow)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::CenterWindow"));
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::CenterWindow"));
             if(window_ == NULL)
+            {
+                GetPrivateData()->centerWindow = true;
+                GetPrivateData()->centerRelativeWindow = relativeWindow;
                 return;
+            }
 
             BOOL bDeskWnd = FALSE;
             DWORD dwStyle = ::GetWindowLongPtr(window_, GWL_STYLE);
@@ -196,8 +246,10 @@ namespace nui
 
         void NWindowBase::SetRect(const Base::NRect& rect)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
-            if(window_ != NULL)
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetRect"));
+            if(window_ == NULL)
+                GetPrivateData()->rect = rect;
+            else
                 ::SetWindowPos(window_, NULL, rect.Left, rect.Top, rect.Width(), rect.Height(), SWP_NOACTIVATE | SWP_NOZORDER);
         }
 
@@ -223,8 +275,10 @@ namespace nui
 
         void NWindowBase::SetText(LPCTSTR text)
         {
-            NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::SetText"));
-            if(window_ != NULL)
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetText"));
+            if(window_ == NULL)
+                GetPrivateData()->text = text;
+            else
                 ::SetWindowText(window_, text);
         }
 
@@ -394,6 +448,15 @@ namespace nui
                 style |= WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_THICKFRAME;
             }
             style |= WS_CLIPCHILDREN;
+        }
+
+        nui::Base::NAutoPtr<NWindowBase::WindowPrivateData> NWindowBase::GetPrivateData()
+        {
+            if(privateData_)
+                return privateData_;
+            privateData_ = NNew(WindowPrivateData);
+            privateData_->AddRef();
+            return privateData_;
         }
     }
 }

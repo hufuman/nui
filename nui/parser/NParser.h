@@ -2,17 +2,17 @@
 
 
 #include "../base/BaseObj.h"
-#include "../ui/NFrame.h"
 
 namespace nui
 {
     namespace Parser
     {
-        class NUI_CLASS NParser : public Base::NBaseObj
+        class NUI_INTF NParser : public Base::NBaseObj
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("parser"))
         public:
-            virtual Base::NAutoPtr<Base::NBaseObj> Parse(Ui::NFrame* parentFrame, LPCTSTR packFilePath) = 0;
+            virtual Base::NAutoPtr<Base::NBaseObj> Parse(Base::NBaseObj* parentObj, LPCTSTR packFilePath) = 0;
+            virtual nui::Base::NAutoPtr<nui::Data::NDataReader> FindStyleNode(LPCTSTR packFilePath) = 0;
         };
     }
 }

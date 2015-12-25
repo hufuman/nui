@@ -221,6 +221,10 @@
 				Name="implement"
 				>
 				<File
+					RelativePath=".\base\implement\BaseObj.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\base\implement\DataTypes.cpp"
 					>
 				</File>
@@ -876,22 +880,6 @@
 				>
 				<File
 					RelativePath=".\parser\implement\BaseParser.h"
-					>
-				</File>
-				<File
-					RelativePath=".\parser\implement\ButtonParserImpl.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\parser\implement\ButtonParserImpl.h"
-					>
-				</File>
-				<File
-					RelativePath=".\parser\implement\FrameBaseParserImpl.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\parser\implement\FrameBaseParserImpl.h"
 					>
 				</File>
 				<File

@@ -27,6 +27,27 @@ namespace nui
 
         class NUI_CLASS NWindowBase : public nui::Base::Noncopyable
         {
+        private:
+            class WindowPrivateData : public nui::Base::NBaseObj
+            {
+                WindowPrivateData(const WindowPrivateData&);
+                WindowPrivateData& operator = (const WindowPrivateData&);
+            public:
+                WindowPrivateData()
+                {
+                    visible = false;
+                    style = WindowStyle::Top | WindowStyle::Sizable;
+                    centerWindow = true;
+                    centerRelativeWindow = NULL;
+                }
+                Base::NString text;
+                Base::NRect rect;
+                bool visible;
+                DWORD style;
+                bool centerWindow;
+                HWND centerRelativeWindow;
+            };
+
         public:
             NWindowBase();
             ~NWindowBase();
@@ -36,7 +57,10 @@ namespace nui
             bool Create(HWND parentWindow, DWORD styleValue);
             bool DoModal(HWND parentWindow);
             void Destroy();
-            void SetVisible(BOOL visible);
+
+            // WindowStyle
+            void SetStyle(DWORD styleValue);
+            void SetVisible(bool visible);
             void SetText(LPCTSTR text);
 
             bool GetRect(nui::Base::NRect& rect);
@@ -62,6 +86,8 @@ namespace nui
             bool IsLayered() const;
             void GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const;
 
+            nui::Base::NAutoPtr<WindowPrivateData> GetPrivateData();
+
         protected:
             HWND    window_;
             bool    layered_;
@@ -71,6 +97,8 @@ namespace nui
             HRGN    invalidateRgn_;
             DWORD   lastDrawTick_;
             DWORD   drawTimerId_;
+
+            nui::Base::NAutoPtr<WindowPrivateData> privateData_;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

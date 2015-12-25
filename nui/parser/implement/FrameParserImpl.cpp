@@ -13,58 +13,204 @@ using namespace Data;
 
 FrameParserImpl::FrameParserImpl()
 {
-    text_ = NULL;
+    creator_ = &NBaseParser::BaseCreator<NFrame>;
 }
 
-void FrameParserImpl::Create(nui::Base::NBaseObj* parentObj)
+void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
-    NFrame* parentFrame = dynamic_cast<NFrame*>(parentObj);
-    if(parentFrame == NULL)
-        return;
+    bool tmpBool;
+    NString tmpString;
+    NPoint tmpPoint;
+    NSize tmpSize;
+    NRect tmpRect;
 
-    NFrame* frame = dynamic_cast<NFrame*>(targetObj_);
-    NAssertError(frame != NULL, _T("Invalid obj in FrameParser"));
+    NFrame* targetFrame = dynamic_cast<NFrame*>(targetObj);
+    NAssertError(targetFrame != NULL, _T("Invalid obj in FrameParser"));
+    targetFrame->SetLayoutable(false);
 
-    NString frameId = frame->GetId();
-    NRect rect = frame->GetRect();
-    NString text = frame->GetText();
+    // parser autosize first, or size=xxx will fail
+    if(styleNode->ReadValue(_T("autoSize"), tmpBool))
+        targetFrame->SetAutoSize(tmpBool);
 
-    frame->Create(parentFrame, frameId, rect, text);
+    if(styleNode->ReadValue(_T("minsize"), tmpSize))
+        targetFrame->SetMinSize(tmpSize.Width, tmpSize.Height);
+
+    if(styleNode->ReadValue(_T("margin"), tmpRect))
+        targetFrame->SetMargin(tmpRect.Left, tmpRect.Top, tmpRect.Right, tmpRect.Bottom);
+
+    if(styleNode->ReadValue(_T("text"), tmpString))
+        targetFrame->SetText(tmpString);
+
+    if(styleNode->ReadValue(_T("id"), tmpString))
+        targetFrame->SetId(tmpString);
+
+    if(styleNode->ReadValue(_T("pos"), tmpPoint))
+        targetFrame->SetPos(tmpPoint.X, tmpPoint.Y);
+
+    if(styleNode->ReadValue(_T("size"), tmpSize))
+        targetFrame->SetSize(tmpSize.Width, tmpSize.Height);
+
+    if(styleNode->ReadValue(_T("layout"), tmpString))
+    {
+        NString token;
+        UINT layout = NFrameBase::LayoutNone;
+        struct
+        {
+            LPCTSTR layoutName;
+            NFrameBase::Layout layoutValue;
+        } layoutData[] =
+        {
+            {   _T("left"), NFrameBase::LayoutLeft          },
+            {   _T("top"), NFrameBase::LayoutTop            },
+            {   _T("right"), NFrameBase::LayoutRight        },
+            {   _T("bottom"), NFrameBase::LayoutBottom      },
+
+            {   _T("hfill"), NFrameBase::LayoutHFill        },
+            {   _T("vfill"), NFrameBase::LayoutVFill        },
+            {   _T("hcenter"), NFrameBase::LayoutHCenter    },
+            {   _T("vcenter"), NFrameBase::LayoutVCenter    },
+        };
+        for(int position=0; tmpString.Tokenize(position, _T(","), false, token);)
+        {
+            for(int j=0; j<_countof(layoutData); ++ j)
+            {
+                if(token == layoutData[j].layoutName)
+                {
+                    layout |= layoutData[j].layoutValue;
+                    break;
+                }
+            }
+        }
+        targetFrame->SetLayout(layout);
+    }
 }
 
-void FrameParserImpl::PreParse(nui::Data::NDataReader* styleNode_, nui::Base::NBaseObj* target)
+void FrameParserImpl::Create(nui::Base::NBaseObj* parentObj, nui::Base::NBaseObj* targetObj)
 {
-    FrameBaseParserImpl::PreParse(styleNode_, target);
-
-    NFrame* targetFrame = dynamic_cast<NFrame*>(target);
-    text_ = targetFrame->GetRichText();
+    NAutoPtr<NFrame> targetFrame = dynamic_cast<NFrame*>(targetObj);
+    NAutoPtr<NFrame> parentFrame = dynamic_cast<NFrame*>(parentObj);
+    targetFrame->Create(parentFrame);
 }
 
-void FrameParserImpl::PostParse()
+void FrameParserImpl::PostParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
-    FrameBaseParserImpl::PostParse();
-    text_ = NULL;
+    UNREFERENCED_PARAMETER(styleNode);
+    NAutoPtr<NFrame> targetFrame = dynamic_cast<NFrame*>(targetObj);
+
+    NFrame* parentFrame = targetFrame->GetParent();
+    if(parentFrame)
+    {
+        bool tmpBool;
+        int tmpInt;
+        if(styleNode->ReadValue(_T("topMost"), tmpBool) && tmpBool)
+            parentFrame->SetChildTopmost(targetFrame);
+        else if(styleNode->ReadValue(_T("bottomMost"), tmpBool) && tmpBool)
+            parentFrame->SetChildBottommost(targetFrame);
+        else if(styleNode->ReadValue(_T("zorder"), tmpInt))
+            parentFrame->SetChildZOrder(targetFrame, tmpInt);
+    }
+
+    bool result = false;
+    for(int i=0; ; ++ i)
+    {
+        NAutoPtr<NDataReader> childNode;
+        if(!styleNode->ReadNode(i, childNode))
+            break;
+
+        if(childNode->GetNodeName() == _T("ForeDraw"))
+        {
+            targetFrame->SetForeDraw(ParserUtil::ParseDraw(childNode));
+        }
+        else if(childNode->GetNodeName() == _T("BkgDraw"))
+        {
+            targetFrame->SetBkgDraw(ParserUtil::ParseDraw(childNode));
+        }
+        else if(childNode->GetNodeName() == _T("Font"))
+        {
+            targetFrame->SetFont(ParserUtil::ParseFont(childNode));
+        }
+        else
+        {
+            result = (ParserUtil::LoadObj(targetObj, childNode) != NULL);
+            UNREFERENCED_PARAMETER(result);
+            NAssertError(result, _T("Failed to LoadObj in FrameParser"));
+        }
+    }
+
+    targetFrame->SetLayoutable(true);
 }
 
-void FrameParserImpl::FillAttr()
+void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
-    FrameBaseParserImpl::FillAttr();
-
-    NFrame* targetFrame = dynamic_cast<NFrame*>(targetObj_);
-
-    NString strTmp;
+    NString tmpString;
     ArgbColor color;
     bool bFlag;
+    NFrame* targetFrame = dynamic_cast<NFrame*>(targetObj);
 
-    if(styleNode_->ReadValue(_T("text"), strTmp))
-        targetFrame->SetText(strTmp);
+    if(styleNode->ReadValue(_T("visible"), bFlag))
+        targetFrame->SetVisible(bFlag);
 
-    if(styleNode_->ReadValue(_T("textColor"), color))
-        text_->SetColor(color);
+    if(styleNode->ReadValue(_T("enabled"), bFlag))
+        targetFrame->SetEnabled(bFlag);
 
-    if(styleNode_->ReadValue(_T("textBgColor"), color))
-        text_->SetBgColor(color);
+    if(styleNode->ReadValue(_T("text"), tmpString))
+        targetFrame->SetText(tmpString);
 
-    if(styleNode_->ReadValue(_T("textSingleLine"), bFlag))
-        text_->SetSingleLine(bFlag);
+    if(styleNode->ReadValue(_T("textColor"), color))
+        targetFrame->GetRichText()->SetColor(color);
+
+    if(styleNode->ReadValue(_T("textBgColor"), color))
+        targetFrame->GetRichText()->SetBgColor(color);
+
+    if(styleNode->ReadValue(_T("textSingleLine"), bFlag))
+        targetFrame->GetRichText()->SetSingleLine(bFlag);
+
+    if(styleNode->ReadValue(_T("textAlign"), tmpString))
+    {
+        NString token;
+        UINT alignFlag = NText::TextAlignLeft | NText::TextAlignTop;
+        struct
+        {
+            LPCTSTR name;
+            NText::NTextAlign alignFlag;
+        } TextAlignData[] =
+        {
+            {   _T("left"), NText::TextAlignLeft          },
+            {   _T("top"), NText::TextAlignTop            },
+            {   _T("right"), NText::TextAlignRight        },
+            {   _T("bottom"), NText::TextAlignBottom      },
+
+            {   _T("center"), NText::TextAlignCenter      },
+            {   _T("hcenter"), NText::TextAlignHCenter    },
+            {   _T("vcenter"), NText::TextAlignVCenter    },
+        };
+        for(int position=0; tmpString.Tokenize(position, _T(","), false, token);)
+        {
+            for(int j=0; j<_countof(TextAlignData); ++ j)
+            {
+                if(token == TextAlignData[j].name)
+                {
+                    alignFlag |= TextAlignData[j].alignFlag;
+                    break;
+                }
+            }
+        }
+        targetFrame->GetRichText()->SetAlignFlags(alignFlag);
+    }
+
+    if(styleNode->ReadValue(_T("foreDraw"), tmpString))
+    {
+        targetFrame->SetForeDraw(tmpString);
+    }
+
+    if(styleNode->ReadValue(_T("bkgDraw"), tmpString))
+    {
+        targetFrame->SetBkgDraw(tmpString);
+    }
+
+    if(styleNode->ReadValue(_T("font"), tmpString))
+    {
+        targetFrame->SetFont(tmpString);
+    }
+
 }

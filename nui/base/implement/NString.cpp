@@ -321,6 +321,11 @@ namespace nui
             return pos;
         }
 
+        bool NString::StartWith(LPCTSTR str) const
+        {
+            return IndexOf(str) == 0;
+        }
+
         LPCTSTR NString::GetData() const
         {
             return data_.c_str();

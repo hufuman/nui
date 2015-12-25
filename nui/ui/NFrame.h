@@ -29,6 +29,7 @@ namespace nui
 
         public:
 
+            virtual void Create(NFrame* parentFrame);
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, UINT layout, LPCTSTR frameText);
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NPoint& pos, LPCTSTR frameText);
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText);
@@ -39,14 +40,26 @@ namespace nui
             virtual NText* GetRichText();
             virtual NCursor* GetCursor() const;
 
+            virtual NFont* GetFont();
+            virtual void SetFont(NFont* font);
+#ifndef _NO_NUI_PARSER_
+            virtual void SetFont(const Base::NString& fontName);
+#endif  // _NO_NUI_PARSER_
+
             // draw
             virtual void SetBkgDraw(NDraw* bkgDraw);
+#ifndef _NO_NUI_PARSER_
+            virtual void SetBkgDraw(const Base::NString& drawName);
+#endif  // _NO_NUI_PARSER_
             virtual NDraw* GetBkgDraw() const;
 
             // Normal, Hover, Down, Disabled
             // Checked
             // HalfChecked
             virtual void SetForeDraw(NDraw* foreDraw);
+#ifndef _NO_NUI_PARSER_
+            virtual void SetForeDraw(const Base::NString& drawName);
+#endif  // _NO_NUI_PARSER_
             virtual NDraw* GetForeDraw() const;
 
             // Pos & Size

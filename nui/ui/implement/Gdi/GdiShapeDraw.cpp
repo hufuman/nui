@@ -76,7 +76,7 @@ namespace nui
 
         ArgbColor GdiShapeDraw::GetFillColor() const
         {
-            return fillColor_;
+            return (fillColor_ & 0x00FFFFFF);
         }
 
         NDraw* GdiShapeDraw::Draw(NRender* render, int horzIndex, int vertIndex, const Base::NRect& rect)

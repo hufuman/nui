@@ -9,28 +9,28 @@ using namespace Data;
 
 IMPLEMENT_REFLECTION_EX(NParserImpl, NReflect::Singleton);
 
-NAutoPtr<NBaseObj> NParserImpl::Parse(Ui::NFrame* parentFrame, LPCTSTR packFilePath)
+NAutoPtr<NBaseObj> NParserImpl::Parse(Base::NBaseObj* parentObj, LPCTSTR packFilePath)
 {
-    NString filePath;
     NString styleName;
-
-    if(!GetStyleParam(packFilePath, filePath, styleName))
-        return NULL;
-
-    // Find Resource
-    NInstPtr<NBuffer> buffer(MemToolParam);
-    NInstPtr<NFileSystem> fs(MemToolParam);
-    if(!fs->LoadFile(filePath.GetData(), buffer))
-        return NULL;
-
-    // Load Xml
-    NAutoPtr<NDataReader> reader = CreateDataReader(ReaderXml);
-    if(!reader->ParseUtf8(static_cast<const char*>(buffer->GetBuffer()), buffer->GetSize()))
+    NAutoPtr<NDataReader> reader = LoadPackFile(packFilePath, styleName);
+    if(!reader)
         return NULL;
 
     NAutoPtr<NDataReader> styleNode = FindStyleNode(reader, styleName);
+    if(!styleNode)
+        return NULL;
 
-    return ParserUtil::LoadObj(parentFrame, styleNode);
+    return ParserUtil::LoadObj(parentObj, styleNode);
+}
+
+nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR packFilePath)
+{
+    NString styleName;
+    nui::Base::NAutoPtr<nui::Data::NDataReader> reader = LoadPackFile(packFilePath, styleName);
+    if(!reader)
+        return NULL;
+
+    return FindStyleNode(reader, styleName);
 }
 
 bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString& styleName)
@@ -56,7 +56,7 @@ bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString
     return true;
 }
 
-NAutoPtr<NDataReader> NParserImpl::FindStyleNode(Base::NAutoPtr<Data::NDataReader> dataReader, LPCTSTR styleName)
+NAutoPtr<NDataReader> NParserImpl::FindStyleNode(Base::NAutoPtr<Data::NDataReader> dataReader, const Base::NString& styleName)
 {
     NAutoPtr<NDataReader> styleNode;
     for(int i=0;; ++i)
@@ -69,4 +69,34 @@ NAutoPtr<NDataReader> NParserImpl::FindStyleNode(Base::NAutoPtr<Data::NDataReade
         styleNode = NULL;
     }
     return styleNode;
+}
+
+NAutoPtr<NDataReader> NParserImpl::LoadPackFile(LPCTSTR packFilePath, nui::Base::NString& styleName)
+{
+    NString filePath;
+
+    if(!GetStyleParam(packFilePath, filePath, styleName))
+    {
+        NAssertError(false, _T("failed to parse PackFilePath: %s"), packFilePath);
+        return NULL;
+    }
+
+    // Find Resource
+    NInstPtr<NBuffer> buffer(MemToolParam);
+    NInstPtr<NFileSystem> fs(MemToolParam);
+    if(!fs->LoadFile(filePath.GetData(), buffer))
+    {
+        NAssertError(false, _T("failed to load file: %s"), filePath.GetData());
+        return NULL;
+    }
+
+    // Load Xml
+    NAutoPtr<NDataReader> reader = CreateDataReader(ReaderXml);
+    if(!reader->ParseUtf8(static_cast<const char*>(buffer->GetBuffer()), buffer->GetSize()))
+    {
+        NAssertError(false, _T("failed to parse file: %s"), filePath.GetData());
+        return NULL;
+    }
+
+    return reader;
 }

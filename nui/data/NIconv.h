@@ -11,5 +11,8 @@ namespace nui
         NUI_API std::string t2utf8(LPCTSTR arg, size_t length);
         NUI_API std::string t2utf8(LPCTSTR arg);
 
+        NUI_API nui::Base::tstring a2t(LPCSTR arg);
+        NUI_API nui::Base::tstring a2t(LPCSTR arg, size_t length);
+
     }
 }

@@ -10,31 +10,12 @@ namespace nui
         class NUI_CLASS NBaseObj : protected Noncopyable
         {
         public:
-            NBaseObj()
-            {
-                refCount_ = 0;
-            }
-            virtual ~NBaseObj(){}
+            NBaseObj();
+            virtual ~NBaseObj();
 
-            virtual INT AddRef()
-            {
-                return (++ refCount_);
-            }
-
-            virtual INT Release()
-            {
-                if((--refCount_) == 0)
-                {
-                    NDeleteThis(this);
-                    return 0;
-                }
-                return refCount_;
-            }
-
-            virtual INT RefCount() const
-            {
-                return refCount_;
-            }
+            virtual INT AddRef();
+            virtual INT Release();
+            virtual INT RefCount() const;
 
         private:
             INT refCount_;
