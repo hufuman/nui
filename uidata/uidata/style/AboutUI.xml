@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <UI>
 
-  <Frame name="MainUI" id="TestFrame" visible="false" enabled="false"
-         pos="123,34" size="220,330" minSize="110,120" autoSize="false"
-         margin="6,9,3,2" layout="left;top" >
-    <Button id="btnOk" pos="270,265" text="@Common:btnOk" textcolor="#426594" />
-  </Frame>
+	<Frame name="MainUI" id="TestFrame" visible="true" text="abd"
+		layout="vfill,hfill" minSize="110,120" autoSize="false"
+		foreDraw="shape:@AboutUI:MainForeDraw">
+		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
+	</Frame>
 
+	<Draw name="MainForeDraw" drawType="shape" fillColor="#20FF0000" style="rect" />
 </UI>

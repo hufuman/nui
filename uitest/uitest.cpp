@@ -28,8 +28,23 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     CTestDrawImage testDrawImage;
     testDrawImage.Test();//*/
 
+    /*
     CControlTest controlTest;
     controlTest.Test();
+    */
+
+    {
+        NInstPtr<NParser> parser(MemToolParam);
+        NAutoPtr<NFrame> frame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(NULL, _T("@AboutUI:MainUI")));
+        NAutoPtr<NWindow> window;
+        window.Create(MemToolParam);
+        window->SetSize(520, 420);
+        window->SetVisible(true);
+        window->CenterWindow(NULL);
+        window->SetText(_T("Test Window"));
+        window->GetRootFrame()->AddChild(frame);
+        window->DoModal(NULL);
+    }
 
     core->DestroyCore();
 	return 0;
