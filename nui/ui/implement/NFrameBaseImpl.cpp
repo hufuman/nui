@@ -742,7 +742,7 @@ namespace nui
 
         bool NFrameBase::SetSizeImpl(int width, int height, bool force)
         {
-            if(!force && (IsAutoSize() || layout_ >= LayoutSizeStart))
+            if(!force && (IsAutoSize() || (layout_ >= LayoutSizeStart && parentFrame_ != NULL)))
                 return false;
 
             int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);

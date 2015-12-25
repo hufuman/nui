@@ -57,6 +57,7 @@ namespace ParserUtil
         parser->FillAttr(targetObj, styleNode);
         parser->PostParse(targetObj, styleNode);
         parser->Release();
+        targetObj->Release();
 
         return targetObj;
     }

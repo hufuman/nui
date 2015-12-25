@@ -58,7 +58,7 @@ namespace nui
             }
             else
             {
-                result = _stscanf(data.GetData(), TEXT("%u"), &value) == 8;
+                result = _stscanf(data.GetData(), TEXT("%u"), &value) == 1;
             }
             NAssertError(result, _T("Wrong format for ParserArgb"));
             return result;

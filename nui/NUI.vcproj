@@ -883,6 +883,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\parser\implement\ButtonParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\ButtonParserImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\parser\implement\FrameParserImpl.cpp"
 					>
 				</File>

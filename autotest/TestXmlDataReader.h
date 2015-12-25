@@ -44,6 +44,8 @@ TEST_F(TestXmlDataReader, ParseUtf8)
 {
     using namespace TestXmlDataReaderData;
     EXPECT_TRUE(reader_->ParseUtf8(g_SingleNode));
+
+    NAssertTempDisable();
     EXPECT_FALSE(reader_->ParseUtf8(g_WrongSingleNode));
 }
 
