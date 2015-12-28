@@ -21,7 +21,7 @@ namespace nui
                 ~NScopedElapseGuard()
                 {
                     DWORD dwElapse = ::GetTickCount() - startTickCount_;
-                    NVerify(condition_ || dwElapse < 60, _T("[ScopedElapseGuard] Too long: %d, %s"), dwElapse, msg_.GetData());
+                    NVerify(condition_ || dwElapse < 80, _T("[ScopedElapseGuard] Too long: %d, %s"), dwElapse, msg_.GetData());
                 }
             private:
                 bool condition_;

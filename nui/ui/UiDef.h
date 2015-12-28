@@ -6,3 +6,5 @@
 #define _NUI_HORZ_SCROLL_ID_    _T("_nui_horz_scroll_id_")
 #define _NUI_VERT_SCROLL_ID_    _T("_nui_vert_scroll_id_")
 #define _NUI_INNER_FRAME_ID_    _T("_nui_inner_frame_id_")
+#define _NUI_ROOT_FRAME_ID_     _T("_nui_root_frame_id_")
+

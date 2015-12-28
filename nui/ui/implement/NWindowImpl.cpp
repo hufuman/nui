@@ -26,13 +26,14 @@ namespace nui
             {
                 Base::NInstPtr<NFrame> rootFrame(MemToolParam);
                 rootFrame_ = (NFrame*)rootFrame;
-                rootFrame_->SetId(_T("rootFrame"));
+                rootFrame_->SetId(_NUI_ROOT_FRAME_ID_);
                 rootFrame_->window_ = this;
                 rootFrame_->SetAutoSize(false);
                 // rootFrame->SetLayout(NFrameBase::LayoutHFill | NFrameBase::LayoutVFill);
                 Base::NRect rect;
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());
+                rootFrame_->SizeEvent.AddHandler(MakeDelegate(this, &NWindow::OnRootFrameSizeChanged));
             }
             return rootFrame_;
         }
@@ -241,6 +242,13 @@ namespace nui
             return wndUi->OnParentCommand(HIWORD(wParam));
         }
 
+        void NWindow::OnCreate()
+        {
+            __super::OnCreate();
+
+            WindowCreatedEvent.Invoke(this, NULL);
+        }
+
         void NWindow::OnSize(int width, int height)
         {
             if(rootFrame_)
@@ -275,8 +283,6 @@ namespace nui
 
         void NWindow::Draw(HDC hDc)
         {
-            renderStatus_.BeforeDraw(window_);
-
             GUARD_SCOPE(false, _T("NWindow Draw takes too long"));
             HRGN clipRgn = ::CreateRectRgn(0, 0, 0, 0);
             int clipResult = ::GetClipRgn(hDc, clipRgn);
@@ -293,7 +299,6 @@ namespace nui
 
             OnDraw(render_, clipRgn);
 
-            renderStatus_.DrawStatus();
             render_->DrawBack(IsLayered());
             ::DeleteObject(clipRgn);
 
@@ -334,6 +339,13 @@ namespace nui
                 newHover = dynamic_cast<NFrame*>(rootFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover));
             }
             return newHover;
+        }
+
+        bool NWindow::OnRootFrameSizeChanged(Base::NBaseObj*, NEventData* eventData)
+        {
+            NFrameBase::SizeEventData* data = static_cast<NFrameBase::SizeEventData*>(eventData);
+            SetSize(data->width, data->height);
+            return true;
         }
     }
 }

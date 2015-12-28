@@ -516,7 +516,7 @@ namespace nui
                 return;
             Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagLayoutable, layoutable);
             if(layoutable)
-                Layout();
+                ReLayout();
         }
 
         bool NFrameBase::IsLayoutable() const

@@ -28,7 +28,7 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
     if(status != Gdiplus::Ok)
         return false;
 
-    m_hOleInitResult = OleInitialize(NULL);
+    m_hOleInitResult = ::OleInitialize(NULL);
     NAssertError(SUCCEEDED(m_hOleInitResult), _T("Failed to init Ole"));
     if(FAILED(m_hOleInitResult))
         return false;

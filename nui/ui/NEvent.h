@@ -26,9 +26,30 @@ namespace nui
             NEvent();
             virtual ~NEvent();
 
+            template < typename TObjType >
+            bool AddHandler(TObjType* handlerObj, bool (TObjType::*handler)(Base::NBaseObj*, NEventData*))
+            {
+                return AddHandler(MakeDelegate(handlerObj, handler));
+            }
+
             bool AddHandler(NEventHandler handler);
             bool RemoveHandler(NEventHandler handler);
             bool Invoke(Base::NBaseObj* obj, NEventData* eventData);
+
+            bool operator ()(Base::NBaseObj* obj, NEventData* eventData)
+            {
+                return Invoke(obj, eventData);
+            }
+
+            bool operator += (NEventHandler handler)
+            {
+                return AddHandler(handler);
+            }
+
+            bool operator -= (NEventHandler handler)
+            {
+                return RemoveHandler(handler);
+            }
 
         public:
             void Clear();

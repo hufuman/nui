@@ -61,8 +61,18 @@ namespace nui
                 NULL,
                 nui::Data::NModule::GetInst().GetNUIModule(),
                 static_cast<LPVOID>(this));
-            NEnsureRelease(privateData_);
             NAssertError(window_ != NULL, _T("Failed to create window"));
+
+            if(privateData_)
+            {
+                SetText(privateData_->text);
+                SetRect(privateData_->rect);
+                SetStyle(privateData_->style);
+                if(privateData_->centerWindow)
+                    CenterWindow(privateData_->centerRelativeWindow);
+                SetVisible(privateData_->visible);
+                NEnsureRelease(privateData_);
+            }
 
             // Set Font
             HFONT hFont = GdiObjMgr::Instance().GetDefaultFont();
@@ -90,16 +100,6 @@ namespace nui
             bool result = Create(parentWindow);
             if(result)
             {
-                if(privateData_)
-                {
-                    SetText(privateData_->text);
-                    SetRect(privateData_->rect);
-                    SetStyle(privateData_->style);
-                    if(privateData_->centerWindow)
-                        CenterWindow(privateData_->centerRelativeWindow);
-                    SetVisible(privateData_->visible);
-                    NEnsureRelease(privateData_);
-                }
                 nui::Ui::NMsgLoop loop;
                 result = loop.Loop(window_);
             }
