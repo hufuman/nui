@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<UI>
+
+	<Frame name="MainUI" id="TestFrame" visible="true" text="abd"
+		layout="hfill,vfill" autoSize="false" size="800,600"
+		foreDraw="shape:@MainUI:MainForeDraw">
+		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
+		<Button id="btnBrowse" text="@Main:btnBrowse" />
+		<Frame id="scintilla" layout="vfill,hfill" margin="2,100,2,2"/>
+	</Frame>
+
+	<Draw name="MainForeDraw" drawType="shape" fillColor="#20FF0000" style="rect" />
+</UI>

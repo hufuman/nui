@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<root>
+    <xnc>
+        <root name="skin" path="@root:skin" />
+        <root name="style" path="@root:style" />
+    </xnc>
+    <string>
+        <bundle lang="2052" path="@root:string\2052" />
+    </string>
+</root>
