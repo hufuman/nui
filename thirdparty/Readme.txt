@@ -12,3 +12,8 @@
 	License: zlib/libpng License(http://sourceforge.net/directory/license:zlib/)
 	Website: http://sourceforge.net/projects/tinyxml
 	Version: 2.6.2
+
+4. Scintilla
+	License: Scintilla\License.txt
+	Website: http://www.scintilla.org/
+	Version: 3.6.2
