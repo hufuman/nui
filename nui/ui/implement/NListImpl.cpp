@@ -52,6 +52,7 @@ namespace nui
             lineFrame.Create(MemToolParam);
             Base::NRect rcLine(0, 0, GetLineFrameWidth(), normalLineHeight_);
             int lineWidth = GetLineFrameWidth();
+            lineFrame->SetAutoSize(false);
             lineFrame->Create(layout_, NULL, rcLine, NULL);
             int newLineWidth = GetLineFrameWidth();
             if(lineWidth != newLineWidth)
@@ -99,6 +100,7 @@ namespace nui
                 int width = header_->GetItemWidth(i);
                 rcSubFrame.SetRect(frameLeft, 0, frameLeft + width, frameHeight);
                 GetSubFrameId(i, frameId);
+                subFrame->SetAutoSize(false);
                 subFrame->Create(lineFrame, frameId, rcSubFrame, NULL);
                 frameLeft += width;
             }

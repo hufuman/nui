@@ -130,29 +130,33 @@ namespace ParserUtil
 
     NAutoPtr<nui::Ui::NFont> ParseFont(NAutoPtr<NDataReader> styleNode)
     {
+        INT32 fontSize = -1;
+        Base::NString fontName;
+        bool bold = false;
+        bool italic = false;
+        bool underline = false;
+        bool strikeOut = false;
+
+        if(!styleNode->ReadValue(_T("fontSize"), fontSize)
+            && !styleNode->ReadValue(_T("bold"), bold)
+            && !styleNode->ReadValue(_T("italic"), italic)
+            && !styleNode->ReadValue(_T("underline"), underline)
+            && !styleNode->ReadValue(_T("strikeOut"), strikeOut)
+            && !styleNode->ReadValue(_T("fontName"), fontName))
+        {
+            return NULL;
+        }
+
         Base::NAutoPtr<Ui::NFont> font = Ui::NUiBus::Instance().GetResourceLoader()->CreateFont(MemToolParam);
+        if(!fontName.IsEmpty())
+            font->SetFontName(fontName);
 
-        INT32 tmpLong;
-        NString tmpString;
-        bool tmpBool;
-
-        if(styleNode->ReadValue(_T("fontSize"), tmpLong))
-            font->SetFontSize(tmpLong);
-
-        if(styleNode->ReadValue(_T("bold"), tmpBool))
-            font->SetBold(tmpBool);
-
-        if(styleNode->ReadValue(_T("italic"), tmpBool))
-            font->SetItalic(tmpBool);
-
-        if(styleNode->ReadValue(_T("underline"), tmpBool))
-            font->SetUnderline(tmpBool);
-
-        if(styleNode->ReadValue(_T("strikeOut"), tmpBool))
-            font->SetStrikeOut(tmpBool);
-
-        if(styleNode->ReadValue(_T("fontName"), tmpString))
-            font->SetFontName(tmpString);
+        font->SetStrikeOut(strikeOut);
+        font->SetUnderline(underline);
+        font->SetItalic(italic);
+        font->SetBold(bold);
+        if(fontSize > 0)
+            font->SetFontSize(fontSize);
 
         return font;
     }

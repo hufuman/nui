@@ -48,11 +48,3 @@ void LayoutParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NData
         targetLayout->SetLayoutType(layoutType);
     }
 }
-
-void LayoutParserImpl::Create(nui::Base::NBaseObj* parentObj, nui::Base::NBaseObj* targetObj)
-{
-    FrameParserImpl::Create(parentObj, targetObj);
-
-    NLayout* targetLayout = dynamic_cast<NLayout*>(targetObj);
-    targetLayout->SetLayoutable(false);
-}

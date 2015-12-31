@@ -73,6 +73,9 @@ namespace nui
                 LayoutVFill     = 0x0080,
             };
 
+            static bool IsVertLayout(UINT layout);
+            static bool IsHorzLayout(UINT layout);
+
             NFrameBase();
 
         public:

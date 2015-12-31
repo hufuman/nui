@@ -88,26 +88,5 @@ namespace nui
             TextChangeEvent.Invoke(this, &eventData);
             return true;
         }
-
-        // NFrameBase
-        bool NEdit::SetPosImpl(int left, int top, bool force)
-        {
-            if(!__super::SetPosImpl(left, top, force) || !IsWndValid())
-                return false;
-
-            Base::NRect rcEdit = GetRootRect();
-            ::SetWindowPos(realWindow_, NULL, rcEdit.Left, rcEdit.Top, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
-            return true;
-        }
-
-        bool NEdit::SetSizeImpl(int width, int height, bool force)
-        {
-            if(!__super::SetSizeImpl(width, height, force) || !IsWndValid())
-                return false;
-
-            Base::NRect rcEdit = GetRootRect();
-            ::SetWindowPos(realWindow_, NULL, 0, 0, rcEdit.Width(), rcEdit.Height(), SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
-            return true;
-        }
     }
 }

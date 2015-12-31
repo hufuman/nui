@@ -107,11 +107,7 @@ namespace nui
 
         Base::NSize NLayout::GetAutoSize() const
         {
-            Base::NSize size = innerFrame_->GetAutoSize();
-
-            size.Width = std::max(size.Width, innerFrame_->GetRect().Width());
-            size.Height = std::max(size.Height, innerFrame_->GetRect().Height());
-            return size;
+            return autoSize_;
         }
 
         void NLayout::OnSizeChanged(int width, int height)
@@ -143,8 +139,9 @@ namespace nui
             NLayoutArrangerParam param;
             param.data_ = 0;
             param.frameSize_ = frameRect_.GetSize();
-            innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&param));
 
+            innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&param));
+            autoSize_.SetSize(param.maxSize_.Width, param.maxSize_.Height);
             innerFrame_->SetSize(param.maxSize_.Width, param.maxSize_.Height);
 
             const Base::NRect &rcLayout = GetRect();
@@ -178,7 +175,7 @@ namespace nui
 
                 NScroll* vertScroll = GetVertScroll();
                 vertScroll->SetScrollPage(rcLayout.Height());
-                vertScroll->SetScrollRange(param.maxSize_.Height);
+                vertScroll->SetScrollRange(param.maxSize_.Height - rcLayout.Height());
                 vertScroll->SetVisible(true);
 
                 innerFrameLeft = 0;
@@ -192,7 +189,7 @@ namespace nui
                 NScroll* horzScroll = GetHorzScroll();
                 horzScroll->SetMargin(0, 0, 0, 0);
                 horzScroll->SetScrollPage(rcLayout.Width());
-                horzScroll->SetScrollRange(param.maxSize_.Width);
+                horzScroll->SetScrollRange(param.maxSize_.Width - rcLayout.Width());
                 horzScroll->SetVisible(true);
 
                 innerFrameTop = 0;
@@ -205,18 +202,21 @@ namespace nui
                 horzScroll->SetMargin(0, 0, vertScroll->GetRect().Width(), 0);
                 int horzPage = rcLayout.Width() - vertScroll->GetRect().Width();
                 horzScroll->SetScrollPage(horzPage);
-                horzScroll->SetScrollRange(param.maxSize_.Width);
+                horzScroll->SetScrollRange(param.maxSize_.Width - horzPage);
                 horzScroll->SetVisible(true);
 
                 int vertPage = rcLayout.Height() - horzScroll->GetRect().Height();
                 vertScroll->SetScrollPage(vertPage);
-                vertScroll->SetScrollRange(param.maxSize_.Height);
+                vertScroll->SetScrollRange(param.maxSize_.Height - vertPage);
                 vertScroll->SetVisible(true);
 
                 innerFrameLeft = - horzScroll_->GetScrollPos();
                 innerFrameTop = - vertScroll_->GetScrollPos();
             }
 
+            innerFrame_->SetMinSize(frameRect_.Width() - (vertScroll_ && vertScroll_->IsVisible() ? vertScroll_->GetRect().Width() : 0),
+                frameRect_.Height() - (horzScroll_ && horzScroll_->IsVisible() ? horzScroll_->GetRect().Height() : 0)
+                );
             innerFrame_->SetPos(innerFrameLeft, innerFrameTop);
         }
 

@@ -89,6 +89,8 @@ void FrameParserImpl::Create(nui::Base::NBaseObj* parentObj, nui::Base::NBaseObj
     NAutoPtr<NFrame> targetFrame = dynamic_cast<NFrame*>(targetObj);
     NAutoPtr<NFrame> parentFrame = dynamic_cast<NFrame*>(parentObj);
     targetFrame->Create(parentFrame);
+
+    targetFrame->SetLayoutable(false);
 }
 
 void FrameParserImpl::PostParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
@@ -171,6 +173,8 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
     {
         targetFrame->SetFont(tmpString);
     }
+
+    targetFrame->SetFont(ParserUtil::ParseFont(styleNode));
 
     FillTextAttr(targetFrame, styleNode);
 }

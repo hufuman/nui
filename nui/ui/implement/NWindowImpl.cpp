@@ -247,7 +247,7 @@ namespace nui
         {
             if(wParam == NULL || !::IsWindow(reinterpret_cast<HWND>(lParam)))
                 return false;
-            NNative* wndUi = NNative::GetWndUi(reinterpret_cast<HWND>(lParam));
+            NNative* wndUi = NNative::GetNativeUi(reinterpret_cast<HWND>(lParam));
             if(wndUi == NULL)
                 return false;
             return wndUi->OnParentCommand(HIWORD(wParam));

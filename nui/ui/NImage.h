@@ -24,10 +24,10 @@ namespace nui
             void SetIndex(int horzIndex, int vertIndex);
 
             virtual Base::NSize GetAutoSize() const;
-            virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
 
         protected:
             virtual void OnCreate();
+            virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
 
             void Reset();
             void MovieTimerProc();

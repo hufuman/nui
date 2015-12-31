@@ -37,10 +37,6 @@ namespace nui
             virtual bool OnParentCommand(WORD notifyCode);
             virtual bool GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle);
 
-            // NFrameBase
-            virtual bool SetPosImpl(int left, int top, bool force);
-            virtual bool SetSizeImpl(int width, int height, bool force);
-
         public:
             // Event
             class TextChangeEventData : public NEventData

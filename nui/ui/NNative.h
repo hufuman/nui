@@ -18,7 +18,7 @@ namespace nui
             virtual void Attach(NFrame* parentFrame, HWND hwndNative);
             virtual HWND GetNative() const;
 
-            static NNative* GetWndUi(HWND hWnd);
+            static NNative* GetNativeUi(HWND hWnd);
 
         public:
             // NFrame
@@ -35,8 +35,7 @@ namespace nui
         protected:
             virtual void OnCreate();
 
-            virtual void OnSizeChanged(int width, int height);
-            virtual void OnPosChanged(int left, int top);
+            virtual void Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn);
 
             bool IsWndValid() const;
 

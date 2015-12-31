@@ -3,11 +3,11 @@
 #include "FrameParserImpl.h"
 
 
-class LayoutParserImpl : public FrameParserImpl
+class ImageParserImpl : public FrameParserImpl
 {
-    DECLARE_REFLECTION(TEXT("nui"), TEXT("layoutparser"))
+    DECLARE_REFLECTION(TEXT("nui"), TEXT("imageparser"))
 public:
-    LayoutParserImpl();
+    ImageParserImpl();
 
     virtual void FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode);
 };

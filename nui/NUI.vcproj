@@ -615,6 +615,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\UiUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\UiUtil.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\WindowDef.h"
 					>
 				</File>
@@ -936,6 +944,14 @@
 				</File>
 				<File
 					RelativePath=".\parser\implement\FrameParserImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\ImageParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\ImageParserImpl.h"
 					>
 				</File>
 				<File

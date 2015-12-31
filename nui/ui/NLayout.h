@@ -59,6 +59,8 @@ namespace nui
             Base::NInstPtr<NFrame> innerFrame_;
             Base::NAutoPtr<NLayoutArranger> layoutArranger_;
 
+            Base::NSize autoSize_;
+
             Base::NAutoPtr<NScroll> horzScroll_;
             Base::NAutoPtr<NScroll> vertScroll_;
         };

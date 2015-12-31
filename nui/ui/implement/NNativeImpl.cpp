@@ -34,7 +34,7 @@ namespace nui
             return realWindow_;
         }
 
-        NNative* NNative::GetWndUi(HWND hWnd)
+        NNative* NNative::GetNativeUi(HWND hWnd)
         {
             NNative* wndUi = reinterpret_cast<NNative*>(::GetProp(hWnd, _T("NNativeObj")));
             return wndUi;
@@ -50,22 +50,25 @@ namespace nui
 #endif  // _NO_NUI_PARSER_
         }
 
-        void NNative::OnSizeChanged(int width, int height)
+        void NNative::Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn)
         {
-            __super::OnSizeChanged(width, height);
-            if(realWindow_)
-            {
-                ::SetWindowPos(realWindow_, NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED | SWP_DRAWFRAME);
-            }
-        }
+            UNREFERENCED_PARAMETER(render);
+            UNREFERENCED_PARAMETER(ptOffset);
+            UNREFERENCED_PARAMETER(clipRgn);
 
-        void NNative::OnPosChanged(int left, int top)
-        {
-            __super::OnPosChanged(left, top);
             if(realWindow_)
             {
-                Base::NRect rcNative = GetRootRect();
-                ::SetWindowPos(realWindow_, NULL, rcNative.Left, rcNative.Top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+                Base::NPoint ptNative(ptOffset.X + frameRect_.Left, ptOffset.Y + frameRect_.Top);
+                ::ClientToScreen(window_->GetNative(), ptNative);
+
+                Base::NRect rcWindow;
+                ::GetWindowRect(realWindow_, rcWindow);
+
+                if(ptNative.X != rcWindow.Left || ptNative.Y != rcWindow.Top
+                    || frameRect_.Width() != rcWindow.Width() || frameRect_.Height() != rcWindow.Height())
+                {
+                    ::MoveWindow(realWindow_, ptOffset.X + frameRect_.Left, ptOffset.Y + frameRect_.Top, frameRect_.Width(), frameRect_.Height(), FALSE);
+                }
             }
         }
 
@@ -158,17 +161,30 @@ namespace nui
             if(!GetWndData(wndClassName, style, exStyle))
                 return;
 
+            bool visible = IsVisible();
+            bool enabled = IsEnabled();
+
+            NFrameBase* parentFrame = parentFrame_;
+            while(parentFrame != NULL)
+            {
+                visible = visible && parentFrame->IsVisible();
+                enabled = enabled && parentFrame->IsEnabled();
+                parentFrame = parentFrame->GetParent();
+            }
+
             Base::NRect rcWnd = GetRootRect();
             HWND hWnd = ::CreateWindowEx(exStyle,
                 wndClassName,
                 GetText().GetData(),
-                WS_TABSTOP | WS_CHILD | (IsVisible() ? WS_VISIBLE : 0) | style,
+                WS_TABSTOP | WS_CHILD | (visible ? WS_VISIBLE : 0) | style,
                 rcWnd.Left, rcWnd.Top,
                 rcWnd.Width(), rcWnd.Height(),
                 window->GetNative(),
                 NULL,
                 ::GetModuleHandle(NULL),
                 0);
+            if(!enabled)
+                ::EnableWindow(hWnd, FALSE);
             AttachWnd(hWnd);
             ::SendMessage(hWnd, WM_SETFONT, ::SendMessage(window->GetNative(), WM_GETFONT, 0, 0), TRUE);
         }
@@ -189,6 +205,19 @@ namespace nui
 
             SetPos(rcWnd.left, rcWnd.top);
             SetSize(rcWnd.right - rcWnd.left, rcWnd.bottom - rcWnd.top);
+
+            bool visible = IsVisible();
+            bool enabled = IsEnabled();
+
+            NFrameBase* parentFrame = parentFrame_;
+            while(parentFrame != NULL)
+            {
+                visible = visible && parentFrame->IsVisible();
+                enabled = enabled && parentFrame->IsEnabled();
+                parentFrame = parentFrame->GetParent();
+            }
+            ::ShowWindow(realWindow_, visible ? TRUE : FALSE);
+            ::EnableWindow(realWindow_, enabled ? TRUE : FALSE);
         }
     }
 }

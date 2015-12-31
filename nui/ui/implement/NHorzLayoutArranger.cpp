@@ -11,14 +11,11 @@ namespace nui
 
         bool NHorzLayoutArranger::IfCouldLayout(const NFrameBase* const &child) const
         {
-            if(!child->IsVisible() || child->GetRect().Width() == 0 || child->GetRect().Height() == 0)
+            if(!child->IsVisible())
                 return false;
 
             UINT flags = child->GetLayout();
-            return ((flags & NFrameBase::LayoutLeft) != NFrameBase::LayoutLeft)
-                || ((flags & NFrameBase::LayoutRight) != NFrameBase::LayoutRight)
-                || ((flags & NFrameBase::LayoutHCenter) != NFrameBase::LayoutHCenter)
-                || ((flags & NFrameBase::LayoutHFill) != NFrameBase::LayoutHFill);
+            return !NFrameBase::IsHorzLayout(flags);
         }
 
         void NHorzLayoutArranger::RelayoutChild(NFrameBase* child, NLayoutArrangerParam& param) const

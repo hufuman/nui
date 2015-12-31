@@ -350,9 +350,14 @@ namespace nui
                 if(wParam == drawTimerId_ && !IsRegionEmpty(invalidateRgn_))
                 {
                     if(IsLayered())
+                    {
                         ::PostMessage(window_, WM_PAINT, 0, 0);
+                    }
                     else
+                    {
                         ::InvalidateRgn(window_, invalidateRgn_, FALSE);
+                    }
+                    ResetInvalidRgn();
                 }
             }
             else if(message == WM_PAINT)
@@ -367,7 +372,6 @@ namespace nui
 
                 Draw(hDc);
                 ::EndPaint(window_, &ps);
-                ResetInvalidRgn();
             }
             else if(message == WM_PRINT)
             {

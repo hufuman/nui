@@ -2,11 +2,28 @@
 #include "../NFrameBase.h"
 
 #include "../NRenderClip.h"
+#include "UiUtil.h"
 
 namespace nui
 {
     namespace Ui
     {
+        bool NFrameBase::IsVertLayout(UINT layout)
+        {
+            return (layout & NFrameBase::LayoutTop)
+                || (layout & NFrameBase::LayoutBottom)
+                || (layout & NFrameBase::LayoutVCenter)
+                || (layout & NFrameBase::LayoutVFill);
+        }
+
+        bool NFrameBase::IsHorzLayout(UINT layout)
+        {
+            return (layout & NFrameBase::LayoutLeft)
+                || (layout & NFrameBase::LayoutRight)
+                || (layout & NFrameBase::LayoutHCenter)
+                || (layout & NFrameBase::LayoutHFill);
+        }
+
         NFrameBase::NFrameBase()
         {
             parentFrame_ = NULL;
@@ -247,8 +264,11 @@ namespace nui
         {
             if(visible == IsVisible())
                 return false;
+
             ForceInvalidate();
             Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagVisible, visible);
+
+            UiUtil::SyncNativeWindowByVisible(this);
             return true;
         }
 
@@ -261,8 +281,11 @@ namespace nui
         {
             if(enabled == IsEnabled())
                 return false;
+
             ForceInvalidate();
             Util::Misc::CheckFlag(frameStatus_, NFrameBase::StatusDisabled, !enabled);
+
+            UiUtil::SyncNativeWindowByEnable(this);
             return true;
         }
 
@@ -464,7 +487,7 @@ namespace nui
 
             Base::NSize size = IsAutoSize() ? GetAutoSize() : frameRect_.GetSize();
 
-            Base::NRect rcNew(frameRect_);
+            Base::NRect rcNew(frameRect_.Left, frameRect_.Top, frameRect_.Left + size.Width, frameRect_.Top + size.Height);
 
             if(layout_ & LayoutHFill)
             {
@@ -738,8 +761,10 @@ namespace nui
 
         bool NFrameBase::SetPosImpl(int left, int top, bool force)
         {
-            if(layout_ > 0 && layout_ <= LayoutPosEnd && !force)
-                return false;
+            if(!force && (layout_ == LayoutLeft || layout_ == LayoutRight || layout_ == LayoutHFill || layout_ == LayoutHCenter))
+                left = frameRect_.Left;
+            if(!force && (layout_ == LayoutTop || layout_ == LayoutBottom || layout_ == LayoutVFill || layout_ == LayoutVCenter))
+                top = frameRect_.Top;
             if(frameRect_.Left == left && frameRect_.Top == top)
                 return false;
             Invalidate();

@@ -11,14 +11,11 @@ namespace nui
 
         bool NVertLayoutArranger::IfCouldLayout(const NFrameBase* const &child) const
         {
-            if(!child->IsVisible() || child->GetRect().Width() == 0 || child->GetRect().Height() == 0)
+            if(!child->IsVisible())
                 return false;
 
             UINT flags = child->GetLayout();
-            return ((flags & NFrameBase::LayoutTop) != NFrameBase::LayoutTop)
-                || ((flags & NFrameBase::LayoutBottom) != NFrameBase::LayoutBottom)
-                || ((flags & NFrameBase::LayoutVCenter) != NFrameBase::LayoutVCenter)
-                || ((flags & NFrameBase::LayoutVFill) != NFrameBase::LayoutVFill);
+            return !NFrameBase::IsVertLayout(flags);
         }
 
         void NVertLayoutArranger::RelayoutChild(NFrameBase* child, NLayoutArrangerParam& param) const
@@ -27,10 +24,12 @@ namespace nui
                 return;
 
             const Base::NRect& margin = child->GetMargin();
+            const Base::NRect &rect = child->GetRect();
+
             param.maxSize_.Height += margin.Top;
             child->SetPos(margin.Left, param.maxSize_.Height);
-            param.maxSize_.Height += child->GetRect().Height() + margin.Bottom;
-            param.maxSize_.Width = std::max(child->GetRect().Width() + margin.Left + margin.Right, param.maxSize_.Width);
+            param.maxSize_.Height += rect.Height() + margin.Bottom;
+            param.maxSize_.Width = std::max(rect.Width() + margin.Left + margin.Right, param.maxSize_.Width);
         }
     }
 }

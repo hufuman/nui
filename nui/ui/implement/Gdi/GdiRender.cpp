@@ -284,8 +284,12 @@ namespace nui
         {
             NTempDC tmpDc;
             HDC hDc = memDC_;
+            HGDIOBJ oldFont = NULL;
             if(hDc == NULL)
+            {
                 hDc = tmpDc.Init();
+                oldFont = ::SelectObject(hDc, GdiObjMgr::Instance().GetDefaultFont());
+            }
 
             HFONT hFont = NULL;
             GdiFont* gdiFont = NULL;
@@ -327,6 +331,9 @@ namespace nui
             ::DrawText(hDc, text, text.GetLength(), rcTmp, drawFlags | DT_CALCRECT);
             size.Width = rcTmp.Width();
             size.Height = rcTmp.Height();
+
+            if(oldFont != NULL)
+                ::SelectObject(hDc, oldFont);
         }
 
         nui::Base::NHolder GdiRender::ClipRgn(HRGN clipRgn)

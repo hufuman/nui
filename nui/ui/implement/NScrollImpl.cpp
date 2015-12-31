@@ -12,8 +12,7 @@ namespace nui
 {
     namespace Ui
     {
-        // min width for slider
-        const int g_minForeWidth = 8;
+        const int g_minSliderWidth = 8;
 
         IMPLEMENT_REFLECTION(NScroll);
 
@@ -48,8 +47,8 @@ namespace nui
             if(range < 1)
                 return;
             scrollRange_ = range;
-            if(scrollPos_ + scrollPage_ > scrollRange_)
-                SetScrollPos(scrollRange_ - scrollPage_);
+            if(scrollPos_ >= scrollRange_)
+                SetScrollPos(scrollRange_ - 1);
             Invalidate();
         }
 
@@ -58,8 +57,8 @@ namespace nui
             NAssertError(pos >= 0 && pos < scrollRange_, _T("wrong pos in NScroll?"));
             if(pos < 0)
                 pos = 0;
-            if(pos + scrollPage_ > scrollRange_)
-                pos = scrollRange_ - scrollPage_;
+            if(pos >= scrollRange_)
+                pos = scrollRange_ - 1;
             if(scrollPos_ == pos)
                 return;
 
@@ -79,15 +78,11 @@ namespace nui
 
         void NScroll::SetScrollPage(int page)
         {
-            if(page > scrollRange_)
-                page = scrollRange_;
             if(page < 1)
                 page = 1;
             if(scrollPage_ == page)
                 return;
             scrollPage_ = page;
-            if(scrollPage_ + scrollPos_ > scrollRange_)
-                SetScrollPos(scrollRange_ - scrollPage_);
             Invalidate();
         }
 
@@ -129,9 +124,12 @@ namespace nui
         {
             bool result = __super::SetVisible(visible);
 
-            ScrollEventData eventData;
-            eventData.scrollPos = scrollPos_;
-            ScrollEvent.Invoke(this, &eventData);
+            if(result && visible)
+            {
+                ScrollEventData eventData;
+                eventData.scrollPos = scrollPos_;
+                ScrollEvent.Invoke(this, &eventData);
+            }
 
             return result;
         }
@@ -253,7 +251,7 @@ namespace nui
 
             if(capturedPart_ == ScrollPartSlider)
             {
-                Base::NRect itemRect = GetRect();
+                Base::NRect itemRect = GetRootRect();
                 Base::NRect leftBlock, rightBlock, bkg, slider;
                 if(horzScroll_)
                     GetHorzPartRect(itemRect, leftBlock, rightBlock, bkg, slider);
@@ -362,16 +360,26 @@ namespace nui
                 if(horzScroll_)
                 {
                     if(bkg.Width() == slider.Width())
+                    {
                         pos = 0;
+                    }
                     else
-                        pos = (scrollRange_ - scrollPage_) * (point.X - startPoint_.X - leftBlock.Width()) / (bkg.Width() - slider.Width());
+                    {
+                        double d = (double)(point.X - startPoint_.X - bkg.Left) * (scrollRange_ - 1) / (bkg.Width() - slider.Width());
+                        pos = (int)(d + 0.5);
+                    }
                 }
                 else
                 {
                     if(bkg.Height() == slider.Height())
+                    {
                         pos = 0;
+                    }
                     else
-                        pos = (scrollRange_ - scrollPage_) * (point.Y - startPoint_.Y - leftBlock.Height()) / (bkg.Height() - slider.Height());
+                    {
+                        double d = (double)(point.Y - startPoint_.Y - bkg.Top) * (scrollRange_ - 1) / (bkg.Height() - slider.Height());
+                        pos = (int)(d + 0.5);
+                    }
                 }
             }
             else if(capturedPart_ == ScrollPartRightBkg && part == capturedPart_)
@@ -416,9 +424,17 @@ namespace nui
             }
 
             // Slider
-            int foreWidth = bkg.Width() * scrollPage_ / scrollRange_;
-            foreWidth = std::max(g_minForeWidth, foreWidth);
-            int pos = scrollPos_ * (bkg.Width() - foreWidth) / (scrollRange_ - 1);
+            int foreWidth = 0;
+            if(scrollPage_ < scrollRange_)
+            {
+                foreWidth = bkg.Width() * scrollPage_ / scrollRange_;
+            }
+            else
+            {
+                foreWidth = bkg.Width() * scrollPage_ / (scrollPage_ + scrollRange_);
+            }
+            foreWidth = std::max(g_minSliderWidth, foreWidth);
+            int pos = (scrollRange_ > 1) ? scrollPos_ * (bkg.Width() - foreWidth) / (scrollRange_ - 1) : 0;
             slider.SetPos(bkg.Left + pos, rect.Top);
             slider.SetSize(foreWidth, rect.Height());
         }
@@ -442,9 +458,17 @@ namespace nui
 
             if(sliderDraw_)
             {
-                int foreHeight = bkg.Height() * scrollPage_ / scrollRange_;
-                foreHeight = std::max(g_minForeWidth, foreHeight);
-                int pos = scrollPos_ * (bkg.Height() - foreHeight) / (scrollRange_ - 1);
+                int foreHeight = 0;
+                if(scrollPage_ < scrollRange_)
+                {
+                    foreHeight = bkg.Height() * scrollPage_ / scrollRange_;
+                }
+                else
+                {
+                    foreHeight = bkg.Height() * scrollPage_ / (scrollPage_ + scrollRange_);
+                }
+                foreHeight = std::max(g_minSliderWidth, foreHeight);
+                int pos = (scrollRange_ > 1) ? scrollPos_ * (bkg.Height() - foreHeight) / (scrollRange_ - 1) : 0;
                 slider.SetPos(rect.Left, bkg.Top + pos);
                 slider.SetSize(rect.Width(), foreHeight);
             }
