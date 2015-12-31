@@ -9,113 +9,106 @@ using namespace Data;
 
 IMPLEMENT_REFLECTION_EX(NParserImpl, NReflect::Singleton);
 
-NAutoPtr<NBaseObj> NParserImpl::Parse(Base::NBaseObj* parentObj, LPCTSTR packFilePath)
+NAutoPtr<NBaseObj> NParserImpl::Parse(Base::NBaseObj* parentObj, LPCTSTR stylePath)
 {
-    NString styleName;
-    NAutoPtr<NDataReader> reader = LoadPackFile(packFilePath, styleName);
-    if(!reader)
+    if(stylePath == NULL)
         return NULL;
 
-    NAutoPtr<NDataReader> styleNode = FindStyleNode(reader, styleName);
+    NAutoPtr<NDataReader> styleNode = FindStyleNode(stylePath);
     if(!styleNode)
         return NULL;
 
     return ParserUtil::LoadObj(parentObj, styleNode);
 }
 
-bool NParserImpl::ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR styleName)
+bool NParserImpl::ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR stylePath)
 {
-    nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode = FindStyleNode(styleName);
+    nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode = FindStyleNode(stylePath);
     if(!styleNode)
         return false;
 
     return ParserUtil::ApplyStyle(targetObj, styleNode);
 }
 
-nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR packFilePath)
+nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR stylePathParam)
 {
+    NAutoPtr<NDataReader> styleNode;
+    NString filePath;
     NString styleName;
-    nui::Base::NAutoPtr<nui::Data::NDataReader> reader = LoadPackFile(packFilePath, styleName);
-    if(!reader)
-        return NULL;
 
-    return FindStyleNode(reader, styleName);
+    NString stylePath(stylePathParam);
+    // in case of cycle reference
+    for(int refCount=0; refCount<5; ++ refCount)
+    {
+        if(!GetStyleParam(stylePath, filePath, styleName) || filePath.IsEmpty())
+            return NULL;
+
+        nui::Base::NAutoPtr<nui::Data::NDataReader> dataReader = LoadPackFile(filePath);
+        if(!dataReader)
+            return NULL;
+
+        if(styleName.IsEmpty())
+        {
+            NString tmpString;
+            if(dataReader->ReadValue(_T("default"), tmpString) && !tmpString.IsEmpty())
+            {
+                stylePath = tmpString;
+                continue;
+            }
+        }
+
+        for(int i=0;; ++i)
+        {
+            if(!dataReader->ReadNode(i, styleNode))
+                return NULL;
+            if(styleName.IsEmpty())
+                break;
+            Base::NString name;
+            if(styleNode->ReadValue(_T("name"), name) && name == styleName)
+                break;
+            styleNode = NULL;
+        }
+    }
+
+    return styleNode;
 }
 
-bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString& styleName)
+bool NParserImpl::GetStyleParam(LPCTSTR stylePath, NString& filePath, NString& styleName)
 {
     // Normalize path
-    LPCTSTR separator = _tcschr(packFilePath, _T(':'));
+    LPCTSTR separator = _tcschr(stylePath, _T(':'));
+
     if(separator == NULL)
     {
-        if(packFilePath[0] == _T('@'))
+        if(stylePath[0] == _T('@'))
         {
-            filePath.Format(_T("@style:%s.xml"), packFilePath + 1);
+            filePath.Format(_T("@style:%s.xml"), stylePath + 1);
         }
         else
         {
-            filePath = packFilePath;
+            styleName = stylePath;
         }
         return true;
     }
 
+    if(stylePath[0] != _T('@'))
+        return false;
+
     styleName = separator + 1;
 
-    if(packFilePath[0] == _T('@'))
-    {
-        NString tmpPath;
-        tmpPath.Assign(packFilePath, separator - packFilePath);
-        filePath.Format(_T("@style:%s.xml"), tmpPath.GetData() + 1);
-    }
-    else
-    {
-        filePath.Assign(packFilePath, separator - packFilePath);
-    }
-
+    filePath.Assign(stylePath, separator - stylePath);
+    filePath.Format(_T("@style:%s.xml"), filePath.GetData() + 1);
     return true;
 }
 
-NAutoPtr<NDataReader> NParserImpl::FindStyleNode(Base::NAutoPtr<Data::NDataReader> dataReader, const Base::NString& styleName)
+NAutoPtr<NDataReader> NParserImpl::LoadPackFile(LPCTSTR filePath)
 {
-    NString style = styleName;
-    NAutoPtr<NDataReader> styleNode;
-    if(style.IsEmpty())
-    {
-        NString tmpString;
-        if(dataReader->ReadValue(_T("default"), tmpString))
-            style = tmpString;
-    }
-
-    for(int i=0;; ++i)
-    {
-        if(!dataReader->ReadNode(i, styleNode))
-            return NULL;
-        if(style.IsEmpty())
-            break;
-        Base::NString name;
-        if(styleNode->ReadValue(_T("name"), name) && name == style)
-            break;
-        styleNode = NULL;
-    }
-    return styleNode;
-}
-
-NAutoPtr<NDataReader> NParserImpl::LoadPackFile(LPCTSTR packFilePath, nui::Base::NString& styleName)
-{
-    NString filePath;
-
-    if(!GetStyleParam(packFilePath, filePath, styleName))
-    {
-        NAssertError(false, _T("failed to parse PackFilePath: %s"), packFilePath);
-        return NULL;
-    }
-
     // Find Resource
     NInstPtr<NBuffer> buffer(MemToolParam);
     NInstPtr<NFileSystem> fs(MemToolParam);
-    if(!fs->LoadFile(filePath.GetData(), buffer))
+    if(!fs->LoadFile(filePath, buffer))
     {
-        NAssertError(false, _T("failed to load file: %s"), filePath.GetData());
+        NAssertError(false, _T("failed to load file: %s"), filePath);
         return NULL;
     }
 
@@ -123,7 +116,7 @@ NAutoPtr<NDataReader> NParserImpl::LoadPackFile(LPCTSTR packFilePath, nui::Base:
     NAutoPtr<NDataReader> reader = CreateDataReader(ReaderXml);
     if(!reader->ParseUtf8(static_cast<const char*>(buffer->GetBuffer()), buffer->GetSize()))
     {
-        NAssertError(false, _T("failed to parse file: %s"), filePath.GetData());
+        NAssertError(false, _T("failed to parse file: %s"), filePath);
         return NULL;
     }
 
