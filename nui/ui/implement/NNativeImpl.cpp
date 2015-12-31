@@ -121,15 +121,6 @@ namespace nui
             return text;
         }
 
-        NText* NNative::GetRichText()
-        {
-            NText* pText = __super::GetRichText();
-            if(pText == NULL)
-                return NULL;
-            pText->SetText(GetText().GetData());
-            return pText;
-        }
-
         // flags
         bool NNative::SetVisible(bool visible)
         {

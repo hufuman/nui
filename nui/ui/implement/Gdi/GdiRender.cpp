@@ -6,7 +6,7 @@
 #include "GdiUtil.h"
 #include "GdiShapeDraw.h"
 #include "GdiImageDraw.h"
-#include "GdiText.h"
+#include "GdiTextAttr.h"
 #include "GdiFont.h"
 #include "GdiUtil.h"
 #include "TempDC.h"
@@ -204,15 +204,14 @@ namespace nui
             }
         }
 
-        void GdiRender::DrawText(NText* text, NFont* font, const Base::NRect& rect)
+        void GdiRender::DrawText(Base::NString text, NTextAttr* textAttr, NFont* font, const Base::NRect& rect)
         {
             NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::DrawText"));
-
-            GdiText* gdiText = dynamic_cast<GdiText*>(text);
-            GdiFont* gdiFont = NULL;
-            NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::DrawText"));
-            if(gdiText == NULL)
+            if(text.IsEmpty())
                 return;
+
+            GdiFont* gdiFont = NULL;
+            GdiTextAttr* gdiTextAttr = NULL;
 
             if(font != NULL)
             {
@@ -222,13 +221,21 @@ namespace nui
                     return;
             }
 
+            if(textAttr != NULL)
+            {
+                gdiTextAttr = dynamic_cast<GdiTextAttr*>(textAttr);
+                NAssertError(gdiTextAttr != NULL, _T("Not GdiTextAttr in GdiRender::DrawText"));
+                if(gdiTextAttr == NULL)
+                    return;
+            }
+
             Base::NRect textRect(rect);
             Base::NSize size(rect.Width(), rect.Height());
-            GetTextSize(text, font, size);
+            GetTextSize(text, textAttr, font, size);
 
-            if(gdiText->IsVertAlign())
+            if(gdiTextAttr != NULL && gdiTextAttr->IsVertAlign())
             {
-                if(gdiText->IsHorzAlign())
+                if(gdiTextAttr->IsHorzAlign())
                     textRect.Inflate(-(rect.Width() - size.Width) / 2, -(rect.Height() - size.Height) / 2);
                 else
                     textRect.Inflate(0, -(rect.Height() - size.Height) / 2);
@@ -248,8 +255,8 @@ namespace nui
             if(textRect.Bottom > rect.Bottom)
                 textRect.Bottom = rect.Bottom;
 
-            if(GetAlpha(gdiText->GetBgColor()) > 0)
-                FillRectangle(textRect, gdiText->GetBgColor());
+            if(gdiTextAttr != NULL && GetAlpha(gdiTextAttr->GetBgColor()) > 0)
+                FillRectangle(textRect, gdiTextAttr->GetBgColor());
 
             CAlphaDC alphaDc;
             if(alphaDc.Init(memDC_, textRect, memDC_.GetSize(), true))
@@ -259,24 +266,23 @@ namespace nui
                 if(hFont == NULL)
                     hFont = ::GetCurrentObject(memDC_, OBJ_FONT);
                 Gdi::CGdiSelector fontSelector(alphaDc, hFont, false);
-                ::SetTextColor(alphaDc, gdiText->GetColor() & 0x00FFFFFF);
-                ::DrawText(alphaDc, text->GetText(), text->GetText().GetLength(), textRect, gdiText->GetDrawFlags());
 
-                alphaDc.EndDraw(GetAlpha(text->GetColor()));
+                if(gdiTextAttr != NULL)
+                    ::SetTextColor(alphaDc, gdiTextAttr->GetColor() & 0x00FFFFFF);
+
+                DWORD drawFlags = gdiTextAttr == NULL ? GDI_TEXTATTR_DEFAULT_DRAWFLAGS : gdiTextAttr->GetDrawFlags();
+                ::DrawText(alphaDc, text, text.GetLength(), textRect, drawFlags);
+
+                alphaDc.EndDraw(gdiTextAttr == NULL ? 255 : GetAlpha(gdiTextAttr->GetColor()));
             }
         }
 
-        void GdiRender::GetTextSize(NText *text, NFont* font, nui::Base::NSize &size)
+        void GdiRender::GetTextSize(Base::NString text, NTextAttr *textAttr, NFont* font, nui::Base::NSize &size)
         {
             NTempDC tmpDc;
             HDC hDc = memDC_;
             if(hDc == NULL)
                 hDc = tmpDc.Init();
-
-            GdiText* gdiText = dynamic_cast<GdiText*>(text);
-            NAssertError(gdiText != NULL, _T("Not GdiText in GdiRender::GetTextSize"));
-            if(gdiText == NULL)
-                return;
 
             HFONT hFont = NULL;
             GdiFont* gdiFont = NULL;
@@ -287,25 +293,35 @@ namespace nui
             }
             Gdi::CGdiSelector selector(hDc, hFont, false);
 
-            DWORD flags = gdiText->GetDrawFlags();
-            flags = (flags & (~DT_CENTER));
-            flags = (flags & (~DT_VCENTER));
-            flags = (flags & (~DT_BOTTOM));
-            flags = (flags & (~DT_RIGHT));
-            flags = (flags & (~DT_END_ELLIPSIS));
-            flags = (flags & (~DT_PATH_ELLIPSIS));
-            flags = (flags & (~DT_WORD_ELLIPSIS));
+            DWORD drawFlags = GDI_TEXTATTR_DEFAULT_DRAWFLAGS;
+
+            if(textAttr != NULL)
+            {
+                GdiTextAttr* gdiTextAttr = dynamic_cast<GdiTextAttr*>(textAttr);
+                NAssertError(gdiTextAttr != NULL, _T("Not GdiTextAttr in GdiRender::GetTextSize"));
+                if(gdiTextAttr == NULL)
+                    return;
+                drawFlags = gdiTextAttr->GetDrawFlags();
+            }
+
+            drawFlags = (drawFlags & (~DT_CENTER));
+            drawFlags = (drawFlags & (~DT_VCENTER));
+            drawFlags = (drawFlags & (~DT_BOTTOM));
+            drawFlags = (drawFlags & (~DT_RIGHT));
+            drawFlags = (drawFlags & (~DT_END_ELLIPSIS));
+            drawFlags = (drawFlags & (~DT_PATH_ELLIPSIS));
+            drawFlags = (drawFlags & (~DT_WORD_ELLIPSIS));
             Base::NRect rcTmp;
             if(size.Width == 0)
             {
-                flags = (flags & (~DT_EDITCONTROL));
+                drawFlags = (drawFlags & (~DT_EDITCONTROL));
                 rcTmp.SetRect(0, 0, 1000, 1000);
             }
             else
             {
                 rcTmp.SetRect(0, 0, size.Width, 1000);
             }
-            ::DrawText(hDc, text->GetText(), text->GetText().GetLength(), rcTmp, flags | DT_CALCRECT);
+            ::DrawText(hDc, text, text.GetLength(), rcTmp, drawFlags | DT_CALCRECT);
             size.Width = rcTmp.Width();
             size.Height = rcTmp.Height();
         }

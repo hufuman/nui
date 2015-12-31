@@ -9,10 +9,10 @@ namespace nui
 {
     namespace Ui
     {
-        class NUI_INTF NText : public Base::NBaseObj
+        class NUI_INTF NTextAttr : public Base::NBaseObj
         {
         public:
-            enum NTextAlign
+            enum TextAlign
             {
                 TextAlignLeft       = 0x00,
                 TextAlignTop        = 0x00,
@@ -26,15 +26,13 @@ namespace nui
             };
 
         public:
-            virtual NText* SetText(LPCTSTR text) = 0;
-            virtual const Base::NString& GetText() const = 0;
-            virtual NText* SetColor(ArgbColor color) = 0;
+            virtual NTextAttr* SetColor(ArgbColor color) = 0;
             virtual ArgbColor GetColor() const = 0;
-            virtual NText* SetBgColor(ArgbColor color) = 0;
+            virtual NTextAttr* SetBgColor(ArgbColor color) = 0;
             virtual ArgbColor GetBgColor() const = 0;
-            virtual NText* SetSingleLine(bool singleLine) = 0;
+            virtual NTextAttr* SetSingleLine(bool singleLine) = 0;
             virtual bool GetSingleLine() const = 0;
-            virtual NText* SetAlignFlags(UINT alignFlags) = 0;
+            virtual NTextAttr* SetAlignFlags(UINT alignFlags) = 0;
             virtual UINT GetAlignFlags() const = 0;
         };
     }

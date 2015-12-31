@@ -1,29 +1,29 @@
 #pragma once
 
 
-#include "../../NText.h"
+#include "../../NTextAttr.h"
 
 
 namespace nui
 {
     namespace Ui
     {
-        class GdiText : public NText
+#define GDI_TEXTATTR_DEFAULT_DRAWFLAGS (DT_SINGLELINE | DT_END_ELLIPSIS | DT_CENTER | DT_VCENTER)
+
+        class GdiTextAttr : public NTextAttr
         {
         public:
-            GdiText();
-            ~GdiText();
+            GdiTextAttr();
+            ~GdiTextAttr();
 
         public:
-            virtual NText* SetText(LPCTSTR text);
-            virtual const Base::NString& GetText() const;
-            virtual NText* SetColor(ArgbColor color);
+            virtual NTextAttr* SetColor(ArgbColor color);
             virtual ArgbColor GetColor() const;
-            virtual NText* SetBgColor(ArgbColor color);
+            virtual NTextAttr* SetBgColor(ArgbColor color);
             virtual ArgbColor GetBgColor() const;
-            virtual NText* SetSingleLine(bool singleLine);
+            virtual NTextAttr* SetSingleLine(bool singleLine);
             virtual bool GetSingleLine() const;
-            virtual NText* SetAlignFlags(UINT alignFlags);
+            virtual NTextAttr* SetAlignFlags(UINT alignFlags);
             virtual UINT GetAlignFlags() const;
 
         public:
@@ -34,7 +34,6 @@ namespace nui
         private:
             ArgbColor color_;
             ArgbColor bgColor_;
-            Base::NString text_;
             bool singleLine_;
             UINT alignFlags_;
         };

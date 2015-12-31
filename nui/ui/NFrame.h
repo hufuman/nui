@@ -41,7 +41,7 @@ namespace nui
             // data
             virtual void SetText(const Base::NString& text);
             virtual Base::NString GetText() const;
-            virtual NText* GetRichText();
+            virtual NTextAttr* GetTextAttr();
             virtual NCursor* GetCursor() const;
 
             virtual NFont* GetFont();
@@ -107,8 +107,10 @@ namespace nui
             Base::NAutoPtr<NDraw> bkgDraw_;
             Base::NAutoPtr<NDraw> foreDraw_;
 
-            Base::NAutoPtr<NText> text_;
+            Base::NAutoPtr<NTextAttr> textAttr_;
             Base::NAutoPtr<NFont> font_;
+
+            Base::NString text_;
 
         public:
             // Event

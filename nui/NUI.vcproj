@@ -690,11 +690,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\ui\implement\Gdi\GdiText.cpp"
+						RelativePath=".\ui\implement\Gdi\GdiTextAttr.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\ui\implement\Gdi\GdiText.h"
+						RelativePath=".\ui\implement\Gdi\GdiTextAttr.h"
 						>
 					</File>
 					<File
@@ -795,7 +795,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ui\NText.h"
+					RelativePath=".\ui\NTextAttr.h"
 					>
 				</File>
 			</Filter>

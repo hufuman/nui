@@ -29,14 +29,15 @@ namespace nui
                 UINT    flags_;
                 int     width_;
                 DWORD   data_;
-                Base::NAutoPtr<NText>   text_;
+                Base::NString text_;
+                Base::NAutoPtr<NTextAttr>   textAttr_;
 
                 NHeaderItem()
                 {
                     flags_ = HeaderFlagNone;
                     width_ = 0;
                     data_ = 0;
-                    text_ = NULL;
+                    textAttr_ = NULL;
                 }
 
                 NHeaderItem(const NHeaderItem& item)
@@ -45,6 +46,7 @@ namespace nui
                     width_ = item.width_;
                     data_ = item.data_;
                     text_ = item.text_;
+                    textAttr_ = item.textAttr_;
                 }
 
                 NHeaderItem& operator = (const NHeaderItem& item)
@@ -53,6 +55,7 @@ namespace nui
                     width_ = item.width_;
                     data_ = item.data_;
                     text_ = item.text_;
+                    textAttr_ = item.textAttr_;
                     return *this;
                 }
             };

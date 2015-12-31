@@ -36,7 +36,8 @@ namespace nui
             NHeaderItem item;
             item.data_ = 0;
             item.flags_ = flags;
-            item.text_ = NUiBus::Instance().GetResourceLoader()->CreateText(text, MemToolParam);
+            item.text_ = text;
+            item.textAttr_ = NUiBus::Instance().GetResourceLoader()->CreateText(MemToolParam);
             item.width_ = width;
             bool isAppend = index < 0 || index > listItems_.Count();
             if(isAppend)
@@ -155,11 +156,11 @@ namespace nui
                     rcArrow.Left = rcArrow.Right;
 
                 // text
-                if(item.text_ != NULL)
+                if(!item.text_.IsEmpty())
                 {
                     rcText.Left = rcItem.Left + 1;
                     rcText.Right = rcArrow.Left - 1;
-                    render->DrawText(item.text_, NULL, rcText);
+                    render->DrawText(item.text_, item.textAttr_, NULL, rcText);
                 }
 
                 rcItem.Left = rcItem.Right;

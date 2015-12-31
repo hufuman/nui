@@ -25,7 +25,6 @@ namespace nui
             // data
             virtual void SetText(const Base::NString& text);
             virtual Base::NString GetText() const;
-            virtual NText* GetRichText();
 
             // flags
             virtual bool SetVisible(bool visible);

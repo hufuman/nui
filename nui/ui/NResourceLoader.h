@@ -5,7 +5,7 @@
 #include "../base/BaseObj.h"
 #include "NImageDraw.h"
 #include "NShapeDraw.h"
-#include "NText.h"
+#include "NTextAttr.h"
 #include "NFont.h"
 
 namespace nui
@@ -17,7 +17,7 @@ namespace nui
         public:
             virtual NImageDraw* LoadImage(LPCTSTR filePath) = 0;
             virtual NShapeDraw* CreateShape(LPCSTR filePath, int line) = 0;
-            virtual NText* CreateText(LPCTSTR text, LPCSTR filePath, int line) = 0;
+            virtual NTextAttr* CreateText(LPCSTR filePath, int line) = 0;
             virtual NFont* CreateFont(int fontSize, LPCSTR filePath, int line) = 0;
             virtual NFont* CreateFont(LPCSTR filePath, int line) = 0;
         };

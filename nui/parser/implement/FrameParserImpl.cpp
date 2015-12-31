@@ -157,32 +157,32 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
         targetFrame->SetText(tmpString);
 
     if(styleNode->ReadValue(_T("textColor"), color))
-        targetFrame->GetRichText()->SetColor(color);
+        targetFrame->GetTextAttr()->SetColor(color);
 
     if(styleNode->ReadValue(_T("textBgColor"), color))
-        targetFrame->GetRichText()->SetBgColor(color);
+        targetFrame->GetTextAttr()->SetBgColor(color);
 
     if(styleNode->ReadValue(_T("textSingleLine"), bFlag))
-        targetFrame->GetRichText()->SetSingleLine(bFlag);
+        targetFrame->GetTextAttr()->SetSingleLine(bFlag);
 
     if(styleNode->ReadValue(_T("textAlign"), tmpString))
     {
         NString token;
-        UINT alignFlag = NText::TextAlignLeft | NText::TextAlignTop;
+        UINT alignFlag = NTextAttr::TextAlignLeft | NTextAttr::TextAlignTop;
         struct
         {
             LPCTSTR name;
-            NText::NTextAlign alignFlag;
+            NTextAttr::TextAlign alignFlag;
         } TextAlignData[] =
         {
-            {   _T("left"), NText::TextAlignLeft          },
-            {   _T("top"), NText::TextAlignTop            },
-            {   _T("right"), NText::TextAlignRight        },
-            {   _T("bottom"), NText::TextAlignBottom      },
+            {   _T("left"), NTextAttr::TextAlignLeft          },
+            {   _T("top"), NTextAttr::TextAlignTop            },
+            {   _T("right"), NTextAttr::TextAlignRight        },
+            {   _T("bottom"), NTextAttr::TextAlignBottom      },
 
-            {   _T("center"), NText::TextAlignCenter      },
-            {   _T("hcenter"), NText::TextAlignHCenter    },
-            {   _T("vcenter"), NText::TextAlignVCenter    },
+            {   _T("center"), NTextAttr::TextAlignCenter      },
+            {   _T("hcenter"), NTextAttr::TextAlignHCenter    },
+            {   _T("vcenter"), NTextAttr::TextAlignVCenter    },
         };
         for(int position=0; tmpString.Tokenize(position, _T(","), false, token);)
         {
@@ -195,7 +195,7 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
                 }
             }
         }
-        targetFrame->GetRichText()->SetAlignFlags(alignFlag);
+        targetFrame->GetTextAttr()->SetAlignFlags(alignFlag);
     }
 
     if(styleNode->ReadValue(_T("foreDraw"), tmpString))

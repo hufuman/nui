@@ -4,7 +4,7 @@
 #include "../../../Data/NFileSystem.h"
 #include "GdiImageDraw.h"
 #include "GdiShapeDraw.h"
-#include "GdiText.h"
+#include "GdiTextAttr.h"
 #include "GdiFont.h"
 #include "StreamImpl.h"
 #include "GdiObjMgr.h"
@@ -159,11 +159,9 @@ namespace nui
             return shape;
         }
 
-        NText* GdiResourceLoader::CreateText(LPCTSTR text, LPCSTR filePath, int line)
+        NTextAttr* GdiResourceLoader::CreateText(LPCSTR filePath, int line)
         {
-            NText* result = dynamic_cast<NText*>(NNewEx(GdiText, filePath, line));
-            if(text)
-                result->SetText(text);
+            NTextAttr* result = dynamic_cast<NTextAttr*>(NNewEx(GdiTextAttr, filePath, line));
             return result;
         }
 

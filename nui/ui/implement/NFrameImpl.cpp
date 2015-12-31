@@ -100,37 +100,29 @@ namespace nui
 
         void NFrame::SetText(const Base::NString& text)
         {
-            if(text.IsEmpty() && text_  == NULL)
-                return;
-
             nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
             nui::Base::NString readText = stringBundle->GetString(text);
-            if(text_ == NULL)
-            {
-                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(readText, MemToolParam);
-            }
-            else
-            {
-                if(text_->GetText() == readText)
-                    return;
-                text_->SetText(readText);
-            }
+
+            if(text_ == readText)
+                return;
+
+            text_ = readText;
             AutoSize();
             Invalidate();
         }
 
         Base::NString NFrame::GetText() const
         {
-            return text_ == NULL ? Base::NString::EmptyString : text_->GetText();
+            return text_;
         }
 
-        NText* NFrame::GetRichText()
+        NTextAttr* NFrame::GetTextAttr()
         {
-            if(text_ == NULL)
+            if(textAttr_ == NULL)
             {
-                text_ = NUiBus::Instance().GetResourceLoader()->CreateText(_T(""), MemToolParam);
+                textAttr_ = NUiBus::Instance().GetResourceLoader()->CreateText(MemToolParam);
             }
-            return text_;
+            return textAttr_;
         }
 
         NCursor* NFrame::GetCursor() const
@@ -163,7 +155,7 @@ namespace nui
 
         Base::NSize NFrame::GetAutoSize() const
         {
-            if(text_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL)
+            if(textAttr_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL)
             {
                 Base::NSize autoSize;
                 return autoSize;
@@ -172,9 +164,9 @@ namespace nui
 #undef max
 
             Base::NSize autoSize;
-            if(text_ != NULL && window_ != NULL)
+            if(textAttr_ != NULL && window_ != NULL)
             {
-                window_->GetRender()->GetTextSize(text_, font_, autoSize);
+                window_->GetRender()->GetTextSize(text_, textAttr_, font_, autoSize);
             }
 
             if(foreDraw_ != NULL)
@@ -279,8 +271,8 @@ namespace nui
 
         void NFrame::DrawContent(NRender* render, const Base::NRect& rect) const
         {
-            if(text_ != NULL)
-                render->DrawText(text_, font_, rect);
+            if(!text_.IsEmpty())
+                render->DrawText(text_, textAttr_, font_, rect);
         }
 
     }
