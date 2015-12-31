@@ -51,13 +51,13 @@ void CControlTest::Test()
 
     NInstPtr<NButton> btnAdd(MemToolParam);
     btnAdd->Create(window_->GetRootFrame(), _T("btnAdd"), NFrame::LayoutLeft | NFrame::LayoutBottom, _T("Click To Add "));
-    btnAdd->GetRichText()->SetColor(MakeArgb(255, 255, 255, 0));
+    btnAdd->GetTextAttr()->SetColor(MakeArgb(255, 255, 255, 0));
     btnAdd->ClickEvent.AddHandler(MakeDelegate(this, &CControlTest::OnButtonClicked));
 
     NInstPtr<NButton> btnRemove(MemToolParam);
     btnRemove->Create(window_->GetRootFrame(), _T("btnRemove"), NFrame::LayoutLeft | NFrame::LayoutBottom, _T("Click To Remove"));
     btnRemove->ClickEvent.AddHandler(MakeDelegate(this, &CControlTest::OnButtonClicked));
-    btnRemove->GetRichText()->SetColor(MakeArgb(255, 255, 255, 0));
+    btnRemove->GetTextAttr()->SetColor(MakeArgb(255, 255, 255, 0));
     btnRemove->SetMargin(90, 0, 0,0);
     //*/
 
@@ -79,7 +79,7 @@ void CControlTest::Test()
     for(int i=0; i<4; ++ i)
     {
         NInstPtr<NButton> pChild(MemToolParam);
-        pChild->GetRichText()->SetColor(MakeArgb(255, 255, 255, 0));
+        pChild->GetTextAttr()->SetColor(MakeArgb(255, 255, 255, 0));
         pChild->SetId(_T("child"));
         pChild->SetAutoSize(false);
         pChild->SetSize(100, 20);
@@ -220,7 +220,7 @@ bool CControlTest::OnButtonClicked(NBaseObj* pButton, NEventData* eventData)
             pChild->SetSize(pChild->GetRect().Width() + 20, pChild->GetRect().Height());
 
         NInstPtr<NButton> pChild(MemToolParam);
-        pChild->GetRichText()->SetColor(MakeArgb(255, 255, 255, 0));
+        pChild->GetTextAttr()->SetColor(MakeArgb(255, 255, 255, 0));
         pChild->SetId(_T("child"));
         pChild->SetAutoSize(false);
         pChild->SetSize(100, 20);

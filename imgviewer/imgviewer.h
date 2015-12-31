@@ -35,7 +35,8 @@ private:
     int frameIndex_;
     int frameCount_;
     NAutoPtr<NTimerSrv> timerSrv_;
-    Base::NAutoPtr<NText> text_;
+    NString text_;
+    Base::NAutoPtr<NTextAttr> textAttr_;
     Base::NAutoPtr<NFont> font_;
     Base::NAutoPtr<NImageDraw> image_;
 

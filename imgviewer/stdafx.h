@@ -28,7 +28,6 @@
 
 
 #define _NOT_USE_NUI_NAMESPACE 1
-#define NUI_STATIC 1
 #define _NO_NUI_PARSER_ 1
 #include "../NUI/NUI.h"
 // TODO: reference additional headers your program requires here

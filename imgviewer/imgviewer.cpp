@@ -38,11 +38,12 @@ void ImgViewer::Show(LPCTSTR filePath)
     nui::Base::NReflect::GetInstance().Create(timerSrv_, MemToolParam);
 
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-    text_ = loader->CreateText(_T("Double click me Or drag image on me"), MemToolParam);
+    text_ = _T("Double click me Or drag image on me");
+    textAttr_ = loader->CreateText(MemToolParam);
     font_ = loader->CreateFont(24, MemToolParam);
     font_->SetBold(true);
 
-    text_->SetAlignFlags(NText::TextAlignHCenter | NText::TextAlignVCenter)
+    textAttr_->SetAlignFlags(NTextAttr::TextAlignHCenter | NTextAttr::TextAlignVCenter)
         ->SetSingleLine(true)
         ->SetColor(MakeArgb(255, 255, 255, 0));
 
@@ -167,13 +168,13 @@ bool ImgViewer::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
     if(image_ == NULL)
     {
         NSize size;
-        data->render->GetTextSize(text_, font_, size);
+        data->render->GetTextSize(text_, textAttr_, font_, size);
         NRect txtRect;
         const int margin = 4;
         txtRect.SetPos((rcWnd.Width() - size.Width) / 2 - margin, (rcWnd.Height() - size.Height) / 2 - margin);
         txtRect.SetSize(size.Width + 2 * margin, size.Height + 2 * margin);
         data->render->FillRoundRectangle(txtRect, margin, MakeArgb(180, 58, 58, 58));
-        data->render->DrawText(text_, font_, rcWnd);
+        data->render->DrawText(text_, textAttr_, font_, rcWnd);
     }
     else
     {
