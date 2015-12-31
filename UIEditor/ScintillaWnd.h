@@ -10,7 +10,13 @@ public:
 public:
     bool Create(HWND hWndParent, const RECT& rcWnd, DWORD dwStyle = WS_VISIBLE | WS_CHILD);
     bool OnNotify(WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+    HWND GetHandle() const;
+
     void SetKeywords(const char* keywords);
+
+    bool Open(const NString& filePath);
+    bool Save(const NString& filePath);
+    void Clear();
 
 private:
     bool LoadModule();

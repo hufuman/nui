@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <Bundle>
     <string id="btnBrowse" value="Browse..." />
+    <string id="btnPreview" value="Save & Preview" />
 </Bundle>

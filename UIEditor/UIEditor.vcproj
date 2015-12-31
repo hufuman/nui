@@ -224,14 +224,46 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\Editor.cpp"
+		<Filter
+			Name="Utils"
 			>
-		</File>
-		<File
-			RelativePath=".\Editor.h"
+			<File
+				RelativePath=".\EditorUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EditorUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utf8File.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Utf8File.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Ui"
 			>
-		</File>
+			<File
+				RelativePath=".\Editor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Editor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PromptUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PromptUI.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

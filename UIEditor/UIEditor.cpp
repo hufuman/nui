@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include "Editor.h"
+#include "Utf8File.h"
 
 
 nui::Base::NString GetResourcePath();

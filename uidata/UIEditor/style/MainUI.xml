@@ -5,8 +5,11 @@
 		layout="hfill,vfill" autoSize="false" size="800,600"
 		foreDraw="shape:@MainUI:MainForeDraw">
 		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
-		<Button id="btnBrowse" text="@Main:btnBrowse" />
-		<Frame id="scintilla" layout="vfill,hfill" margin="2,100,2,2"/>
+		<Layout layoutType="horz" pos="10,10">
+			<Button id="btnBrowse" text="@Main:btnBrowse" margin="0,0,10,0" textColor="#FFFFFF" />
+			<Button id="btnPreview" text="@Main:btnPreview" textColor="#FFFFFF" enabled="false" />
+		</Layout>
+		<Frame id="scintilla" layout="vfill,hfill" margin="4,100,4,4" visible="false" />
 	</Frame>
 
 	<Draw name="MainForeDraw" drawType="shape" fillColor="#20FF0000" style="rect" />

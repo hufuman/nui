@@ -1,11 +1,17 @@
 #include "StdAfx.h"
 #include "ScintillaWnd.h"
 
+#include <Richedit.h>
+
 #include "../thirdparty/Scintilla/Scintilla.h"
 #include "../thirdparty/Scintilla/SciLexer.h"
 
 #define SCINTILLA_MODULE_NAME _T("SciLexer.dll")
 #define SCINTILLA_WINDOW_NAME _T("Scintilla")
+
+
+#include "Utf8File.h"
+
 
 namespace
 {
@@ -71,9 +77,70 @@ bool CScintillaWnd::OnNotify(WPARAM, LPARAM lParam, LRESULT& lResult)
     return handled;
 }
 
+HWND CScintillaWnd::GetHandle() const
+{
+    return m_hWnd;
+}
+
 void CScintillaWnd::SetKeywords(const char* keywords)
 {
     SendEditorMsg(SCI_SETKEYWORDS, 0, reinterpret_cast<LPARAM>(keywords));
+}
+
+bool CScintillaWnd::Open(const NString& filePath)
+{
+    CUtf8File file;
+    if(!file.LoadFile(filePath.GetData()))
+        return false;
+
+    Clear();
+
+    const char* buffer = file.GetBuffer();
+    int length = file.GetLength();
+
+    SendEditorMsg(SCI_ADDTEXT, length, reinterpret_cast<LPARAM>(buffer));
+
+    return true;
+}
+
+bool CScintillaWnd::Save(const NString& filePath)
+{
+    HANDLE file = ::CreateFile(filePath.GetData(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
+    if(file == INVALID_HANDLE_VALUE)
+        return false;
+
+    DWORD dwWritten;
+    BYTE utf8Bom[] = {0xEF, 0xBB, 0xBF};
+    ::WriteFile(file, utf8Bom, 3, &dwWritten, NULL);
+
+    const int bufferLength = 4096;
+    char buffer[bufferLength];
+    TEXTRANGEA tr = {0};
+    int totalLength = SendEditorMsg(SCI_GETLENGTH);
+    for (int i = 0; i < totalLength; i += bufferLength) {
+        int length = totalLength - i;
+        if (length > bufferLength)
+            length = bufferLength;
+
+        tr.chrg.cpMin = i;
+        tr.chrg.cpMax = i + length;
+        tr.lpstrText = buffer;
+        SendEditorMsg(EM_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
+
+        ::WriteFile(file, buffer, length, &dwWritten, NULL);
+    }
+    ::CloseHandle(file);
+    return true;
+}
+
+void CScintillaWnd::Clear()
+{
+    SendEditorMsg(SCI_CLEARALL);
+    SendEditorMsg(SCI_SETUNDOCOLLECTION, 1);
+    SendEditorMsg(EM_EMPTYUNDOBUFFER);
+    SendEditorMsg(SCI_SETSAVEPOINT);
+    SendEditorMsg(SCI_GOTOPOS, 0);
+    ::SetFocus(m_hWnd);
 }
 
 bool CScintillaWnd::LoadModule()
