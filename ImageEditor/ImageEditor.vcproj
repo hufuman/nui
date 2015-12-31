@@ -490,10 +490,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\nui\ui\NRenderStatus.h"
-						>
-					</File>
-					<File
 						RelativePath="..\nui\ui\NResourceLoader.h"
 						>
 					</File>
@@ -549,6 +545,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\implement\NLabelImpl.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\implement\NLayoutImpl.cpp"
 							>
 						</File>
@@ -561,7 +561,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\nui\ui\implement\NRenderStatus.cpp"
+							RelativePath="..\nui\ui\implement\NNativeImpl.cpp"
 							>
 						</File>
 						<File
@@ -590,10 +590,6 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\implement\NWindowImpl.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\implement\NWndUiImpl.cpp"
 							>
 						</File>
 						<File
@@ -821,6 +817,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\NLabel.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\NLayout.h"
 							>
 						</File>
@@ -833,6 +833,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\nui\ui\NNative.h"
+							>
+						</File>
+						<File
 							RelativePath="..\nui\ui\NScroll.h"
 							>
 						</File>
@@ -842,10 +846,6 @@
 						</File>
 						<File
 							RelativePath="..\nui\ui\NWindowBase.h"
-							>
-						</File>
-						<File
-							RelativePath="..\nui\ui\NWndUi.h"
 							>
 						</File>
 					</Filter>

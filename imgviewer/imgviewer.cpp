@@ -127,8 +127,8 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
     }
     else if(message == WM_LBUTTONDBLCLK)
     {
-        Base::NString filePath = Shell::BrowseForFile(window->GetNative(), TRUE, GetFileDlgExts());
-        if(filePath.IsEmpty())
+        Base::NString filePath;
+        if(!Shell::BrowseForFile(filePath, window->GetNative(), TRUE, GetFileDlgExts()) || filePath.IsEmpty())
             return false;
 
         OpenImage(filePath);

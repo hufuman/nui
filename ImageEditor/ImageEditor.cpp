@@ -153,8 +153,8 @@ bool CImageEditor::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam,
             {
                 if(uId == IDC_BTN_BROWSE)
                 {
-                    NString strPath = Shell::BrowseForFile(window->GetNative(), TRUE, _T("All Files|*.gif;*.bmp;*.ico;*.png;*.jpg;*.jpeg||"));
-                    if(!strPath.IsEmpty())
+                    NString strPath;
+                    if(Shell::BrowseForFile(strPath, window->GetNative(), TRUE, _T("All Files|*.gif;*.bmp;*.ico;*.png;*.jpg;*.jpeg||")) && !strPath.IsEmpty())
                     {
                         filePath_ = strPath;
                         ::SetDlgItemText(window->GetNative(), IDC_EDIT_PATH, strPath);
