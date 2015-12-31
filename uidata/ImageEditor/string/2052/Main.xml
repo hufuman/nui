@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<Bundle>
+    <string id="title" value="Image Editor" />
+    <string id="btnBrowse" value="Browse..." />
+    <string id="labelPath" value="Image Path: " />
+    <string id="editPath" value="Image Path" />
+    <string id="labelIndex" value="Image Index: " />
+    <string id="btnPrevHorzIndex" value="<" />
+    <string id="btnNextHorzIndex" value=">" />
+    <string id="btnPrevVertIndex" value="<" />
+    <string id="btnNextVertIndex" value=">" />
+    <string id="labelParams" value="Stretch Params: " />
+    <string id="labelCounts" value="Image Count: " />
+    <string id="btnSave" value="Save" />
+</Bundle>

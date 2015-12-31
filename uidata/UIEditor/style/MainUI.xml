@@ -9,7 +9,7 @@
 			<Button id="btnBrowse" text="@Main:btnBrowse" margin="0,0,10,0" textColor="#FFFFFF" />
 			<Button id="btnPreview" text="@Main:btnPreview" textColor="#FFFFFF" enabled="false" />
 		</Layout>
-		<Frame id="scintilla" layout="vfill,hfill" margin="4,100,4,4" visible="false" />
+		<Frame id="scintilla" layout="vfill,hfill" margin="4,100,4,4"/>
 	</Frame>
 
 	<Draw name="MainForeDraw" drawType="shape" fillColor="#20FF0000" style="rect" />

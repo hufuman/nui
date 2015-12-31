@@ -15,7 +15,7 @@ private:
     bool initEditor();
     void listenEvents();
     bool openFile(const NString& filePath);
-    void previewUi(const NString& styleName);
+    bool previewUi(const NString& styleName, NString& error);
 
     bool onWindowMsg(NWindowBase*, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 

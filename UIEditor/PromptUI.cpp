@@ -5,20 +5,22 @@ CPromptUI::CPromptUI(void)
 {
     window_ = NULL;
     rootFrame_ = NULL;
+    needPreview_ = false;
 }
 
 CPromptUI::~CPromptUI(void)
 {
 }
 
-NString CPromptUI::DoModal(HWND hWnd)
+bool CPromptUI::DoModal(HWND hWnd, NString& styleName)
 {
     NInstPtr<NWindow> window(MemToolParam);
 
     window_ = window;
     window->WindowCreatedEvent.AddHandler(this, &CPromptUI::onWindowCreated);
     window->DoModalWithStyle(hWnd, _T("@PromptUI:MainUI"));
-    return styleName_;
+    styleName = styleName_;
+    return needPreview_;
 }
 
 bool CPromptUI::onWindowCreated(NBaseObj*, NEventData*)
@@ -34,5 +36,6 @@ bool CPromptUI::onBtnPreview(NBaseObj*, NEventData*)
     NEdit* editStyle = rootFrame_->GetChildById<NEdit*>(_T("editStyle"));
     styleName_ = editStyle->GetText();
     window_->Destroy();
+    needPreview_ = true;
     return true;
 }

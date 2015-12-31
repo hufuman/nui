@@ -6,7 +6,7 @@ public:
     CPromptUI(void);
     ~CPromptUI(void);
 
-    NString DoModal(HWND hWnd);
+    bool DoModal(HWND hWnd, NString& styleName);
 
 protected:
     // events
@@ -17,4 +17,5 @@ private:
     NWindow* window_;
     NFrame* rootFrame_;
     NString styleName_;
+    bool needPreview_;
 };

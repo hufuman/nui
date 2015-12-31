@@ -70,7 +70,7 @@ bool CEditor::openFile(const NString& filePath)
     return true;
 }
 
-void CEditor::previewUi(const NString& styleName)
+bool CEditor::previewUi(const NString& styleName, NString& error)
 {
     NString resourcePath = File::GetParentFolder(styleFilePath_);
     while(!resourcePath.IsEmpty())
@@ -79,9 +79,11 @@ void CEditor::previewUi(const NString& styleName)
             break;
         resourcePath = File::GetParentFolder(resourcePath);
     }
+
     if(resourcePath.IsEmpty())
     {
-        return;
+        error.Format(_T("can't find a valid package.xml in parent folders of %s"), styleFilePath_.GetData());
+        return false;
     }
 
     NString commandLine;
@@ -89,8 +91,10 @@ void CEditor::previewUi(const NString& styleName)
     commandLine.Replace(_T("\\\""), _T("\""));
     if(!EditorUtil::Execute(commandLine.GetData()))
     {
-        return;
+        error.Format(_T("failed to execute: %s"), commandLine.GetData());
+        return false;
     }
+    return true;
 }
 
 bool CEditor::onWindowCreated(NBaseObj*, NEventData*)
@@ -120,11 +124,37 @@ bool CEditor::onBtnSaveAndPreviewClicked(NBaseObj*, NEventData*)
         return false;
 
     CPromptUI promptUi;
-    NString styleName = promptUi.DoModal(window_->GetNative());
-    if(styleName.IsEmpty())
+    NString styleName;
+    if(!promptUi.DoModal(window_->GetNative(), styleName))
         return false;
 
-    previewUi(styleName);
+    if(styleName.IsEmpty())
+    {
+        int pos = styleFilePath_.LastIndexOf(_T('.'));
+        if(pos > 0)
+        {
+            styleName = styleFilePath_.SubString(0, pos);
+            pos = styleName.LastIndexOf(_T('\\'));
+            styleName = styleName.SubString(pos);
+            styleName[0] = _T('@');
+        }
+    }
+
+    NString error;
+    if(styleName.IsEmpty())
+    {
+        error.Format(_T("failed to find a stylePath:\r\nFile Path: %s\r\n"), styleFilePath_.GetData());
+    }
+    else
+    {
+        previewUi(styleName, error);
+    }
+
+    if(!error.IsEmpty())
+    {
+        ::MessageBox(window_->GetNative(), error.GetData(), _T("Editor"), MB_OK | MB_ICONERROR);
+    }
+
     return true;
 }
 
