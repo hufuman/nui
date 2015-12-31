@@ -20,6 +20,7 @@ namespace nui
         {
         }
 
+#ifndef _NO_NUI_PARSER_
         bool NWindow::DoModalWithStyle(HWND parentWindow, LPCTSTR styleName)
         {
             if(styleName && styleName[0] != 0)
@@ -28,6 +29,7 @@ namespace nui
                 styleName_ = _T("");
             return __super::DoModal(parentWindow);
         }
+#endif  // _NO_NUI_PARSER_
 
         NFrame* NWindow::GetRootFrame()
         {
@@ -255,8 +257,10 @@ namespace nui
         {
             __super::OnCreate();
 
+#ifndef _NO_NUI_PARSER_
             if(!styleName_.IsEmpty())
                 GetRootFrame()->ApplyStyle(styleName_);
+#endif  // _NO_NUI_PARSER_
             WindowCreatedEvent.Invoke(this, NULL);
         }
 

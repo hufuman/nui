@@ -22,7 +22,9 @@ namespace nui
             NWindow();
             ~NWindow();
 
+#ifndef _NO_NUI_PARSER_
             bool DoModalWithStyle(HWND parentWindow, LPCTSTR styleName);
+#endif  // _NO_NUI_PARSER_
 
             NFrame* GetRootFrame();
             NRender* GetRender() const;
