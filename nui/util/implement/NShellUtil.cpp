@@ -56,15 +56,19 @@ namespace nui
     {
         namespace Shell
         {
-            NUI_API Base::NString BrowseForFile(HWND hWnd, BOOL openFile, LPCTSTR filter, LPCTSTR initDir, LPCTSTR title, DWORD flags)
+            NUI_API bool BrowseForFile(Base::NString& result, HWND hWnd, BOOL openFile, LPCTSTR filter, LPCTSTR initDir, LPCTSTR title, DWORD flags)
             {
                 TCHAR buffer[4096] = {0};
-                Base::NString result;
-                if(BrowserForFile(buffer, hWnd, 4096, openFile, filter, initDir, title, flags))
+                if(!result.IsEmpty())
                 {
-                    result = buffer;
+                    _tcsncpy(buffer, result.GetData(), _countof(buffer));
                 }
-                return result;
+                if(!BrowserForFile(buffer, hWnd, _countof(buffer), openFile, filter, initDir, title, flags))
+                {
+                    return false;
+                }
+                result = buffer;
+                return true;
             }
 
             NUI_API Data::NArrayT<Base::NString> BrowseForMultiFiles(HWND hWnd, BOOL openFile, LPCTSTR filter, LPCTSTR initDir, LPCTSTR szTitle, DWORD dwFlags)

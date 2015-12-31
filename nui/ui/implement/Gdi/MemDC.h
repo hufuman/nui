@@ -11,7 +11,6 @@ class MemDC
 public:
     MemDC()
     {
-        dc_ = NULL;
         memDC_ = NULL;
         oldBitmap_ = NULL;
         bitmap_ = NULL;
@@ -30,12 +29,11 @@ public:
     {
         Destroy();
 
-        dc_ = hDc;
         alphaValue_ = alphaValue;
         viewPos_.SetPoint(rcPaint.Left, rcPaint.Top);
         viewSize_.SetSize(rcPaint.Width(), rcPaint.Height());
-        memDC_ = ::CreateCompatibleDC(dc_);
-        bitmap_ = ::CreateCompatibleBitmap(dc_, viewSize_.Width, viewSize_.Height);
+        memDC_ = ::CreateCompatibleDC(hDc);
+        bitmap_ = ::CreateCompatibleBitmap(hDc, viewSize_.Width, viewSize_.Height);
         oldBitmap_ = ::SelectObject(memDC_, bitmap_);
         NAssertError(oldBitmap_ != NULL, _T("Error Encountered"));
         ::SetStretchBltMode(memDC_, COLORONCOLOR);
@@ -60,7 +58,6 @@ public:
             oldBitmap_ = NULL;
             memDC_ = NULL;
             bitmap_ = NULL;
-            dc_  = NULL;
         }
     }
 
@@ -75,7 +72,6 @@ public:
     }
 
 private:
-    HDC dc_;
     HDC memDC_;
     HGDIOBJ oldBitmap_;
     HBITMAP bitmap_;

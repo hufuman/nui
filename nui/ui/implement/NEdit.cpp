@@ -24,7 +24,7 @@ namespace nui
 
             nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
             Base::NString hintText = stringBundle->GetString(szHintText);
-            ::SendMessage(realWindow_, EM_SETCUEBANNER, (WPARAM)hintText.GetData(), TRUE);
+            ::SendMessage(realWindow_, EM_SETCUEBANNER, TRUE, (LPARAM)hintText.GetData());
         }
 
         void NEdit::SetReadOnly(bool readOnly)

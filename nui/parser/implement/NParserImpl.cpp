@@ -23,6 +23,15 @@ NAutoPtr<NBaseObj> NParserImpl::Parse(Base::NBaseObj* parentObj, LPCTSTR packFil
     return ParserUtil::LoadObj(parentObj, styleNode);
 }
 
+bool NParserImpl::ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR styleName)
+{
+    nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode = FindStyleNode(styleName);
+    if(!styleNode)
+        return false;
+
+    return ParserUtil::ApplyStyle(targetObj, styleNode);
+}
+
 nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR packFilePath)
 {
     NString styleName;

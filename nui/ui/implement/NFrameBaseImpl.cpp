@@ -257,12 +257,13 @@ namespace nui
             return Util::Misc::IsFlagChecked(frameFlags_, NFrameBase::FlagVisible);
         }
 
-        void NFrameBase::SetEnabled(bool enabled)
+        bool NFrameBase::SetEnabled(bool enabled)
         {
             if(enabled == IsEnabled())
-                return;
+                return false;
             Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagEnabled, enabled);
             Invalidate();
+            return true;
         }
 
         bool NFrameBase::IsEnabled() const
@@ -516,7 +517,7 @@ namespace nui
                 return;
             Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagLayoutable, layoutable);
             if(layoutable)
-                ReLayout();
+                AutoSize();
         }
 
         bool NFrameBase::IsLayoutable() const
@@ -569,7 +570,7 @@ namespace nui
                 OnWindowChanged(parentFrame_->window_);
             else
                 OnWindowChanged(NULL);
-            ReLayout();
+            AutoSize();
         }
 
         void NFrameBase::OnWindowChanged(NWindow* window)
@@ -627,10 +628,16 @@ namespace nui
             return !!(FlagCanHover & frameFlags_);
         }
 
-        void NFrameBase::OnSize(int width, int height)
+        void NFrameBase::OnSizeChanged(int width, int height)
         {
             UNREFERENCED_PARAMETER(width);
             UNREFERENCED_PARAMETER(height);
+        }
+
+        void NFrameBase::OnPosChanged(int left, int top)
+        {
+            UNREFERENCED_PARAMETER(left);
+            UNREFERENCED_PARAMETER(top);
         }
 
         void NFrameBase::SetParentHelper(NFrameBase* child, NFrameBase* newParent)
@@ -687,7 +694,7 @@ namespace nui
 
         void NFrameBase::GetDrawIndex(int& horzIndex, int& vertIndex) const
         {
-            if(frameStatus_ & StatusDisabled)
+            if(!Util::Misc::IsFlagChecked(frameFlags_, NFrameBase::FlagEnabled))
                 horzIndex = 3;
             else if(frameStatus_ & StatusPressed)
                 horzIndex = 2;
@@ -736,6 +743,7 @@ namespace nui
                 return false;
             Invalidate();
             frameRect_.SetPos(left, top);
+            OnPosChanged(left, top);
             Invalidate();
             return true;
         }
@@ -754,7 +762,7 @@ namespace nui
             frameRect_.SetSize(frameWidth, frameHeight);
             Invalidate();
 
-            OnSize(frameWidth, frameHeight);
+            OnSizeChanged(frameWidth, frameHeight);
             SizeEventData eventData;
             eventData.width = width;
             eventData.height = height;

@@ -9,6 +9,7 @@ class NParserImpl : public nui::Parser::NParser
 {
 public:
     virtual nui::Base::NAutoPtr<nui::Base::NBaseObj> Parse(nui::Base::NBaseObj* parentObj, LPCTSTR packFilePath);
+    virtual bool ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR styleName);
     virtual nui::Base::NAutoPtr<nui::Data::NDataReader> FindStyleNode(LPCTSTR packFilePath);
 
 private:

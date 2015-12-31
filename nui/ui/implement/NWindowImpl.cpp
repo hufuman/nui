@@ -20,6 +20,15 @@ namespace nui
         {
         }
 
+        bool NWindow::DoModalWithStyle(HWND parentWindow, LPCTSTR styleName)
+        {
+            if(styleName && styleName[0] != 0)
+                styleName_ = styleName;
+            else
+                styleName_ = _T("");
+            return __super::DoModal(parentWindow);
+        }
+
         NFrame* NWindow::GetRootFrame()
         {
             if(rootFrame_ == NULL)
@@ -236,7 +245,7 @@ namespace nui
         {
             if(wParam == NULL || !::IsWindow(reinterpret_cast<HWND>(lParam)))
                 return false;
-            NWndUi* wndUi = NWndUi::GetWndUi(reinterpret_cast<HWND>(lParam));
+            NNative* wndUi = NNative::GetWndUi(reinterpret_cast<HWND>(lParam));
             if(wndUi == NULL)
                 return false;
             return wndUi->OnParentCommand(HIWORD(wParam));
@@ -246,6 +255,8 @@ namespace nui
         {
             __super::OnCreate();
 
+            if(!styleName_.IsEmpty())
+                GetRootFrame()->ApplyStyle(styleName_);
             WindowCreatedEvent.Invoke(this, NULL);
         }
 

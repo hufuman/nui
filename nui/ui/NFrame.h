@@ -34,6 +34,10 @@ namespace nui
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NPoint& pos, LPCTSTR frameText);
             virtual void Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText);
 
+#ifndef _NO_NUI_PARSER_
+            virtual bool ApplyStyle(const Base::NString& style);
+#endif  // _NO_NUI_PARSER_
+
             // data
             virtual void SetText(const Base::NString& text);
             virtual Base::NString GetText() const;
@@ -67,9 +71,20 @@ namespace nui
 
             // Childs
             template < typename T >
+            T GetChildById(const Base::NString& id)
+            {
+                return dynamic_cast<T>(GetChildById(id, true));
+            }
+
+            template < typename T >
             T GetChildById(const Base::NString& id, bool recursive)
             {
                 return dynamic_cast<T>(GetChildById(id, recursive));
+            }
+
+            NFrame* GetChildById(const Base::NString& id)
+            {
+                return GetChildById(id, true);
             }
 
             virtual NFrame* GetChildById(const Base::NString& id, bool recursive);

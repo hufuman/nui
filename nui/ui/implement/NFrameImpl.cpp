@@ -6,6 +6,7 @@
 #include "../../base/NInstPtr.h"
 
 #ifndef _NO_NUI_PARSER_
+#include "../../parser/NParser.h"
 #include "../../parser/implement/ParserUtil.h"
 #endif // _NO_NUI_PARSER_
 
@@ -54,11 +55,10 @@ namespace nui
 
         void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText)
         {
-            frameId = frameId == NULL ? _T("") : frameId;
-            frameText = frameText == NULL ? _T("") : frameText;
-
-            SetId(frameId);
-            SetText(frameText);
+            if(frameId && frameId[0])
+                SetId(frameId);
+            if(frameText && frameText[0])
+                SetText(frameText);
             SetPos(rect.Left, rect.Top);
             SetSize(rect.Width(), rect.Height());
             if(parentFrame != NULL)
@@ -66,6 +66,14 @@ namespace nui
             AutoSize();
             OnCreate();
         }
+
+#ifndef _NO_NUI_PARSER_
+        bool NFrame::ApplyStyle(const Base::NString& style)
+        {
+            Base::NInstPtr<Parser::NParser> parser(MemToolParam);
+            return parser->ApplyStyle(this, style);
+        }
+#endif // _NO_NUI_PARSER_
 
         void NFrame::OnCreate()
         {
@@ -81,9 +89,13 @@ namespace nui
 
         void NFrame::OnClicked(const nui::Base::NPoint& point)
         {
+            // sometimes, you need to destroy window in button's click event
+            //  add ref to avoid crash because of freed this pointer
+            AddRef();
             ClickEventData eventData(point);
             ClickEvent.Invoke(this, &eventData);
             OnMouseUp();
+            Release();
         }
 
         void NFrame::SetText(const Base::NString& text)

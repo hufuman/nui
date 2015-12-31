@@ -23,10 +23,6 @@ namespace nui
 
             innerFrame_->Create(this, _NUI_INNER_FRAME_ID_, 0, _T(""));
             innerFrame_->SetAutoSize(false);
-            NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-            Base::NAutoPtr<Ui::NShapeDraw> pBkgDraw = loader->CreateShape(MemToolParam);
-            pBkgDraw->SetStyle(Ui::NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 0, 255, 0));
-            innerFrame_->SetBkgDraw(pBkgDraw);
 
             GetHorzScroll();
             GetVertScroll();
@@ -108,7 +104,7 @@ namespace nui
             return size;
         }
 
-        void NLayout::OnSize(int width, int height)
+        void NLayout::OnSizeChanged(int width, int height)
         {
             UNREFERENCED_PARAMETER(width);
             UNREFERENCED_PARAMETER(height);
@@ -120,12 +116,18 @@ namespace nui
             bool oldValue = IsLayoutable();
             __super::SetLayoutable(layoutable);
             if(!oldValue && layoutable)
+            {
                 RelayoutChilds();
+                AutoSize();
+            }
         }
 
         void NLayout::RelayoutChilds()
         {
             if(!IsLayoutable())
+                return;
+
+            if(innerFrame_ == NULL)
                 return;
 
             NLayoutArrangerParam param;

@@ -9,7 +9,7 @@ namespace nui
     {
         BEGIN_USE_UNEXPORT_TEMPLATE()
 
-        class NUI_CLASS NEdit : public NWndUi
+        class NUI_CLASS NEdit : public NNative
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("edit"))
         public:

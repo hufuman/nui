@@ -98,6 +98,8 @@ namespace nui
             DWORD   lastDrawTick_;
             DWORD   drawTimerId_;
 
+            HWND    modalParent_;
+
             nui::Base::NAutoPtr<WindowPrivateData> privateData_;
         };
         END_USE_UNEXPORT_TEMPLATE()

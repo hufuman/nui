@@ -21,6 +21,7 @@ namespace nui
             invalidateRgn_ = NULL;
             lastDrawTick_ = 0;
             drawTimerId_ = 0;
+            modalParent_ = NULL;
             privateData_ = NULL;
         }
 
@@ -89,24 +90,22 @@ namespace nui
         bool NWindowBase::DoModal(HWND parentWindow)
         {
             NAssertError(window_ == NULL, _T("window_ isn't Null in DoModal"));
-            if(parentWindow != NULL)
-            {
-                ::EnableWindow(parentWindow, FALSE);
-            }
+            modalParent_ = parentWindow;
 
             if(privateData_)
                 privateData_->AddRef();
 
-            bool result = Create(parentWindow);
+            bool result = Create(modalParent_);
             if(result)
             {
+                CenterWindow(modalParent_);
+                SetVisible(true);
+
+                if(modalParent_ != NULL)
+                    ::EnableWindow(modalParent_, FALSE);
+
                 nui::Ui::NMsgLoop loop;
                 result = loop.Loop(window_);
-            }
-
-            if(parentWindow != NULL)
-            {
-                ::EnableWindow(parentWindow, TRUE);
             }
             return result;
         }
@@ -117,7 +116,7 @@ namespace nui
             if(window_ != NULL)
             {
                 if(::IsWindow(window_))
-                    ::DestroyWindow(window_);
+                    ::SendMessage(window_, WM_CLOSE, 0, 0);
                 window_ = NULL;
                 ::PostThreadMessage(::GetCurrentThreadId(), WM_NULL, 0, 0);
             }
@@ -255,8 +254,6 @@ namespace nui
 
         void NWindowBase::Invalidate()
         {
-            if(drawTimerId_ == 0)
-                drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
             Base::NRect rcClient;
             ::GetClientRect(window_, rcClient);
             InvalidateRect(rcClient);
@@ -264,6 +261,8 @@ namespace nui
 
         void NWindowBase::InvalidateRect(const Base::NRect& rect)
         {
+            if(window_ == NULL)
+                return;
             if(drawTimerId_ == 0)
                 drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
 
@@ -346,9 +345,9 @@ namespace nui
             {
                 mouseTracking_ = false;
             }
-            else if(message == WM_TIMER && wParam == drawTimerId_)
+            else if(message == WM_TIMER)
             {
-                if(!IsRegionEmpty(invalidateRgn_))
+                if(wParam == drawTimerId_ && !IsRegionEmpty(invalidateRgn_))
                 {
                     if(IsLayered())
                         ::PostMessage(window_, WM_PAINT, 0, 0);
@@ -382,6 +381,13 @@ namespace nui
                     ::KillTimer(window_, drawTimerId_);
                     drawTimerId_ = 0;
                 }
+            }
+            else if(message == WM_CLOSE)
+            {
+                if(modalParent_ != NULL && !::IsWindowEnabled(modalParent_))
+                    ::EnableWindow(modalParent_, TRUE);
+
+                modalParent_ = NULL;
             }
 
             if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
@@ -426,7 +432,7 @@ namespace nui
         void NWindowBase::GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const
         {
             style = 0;
-            exStyle = WS_EX_APPWINDOW;
+            exStyle = 0;
             if(styleValue & WindowStyle::Child)
             {
                 style |= WS_CHILD;
@@ -447,7 +453,7 @@ namespace nui
             {
                 style |= WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_THICKFRAME;
             }
-            style |= WS_CLIPCHILDREN;
+            style |= WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
         }
 
         nui::Base::NAutoPtr<NWindowBase::WindowPrivateData> NWindowBase::GetPrivateData()

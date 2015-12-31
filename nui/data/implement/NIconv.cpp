@@ -110,6 +110,12 @@ namespace nui
             return t2utf8(arg, _tcslen(arg));
         }
 
+        std::string a2utf8(LPCSTR arg, size_t length)
+        {
+            nui::Base::tstring t = a2t(arg, length);
+            return t2utf8(t.c_str());
+        }
+
         nui::Base::tstring a2t(LPCSTR arg)
         {
             return a2t(arg, strlen(arg));

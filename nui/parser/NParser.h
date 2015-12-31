@@ -12,6 +12,7 @@ namespace nui
             DECLARE_REFLECTION(TEXT("nui"), TEXT("parser"))
         public:
             virtual Base::NAutoPtr<Base::NBaseObj> Parse(Base::NBaseObj* parentObj, LPCTSTR packFilePath) = 0;
+            virtual bool ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR styleName) = 0;
             virtual nui::Base::NAutoPtr<nui::Data::NDataReader> FindStyleNode(LPCTSTR packFilePath) = 0;
         };
     }

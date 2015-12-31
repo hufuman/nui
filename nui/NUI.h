@@ -92,7 +92,7 @@ using namespace fastdelegate;
 #include "./ui/NScroll.h"
 #include "./ui/NLayout.h"
 #include "./ui/NList.h"
-#include "./ui/NWndUi.h"
+#include "./ui/NNative.h"
 #include "./ui/NEdit.h"
 
 #include "./parser/NParser.h"

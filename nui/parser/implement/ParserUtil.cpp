@@ -9,7 +9,7 @@ using namespace Data;
 
 namespace ParserUtil
 {
-    Base::NAutoPtr<Ui::NDraw> ParseShapeDraw(Base::NAutoPtr<nui::Data::NDataReader> styleNode)
+    Base::NAutoPtr<Ui::NDraw> ParseShapeDraw(Base::NAutoPtr<NDataReader> styleNode)
     {
         Base::NAutoPtr<Ui::NShapeDraw> shape = Ui::NUiBus::Instance().GetResourceLoader()->CreateShape(MemToolParam);
 
@@ -40,7 +40,7 @@ namespace ParserUtil
         return result;
     }
 
-    NAutoPtr<NBaseObj> LoadObj(nui::Base::NBaseObj* parentObj, Base::NAutoPtr<Data::NDataReader> styleNode)
+    NAutoPtr<NBaseObj> LoadObj(NBaseObj* parentObj, Base::NAutoPtr<Data::NDataReader> styleNode)
     {
         NString objName = styleNode->GetNodeName();
         objName.MakeLower();
@@ -62,15 +62,25 @@ namespace ParserUtil
         return targetObj;
     }
 
-    bool FillObjectAttr(NAutoPtr<NBaseParser> parser, NAutoPtr<NBaseObj> targetObj, NAutoPtr<nui::Data::NDataReader> styleNode)
+    bool ApplyStyle(nui::Base::NBaseObj* targetObj, nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode)
     {
+        NString objName = styleNode->GetNodeName();
+        objName.MakeLower();
+
+        NString parserName = objName + _T("parser");
+        NAutoPtr<NBaseParser> parser = dynamic_cast<NBaseParser*>(NReflect::GetInstance().Create(parserName, MemToolParam));
+        NAssertError(parser != NULL, _T("Parser not found, Name: %s"), parserName.GetData());
+        if(parser == NULL)
+            return NULL;
+
         parser->PreParse(targetObj, styleNode);
         parser->FillAttr(targetObj, styleNode);
         parser->PostParse(targetObj, styleNode);
+        parser->Release();
         return true;
     }
 
-    nui::Base::NAutoPtr<nui::Ui::NDraw> ParseDraw(const nui::Base::NString& styleName)
+    NAutoPtr<nui::Ui::NDraw> ParseDraw(const NString& styleName)
     {
         int pos = styleName.IndexOf(_T(':'));
         NAssertError(pos > 0, _T("Invalid styleName in ParseDraw: %s"), styleName.GetData());
@@ -87,14 +97,14 @@ namespace ParserUtil
         else if(prefix == _T("shape"))
         {
             Base::NInstPtr<Parser::NParser> parser(MemToolParam);
-            nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode = parser->FindStyleNode(stylePath);
+            NAutoPtr<NDataReader> styleNode = parser->FindStyleNode(stylePath);
             return ParseShapeDraw(styleNode);
         }
         NAssertError(false, _T("Invalid styleName in ParseDraw: %s"), styleName.GetData());
         return NULL;
     }
 
-    nui::Base::NAutoPtr<nui::Ui::NDraw> ParseDraw(nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode)
+    NAutoPtr<nui::Ui::NDraw> ParseDraw(NAutoPtr<NDataReader> styleNode)
     {
         NString drawType;
         if(!styleNode->ReadValue(_T("drawType"), drawType))
@@ -118,7 +128,7 @@ namespace ParserUtil
         return NULL;
     }
 
-    nui::Base::NAutoPtr<nui::Ui::NFont> ParseFont(nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode)
+    NAutoPtr<nui::Ui::NFont> ParseFont(NAutoPtr<NDataReader> styleNode)
     {
         Base::NAutoPtr<Ui::NFont> font = Ui::NUiBus::Instance().GetResourceLoader()->CreateFont(MemToolParam);
 

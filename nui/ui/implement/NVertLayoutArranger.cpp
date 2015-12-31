@@ -23,10 +23,11 @@ namespace nui
             if(!IfCouldLayout(child))
                 return;
 
-            param.maxSize_.Height += child->GetMargin().Top;
-            child->SetPos(child->GetRect().Left, param.maxSize_.Height);
-            param.maxSize_.Width = std::max(child->GetRect().Width(), param.maxSize_.Width);
-            param.maxSize_.Height += child->GetMargin().Top + child->GetRect().Height() + child->GetMargin().Bottom;
+            const Base::NRect& margin = child->GetMargin();
+            param.maxSize_.Height += margin.Top;
+            child->SetPos(margin.Left, param.maxSize_.Height);
+            param.maxSize_.Height += child->GetRect().Height() + margin.Bottom;
+            param.maxSize_.Width = std::max(child->GetRect().Width() + margin.Left + margin.Right, param.maxSize_.Width);
         }
     }
 }

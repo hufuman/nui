@@ -54,7 +54,6 @@ namespace nui
                 StatusNormal  = 0x0001,
                 StatusHover   = 0x0002,
                 StatusPressed = 0x0004,
-                StatusDisabled= 0x0008,
                 StatusSelected= 0x0010,
                 StatusChecked = 0x0020,
             };
@@ -104,7 +103,7 @@ namespace nui
             // flags
             virtual bool SetVisible(bool visible);
             virtual bool IsVisible() const;
-            virtual void SetEnabled(bool enabled);
+            virtual bool SetEnabled(bool enabled);
             virtual bool IsEnabled() const;
             virtual void SetValid(bool valid);
             virtual bool IsValid() const;
@@ -149,7 +148,8 @@ namespace nui
             virtual void OnWindowChanged(NWindow* window);
 
             virtual bool CanHover() const;
-            virtual void OnSize(int width, int height);
+            virtual void OnSizeChanged(int width, int height);
+            virtual void OnPosChanged(int left, int top);
 
             // Draw
             virtual void GetDrawIndex(int& horzIndex, int& vertIndex) const;

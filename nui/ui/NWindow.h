@@ -22,6 +22,8 @@ namespace nui
             NWindow();
             ~NWindow();
 
+            bool DoModalWithStyle(HWND parentWindow, LPCTSTR styleName);
+
             NFrame* GetRootFrame();
             NRender* GetRender() const;
 
@@ -60,6 +62,7 @@ namespace nui
 
             Base::NAutoPtr<NFrame> hoverFrame_;
 
+            Base::NString styleName_;
             Base::NRect sizableBorder_;
             END_USE_UNEXPORT_TEMPLATE()
         };

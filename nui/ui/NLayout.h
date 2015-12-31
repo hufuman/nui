@@ -38,7 +38,7 @@ namespace nui
 
         protected:
             virtual Base::NSize GetAutoSize() const;
-            virtual void OnSize(int width, int height);
+            virtual void OnSizeChanged(int width, int height);
 
         private:
             void RelayoutChilds();

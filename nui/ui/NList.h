@@ -51,7 +51,7 @@ namespace nui
 
         protected:
             virtual void OnCreate();
-            virtual void OnSize(int width, int height);
+            virtual void OnSizeChanged(int width, int height);
 
             void GetSubFrameId(int columnIndex, Base::NString& subFrameId) const;
 

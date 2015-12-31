@@ -141,7 +141,7 @@ namespace nui
             horzScroll->ScrollEvent.AddHandler(MakeDelegate(this, &NList::OnHorzScrollPosChanged));
         }
 
-        void NList::OnSize(int width, int height)
+        void NList::OnSizeChanged(int width, int height)
         {
             UNREFERENCED_PARAMETER(width);
             UNREFERENCED_PARAMETER(height);

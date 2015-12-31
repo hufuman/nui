@@ -555,6 +555,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NLabelImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NLayoutImpl.cpp"
 					>
 				</File>
@@ -564,6 +568,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NMsgLoop.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NNativeImpl.cpp"
 					>
 				</File>
 				<File
@@ -592,10 +600,6 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NWindowImpl.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ui\implement\NWndUiImpl.cpp"
 					>
 				</File>
 				<File
@@ -823,6 +827,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\NLabel.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\NLayout.h"
 					>
 				</File>
@@ -835,6 +843,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\NNative.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\NScroll.h"
 					>
 				</File>
@@ -844,10 +856,6 @@
 				</File>
 				<File
 					RelativePath=".\ui\NWindowBase.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ui\NWndUi.h"
 					>
 				</File>
 			</Filter>
@@ -883,11 +891,35 @@
 					>
 				</File>
 				<File
+					RelativePath=".\parser\implement\EditParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\EditParserImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\parser\implement\FrameParserImpl.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\parser\implement\FrameParserImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\LabelParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\LabelParserImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\LayoutParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\LayoutParserImpl.h"
 					>
 				</File>
 				<File

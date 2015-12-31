@@ -103,7 +103,6 @@ namespace nui
 
             RequireDraws();
             AutoSize();
-            ReLayout();
         }
 
         int NScroll::GetScrollPos() const
