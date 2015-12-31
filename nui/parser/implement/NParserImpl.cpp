@@ -47,7 +47,17 @@ bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString
     // Normalize path
     LPCTSTR separator = _tcschr(packFilePath, _T(':'));
     if(separator == NULL)
-        return false;
+    {
+        if(packFilePath[0] == _T('@'))
+        {
+            filePath.Format(_T("@style:%s.xml"), packFilePath + 1);
+        }
+        else
+        {
+            filePath = packFilePath;
+        }
+        return true;
+    }
 
     styleName = separator + 1;
 
@@ -67,13 +77,23 @@ bool NParserImpl::GetStyleParam(LPCTSTR packFilePath, NString& filePath, NString
 
 NAutoPtr<NDataReader> NParserImpl::FindStyleNode(Base::NAutoPtr<Data::NDataReader> dataReader, const Base::NString& styleName)
 {
+    NString style = styleName;
     NAutoPtr<NDataReader> styleNode;
+    if(style.IsEmpty())
+    {
+        NString tmpString;
+        if(dataReader->ReadValue(_T("default"), tmpString))
+            style = tmpString;
+    }
+
     for(int i=0;; ++i)
     {
         if(!dataReader->ReadNode(i, styleNode))
             return NULL;
+        if(style.IsEmpty())
+            break;
         Base::NString name;
-        if(styleNode->ReadValue(_T("name"), name) && name == styleName)
+        if(styleNode->ReadValue(_T("name"), name) && name == style)
             break;
         styleNode = NULL;
     }
