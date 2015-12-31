@@ -5,9 +5,6 @@ namespace nui
 {
     namespace Base
     {
-
-        typedef std::basic_string<TCHAR> tstring;
-
         class NUI_CLASS NPoint
         {
         public:

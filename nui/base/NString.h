@@ -103,7 +103,10 @@ namespace nui
 
         private:
             int argPos_;
+            BEGIN_USE_UNEXPORT_TEMPLATE()
+            typedef std::basic_string<TCHAR> tstring;
             tstring data_;
+            END_USE_UNEXPORT_TEMPLATE()
         };
 
     }

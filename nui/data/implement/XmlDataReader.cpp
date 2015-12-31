@@ -33,7 +33,7 @@ bool XmlDataReader::ParseUtf8(const char* data, size_t length)
 #ifdef _DEBUG
     if(document_->Error())
     {
-        nui::Base::NString errorDesc = nui::Data::a2t(document_->ErrorDesc()).c_str();
+        nui::Base::NString errorDesc = nui::Data::a2t(document_->ErrorDesc());
         int row = document_->ErrorRow();
         int column = document_->ErrorCol();
         NAssertError(false, _T("Failed to parse xml\r\n\trow: %d, col: %d\r\n\tReason: %s"), row, column, errorDesc.GetData());
@@ -72,8 +72,8 @@ bool XmlDataReader::ReadValue(int index, nui::Base::NString& name, nui::Base::NS
     if(attrValue == NULL || attrName == NULL)
         return false;
 
-    name = utf82t(attrName).c_str();
-    value = utf82t(attrValue).c_str();
+    name = utf82t(attrName);
+    value = utf82t(attrValue);
     return true;
 }
 
@@ -134,7 +134,7 @@ nui::Base::NString XmlDataReader::GetNodeName() const
     const char* name = root_->Value();
     if(name == NULL)
         return _T("");
-    return utf82t(name).c_str();
+    return utf82t(name);
 }
 
 bool XmlDataReader::ReadPath(size_t index, LPCTSTR path, LPCTSTR valueName, NString& value)
@@ -221,6 +221,6 @@ bool XmlDataReader::ElementToString(TiXmlElement* element, LPCTSTR valueName, NS
     const char* data = element->Attribute(strValueName.c_str());
     if(data == NULL)
         return false;
-    value = utf82t(data).c_str();
+    value = utf82t(data);
     return true;
 }

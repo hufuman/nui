@@ -121,8 +121,8 @@ namespace nui
 
             NBaseObj* Create(LPCTSTR szFullName, LPCSTR filePath, int line)
             {
-                tstring namespaceName;
-                tstring className;
+                NString namespaceName;
+                NString className;
                 LPCTSTR pos = _tcsstr(szFullName, _T("::"));
                 if(pos == NULL)
                 {
@@ -131,10 +131,10 @@ namespace nui
                 }
                 else
                 {
-                    namespaceName.assign(szFullName, pos - szFullName);
+                    namespaceName.Assign(szFullName, pos - szFullName);
                     className = pos + 2;
                 }
-                return Create(namespaceName.c_str(), className.c_str(), filePath, line);
+                return Create(namespaceName.GetData(), className.GetData(), filePath, line);
             }
 
             NBaseObj* Create(LPCTSTR szNamespace, LPCTSTR szClassName, LPCSTR filePath, int line);
@@ -144,8 +144,8 @@ namespace nui
             bool GetClassData(LPCTSTR szNamespace, LPCTSTR szClassName, ClassData*& pClassData);
 
         private:
-            typedef std::map<tstring, ClassData> ClassDataMap;
-            typedef std::map<tstring, ClassDataMap> NamespaceInfoMap;
+            typedef std::map<NString, ClassData> ClassDataMap;
+            typedef std::map<NString, ClassDataMap> NamespaceInfoMap;
             NamespaceInfoMap   m_mapNamespaceInfo;
         };
 

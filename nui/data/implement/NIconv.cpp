@@ -80,17 +80,17 @@ namespace nui
             return MultiByteToUnicode(arg, length, CP_ACP);
         }
 
-        tstring utf82t(LPCSTR arg, size_t length)
+        NString utf82t(LPCSTR arg, size_t length)
         {
 #ifdef _UNICODE
-            return utf82w(arg, length);
+            return NString(utf82w(arg, length).c_str());
 #else
             std::wstring result = utf82w(arg, length);
             return w2a(result.c_str(), result.length());
 #endif
         }
 
-        tstring utf82t(LPCSTR arg)
+        NString utf82t(LPCSTR arg)
         {
             return utf82t(arg, strlen(arg));
         }
@@ -112,19 +112,19 @@ namespace nui
 
         std::string a2utf8(LPCSTR arg, size_t length)
         {
-            nui::Base::tstring t = a2t(arg, length);
-            return t2utf8(t.c_str());
+            nui::Base::NString t = a2t(arg, length);
+            return t2utf8(t.GetData());
         }
 
-        nui::Base::tstring a2t(LPCSTR arg)
+        nui::Base::NString a2t(LPCSTR arg)
         {
             return a2t(arg, strlen(arg));
         }
 
-        nui::Base::tstring a2t(LPCSTR arg, size_t length)
+        nui::Base::NString a2t(LPCSTR arg, size_t length)
         {
 #ifdef _UNICODE
-            return a2w(arg, length);
+            return a2w(arg, length).c_str();
 #else
             std::string str;
             str.assign(arg, length);
