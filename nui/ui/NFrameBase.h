@@ -103,6 +103,8 @@ namespace nui
             virtual bool IsVisible() const;
             virtual bool SetEnabled(bool enabled);
             virtual bool IsEnabled() const;
+            virtual bool SetCheck(bool checked);
+            virtual bool IsChecked() const;
             virtual bool IsInStatus(Status status) const;
 
             // data

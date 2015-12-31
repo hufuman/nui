@@ -228,7 +228,9 @@ namespace nui
                     if(hoverFrame_ != NULL)
                     {
                         Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
-                        hoverFrame_->OnClicked(point);
+                        Base::NRect rcFrame = hoverFrame_->GetRootRect();
+                        if(rcFrame.Contains(point))
+                            hoverFrame_->OnClicked(point);
                     }
                     NUiBus::Instance().SetCaptureFrame(NULL);
                     ::ReleaseCapture();

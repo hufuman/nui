@@ -271,6 +271,20 @@ namespace nui
             return !Util::Misc::IsFlagChecked(frameStatus_, NFrameBase::StatusDisabled);
         }
 
+        bool NFrameBase::SetCheck(bool checked)
+        {
+            if(checked == IsChecked())
+                return false;
+            ForceInvalidate();
+            Util::Misc::CheckFlag(frameStatus_, NFrameBase::StatusChecked, checked);
+            return true;
+        }
+
+        bool NFrameBase::IsChecked() const
+        {
+            return Util::Misc::IsFlagChecked(frameStatus_, NFrameBase::StatusChecked);
+        }
+
         bool NFrameBase::IsInStatus(Status status) const
         {
             return (frameStatus_ & status) == static_cast<DWORD>(status);

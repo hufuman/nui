@@ -531,6 +531,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NCheckBoxImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NEditImpl.cpp"
 					>
 				</File>
@@ -576,6 +580,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NNativeImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NRadioBoxImpl.cpp"
 					>
 				</File>
 				<File
@@ -811,6 +819,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\NCheckBox.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\NEdit.h"
 					>
 				</File>
@@ -855,6 +867,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\NRadioBox.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\NScroll.h"
 					>
 				</File>
@@ -896,6 +912,14 @@
 				</File>
 				<File
 					RelativePath=".\parser\implement\ButtonParserImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\CheckBoxParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\CheckBoxParserImpl.h"
 					>
 				</File>
 				<File
@@ -952,6 +976,14 @@
 				</File>
 				<File
 					RelativePath=".\parser\implement\ParserUtil.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\RadioBoxParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\RadioBoxParserImpl.h"
 					>
 				</File>
 			</Filter>

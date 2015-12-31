@@ -45,7 +45,7 @@ namespace nui
             virtual NTextAttr* GetTextAttr(UINT status, bool create);
             virtual NCursor* GetCursor() const;
 
-            virtual NFont* GetFont();
+            virtual NFont* GetFont(bool needCreate);
             virtual NFont* GetFont() const;
             virtual void SetFont(NFont* font);
 #ifndef _NO_NUI_PARSER_

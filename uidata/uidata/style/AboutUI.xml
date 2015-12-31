@@ -6,7 +6,14 @@
 		foreDraw="shape:@AboutUI:MainForeDraw">
 		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
 
+		<Layout>
 		<Link url="http://www.baidu.com" />
+		<CheckBox text="checkBox" checked="true" />
+		<RadioBox text="radioBox1" group="group1" checked="true" />
+		<RadioBox text="radioBox1" group="group1" checked="true" />
+		<RadioBox text="radioBox2" group="group2" />
+		<RadioBox text="radioBox3" />
+		</Layout>
 	</Frame>
 
 	<Draw name="MainForeDraw" drawType="shape" fillColor="#20FF0000" style="rect" />

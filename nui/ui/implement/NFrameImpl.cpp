@@ -154,9 +154,9 @@ namespace nui
             return NULL;
         }
 
-        NFont* NFrame::GetFont()
+        NFont* NFrame::GetFont(bool needCreate)
         {
-            if(font_ == NULL)
+            if(font_ == NULL && needCreate)
             {
                 font_ = NUiBus::Instance().GetResourceLoader()->CreateFont(MemToolParam);
             }

@@ -148,6 +148,9 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
     if(styleNode->ReadValue(_T("visible"), bFlag))
         targetFrame->SetVisible(bFlag);
 
+    if(styleNode->ReadValue(_T("checked"), bFlag))
+        targetFrame->SetCheck(bFlag);
+
     if(styleNode->ReadValue(_T("enabled"), bFlag))
         targetFrame->SetEnabled(bFlag);
 
