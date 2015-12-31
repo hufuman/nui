@@ -95,6 +95,16 @@ namespace nui
             AutoSize();
         }
 
+        void NLayout::OnCreate()
+        {
+            __super::OnCreate();
+
+#ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            ApplyStyle(_T("@sys_default_style:layout"));
+#endif  // _NO_NUI_PARSER_
+        }
+
         Base::NSize NLayout::GetAutoSize() const
         {
             Base::NSize size = innerFrame_->GetAutoSize();

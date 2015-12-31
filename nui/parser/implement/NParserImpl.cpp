@@ -11,23 +11,31 @@ IMPLEMENT_REFLECTION_EX(NParserImpl, NReflect::Singleton);
 
 NAutoPtr<NBaseObj> NParserImpl::Parse(Base::NBaseObj* parentObj, LPCTSTR stylePath)
 {
-    if(stylePath == NULL)
-        return NULL;
-
-    NAutoPtr<NDataReader> styleNode = FindStyleNode(stylePath);
-    if(!styleNode)
-        return NULL;
-
-    return ParserUtil::LoadObj(parentObj, styleNode);
+    NAutoPtr<NBaseObj> result;
+    if(stylePath != NULL)
+    {
+        NAutoPtr<NDataReader> styleNode = FindStyleNode(stylePath);
+        if(styleNode)
+        {
+            result = ParserUtil::LoadObj(parentObj, styleNode);
+        }
+    }
+    NAssertError(result, _T("StyleNotFound: %s"), stylePath);
+    return result;
 }
 
 bool NParserImpl::ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR stylePath)
 {
-    nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode = FindStyleNode(stylePath);
-    if(!styleNode)
+    if(targetObj == NULL)
         return false;
-
-    return ParserUtil::ApplyStyle(targetObj, styleNode);
+    bool result = false;
+    nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode = FindStyleNode(stylePath);
+    if(styleNode)
+    {
+        result = ParserUtil::ApplyStyle(targetObj, styleNode);
+    }
+    NAssertError(result, _T("StyleNotFound: %s"), stylePath);
+    return result;
 }
 
 nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR stylePathParam)
@@ -36,16 +44,18 @@ nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR s
     NString filePath;
     NString styleName;
 
+    bool innerBreak = false;
     NString stylePath(stylePathParam);
+    nui::Base::NAutoPtr<nui::Data::NDataReader> result;
     // in case of cycle reference
     for(int refCount=0; refCount<5; ++ refCount)
     {
         if(!GetStyleParam(stylePath, filePath, styleName) || filePath.IsEmpty())
-            return NULL;
+            break;
 
         nui::Base::NAutoPtr<nui::Data::NDataReader> dataReader = LoadPackFile(filePath);
         if(!dataReader)
-            return NULL;
+            break;
 
         if(styleName.IsEmpty())
         {
@@ -57,10 +67,14 @@ nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR s
             }
         }
 
+        innerBreak = false;
         for(int i=0;; ++i)
         {
             if(!dataReader->ReadNode(i, styleNode))
-                return NULL;
+            {
+                innerBreak = true;
+                break;
+            }
             if(styleName.IsEmpty())
                 break;
             Base::NString name;
@@ -68,8 +82,11 @@ nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR s
                 break;
             styleNode = NULL;
         }
+        if(innerBreak)
+            break;
     }
 
+    NAssertError(styleNode, _T("StyleNotFound: %s"), stylePathParam);
     return styleNode;
 }
 

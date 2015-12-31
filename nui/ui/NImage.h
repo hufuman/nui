@@ -27,6 +27,8 @@ namespace nui
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
 
         protected:
+            virtual void OnCreate();
+
             void Reset();
             void MovieTimerProc();
 

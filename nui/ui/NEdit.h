@@ -32,6 +32,8 @@ namespace nui
 
         protected:
 
+            virtual void OnCreate();
+
             virtual bool OnParentCommand(WORD notifyCode);
             virtual bool GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle);
 

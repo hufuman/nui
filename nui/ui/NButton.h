@@ -15,6 +15,9 @@ namespace nui
         public:
             NButton();
             ~NButton();
+
+        protected:
+            virtual void OnCreate();
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

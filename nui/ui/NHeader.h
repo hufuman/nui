@@ -74,6 +74,9 @@ namespace nui
             virtual DWORD GetItemData(int index) const;
 
         protected:
+
+            virtual void OnCreate();
+
             virtual void DrawBkg(NRender* render, const Base::NRect& rect) const;
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
             virtual Base::NSize GetAutoSize() const;

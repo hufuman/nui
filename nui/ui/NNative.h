@@ -34,6 +34,7 @@ namespace nui
             virtual Base::NSize GetAutoSize() const;
 
         protected:
+            virtual void OnCreate();
 
             virtual void OnSizeChanged(int width, int height);
             virtual void OnPosChanged(int left, int top);

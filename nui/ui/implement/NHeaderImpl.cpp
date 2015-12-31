@@ -103,6 +103,16 @@ namespace nui
             return 0;
         }
 
+        void NHeader::OnCreate()
+        {
+            __super::OnCreate();
+
+#ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            ApplyStyle(_T("@sys_default_style:header"));
+#endif  // _NO_NUI_PARSER_
+        }
+
         void NHeader::DrawBkg(NRender* render, const Base::NRect& rect) const
         {
             __super::DrawBkg(render, rect);

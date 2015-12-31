@@ -15,6 +15,9 @@ namespace nui
         public:
             NLabel();
             ~NLabel();
+
+        protected:
+            virtual void OnCreate();
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

@@ -40,6 +40,16 @@ namespace nui
             return wndUi;
         }
 
+        void NNative::OnCreate()
+        {
+            __super::OnCreate();
+
+#ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            ApplyStyle(_T("@sys_default_style:native"));
+#endif  // _NO_NUI_PARSER_
+        }
+
         void NNative::OnSizeChanged(int width, int height)
         {
             __super::OnSizeChanged(width, height);

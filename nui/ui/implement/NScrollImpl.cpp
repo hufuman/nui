@@ -136,6 +136,16 @@ namespace nui
             return result;
         }
 
+        void NScroll::OnCreate()
+        {
+            __super::OnCreate();
+
+#ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            ApplyStyle(_T("@sys_default_style:scroll"));
+#endif  // _NO_NUI_PARSER_
+        }
+
         Base::NSize NScroll::GetAutoSize() const
         {
             if(horzScroll_)

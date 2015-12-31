@@ -531,7 +531,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ui\implement\NEdit.cpp"
+					RelativePath=".\ui\implement\NEditImpl.cpp"
 					>
 				</File>
 				<File

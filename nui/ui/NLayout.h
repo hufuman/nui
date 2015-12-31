@@ -37,6 +37,8 @@ namespace nui
             virtual void SetLayoutable(bool layoutable);
 
         protected:
+            virtual void OnCreate();
+
             virtual Base::NSize GetAutoSize() const;
             virtual void OnSizeChanged(int width, int height);
 

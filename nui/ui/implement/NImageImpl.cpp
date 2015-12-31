@@ -76,6 +76,16 @@ namespace nui
             imageDraw_->Draw(render, horzIndex_, vertIndex_, rect);
         }
 
+        void NImage::OnCreate()
+        {
+            __super::OnCreate();
+
+#ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            ApplyStyle(_T("@sys_default_style:image"));
+#endif  // _NO_NUI_PARSER_
+        }
+
         void NImage::Reset()
         {
             horzIndex_ = 0;

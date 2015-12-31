@@ -70,6 +70,16 @@ namespace nui
             return true;
         }
 
+        void NEdit::OnCreate()
+        {
+            __super::OnCreate();
+
+#ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            ApplyStyle(_T("@sys_default_style:edit"));
+#endif  // _NO_NUI_PARSER_
+        }
+
         bool NEdit::OnParentCommand(WORD notifyCode)
         {
             if(notifyCode != EN_CHANGE)

@@ -259,7 +259,14 @@ namespace nui
 
 #ifndef _NO_NUI_PARSER_
             if(!styleName_.IsEmpty())
+            {
                 GetRootFrame()->ApplyStyle(styleName_);
+            }
+            else
+            {
+                NAssertTempDisable();
+                GetRootFrame()->ApplyStyle(_T("@sys_default_style:window"));
+            }
 #endif  // _NO_NUI_PARSER_
             WindowCreatedEvent.Invoke(this, NULL);
         }

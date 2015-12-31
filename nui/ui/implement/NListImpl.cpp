@@ -139,6 +139,11 @@ namespace nui
 
             NScroll* horzScroll = dynamic_cast<NScroll*>(layout_->GetChildById(_NUI_HORZ_SCROLL_ID_, false));
             horzScroll->ScrollEvent.AddHandler(MakeDelegate(this, &NList::OnHorzScrollPosChanged));
+
+#ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            ApplyStyle(_T("@sys_default_style:list"));
+#endif  // _NO_NUI_PARSER_
         }
 
         void NList::OnSizeChanged(int width, int height)

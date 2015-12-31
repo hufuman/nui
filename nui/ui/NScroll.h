@@ -41,6 +41,8 @@ namespace nui
             virtual bool SetVisible(bool visible);
 
         protected:
+            virtual void OnCreate();
+
             // Pos & Size
             virtual Base::NSize GetAutoSize() const;
 
