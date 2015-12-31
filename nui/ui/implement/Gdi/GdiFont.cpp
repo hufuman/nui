@@ -41,7 +41,7 @@ namespace nui
             bool oldBold = (fontFlags_ & StyleBold) == StyleBold;
             if(oldBold != bold)
             {
-                fontFlags_ = fontFlags_ | StyleBold;
+                Util::Misc::CheckFlag(fontFlags_, StyleBold, bold);
                 UpdateFont();
             }
             return this;
@@ -52,7 +52,7 @@ namespace nui
             bool oldItalic = (fontFlags_ & StyleItalic) == StyleItalic;
             if(oldItalic != italic)
             {
-                fontFlags_ = fontFlags_ | StyleItalic;
+                Util::Misc::CheckFlag(fontFlags_, StyleItalic, italic);
                 UpdateFont();
             }
             return this;
@@ -63,7 +63,7 @@ namespace nui
             bool oldUnderline = (fontFlags_ & StyleUnderline) == StyleUnderline;
             if(oldUnderline != underline)
             {
-                fontFlags_ = fontFlags_ | StyleUnderline;
+                Util::Misc::CheckFlag(fontFlags_, StyleUnderline, underline);
                 UpdateFont();
             }
             return this;
@@ -74,7 +74,7 @@ namespace nui
             bool oldStrikeOut = (fontFlags_ & StyleStrikeOut) == StyleStrikeOut;
             if(oldStrikeOut != strikeOut)
             {
-                fontFlags_ = fontFlags_ | StyleStrikeOut;
+                Util::Misc::CheckFlag(fontFlags_, StyleStrikeOut, strikeOut);
                 UpdateFont();
             }
             return this;

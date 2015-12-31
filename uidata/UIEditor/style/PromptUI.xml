@@ -6,7 +6,7 @@
 		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
 		<Layout layoutType="horz" pos="20,20">
 			<Label text="Style Name:" margin="0,0,10,0" />
-			<Edit id="editStyle" hintText="Style Name" />
+			<Edit id="editStyle" hintText="default" />
 		</Layout>
 		<Button id="btnPreview" layout="right,bottom" margin="0,0,20,10" text="Preview" />
 	</Frame>

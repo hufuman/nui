@@ -5,6 +5,8 @@
 		layout="vfill,hfill" minSize="110,120" autoSize="false"
 		foreDraw="shape:@AboutUI:MainForeDraw">
 		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
+
+		<Link url="http://www.baidu.com" />
 	</Frame>
 
 	<Draw name="MainForeDraw" drawType="shape" fillColor="#20FF0000" style="rect" />

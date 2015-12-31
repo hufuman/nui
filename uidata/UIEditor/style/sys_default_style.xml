@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <UI>
-
 	<Frame name="button" textColor="#FFFFFFFF" />
+	<Frame name="window" layout="hfill;vfill">
+		<Layout layoutType="horz" layout="right,top">
+			<Button id="_nui_sys_close_id_" bkgDraw="image:@skin:common\sys_close_button.png" />
+			<Button id="_nui_sys_min_id_" />
+			<Button id="_nui_sys_max_id_" />
+		</Layout>
+	</Frame>
 </UI>

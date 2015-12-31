@@ -119,7 +119,7 @@ namespace nui
             }
             if(result != NULL)
                 result->AddRef();
-            NAssertError(result != NULL, _T("Invalid data in NReflect::Create"));
+            NAssertError(result != NULL, _T("Invalid data in NReflect::Create, %s::%s"), szNamespace, szClassName);
             return result;
         }
 

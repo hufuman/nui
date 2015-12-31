@@ -14,6 +14,7 @@ public:
         memDC_ = NULL;
         oldBitmap_ = NULL;
         bitmap_ = NULL;
+        memDcStatus_ = 0;
     }
     ~MemDC()
     {
@@ -47,10 +48,22 @@ public:
         ::DeleteObject(rgn);
     }
 
+    void SaveDc()
+    {
+        if(memDC_ == NULL)
+            return;
+        if(memDcStatus_ > 0)
+            ::RestoreDC(memDC_, memDcStatus_);
+        memDcStatus_ = ::SaveDC(memDC_);
+    }
+
     void Destroy()
     {
         if(memDC_ != NULL)
         {
+            if(memDcStatus_ > 0)
+                ::RestoreDC(memDC_, memDcStatus_);
+            memDcStatus_ = 0;
             if(oldBitmap_ != NULL)
                 ::SelectObject(memDC_, oldBitmap_);
             ::DeleteObject(bitmap_);
@@ -78,4 +91,5 @@ private:
     BYTE alphaValue_;
     nui::Base::NPoint viewPos_;
     nui::Base::NSize viewSize_;
+    int memDcStatus_;
 };

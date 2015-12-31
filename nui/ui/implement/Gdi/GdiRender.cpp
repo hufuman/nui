@@ -10,6 +10,7 @@
 #include "GdiFont.h"
 #include "GdiUtil.h"
 #include "TempDC.h"
+#include "GdiObjMgr.h"
 
 
 namespace nui
@@ -28,6 +29,8 @@ namespace nui
         {
             orgDc_ = hDc;
             memDC_.Init(orgDc_, rcPaint, 255);
+            memDC_.SaveDc();
+            ::SelectObject(memDC_, GdiObjMgr::Instance().GetDefaultFont());
             return true;
         }
 

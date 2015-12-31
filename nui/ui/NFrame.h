@@ -41,10 +41,12 @@ namespace nui
             // data
             virtual void SetText(const Base::NString& text);
             virtual Base::NString GetText() const;
-            virtual NTextAttr* GetTextAttr();
+            virtual NTextAttr* GetTextAttr() const;
+            virtual NTextAttr* GetTextAttr(UINT status, bool create);
             virtual NCursor* GetCursor() const;
 
             virtual NFont* GetFont();
+            virtual NFont* GetFont() const;
             virtual void SetFont(NFont* font);
 #ifndef _NO_NUI_PARSER_
             virtual void SetFont(const Base::NString& fontName);
@@ -107,7 +109,8 @@ namespace nui
             Base::NAutoPtr<NDraw> bkgDraw_;
             Base::NAutoPtr<NDraw> foreDraw_;
 
-            Base::NAutoPtr<NTextAttr> textAttr_;
+            typedef std::map<UINT, Base::NAutoPtr<NTextAttr>> TextAttrMap;
+            TextAttrMap textAttrMap_;
             Base::NAutoPtr<NFont> font_;
 
             Base::NString text_;

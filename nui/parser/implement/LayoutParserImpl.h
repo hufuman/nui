@@ -10,4 +10,5 @@ public:
     LayoutParserImpl();
 
     virtual void FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode);
+    virtual void Create(nui::Base::NBaseObj* parentObj, nui::Base::NBaseObj* targetObj);
 };

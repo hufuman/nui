@@ -11,6 +11,9 @@ namespace nui
 
         bool NVertLayoutArranger::IfCouldLayout(const NFrameBase* const &child) const
         {
+            if(!child->IsVisible() || child->GetRect().Width() == 0 || child->GetRect().Height() == 0)
+                return false;
+
             UINT flags = child->GetLayout();
             return ((flags & NFrameBase::LayoutTop) != NFrameBase::LayoutTop)
                 || ((flags & NFrameBase::LayoutBottom) != NFrameBase::LayoutBottom)

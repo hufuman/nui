@@ -12,7 +12,7 @@ namespace nui
             parentFrame_ = NULL;
             topMostCount_ = 0;
             bottomMostCount_ = 0;
-            frameFlags_ = FlagVisible | FlagValid | FlagEnabled | FlagAutoSize | FlagLayoutable;
+            frameFlags_ = FlagVisible | FlagAutoSize | FlagLayoutable;
             frameStatus_ = StatusNormal;
             layout_ = LayoutNone;
             frameData_ = 0;
@@ -207,7 +207,7 @@ namespace nui
 
         NFrameBase* NFrameBase::GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags)
         {
-            if(!IsVisible()  || !IsEnabled() || !IsValid())
+            if(!IsVisible()  || !IsEnabled())
                 return NULL;
 
             Base::NPoint pt(point);
@@ -261,27 +261,14 @@ namespace nui
         {
             if(enabled == IsEnabled())
                 return false;
-            Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagEnabled, enabled);
-            Invalidate();
+            ForceInvalidate();
+            Util::Misc::CheckFlag(frameStatus_, NFrameBase::StatusDisabled, !enabled);
             return true;
         }
 
         bool NFrameBase::IsEnabled() const
         {
-            return Util::Misc::IsFlagChecked(frameFlags_, NFrameBase::FlagEnabled);
-        }
-
-        void NFrameBase::SetValid(bool valid)
-        {
-            if(valid == IsValid())
-                return;
-            Util::Misc::CheckFlag(frameFlags_, NFrameBase::FlagValid, valid);
-            Invalidate();
-        }
-
-        bool NFrameBase::IsValid() const
-        {
-            return Util::Misc::IsFlagChecked(frameFlags_, NFrameBase::FlagValid);
+            return !Util::Misc::IsFlagChecked(frameStatus_, NFrameBase::StatusDisabled);
         }
 
         bool NFrameBase::IsInStatus(Status status) const
@@ -527,7 +514,7 @@ namespace nui
 
         void NFrameBase::Invalidate() const
         {
-            if(!window_ || !IsVisible() || !IsValid())
+            if(!window_ || !IsVisible())
                 return;
             ForceInvalidate();
         }
@@ -542,7 +529,7 @@ namespace nui
 
         void NFrameBase::Draw(NRender* render, Base::NPoint& ptOffset, HRGN clipRgn)
         {
-            if(!IsVisible() || !IsValid())
+            if(!IsVisible())
                 return;
 
             Base::NRect rect(frameRect_);
@@ -570,7 +557,6 @@ namespace nui
                 OnWindowChanged(parentFrame_->window_);
             else
                 OnWindowChanged(NULL);
-            AutoSize();
         }
 
         void NFrameBase::OnWindowChanged(NWindow* window)
@@ -585,6 +571,7 @@ namespace nui
                 child->OnWindowChanged(window_);
                 ++ ite;
             }
+            AutoSize();
         }
 
         void NFrameBase::OnMouseDown(short x, short y)
@@ -694,7 +681,7 @@ namespace nui
 
         void NFrameBase::GetDrawIndex(int& horzIndex, int& vertIndex) const
         {
-            if(!Util::Misc::IsFlagChecked(frameFlags_, NFrameBase::FlagEnabled))
+            if(!IsEnabled())
                 horzIndex = 3;
             else if(frameStatus_ & StatusPressed)
                 horzIndex = 2;

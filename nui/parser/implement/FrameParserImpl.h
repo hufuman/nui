@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseParser.h"
+#include "../../ui/NFrame.h"
 
 
 class FrameParserImpl : public NBaseParser
@@ -13,4 +14,7 @@ public:
     virtual void FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode);
     virtual void PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode);
     virtual void PostParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode);
+
+private:
+    void FillTextAttr(nui::Ui::NFrame* targetFrame, nui::Data::NDataReader* styleNode);
 };

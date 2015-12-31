@@ -563,6 +563,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\implement\NLinkImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\implement\NListImpl.cpp"
 					>
 				</File>
@@ -839,6 +843,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ui\NLink.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ui\NList.h"
 					>
 				</File>
@@ -920,6 +928,14 @@
 				</File>
 				<File
 					RelativePath=".\parser\implement\LayoutParserImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\LinkParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\LinkParserImpl.h"
 					>
 				</File>
 				<File

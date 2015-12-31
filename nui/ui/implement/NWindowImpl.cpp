@@ -14,6 +14,7 @@ namespace nui
         NWindow::NWindow()
         {
             sizableBorder_.SetRect(4, 4, 4, 4);
+            render_ = NUiBus::Instance().CreateRender();
         }
 
         NWindow::~NWindow()
@@ -68,9 +69,6 @@ namespace nui
                     lResult = 0;
                     return true;
                 }
-                break;
-            case WM_CREATE:
-                render_ = NUiBus::Instance().CreateRender();
                 break;
             case WM_DESTROY:
                 render_ = NULL;
@@ -258,14 +256,12 @@ namespace nui
             __super::OnCreate();
 
 #ifndef _NO_NUI_PARSER_
+            NAssertTempDisable();
+            GetRootFrame()->ApplyStyle(_T("@sys_default_style:window"));
+
             if(!styleName_.IsEmpty())
             {
                 GetRootFrame()->ApplyStyle(styleName_);
-            }
-            else
-            {
-                NAssertTempDisable();
-                GetRootFrame()->ApplyStyle(_T("@sys_default_style:window"));
             }
 #endif  // _NO_NUI_PARSER_
             WindowCreatedEvent.Invoke(this, NULL);

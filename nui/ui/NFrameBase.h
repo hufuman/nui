@@ -41,9 +41,7 @@ namespace nui
             {
                 FlagNone        = 0x0000,
                 FlagVisible     = 0x0001,
-                FlagEnabled     = 0x0002,
                 FlagAutoSize    = 0x0004,
-                FlagValid       = 0x0008,
                 FlagCanHover    = 0x0010,
                 FlagLayoutable  = 0x0020,
             };
@@ -51,11 +49,11 @@ namespace nui
         public:
             enum Status
             {
-                StatusNormal  = 0x0001,
-                StatusHover   = 0x0002,
-                StatusPressed = 0x0004,
-                StatusSelected= 0x0010,
-                StatusChecked = 0x0020,
+                StatusNormal  = 0x0000,
+                StatusHover   = 0x0001,
+                StatusPressed = 0x0002,
+                StatusDisabled= 0x0004,
+                StatusChecked = 0x0008,
             };
 
             enum Layout
@@ -105,8 +103,6 @@ namespace nui
             virtual bool IsVisible() const;
             virtual bool SetEnabled(bool enabled);
             virtual bool IsEnabled() const;
-            virtual void SetValid(bool valid);
-            virtual bool IsValid() const;
             virtual bool IsInStatus(Status status) const;
 
             // data

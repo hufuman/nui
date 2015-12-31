@@ -31,6 +31,7 @@ namespace nui
         void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, UINT layout, LPCTSTR frameText)
         {
             NAssertError(parentFrame != NULL, _T("Create twice"));
+            SetLayoutable(false);
             frameId = frameId == NULL ? _T("") : frameId;
             frameText = frameText == NULL ? _T("") : frameText;
             SetId(frameId);
@@ -38,7 +39,7 @@ namespace nui
             SetLayout(layout);
             if(parentFrame != NULL)
                 parentFrame->AddChild(this);
-            AutoSize();
+            SetLayoutable(true);
             OnCreate();
         }
 
@@ -55,6 +56,7 @@ namespace nui
 
         void NFrame::Create(NFrame* parentFrame, LPCTSTR frameId, const Base::NRect& rect, LPCTSTR frameText)
         {
+            SetLayoutable(false);
             if(frameId && frameId[0])
                 SetId(frameId);
             if(frameText && frameText[0])
@@ -63,7 +65,7 @@ namespace nui
             SetSize(rect.Width(), rect.Height());
             if(parentFrame != NULL)
                 parentFrame->AddChild(this);
-            AutoSize();
+            SetLayoutable(true);
             OnCreate();
         }
 
@@ -116,13 +118,35 @@ namespace nui
             return text_;
         }
 
-        NTextAttr* NFrame::GetTextAttr()
+        NTextAttr* NFrame::GetTextAttr() const
         {
-            if(textAttr_ == NULL)
+            NTextAttr* result = NULL;
+            TextAttrMap::const_iterator ite = textAttrMap_.find(frameStatus_);
+            if(ite == textAttrMap_.end())
+                ite = textAttrMap_.find(NFrame::StatusNormal);
+
+            if(ite != textAttrMap_.end())
+                result = ite->second;
+            return result;
+        }
+
+        NTextAttr* NFrame::GetTextAttr(UINT status, bool create)
+        {
+            NTextAttr* result = NULL;
+            TextAttrMap::iterator ite = textAttrMap_.find(status);
+            if(ite == textAttrMap_.end())
             {
-                textAttr_ = NUiBus::Instance().GetResourceLoader()->CreateText(MemToolParam);
+                if(create)
+                {
+                    result = NUiBus::Instance().GetResourceLoader()->CreateText(MemToolParam);
+                    textAttrMap_.insert(std::make_pair(status, result));
+                }
             }
-            return textAttr_;
+            else
+            {
+                result = ite->second;
+            }
+            return result;
         }
 
         NCursor* NFrame::GetCursor() const
@@ -136,6 +160,11 @@ namespace nui
             {
                 font_ = NUiBus::Instance().GetResourceLoader()->CreateFont(MemToolParam);
             }
+            return font_;
+        }
+
+        NFont* NFrame::GetFont() const
+        {
             return font_;
         }
 
@@ -155,19 +184,19 @@ namespace nui
 
         Base::NSize NFrame::GetAutoSize() const
         {
-            if(textAttr_ == NULL && foreDraw_ == NULL && bkgDraw_ == NULL)
+            Base::NSize autoSize;
+            if(!IsLayoutable() || window_ == NULL || window_->GetRender() == NULL)
+                return autoSize;
+
+            if(text_.IsEmpty() && foreDraw_ == NULL && bkgDraw_ == NULL)
             {
-                Base::NSize autoSize;
                 return autoSize;
             }
 
 #undef max
 
-            Base::NSize autoSize;
-            if(textAttr_ != NULL && window_ != NULL)
-            {
-                window_->GetRender()->GetTextSize(text_, textAttr_, font_, autoSize);
-            }
+            if(!text_.IsEmpty())
+                window_->GetRender()->GetTextSize(text_, GetTextAttr(), font_, autoSize);
 
             if(foreDraw_ != NULL)
             {
@@ -215,6 +244,7 @@ namespace nui
             if(bkgDraw == bkgDraw_)
                 return;
             bkgDraw_ = bkgDraw;
+            AutoSize();
             Invalidate();
         }
 
@@ -235,6 +265,7 @@ namespace nui
             if(foreDraw == foreDraw_)
                 return;
             foreDraw_ = foreDraw;
+            AutoSize();
             Invalidate();
         }
 
@@ -272,7 +303,7 @@ namespace nui
         void NFrame::DrawContent(NRender* render, const Base::NRect& rect) const
         {
             if(!text_.IsEmpty())
-                render->DrawText(text_, textAttr_, font_, rect);
+                render->DrawText(text_, GetTextAttr(), font_, rect);
         }
 
     }

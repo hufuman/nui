@@ -2,7 +2,6 @@
 #include "FrameParserImpl.h"
 
 #include "ParserUtil.h"
-#include "../../ui/NFrame.h"
 
 IMPLEMENT_REFLECTION(FrameParserImpl);
 
@@ -143,7 +142,6 @@ void FrameParserImpl::PostParse(nui::Base::NBaseObj* targetObj, nui::Data::NData
 void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     NString tmpString;
-    ArgbColor color;
     bool bFlag;
     NFrame* targetFrame = dynamic_cast<NFrame*>(targetObj);
 
@@ -155,48 +153,6 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
 
     if(styleNode->ReadValue(_T("text"), tmpString))
         targetFrame->SetText(tmpString);
-
-    if(styleNode->ReadValue(_T("textColor"), color))
-        targetFrame->GetTextAttr()->SetColor(color);
-
-    if(styleNode->ReadValue(_T("textBgColor"), color))
-        targetFrame->GetTextAttr()->SetBgColor(color);
-
-    if(styleNode->ReadValue(_T("textSingleLine"), bFlag))
-        targetFrame->GetTextAttr()->SetSingleLine(bFlag);
-
-    if(styleNode->ReadValue(_T("textAlign"), tmpString))
-    {
-        NString token;
-        UINT alignFlag = NTextAttr::TextAlignLeft | NTextAttr::TextAlignTop;
-        struct
-        {
-            LPCTSTR name;
-            NTextAttr::TextAlign alignFlag;
-        } TextAlignData[] =
-        {
-            {   _T("left"), NTextAttr::TextAlignLeft          },
-            {   _T("top"), NTextAttr::TextAlignTop            },
-            {   _T("right"), NTextAttr::TextAlignRight        },
-            {   _T("bottom"), NTextAttr::TextAlignBottom      },
-
-            {   _T("center"), NTextAttr::TextAlignCenter      },
-            {   _T("hcenter"), NTextAttr::TextAlignHCenter    },
-            {   _T("vcenter"), NTextAttr::TextAlignVCenter    },
-        };
-        for(int position=0; tmpString.Tokenize(position, _T(","), false, token);)
-        {
-            for(int j=0; j<_countof(TextAlignData); ++ j)
-            {
-                if(token == TextAlignData[j].name)
-                {
-                    alignFlag |= TextAlignData[j].alignFlag;
-                    break;
-                }
-            }
-        }
-        targetFrame->GetTextAttr()->SetAlignFlags(alignFlag);
-    }
 
     if(styleNode->ReadValue(_T("foreDraw"), tmpString))
     {
@@ -213,4 +169,80 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
         targetFrame->SetFont(tmpString);
     }
 
+    FillTextAttr(targetFrame, styleNode);
+}
+
+void FrameParserImpl::FillTextAttr(nui::Ui::NFrame* targetFrame, nui::Data::NDataReader* styleNode)
+{
+    NString tmpString;
+    ArgbColor color;
+    bool bFlag;
+
+    NString name;
+
+    struct
+    {
+        LPCTSTR prefix;
+        UINT status;
+    } textAttrData[] =
+    {
+        { _T("text"), NFrame::StatusNormal },
+        { _T("hoverText"), NFrame::StatusHover },
+        { _T("pressedText"), NFrame::StatusHover | NFrame::StatusPressed },
+        { _T("disabledText"), NFrame::StatusDisabled },
+
+        { _T("chkText"), NFrame::StatusChecked },
+        { _T("chkHoverText"), NFrame::StatusHover | NFrame::StatusChecked },
+        { _T("chkPressedText"), NFrame::StatusHover | NFrame::StatusPressed | NFrame::StatusChecked },
+        { _T("chkDisabledText"), NFrame::StatusDisabled | NFrame::StatusChecked },
+    };
+
+    for(int i=0; i<_countof(textAttrData); ++ i)
+    {
+        name.Format(_T("%sColor"), textAttrData[i].prefix);
+        if(styleNode->ReadValue(name, color))
+            targetFrame->GetTextAttr(textAttrData[i].status, true)->SetColor(color);
+
+        name.Format(_T("%sBgColor"), textAttrData[i].prefix);
+        if(styleNode->ReadValue(name, color))
+            targetFrame->GetTextAttr(textAttrData[i].status, true)->SetBgColor(color);
+
+        name.Format(_T("%sSingleLine"), textAttrData[i].prefix);
+        if(styleNode->ReadValue(name, bFlag))
+            targetFrame->GetTextAttr(textAttrData[i].status, true)->SetSingleLine(bFlag);
+
+        name.Format(_T("%sAlign"), textAttrData[i].prefix);
+        if(styleNode->ReadValue(name, tmpString))
+        {
+            NString token;
+            UINT alignFlag = NTextAttr::TextAlignLeft | NTextAttr::TextAlignTop;
+            struct
+            {
+                LPCTSTR name;
+                NTextAttr::TextAlign alignFlag;
+            } TextAlignData[] =
+            {
+                {   _T("left"), NTextAttr::TextAlignLeft          },
+                {   _T("top"), NTextAttr::TextAlignTop            },
+                {   _T("right"), NTextAttr::TextAlignRight        },
+                {   _T("bottom"), NTextAttr::TextAlignBottom      },
+
+                {   _T("center"), NTextAttr::TextAlignCenter      },
+                {   _T("hcenter"), NTextAttr::TextAlignHCenter    },
+                {   _T("vcenter"), NTextAttr::TextAlignVCenter    },
+            };
+            for(int position=0; tmpString.Tokenize(position, _T(","), false, token);)
+            {
+                for(int j=0; j<_countof(TextAlignData); ++ j)
+                {
+                    if(token == TextAlignData[j].name)
+                    {
+                        alignFlag |= TextAlignData[j].alignFlag;
+                        break;
+                    }
+                }
+            }
+            targetFrame->GetTextAttr(textAttrData[i].status, true)->SetAlignFlags(alignFlag);
+        }
+    }
 }
