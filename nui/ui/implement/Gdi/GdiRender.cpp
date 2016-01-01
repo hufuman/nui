@@ -81,6 +81,8 @@ namespace nui
 
         void GdiRender::DrawShape(NShapeDraw* shape, const Base::NRect& rect)
         {
+            if(shape == NULL)
+                return;
             NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::DrawShape"));
             GdiShapeDraw* gdiShapeDraw = dynamic_cast<GdiShapeDraw*>(shape);
 

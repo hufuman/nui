@@ -321,7 +321,6 @@ namespace nui
 
             render_->DrawBack(IsLayered());
             ::DeleteObject(clipRgn);
-
         }
 
         void NWindow::SetHoverItem(NFrame* frame)
