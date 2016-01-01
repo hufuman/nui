@@ -8,16 +8,22 @@ public:
 
     void Show();
 
+private:
+
+    void ListenEvents();
+
     bool MsgCallback(NWindowBase*, UINT, WPARAM, LPARAM, LRESULT&);
     bool PostDrawCallback(NBaseObj*, NEventData* eventData);
 
-private:
-    void OffsetImageIndex(HWND hWnd, int horzOffset, int vertOffset);
     void UpdateDraw(HWND hWnd, BOOL bReload);
-    HWND CreateRealControl(HWND hWndParent, UINT uId, LPCTSTR szClassName, LPCTSTR szText, const NRect& rcEdit, DWORD dwStyle, DWORD dwExStyle);
 
     void OnDropFiles(HWND hWnd, HDROP hDrop);
     void SaveExtInfo(HWND hWnd, NString strPath);
+
+    bool OnImageIndexChanged(NBaseObj*, NEventData*);
+    bool OnBtnBrowse(NBaseObj*, NEventData*);
+    bool OnBtnSave(NBaseObj*, NEventData*);
+    bool OnParamChanged(NBaseObj*, NEventData*);
 
 private:
     NString filePath_;

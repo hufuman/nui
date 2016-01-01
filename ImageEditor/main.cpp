@@ -28,14 +28,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 nui::Base::NString GetResourcePath()
 {
     nui::Base::NString resPath = nui::Data::NModule::GetInst().GetAppPath();
-    nui::Base::NString tmp = nui::Util::File::CombinePath(resPath, _T("uidata"));
+    nui::Base::NString tmp = nui::Util::File::CombinePath(resPath, _T("ImageEditor"));
     if(!nui::Util::File::IsFolderExists(tmp.GetData()))
     {
         tmp = nui::Util::File::GetParentFolder(tmp);
         tmp = nui::Util::File::GetParentFolder(tmp);
         tmp = nui::Util::File::GetParentFolder(tmp);
         tmp = nui::Util::File::CombinePath(tmp, _T("uidata"));
-        tmp = nui::Util::File::CombinePath(tmp, _T("uidata"));
+        tmp = nui::Util::File::CombinePath(tmp, _T("ImageEditor"));
     }
     return tmp;
 }

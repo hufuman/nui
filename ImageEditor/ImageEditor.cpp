@@ -4,6 +4,9 @@
 #include "Resource.h"
 #include "..\nui\ui\implement\Gdi\GdiUtil.h"
 
+#undef min
+#undef max
+
 CImageEditor::CImageEditor(void)
 {
 }
@@ -15,94 +18,37 @@ CImageEditor::~CImageEditor(void)
 void CImageEditor::Show()
 {
     // Create Window
-    NInstPtr<NWindow> window(MemToolParam);
-    window->Create(NULL, WindowStyle::Top | WindowStyle::Sizable);
-    window->SetSize(520, 420);
-    window->CenterWindow(NULL);
-    window->SetText(_T("Test Window"));
-    window->SetVisible(true);
+    window_.Create(MemToolParam);
+    window_->Create(NULL, WindowStyle::Top | WindowStyle::Sizable);
+    window_->SetSize(520, 420);
+    window_->CenterWindow(NULL);
+    window_->SetText(_T("Image Editor"));
+    window_->GetRootFrame()->ApplyStyle(_T("@MainUI"));
+    window_->SetVisible(true);
+
+    NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
+    shape_ = loader->CreateShape(MemToolParam);
+    shape_->SetFillColor(MakeArgb(255, 255, 255, 255))->SetStyle(NShapeDraw::Rect);
 
     // Drop Files
-    ::DragAcceptFiles(window->GetNative(), TRUE);
+    ::DragAcceptFiles(window_->GetNative(), TRUE);
     Shell::FilterWindowMessage(0x0049 /*WM_COPYGLOBALDATA*/, 1);
     Shell::FilterWindowMessage(WM_DROPFILES, 1);
     Shell::FilterWindowMessage(WM_COPYDATA, 1);
 
-    NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-    shape_ = loader->CreateShape(MemToolParam);
-    shape_->SetBorderWidth(2)->SetFillColor(::GetSysColor(CTLCOLOR_DLG) | 0xFF000000)->SetStyle(NShapeDraw::Rect)->SetBorderColor(MakeArgb(255, 0, 0, 0));
+    ListenEvents();
 
-    window->SetMsgFilterCallback(MakeDelegate(this, &CImageEditor::MsgCallback));
-    window->PostDrawEvent.AddHandler(MakeDelegate(this, &CImageEditor::PostDrawCallback));
-
-    // Create controls
-    NRect rcTmp;
-    HWND hWnd = window->GetNative();
-
-    // Path
-    rcTmp.SetPos(10, 13).SetSize(80, 20);
-    CreateRealControl(hWnd, IDC_STATIC, WC_STATIC, _T("Image Path: "), rcTmp, 0, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 10).SetSize(250, 20);
-    CreateRealControl(hWnd, IDC_EDIT_PATH, WC_EDIT, _T(""), rcTmp, ES_AUTOHSCROLL | ES_AUTOVSCROLL, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 9).SetSize(88, 22);
-    CreateRealControl(hWnd, IDC_BTN_BROWSE, WC_BUTTON, _T("Browse..."), rcTmp, 0, 0);
-
-    // Image Index
-    rcTmp.SetPos(10, 38).SetSize(90, 20);
-    CreateRealControl(hWnd, IDC_STATIC, WC_STATIC, _T("Image Index: "), rcTmp, 0, 0);
-    rcTmp.SetPos(rcTmp.Right + 8, 35).SetSize(20, 22);
-    CreateRealControl(hWnd, IDC_BTN_HORZ_PREV_FRAME, WC_BUTTON, _T("<"), rcTmp, 0, 0);
-    rcTmp.SetPos(rcTmp.Right + 2, 38).SetSize(25, 20);
-    CreateRealControl(hWnd, IDC_LABEL_HORZ_INDEX, WC_STATIC, _T("0"), rcTmp, SS_CENTER, 0);
-    rcTmp.SetPos(rcTmp.Right + 2, 35).SetSize(20, 22);
-    CreateRealControl(hWnd, IDC_BTN_HORZ_NEXT_FRAME, WC_BUTTON, _T(">"), rcTmp, 0, 0);
-    rcTmp.SetPos(rcTmp.Right + 22, 35).SetSize(20, 22);
-    CreateRealControl(hWnd, IDC_BTN_VERT_PREV_FRAME, WC_BUTTON, _T("<"), rcTmp, 0, 0);
-    rcTmp.SetPos(rcTmp.Right + 2, 38).SetSize(25, 20);
-    CreateRealControl(hWnd, IDC_LABEL_VERT_INDEX, WC_STATIC, _T("0"), rcTmp, SS_CENTER, 0);
-    rcTmp.SetPos(rcTmp.Right + 2, 35).SetSize(20, 22);
-    CreateRealControl(hWnd, IDC_BTN_VERT_NEXT_FRAME, WC_BUTTON, _T(">"), rcTmp, 0, 0);
-
-    // DrawType
-    int left = 370;
-    rcTmp.SetPos(left, 35).SetSize(80, 20);
-    CreateRealControl(hWnd, IDC_RADIO_STRETCH, WC_BUTTON, _T("Stretch"), rcTmp, BS_AUTORADIOBUTTON | WS_GROUP, 0);
-    ::CheckDlgButton(hWnd, IDC_RADIO_STRETCH, BST_CHECKED);
-    rcTmp.SetPos(left, 60).SetSize(110, 20);
-    CreateRealControl(hWnd, IDC_RADIO_TILE, WC_BUTTON, _T("Tile"), rcTmp, BS_AUTORADIOBUTTON, 0);
-    rcTmp.SetPos(left, 85).SetSize(110, 20);
-    CreateRealControl(hWnd, IDC_RADIO_NINESTRETCH, WC_BUTTON, _T("NineStretch"), rcTmp, BS_AUTORADIOBUTTON, 0);
-
-    // Param
-    rcTmp.SetPos(10, 63).SetSize(110, 20);
-    CreateRealControl(hWnd, IDC_STATIC, WC_STATIC, _T("Stretch Param: "), rcTmp, 0, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 60).SetSize(30, 20);
-    CreateRealControl(hWnd, IDC_EDIT_PARAM_LEFT, WC_EDIT, _T("0"), rcTmp, ES_CENTER | ES_NUMBER, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 60).SetSize(30, 20);
-    CreateRealControl(hWnd, IDC_EDIT_PARAM_TOP, WC_EDIT, _T("0"), rcTmp, ES_CENTER | ES_NUMBER, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 60).SetSize(30, 20);
-    CreateRealControl(hWnd, IDC_EDIT_PARAM_RIGHT, WC_EDIT, _T("0"), rcTmp, ES_CENTER | ES_NUMBER, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 60).SetSize(30, 20);
-    CreateRealControl(hWnd, IDC_EDIT_PARAM_BOTTOM, WC_EDIT, _T("0"), rcTmp, ES_CENTER | ES_NUMBER, 0);
-
-    // Count
-    rcTmp.SetPos(10, 88).SetSize(110, 20);
-    CreateRealControl(hWnd, IDC_STATIC, WC_STATIC, _T("Image Count: "), rcTmp, 0, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 85).SetSize(30, 20);
-    CreateRealControl(hWnd, IDC_EDIT_HORZ_COUNT, WC_EDIT, _T("1"), rcTmp, ES_CENTER | ES_NUMBER, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 85).SetSize(30, 20);
-    CreateRealControl(hWnd, IDC_EDIT_VERT_COUNT, WC_EDIT, _T("1"), rcTmp, ES_CENTER | ES_NUMBER, 0);
-    rcTmp.SetPos(10 + rcTmp.Right + 8, 85).SetSize(88, 22);
-    CreateRealControl(hWnd, IDC_BTN_SAVE, WC_BUTTON, _T("Save"), rcTmp, 0, 0);
+    // window_->SetMsgFilterCallback(MakeDelegate(this, &CImageEditor::MsgCallback));
+    window_->PostDrawEvent.AddHandler(MakeDelegate(this, &CImageEditor::PostDrawCallback));
 
     // Loop
     nui::Ui::NMsgLoop loop;
-    loop.Loop(window->GetNative());
+    loop.Loop(window_->GetNative());
 
     // Destroy
     shape_ = NULL;
     image_ = NULL;
-    window = NULL;
+    window_ = NULL;
 }
 
 bool CImageEditor::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
@@ -123,7 +69,27 @@ bool CImageEditor::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
 
         data->render->DrawImage(image_, curHorzIndex, curVertIndex, dstRect, 0);
     }
-    return true;
+    return false;
+}
+
+void CImageEditor::ListenEvents()
+{
+    NFrame* rootFrame = window_->GetRootFrame();
+
+    rootFrame->GetChildById(_T("btnBrowse"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnBtnBrowse);
+    rootFrame->GetChildById(_T("btnSave"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnBtnSave);
+
+    rootFrame->GetChildById(_T("btnPrevHorzIndex"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnImageIndexChanged);
+    rootFrame->GetChildById(_T("btnNextHorzIndex"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnImageIndexChanged);
+    rootFrame->GetChildById(_T("btnPrevVertIndex"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnImageIndexChanged);
+    rootFrame->GetChildById(_T("btnNextVertIndex"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnImageIndexChanged);
+
+    rootFrame->GetChildById<NEdit*>(_T("editLeft"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editTop"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editRight"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editBottom"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editHorzCount"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editVertCount"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
 }
 
 bool CImageEditor::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
@@ -151,52 +117,7 @@ bool CImageEditor::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam,
             uCode  = HIWORD(wParam);
             if(uCode == BN_CLICKED)
             {
-                if(uId == IDC_BTN_BROWSE)
-                {
-                    NString strPath;
-                    if(Shell::BrowseForFile(strPath, window->GetNative(), TRUE, _T("All Files|*.gif;*.bmp;*.ico;*.png;*.jpg;*.jpeg||")) && !strPath.IsEmpty())
-                    {
-                        filePath_ = strPath;
-                        ::SetDlgItemText(window->GetNative(), IDC_EDIT_PATH, strPath);
-                        UpdateDraw(window->GetNative(), TRUE);
-                    }
-                }
-                else if(uId == IDC_BTN_SAVE)
-                {
-                    if(image_ != NULL)
-                    {
-                        SaveExtInfo(window->GetNative(), filePath_);
-                    }
-                }
-                else if(uId == IDC_RADIO_STRETCH || uId == IDC_RADIO_TILE || uId == IDC_RADIO_NINESTRETCH)
-                {
-                    UpdateDraw(window->GetNative(), FALSE);
-                }
-                else if(uId == IDC_BTN_HORZ_PREV_FRAME)
-                {
-                    OffsetImageIndex(window->GetNative(), -1, 0);
-                }
-                else if(uId == IDC_BTN_HORZ_NEXT_FRAME)
-                {
-                    OffsetImageIndex(window->GetNative(), 1, 0);
-                }
-                else if(uId == IDC_BTN_VERT_PREV_FRAME)
-                {
-                    OffsetImageIndex(window->GetNative(), 0, -1);
-                }
-                else if(uId == IDC_BTN_VERT_NEXT_FRAME)
-                {
-                    OffsetImageIndex(window->GetNative(), 0, 1);
-                }
-            }
-            else if(uCode == EN_UPDATE)
-            {
-                if(uId == IDC_EDIT_PARAM_LEFT
-                    || uId == IDC_EDIT_PARAM_TOP
-                    || uId == IDC_EDIT_PARAM_RIGHT
-                    || uId == IDC_EDIT_PARAM_BOTTOM
-                    || uId == IDC_EDIT_HORZ_COUNT
-                    || uId == IDC_EDIT_VERT_COUNT)
+                if(uId == IDC_RADIO_STRETCH || uId == IDC_RADIO_TILE || uId == IDC_RADIO_NINESTRETCH)
                 {
                     UpdateDraw(window->GetNative(), FALSE);
                 }
@@ -207,42 +128,17 @@ bool CImageEditor::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam,
     return false;
 }
 
-void CImageEditor::OffsetImageIndex(HWND hWnd, int horzOffset, int vertOffset)
-{
-    if(image_ == NULL)
-        return;
-    int horzCount, vertCount;
-    image_->GetCount(horzCount, vertCount);
-    int curHorzIndex = ::GetDlgItemInt(hWnd, IDC_LABEL_HORZ_INDEX, NULL, FALSE);
-    int curVertIndex = ::GetDlgItemInt(hWnd, IDC_LABEL_VERT_INDEX, NULL, FALSE);
-    curHorzIndex += horzOffset;
-    curVertIndex += vertOffset;
-    if(curHorzIndex >= horzCount)
-        curHorzIndex = horzCount - 1;
-    if(curHorzIndex < 0)
-        curHorzIndex = 0;
-    if(curVertIndex >= vertCount)
-        curVertIndex = vertCount - 1;
-    if(curVertIndex < 0)
-        curVertIndex = 0;
-    ::SetDlgItemInt(hWnd, IDC_LABEL_HORZ_INDEX, curHorzIndex, FALSE);
-    ::SetDlgItemInt(hWnd, IDC_LABEL_VERT_INDEX, curVertIndex, FALSE);
-
-    ::InvalidateRect(hWnd, NULL, FALSE);
-}
-
 void CImageEditor::UpdateDraw(HWND hWnd, BOOL bReload)
 {
     if(filePath_.IsEmpty())
         return;
 
     // trick: cause this function is none-reentrant, set filePath_ to empty to avoid this
+    NFrame* rootFrame = window_->GetRootFrame();
     NString strPath = filePath_;
     filePath_ = _T("");
     if(bReload)
     {
-        // ::SendMessage(hWnd, WM_SETREDRAW, FALSE, 0);
-
         NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
         // set to NULL first, to reload current image, because loader caches images
         image_ = NULL;
@@ -258,22 +154,26 @@ void CImageEditor::UpdateDraw(HWND hWnd, BOOL bReload)
         ::CheckDlgButton(hWnd, IDC_RADIO_TILE, drawType == ImageDrawType::Tile ? BST_CHECKED : BST_UNCHECKED);
         ::CheckDlgButton(hWnd, IDC_RADIO_NINESTRETCH, drawType == ImageDrawType::NineStretch ? BST_CHECKED : BST_UNCHECKED);
 
+        NString tmp;
         NRect rcParam = image_->GetStretchParam();
-        ::SetDlgItemInt(hWnd, IDC_EDIT_PARAM_LEFT, rcParam.Left, FALSE);
-        ::SetDlgItemInt(hWnd, IDC_EDIT_PARAM_TOP, rcParam.Top, FALSE);
-        ::SetDlgItemInt(hWnd, IDC_EDIT_PARAM_RIGHT, rcParam.Right, FALSE);
-        ::SetDlgItemInt(hWnd, IDC_EDIT_PARAM_BOTTOM, rcParam.Bottom, FALSE);
+        tmp.Format(_T("%d"), rcParam.Left);
+        rootFrame->GetChildById<NFrame*>(_T("editLeft"))->SetText(tmp);
+        tmp.Format(_T("%d"), rcParam.Top);
+        rootFrame->GetChildById<NFrame*>(_T("editTop"))->SetText(tmp);
+        tmp.Format(_T("%d"), rcParam.Right);
+        rootFrame->GetChildById<NFrame*>(_T("editRight"))->SetText(tmp);
+        tmp.Format(_T("%d"), rcParam.Bottom);
+        rootFrame->GetChildById<NFrame*>(_T("editBottom"))->SetText(tmp);
 
-        ::SetDlgItemInt(hWnd, IDC_LABEL_HORZ_INDEX, 0, FALSE);
-        ::SetDlgItemInt(hWnd, IDC_LABEL_VERT_INDEX, 0, FALSE);
+        rootFrame->GetChildById<NFrame*>(_T("labelHorzIndex"))->SetText(_T("0"));
+        rootFrame->GetChildById<NFrame*>(_T("labelVertIndex"))->SetText(_T("0"));
 
         int horzCount, vertCount;
         image_->GetCount(horzCount, vertCount);
-        ::SetDlgItemInt(hWnd, IDC_EDIT_HORZ_COUNT, horzCount, FALSE);
-        ::SetDlgItemInt(hWnd, IDC_EDIT_VERT_COUNT, vertCount, FALSE);
-
-        // ::SendMessage(hWnd, WM_SETREDRAW, TRUE, 0);
-        // ::InvalidateRect(hWnd, NULL, FALSE);
+        tmp.Format(_T("%d"), horzCount);
+        rootFrame->GetChildById<NFrame*>(_T("editHorzCount"))->SetText(tmp);
+        tmp.Format(_T("%d"), vertCount);
+        rootFrame->GetChildById<NFrame*>(_T("editVertCount"))->SetText(tmp);
     }
 
     ImageDrawType::Type drawType = ImageDrawType::Stretch;
@@ -284,34 +184,19 @@ void CImageEditor::UpdateDraw(HWND hWnd, BOOL bReload)
     else if(::IsDlgButtonChecked(hWnd, IDC_RADIO_NINESTRETCH) == BST_CHECKED)
         drawType = ImageDrawType::NineStretch;
 
-    int left = ::GetDlgItemInt(hWnd, IDC_EDIT_PARAM_LEFT, NULL, FALSE);
-    int top = ::GetDlgItemInt(hWnd, IDC_EDIT_PARAM_TOP, NULL, FALSE);
-    int right = ::GetDlgItemInt(hWnd, IDC_EDIT_PARAM_RIGHT, NULL, FALSE);
-    int bottom = ::GetDlgItemInt(hWnd, IDC_EDIT_PARAM_BOTTOM, NULL, FALSE);
+    int left = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editLeft"))->GetText());
+    int top = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editTop"))->GetText());
+    int right = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editRight"))->GetText());
+    int bottom = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editBottom"))->GetText());
 
-    int horzCount = ::GetDlgItemInt(hWnd, IDC_EDIT_HORZ_COUNT, NULL, FALSE);
-    int vertCount = ::GetDlgItemInt(hWnd, IDC_EDIT_VERT_COUNT, NULL, FALSE);
+    int horzCount = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editHorzCount"))->GetText());
+    int vertCount = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editVertCount"))->GetText());
 
     image_->SetDrawType(drawType)->SetStretchParam(left, top, right, bottom)->SetCount(horzCount, vertCount);
 
     filePath_ = strPath;
-    ::InvalidateRect(hWnd, NULL, FALSE);
-}
-
-HWND CImageEditor::CreateRealControl(HWND hWndParent, UINT uId, LPCTSTR szClassName, LPCTSTR szText, const NRect& rcEdit, DWORD dwStyle, DWORD dwExStyle)
-{
-    HWND hWnd = ::CreateWindowEx(dwExStyle,
-        szClassName, szText,
-        dwStyle | WS_CHILD | WS_VISIBLE | WS_TABSTOP,
-        rcEdit.Left, rcEdit.Top, rcEdit.Width(), rcEdit.Height(),
-        hWndParent, (HMENU)uId, NULL, 0);
-    ::SendMessage(hWnd, WM_SETFONT, (WPARAM)::SendMessage(hWndParent, WM_GETFONT, 0, 0), TRUE);
-    HGDIOBJ hFont = GetStockObject(DEFAULT_GUI_FONT);
-    LOGFONT logFont;
-    ::GetObject(hFont, sizeof(logFont), &logFont);
-    hFont = (HGDIOBJ)::SendMessage(hWnd, WM_GETFONT, 0, 0);
-        ::GetObject(hFont, sizeof(logFont), &logFont);
-    return hWnd;
+    window_->Invalidate();
+    ::InvalidateRect(window_->GetNative(), NULL, TRUE);
 }
 
 void CImageEditor::OnDropFiles(HWND hWnd, HDROP hDrop)
@@ -375,4 +260,71 @@ void CImageEditor::SaveExtInfo(HWND hWnd, NString strPath)
         ::MessageBox(hWnd, _T("Failed to save extInfo of image"), _T("ImageEditor"), MB_OK | MB_ICONERROR);
         return;
     }
+}
+
+bool CImageEditor::OnImageIndexChanged(NBaseObj* baseObj, NEventData*)
+{
+    NFrame* frame = dynamic_cast<NFrame*>(baseObj);
+    NString frameId = frame->GetId();
+
+    int horzCount = _ttoi(window_->GetRootFrame()->GetChildById<NFrame*>(_T("editHorzCount"))->GetText());
+    int vertCount = _ttoi(window_->GetRootFrame()->GetChildById<NFrame*>(_T("editVertCount"))->GetText());
+
+    NString tmp;
+    if(frameId == _T("btnPrevHorzIndex"))
+    {
+        NFrame* horzIndex = window_->GetRootFrame()->GetChildById<NFrame*>(_T("labelHorzIndex"));
+        tmp.Format(_T("%d"), std::max(_ttoi(horzIndex->GetText()) - 1, 0));
+        horzIndex->SetText(tmp);
+    }
+    else if(frameId == _T("btnNextHorzIndex"))
+    {
+        NFrame* horzIndex = window_->GetRootFrame()->GetChildById<NFrame*>(_T("labelHorzIndex"));
+        tmp.Format(_T("%d"), std::min(_ttoi(horzIndex->GetText()) + 1, horzCount - 1));
+        horzIndex->SetText(tmp);
+    }
+    else if(frameId == _T("btnPrevVertIndex"))
+    {
+        NFrame* vertIndex = window_->GetRootFrame()->GetChildById<NFrame*>(_T("labelVertIndex"));
+        tmp.Format(_T("%d"), std::max(_ttoi(vertIndex->GetText()) - 1, 0));
+        vertIndex->SetText(tmp);
+    }
+    else if(frameId == _T("btnNextVertIndex"))
+    {
+        NFrame* vertIndex = window_->GetRootFrame()->GetChildById<NFrame*>(_T("labelVertIndex"));
+        tmp.Format(_T("%d"), std::min(_ttoi(vertIndex->GetText()) + 1, vertCount - 1));
+        vertIndex->SetText(tmp);
+    }
+    window_->Invalidate();
+    ::InvalidateRect(window_->GetNative(), NULL, TRUE);
+
+    return false;
+}
+
+bool CImageEditor::OnBtnBrowse(NBaseObj*, NEventData*)
+{
+    NString strPath;
+    if(Shell::BrowseForFile(strPath, window_->GetNative(), TRUE, _T("All Files|*.gif;*.bmp;*.ico;*.png;*.jpg;*.jpeg||")) && !strPath.IsEmpty())
+    {
+        filePath_ = strPath;
+        window_->GetRootFrame()->GetChildById<NFrame*>(_T("editPath"))->SetText(strPath);
+        UpdateDraw(window_->GetNative(), TRUE);
+    }
+
+    return false;
+}
+
+bool CImageEditor::OnBtnSave(NBaseObj*, NEventData*)
+{
+    if(image_ != NULL)
+    {
+        SaveExtInfo(window_->GetNative(), filePath_);
+    }
+
+    return false;
+}
+bool CImageEditor::OnParamChanged(NBaseObj*, NEventData*)
+{
+    UpdateDraw(window_->GetNative(), FALSE);
+    return false;
 }

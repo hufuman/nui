@@ -7,7 +7,7 @@
 		<Layout layout="hfill,top" margin="50,40,0,0">
 			<Layout layout="hfill" layoutType="horz">
 				<Label text="@Main:labelPath" layout="vcenter" />
-				<Edit id="editPath" hintText="@Main:editPath" layout="vcenter" />
+				<Edit id="editPath" hintText="@Main:editPath" layout="vcenter" autoSize="false" size="250,20" />
 				<Button id="btnBrowse" text="@Main:btnBrowse" margin="10,0,0,0" />
 			</Layout>
 
@@ -17,7 +17,7 @@
 				<Label id="labelHorzIndex" text="0" margin="10,0,0,0" />
 				<Button id="btnNextHorzIndex" text="@Main:btnNextHorzIndex" size="20,20" autoSize="false" margin="10,0,0,0" />
 				<Button id="btnPrevVertIndex" text="@Main:btnPrevVertIndex" size="20,20" autoSize="false" margin="10,0,0,0" />
-				<Label id="labelHorzIndex" text="0" margin="10,0,0,0" />
+				<Label id="labelVertIndex" text="0" margin="10,0,0,0" />
 				<Button id="btnNextVertIndex" text="@Main:btnNextVertIndex" size="20,20" autoSize="false" margin="10,0,0,0" />
 			</Layout>
 
@@ -31,12 +31,12 @@
 
 			<Layout layout="hfill" layoutType="horz" margin="0,8,0,0" >
 				<Label text="@Main:labelCounts" layout="vcenter" />
-				<Edit id="editLeft" text="0" size="40,20" autoSize="false" margin="10,0,0,0" layout="vcenter" />
-				<Edit id="editTop" text="0" size="40,20" autoSize="false" margin="10,0,0,0" layout="vcenter" />
+				<Edit id="editHorzCount" text="0" size="40,20" autoSize="false" margin="10,0,0,0" layout="vcenter" />
+				<Edit id="editVertCount" text="0" size="40,20" autoSize="false" margin="10,0,0,0" layout="vcenter" />
 				<Button id="btnSave" text="@Main:btnSave" margin="10,0,0,0" />
 			</Layout>
 		</Layout>
 
-		<Image imagePath="@skin:images\nineimage.png" layout="hfill,vfill" margin="20,180,20,20" />
+		<!-- Image imagePath="@skin:images\nineimage.png" layout="hfill,vfill" margin="20,180,20,20" /-->
 	</Frame>
 </UI>
