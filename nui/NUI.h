@@ -18,10 +18,6 @@
     #define NUI_TEMPLATE
 #endif
 
-#define NSafeRelease(ptr)   for(;;){if(ptr) ptr->Release(); ptr = NULL;break;}
-#define NEnsureRelease(ptr)   for(;ptr;){if(ptr->Release() == 0) {ptr = NULL;break;}break;}
-
-
 #include <map>
 #include <list>
 #include <string>

@@ -17,9 +17,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-    HDC hDc = ::GetDC(NULL);
-    ::ReleaseDC(NULL, hDc);
-
     nui::Base::NString resPath = GetResourcePath();
     nui::Base::NInstPtr<nui::Base::NCore> core(MemToolParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);

@@ -229,6 +229,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\base\implement\DelayedReleaser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\base\implement\DelayedReleaser.h"
+					>
+				</File>
+				<File
 					RelativePath=".\base\implement\MemRecorder.cpp"
 					>
 				</File>

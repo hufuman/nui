@@ -11,6 +11,7 @@
 #include "TestDataTypes.h"
 #include "TestReflect.h"
 #include "TestCore.h"
+#include "TestDelayedRelease.h"
 
 // Data
 #include "TestString.h"

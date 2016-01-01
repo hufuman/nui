@@ -4,6 +4,11 @@ namespace nui
 {
     namespace Base
     {
+#define NSafeRelease(ptr)       for(;;){if(ptr) ptr->Release(); ptr = NULL;break;}
+#define NEnsureRelease(ptr)     for(;ptr;){if(ptr->Release() == 0) {ptr = NULL;}break;}
+
+#define NDelayedRelease(ptr)    for(;;){if(ptr) NDelayedReleaseImpl(ptr); ptr = NULL;break;}
+
         /**
          * Base class of all nui classes, which provide refCount
          */
@@ -20,6 +25,8 @@ namespace nui
         private:
             INT refCount_;
         };
+
+        NUI_API void NDelayedReleaseImpl(void* ptr);
 
     }
 }

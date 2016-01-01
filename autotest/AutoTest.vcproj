@@ -225,6 +225,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TestDelayedRelease.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TestReflect.h"
 				>
 			</File>
