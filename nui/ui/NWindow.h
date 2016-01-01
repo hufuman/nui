@@ -5,6 +5,7 @@
 #include "NWindowBase.h"
 #include "NRender.h"
 #include "NEvent.h"
+#include "NCheckBox.h"
 #include "../base/NInstPtr.h"
 #include "../base/NAutoPtr.h"
 
@@ -42,7 +43,13 @@ namespace nui
 
             void SetHoverItem(NFrame* frame);
             NFrame* RefreshHoverItem(const Base::NPoint& point);
+
             bool OnRootFrameSizeChanged(Base::NBaseObj* baseObj, NEventData* eventData);
+
+            void SyncSysButtonGroup();
+            bool OnBtnMinClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
+            bool OnBtnMaxClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
+            bool OnBtnCloseClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
 
         public:
             // Event
@@ -63,6 +70,10 @@ namespace nui
             Base::NAutoPtr<NRender> render_;
 
             Base::NAutoPtr<NFrame> hoverFrame_;
+
+            Base::NAutoPtr<NFrame> btnSysMin_;
+            Base::NAutoPtr<NCheckBox> btnSysMax_;
+            Base::NAutoPtr<NFrame> btnSysClose_;
 
             Base::NString styleName_;
             Base::NRect sizableBorder_;

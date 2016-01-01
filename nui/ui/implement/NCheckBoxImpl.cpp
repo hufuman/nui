@@ -125,9 +125,9 @@ namespace nui
 
         void NCheckBox::OnClicked(const nui::Base::NPoint& point)
         {
+            Util::Misc::CheckFlag(frameStatus_, NFrame::StatusChecked, !IsInStatus(NFrame::StatusChecked));
             __super::OnClicked(point);
 
-            Util::Misc::CheckFlag(frameStatus_, NFrame::StatusChecked, !IsInStatus(NFrame::StatusChecked));
             Invalidate();
         }
     }

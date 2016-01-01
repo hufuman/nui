@@ -265,6 +265,8 @@ namespace nui
             {
                 GetRootFrame()->ApplyStyle(styleName_);
             }
+
+            SyncSysButtonGroup();
 #endif  // _NO_NUI_PARSER_
             WindowCreatedEvent.Invoke(this, NULL);
         }
@@ -272,7 +274,12 @@ namespace nui
         void NWindow::OnSize(int width, int height)
         {
             if(rootFrame_)
+            {
                 rootFrame_->SetSize(width, height);
+
+                if(btnSysMax_)
+                    btnSysMax_->SetCheck(!!::IsZoomed(window_));
+            }
 
             Base::NRect rcWnd;
             GetRect(rcWnd);
@@ -365,6 +372,50 @@ namespace nui
             NFrameBase::SizeEventData* data = static_cast<NFrameBase::SizeEventData*>(eventData);
             SetSize(data->width, data->height);
             return true;
+        }
+
+        void NWindow::SyncSysButtonGroup()
+        {
+            btnSysMin_ = dynamic_cast<NFrame*>(rootFrame_->GetChildById(_T("_nui_sys_min_id_"), true));
+            if(btnSysMin_ != NULL)
+            {
+                btnSysMin_->ClickEvent.AddHandler(MakeDelegate(this, &NWindow::OnBtnMinClickedChanged));
+            }
+
+            NFrame* frameSysMax = dynamic_cast<NFrame*>(rootFrame_->GetChildById(_T("_nui_sys_max_id_"), true));
+            if(frameSysMax != NULL)
+            {
+                btnSysMax_ = dynamic_cast<NCheckBox*>(frameSysMax);
+                btnSysMax_->SetCheck(!!::IsZoomed(window_));
+                btnSysMax_->ClickEvent.AddHandler(MakeDelegate(this, &NWindow::OnBtnMaxClickedChanged));
+            }
+
+            btnSysClose_ = dynamic_cast<NFrame*>(rootFrame_->GetChildById(_T("_nui_sys_close_id_"), true));
+            if(btnSysClose_ != NULL)
+            {
+                btnSysClose_->ClickEvent.AddHandler(MakeDelegate(this, &NWindow::OnBtnCloseClickedChanged));
+            }
+        }
+
+        bool NWindow::OnBtnMinClickedChanged(Base::NBaseObj*, NEventData*)
+        {
+            ::ShowWindow(window_, SW_MINIMIZE);
+            return false;
+        }
+
+        bool NWindow::OnBtnMaxClickedChanged(Base::NBaseObj*, NEventData*)
+        {
+            if(::IsZoomed(window_))
+                ::ShowWindow(window_, SW_RESTORE);
+            else
+                ::ShowWindow(window_, SW_MAXIMIZE);
+            return false;
+        }
+
+        bool NWindow::OnBtnCloseClickedChanged(Base::NBaseObj*, NEventData*)
+        {
+            Destroy();
+            return false;
         }
     }
 }

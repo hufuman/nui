@@ -789,6 +789,7 @@ namespace nui
             Invalidate();
 
             OnSizeChanged(frameWidth, frameHeight);
+
             SizeEventData eventData;
             eventData.width = width;
             eventData.height = height;

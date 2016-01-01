@@ -7,7 +7,6 @@
 #include "WindowMap.h"
 
 #include "../NMsgLoop.h"
-#include "./Gdi/GdiObjMgr.h"
 
 namespace nui
 {
@@ -74,10 +73,6 @@ namespace nui
                 SetVisible(privateData_->visible);
                 NEnsureRelease(privateData_);
             }
-
-            // Set Font
-            HFONT hFont = GdiObjMgr::Instance().GetDefaultFont();
-            ::SendMessage(window_, WM_SETFONT, (WPARAM)hFont, 0);
 
             if(window_)
             {

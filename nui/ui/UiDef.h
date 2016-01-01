@@ -11,4 +11,3 @@
 #define _NUI_SYS_CLOSE_BUTTON_ID_   _T("_nui_sys_close_id_")
 #define _NUI_SYS_MIN_BUTTON_ID_     _T("_nui_sys_min_id_")
 #define _NUI_SYS_MAX_BUTTON_ID_     _T("_nui_sys_max_id_")
-

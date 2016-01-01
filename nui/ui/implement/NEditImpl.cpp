@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "../NEdit.h"
 
+#include "./Gdi/GdiFont.h"
 
 namespace nui
 {

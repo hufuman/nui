@@ -1,8 +1,10 @@
 #pragma once
 
 
-#include "./NRender.h"
 #include "./NDraw.h"
+#include "./NRender.h"
+#include "./NCursor.h"
+#include "./NFrameBase.h"
 #include "../base/NString.h"
 #include "../base/DataTypes.h"
 #include "../base/NAutoPtr.h"

@@ -2,6 +2,8 @@
 #include "../NNative.h"
 
 
+#include "./Gdi/GdiObjMgr.h"
+
 namespace nui
 {
     namespace Ui
@@ -186,7 +188,9 @@ namespace nui
             if(!enabled)
                 ::EnableWindow(hWnd, FALSE);
             AttachWnd(hWnd);
-            ::SendMessage(hWnd, WM_SETFONT, ::SendMessage(window->GetNative(), WM_GETFONT, 0, 0), TRUE);
+
+            HFONT hFont = GdiObjMgr::Instance().GetDefaultFont();
+            ::SendMessage(hWnd, WM_SETFONT, reinterpret_cast<WPARAM>(hFont), TRUE);
         }
 
         void NNative::AttachWnd(HWND hWnd)

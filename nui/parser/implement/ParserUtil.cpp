@@ -90,18 +90,19 @@ namespace ParserUtil
         NString prefix = styleName.SubString(0, pos);
         NString stylePath = styleName.SubString(pos + 1);
 
+        NAutoPtr<nui::Ui::NDraw> result;
         if(prefix == _T("image"))
         {
-            return Ui::NUiBus::Instance().GetResourceLoader()->LoadImage(stylePath);
+            result = Ui::NUiBus::Instance().GetResourceLoader()->LoadImage(stylePath);
         }
         else if(prefix == _T("shape"))
         {
             Base::NInstPtr<Parser::NParser> parser(MemToolParam);
             NAutoPtr<NDataReader> styleNode = parser->FindStyleNode(stylePath);
-            return ParseShapeDraw(styleNode);
+            result = ParseShapeDraw(styleNode);
         }
-        NAssertError(false, _T("Invalid styleName in ParseDraw: %s"), styleName.GetData());
-        return NULL;
+        NAssertError(result != NULL, _T("Invalid styleName in ParseDraw: %s"), styleName.GetData());
+        return result;
     }
 
     NAutoPtr<nui::Ui::NDraw> ParseDraw(NAutoPtr<NDataReader> styleNode)

@@ -4,7 +4,7 @@
 		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
 
 		<Label text="@Main:title" bold="true" fontSize="14" pos="10,10" />
-		<Layout layout="hfill,top" margin="20,40,20,0">
+		<Layout layout="hfill,top" margin="20,30,20,0">
 			<Layout layout="hfill" layoutType="horz">
 				<Label text="@Main:labelPath" layout="vcenter" />
 				<Edit id="editPath" hintText="@Main:editPath" layout="vcenter" autoSize="false" size="250,20" />
