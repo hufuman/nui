@@ -21,6 +21,8 @@ namespace nui
             currentLayoutType_ = LayoutNone;
             SetLayoutType(LayoutVert);
 
+            scrollAllowed_ = true;
+
             innerFrame_->Create(this, _NUI_INNER_FRAME_ID_, 0, _T(""));
             innerFrame_->SetAutoSize(false);
 
@@ -95,6 +97,16 @@ namespace nui
             AutoSize();
         }
 
+        void NLayout::SetScrollAllowed(bool allow)
+        {
+            if(scrollAllowed_ != allow)
+            {
+                scrollAllowed_ = allow;
+                RelayoutChilds();
+                AutoSize();
+            }
+        }
+
         void NLayout::OnCreate()
         {
             __super::OnCreate();
@@ -157,7 +169,7 @@ namespace nui
             else if(innerFrameRect.Bottom + innerFrameRect.Top < rcLayout.Height())
                 innerFrameTop = rcLayout.Height() - innerFrameRect.Height();
 
-            if(rcLayout.Width() >= param.maxSize_.Width && rcLayout.Height() >= param.maxSize_.Height)
+            if(!scrollAllowed_ || (rcLayout.Width() >= param.maxSize_.Width && rcLayout.Height() >= param.maxSize_.Height))
             {
                 // both hide
                 if(horzScroll_)
@@ -197,6 +209,7 @@ namespace nui
             }
             else
             {
+                // both show
                 NScroll* horzScroll = GetHorzScroll();
                 NScroll* vertScroll = GetVertScroll();
                 horzScroll->SetMargin(0, 0, vertScroll->GetRect().Width(), 0);
@@ -250,6 +263,9 @@ namespace nui
 
         NScroll* NLayout::GetHorzScroll()
         {
+            if(!scrollAllowed_)
+                return NULL;
+
             if(horzScroll_)
                 return horzScroll_;
             horzScroll_.Create(MemToolParam);
@@ -262,6 +278,9 @@ namespace nui
 
         NScroll* NLayout::GetVertScroll()
         {
+            if(!scrollAllowed_)
+                return NULL;
+
             if(vertScroll_)
                 return vertScroll_;
             vertScroll_.Create(MemToolParam);

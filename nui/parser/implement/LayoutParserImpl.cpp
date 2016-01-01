@@ -22,7 +22,13 @@ void LayoutParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NData
 
     NLayout* targetLayout = dynamic_cast<NLayout*>(targetObj);
 
+    bool tmpBool;
     NString tmpString;
+
+    if(styleNode->ReadValue(_T("scrollAllowed"), tmpBool))
+    {
+        targetLayout->SetScrollAllowed(tmpBool);
+    }
 
     if(styleNode->ReadValue(_T("layoutType"), tmpString))
     {

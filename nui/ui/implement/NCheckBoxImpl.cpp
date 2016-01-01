@@ -74,9 +74,9 @@ namespace nui
 
             if(GetBkgDraw() != NULL)
             {
-                Base::NSize foreSize = GetBkgDraw()->GetPreferSize();
-                autoSize.Width = std::max(autoSize.Width, foreSize.Width);
-                autoSize.Height = std::max(autoSize.Height, foreSize.Height);
+                Base::NSize bkgSize = GetBkgDraw()->GetPreferSize();
+                autoSize.Width = std::max(autoSize.Width, bkgSize.Width);
+                autoSize.Height = std::max(autoSize.Height, bkgSize.Height);
             }
             return autoSize;
         }
@@ -84,15 +84,18 @@ namespace nui
         void NCheckBox::DrawFore(NRender* render, const Base::NRect& rect) const
         {
             if(!GetForeDraw())
+            {
+                // draw text, or text will be covered
+                __super::DrawContent(render, rect);
                 return;
+            }
 
             if(scaleImage_)
             {
                 __super::DrawFore(render, rect);
 
                 // draw text, or text will be covered
-                if(!GetText().IsEmpty())
-                    render->DrawText(GetText(), GetTextAttr(), GetFont(), rect);
+                __super::DrawContent(render, rect);
                 return;
             }
 
@@ -100,25 +103,14 @@ namespace nui
             int horzIndex, vertIndex;
             GetDrawIndex(horzIndex, vertIndex);
             GetForeDraw()->Draw(render, horzIndex, vertIndex, rcFore);
+
+            Base::NRect rcText(rect);
+            rcText.Left = rcFore.Right + CheckTextAndImageMargin;
+            __super::DrawContent(render, rcText);
         }
 
-        void NCheckBox::DrawContent(NRender* render, const Base::NRect& rect) const
+        void NCheckBox::DrawContent(NRender*, const Base::NRect&) const
         {
-            if(scaleImage_)
-            {
-                __super::DrawContent(render, rect);
-                return;
-            }
-
-            Base::NString text = GetText();
-            if(text.IsEmpty())
-                return;
-
-            Base::NRect rcFore = GetCenterRect(rect, GetForeDraw()->GetPreferSize());
-            Base::NRect rcText(rcFore);
-            rcText.Left = rcText.Right + CheckTextAndImageMargin;
-            rcText.Right = rect.Right;
-            render->DrawText(text, GetTextAttr(), GetFont(), rect);
         }
 
         void NCheckBox::OnCreate()

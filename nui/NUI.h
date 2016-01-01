@@ -78,6 +78,8 @@ using namespace fastdelegate;
 #include "./ui/NFrameBase.h"
 #include "./ui/NFrame.h"
 #include "./ui/NButton.h"
+#include "./ui/NCheckBox.h"
+#include "./ui/NRadioBox.h"
 #include "./ui/NHeader.h"
 #include "./ui/NResourceLoader.h"
 #include "./ui/NUiBus.h"

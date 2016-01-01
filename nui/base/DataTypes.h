@@ -36,6 +36,10 @@ namespace nui
             {
                 return X == point.X && Y == point.Y;
             }
+            bool operator != (const NPoint& point) const
+            {
+                return X != point.X || Y != point.Y;
+            }
 
             operator POINT*()
             {
@@ -77,6 +81,10 @@ namespace nui
             bool operator == (const NSize& size) const
             {
                 return Width == size.Width && Height == size.Height;
+            }
+            bool operator != (const NSize& size) const
+            {
+                return Width != size.Width || Height != size.Height;
             }
 
             operator SIZE*()
@@ -276,6 +284,14 @@ namespace nui
                     && Top == rect.Top
                     && Right == rect.Right
                     && Bottom == rect.Bottom;
+            }
+
+            bool operator != (const NRect& rect) const
+            {
+                return Left != rect.Left
+                    || Top != rect.Top
+                    || Right != rect.Right
+                    || Bottom != rect.Bottom;
             }
 
             static const NRect g_EmptyRect;

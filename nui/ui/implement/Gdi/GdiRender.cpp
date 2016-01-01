@@ -17,6 +17,8 @@ namespace nui
 {
     namespace Ui
     {
+        HRGN g_EmptyRegion = ::CreateRectRgn(0, 0, 0, 0);
+
         GdiRender::GdiRender()
         {
             orgDc_ = NULL;
@@ -342,16 +344,21 @@ namespace nui
         {
             NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::ClipRect"));
 
-            HRGN oldClip = ::CreateRectRgn(0, 0, 0, 0);
-            if(clipRgn == NULL || ::EqualRgn(clipRgn, oldClip))
+            if(clipRgn == NULL || ::EqualRgn(clipRgn, g_EmptyRegion))
             {
-                ::DeleteObject(oldClip);
                 Base::NHolder holder;
                 return holder;
             }
 
-            ::GetClipRgn(memDC_, oldClip);
+            Base::NRect clipRect;
+            int result = ::GetClipBox(memDC_, clipRect);
             ::ExtSelectClipRgn(memDC_, clipRgn, RGN_AND);
+
+            HRGN oldClip = NULL;
+            if(result == SIMPLEREGION || result == COMPLEXREGION)
+            {
+                oldClip = ::CreateRectRgn(clipRect.Left, clipRect.Top, clipRect.Right, clipRect.Bottom);
+            }
 
             Base::NHolder holder(reinterpret_cast<void*>(oldClip), MakeDelegate(this, &GdiRender::RestoreRgn));
             return holder;

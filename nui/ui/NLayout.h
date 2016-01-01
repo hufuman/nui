@@ -33,6 +33,8 @@ namespace nui
             virtual bool RemoveChild(NFrameBase* child);
             virtual void RemoveAllChilds();
 
+            virtual void SetScrollAllowed(bool allow);
+
         public:
             virtual void SetLayoutable(bool layoutable);
 
@@ -59,6 +61,7 @@ namespace nui
             Base::NInstPtr<NFrame> innerFrame_;
             Base::NAutoPtr<NLayoutArranger> layoutArranger_;
 
+            bool scrollAllowed_;
             Base::NSize autoSize_;
 
             Base::NAutoPtr<NScroll> horzScroll_;
