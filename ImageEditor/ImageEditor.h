@@ -24,10 +24,10 @@ private:
     bool OnBtnBrowse(NBaseObj*, NEventData*);
     bool OnBtnSave(NBaseObj*, NEventData*);
     bool OnParamChanged(NBaseObj*, NEventData*);
+    bool OnDrawTypeChanged(NBaseObj*, NEventData*);
 
 private:
     NString filePath_;
     NAutoPtr<NImageDraw> image_;
-    NAutoPtr<NShapeDraw> shape_;
     NAutoPtr<NWindow> window_;
 };

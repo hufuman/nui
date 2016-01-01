@@ -12,4 +12,8 @@
     <string id="labelParams" value="Stretch Params: " />
     <string id="labelCounts" value="Image Count: " />
     <string id="btnSave" value="Save" />
+
+    <string id="Stretch" value="Stretch" />
+    <string id="Tile" value="Tile" />
+    <string id="NineStretch" value="NineStretch" />
 </Bundle>

@@ -28,12 +28,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     CTestDrawImage testDrawImage;
     testDrawImage.Test();//*/
 
-    //*
+    /*
     CControlTest controlTest;
     controlTest.Test();
     //*/
 
-    /*
+    //*
     {
         NInstPtr<NParser> parser(MemToolParam);
         NAutoPtr<NFrame> frame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(NULL, _T("@AboutUI:MainUI")));

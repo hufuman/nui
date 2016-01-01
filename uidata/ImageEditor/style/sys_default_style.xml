@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <UI>
-	<Frame name="button" textColor="#FFFFFFFF" />
+	<Layout name="layout" scrollAllowed="false" />
 	<Frame name="window" layout="hfill;vfill">
 		<Layout layoutType="horz" layout="right,top">
 			<Button id="_nui_sys_close_id_" bkgDraw="image:@skin:common\sys_close_button.png" />
