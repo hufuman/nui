@@ -154,6 +154,22 @@ namespace nui
             return NULL;
         }
 
+        void NFrame::SetTooltip(const Base::NString &tooltip)
+        {
+            nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
+            nui::Base::NString realTooltip = stringBundle->GetString(tooltip);
+
+            if(tooltip_ == realTooltip)
+                return;
+
+            tooltip_ = realTooltip;
+        }
+
+        Base::NString NFrame::GetTooltip() const
+        {
+            return tooltip_;
+        }
+
         NFont* NFrame::GetFont(bool needCreate)
         {
             if(font_ == NULL && needCreate)

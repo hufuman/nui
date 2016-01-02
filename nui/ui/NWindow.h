@@ -51,6 +51,13 @@ namespace nui
             bool OnBtnMaxClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
             bool OnBtnCloseClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
 
+            HWND GetTooltipWnd();
+            void UpdateTooltipWnd();
+            void DestroyTooltipWnd();
+            void UpdateTooltipText(const Base::NString& tooltip);
+            void ShowTooltip(const Base::NString& tooltip);
+            void HideTooltip();
+
         public:
             // Event
             class WindowDrawEventData : public NEventData
@@ -77,6 +84,9 @@ namespace nui
 
             Base::NString styleName_;
             Base::NRect sizableBorder_;
+
+            HWND tooltipWnd_;
+
             END_USE_UNEXPORT_TEMPLATE()
         };
     }

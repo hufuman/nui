@@ -56,7 +56,7 @@ namespace ParserUtil
         parser->Create(parentObj, targetObj);
         parser->FillAttr(targetObj, styleNode);
         parser->PostParse(targetObj, styleNode);
-        parser->Release();
+        NDelayedRelease(parser);
         targetObj->Release();
 
         return targetObj;

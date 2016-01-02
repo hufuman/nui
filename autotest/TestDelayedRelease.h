@@ -52,5 +52,5 @@ TEST_F(TestDelayedRelease, Basic)
     looop.Loop();
 
     tickCount = ::GetTickCount() - tickCount;
-    EXPECT_GT(tickCount, 4999);
+    EXPECT_GT(tickCount, static_cast<DWORD>(4999));
 }

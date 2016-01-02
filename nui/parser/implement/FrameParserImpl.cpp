@@ -40,6 +40,9 @@ void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
     if(styleNode->ReadValue(_T("text"), tmpString))
         targetFrame->SetText(tmpString);
 
+    if(styleNode->ReadValue(_T("tooltip"), tmpString))
+        targetFrame->SetTooltip(tmpString);
+
     if(styleNode->ReadValue(_T("id"), tmpString))
         targetFrame->SetId(tmpString);
 

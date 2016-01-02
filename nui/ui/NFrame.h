@@ -47,6 +47,9 @@ namespace nui
             virtual NTextAttr* GetTextAttr(UINT status, bool create);
             virtual NCursor* GetCursor() const;
 
+            virtual void SetTooltip(const Base::NString &tooltip);
+            virtual Base::NString GetTooltip() const;
+
             virtual NFont* GetFont(bool needCreate);
             virtual NFont* GetFont() const;
             virtual void SetFont(NFont* font);
@@ -116,6 +119,7 @@ namespace nui
             Base::NAutoPtr<NFont> font_;
 
             Base::NString text_;
+            Base::NString tooltip_;
 
         public:
             // Event
