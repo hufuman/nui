@@ -15,4 +15,16 @@ public:
 private:
     bool GetStyleParam(LPCTSTR stylePath, nui::Base::NString& filePath, nui::Base::NString& styleName);
     nui::Base::NAutoPtr<nui::Data::NDataReader> LoadPackFile(LPCTSTR filePath);
+
+    void OnReleaseTimer();
+
+private:
+    struct StyleData
+    {
+        nui::Base::NAutoPtr<nui::Data::NDataReader> styleReader;
+        DWORD lastAccessTime;
+    };
+    typedef std::map<nui::Base::NString, StyleData> StyleMap;
+    StyleMap styleMap_;
+    nui::Base::NHolder releaseHolder_;
 };

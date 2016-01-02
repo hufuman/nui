@@ -2,6 +2,7 @@
 #include "NParserImpl.h"
 
 #include "ParserUtil.h"
+#include "../../Ui/NTimerSrv.h"
 
 using namespace nui;
 using namespace Base;
@@ -40,9 +41,17 @@ bool NParserImpl::ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR stylePath)
 
 nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR stylePathParam)
 {
-    NAutoPtr<NDataReader> styleNode;
+    StyleMap::iterator ite = styleMap_.find(stylePathParam);
+    if(ite != styleMap_.end())
+    {
+        StyleData& data = ite->second;
+        data.lastAccessTime = ::GetTickCount();
+        return data.styleReader;
+    }
+
     NString filePath;
     NString styleName;
+    NAutoPtr<NDataReader> styleNode;
 
     bool innerBreak = false;
     NString stylePath(stylePathParam);
@@ -87,6 +96,17 @@ nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR s
     }
 
     NAssertError(styleNode, _T("StyleNotFound: %s"), stylePathParam);
+    if(styleNode && !releaseHolder_)
+    {
+        StyleData data;
+        data.lastAccessTime = ::GetTickCount();
+        data.styleReader = styleNode;
+        styleMap_.insert(std::make_pair(stylePath, data));
+
+        nui::Base::NInstPtr<nui::Ui::NTimerSrv> timerSrv(MemToolParam);
+        releaseHolder_ = timerSrv->startTimer(1000, MakeDelegate(this, &NParserImpl::OnReleaseTimer));
+    }
+
     return styleNode;
 }
 
@@ -138,4 +158,29 @@ NAutoPtr<NDataReader> NParserImpl::LoadPackFile(LPCTSTR filePath)
     }
 
     return reader;
+}
+
+void NParserImpl::OnReleaseTimer()
+{
+    DWORD nowTickCount = ::GetTickCount();
+    StyleMap::iterator ite = styleMap_.begin();
+    while(ite != styleMap_.end())
+    {
+        const nui::Base::NString& styleName = ite->first;
+        UNREFERENCED_PARAMETER(styleName);
+        StyleData& data = ite->second;
+        if(nowTickCount - data.lastAccessTime > 1000)
+        {
+            data.styleReader = NULL;
+            ite = styleMap_.erase(ite);
+        }
+        else
+        {
+            ++ ite;
+        }
+    }
+    if(styleMap_.empty())
+    {
+        releaseHolder_.Release();
+    }
 }
