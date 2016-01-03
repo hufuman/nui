@@ -4,12 +4,12 @@
 
 DelayedReleaser::DelayedReleaser()
 {
-    inTimer_ = false;
+    inReleasing_ = false;
 }
 
 DelayedReleaser::~DelayedReleaser()
 {
-    releaseTimer_.Release();
+    ReleaseAll();
 }
 
 DelayedReleaser& DelayedReleaser::GetInstance()
@@ -25,22 +25,35 @@ void DelayedReleaser::AddPointer(nui::Base::NBaseObj* pointer)
         nui::Base::NInstPtr<nui::Ui::NTimerSrv> timerSrv(MemToolParam);
         releaseTimer_ = timerSrv->startTimer(1000, MakeDelegate(this, &DelayedReleaser::OnTimer));
     }
-    if(inTimer_)
+    if(inReleasing_)
         waitReleaseQueue_.push_back(pointer);
     else
         releaseQueue_.push_back(pointer);
 }
 
+void DelayedReleaser::ReleaseAll()
+{
+    releaseTimer_.Release();
+    ReleaseObjs();
+    // twice, to make sure waitReleaseQueue_ will be released
+    ReleaseObjs();
+}
+
 void DelayedReleaser::OnTimer()
 {
-    inTimer_ = true;
+    ReleaseObjs();
+}
+
+void DelayedReleaser::ReleaseObjs()
+{
+    inReleasing_ = true;
     PointerList::iterator ite = releaseQueue_.begin();
     for(; ite != releaseQueue_.end(); ++ ite)
     {
         (*ite)->Release();
     }
     releaseQueue_.clear();
-    inTimer_ = false;
+    inReleasing_ = false;
     releaseQueue_.insert(releaseQueue_.end(), waitReleaseQueue_.begin(), waitReleaseQueue_.end());
     waitReleaseQueue_.clear();
 

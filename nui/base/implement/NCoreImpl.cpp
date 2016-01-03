@@ -5,6 +5,7 @@
 #include "../../data/NStringBundle.h"
 #include "../../data/NFileSystem.h"
 #include "../../util/NFileUtil.h"
+#include "DelayedReleaser.h"
 
 IMPLEMENT_REFLECTION_EX(NCoreImpl, nui::Base::NReflect::Singleton);
 
@@ -75,6 +76,8 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
 
 void NCoreImpl::DestroyCore()
 {
+    DelayedReleaser::GetInstance().ReleaseAll();
+
     nui::Ui::NUiBus::Instance().Destroy();
     if(m_uGdiplusToken != 0)
     {

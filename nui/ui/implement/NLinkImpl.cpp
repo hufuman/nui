@@ -36,10 +36,10 @@ namespace nui
         {
             NFont* font = GetFont();
             bool isHover = IsInStatus(NFrame::StatusHover);
-            if(isHover)
+            if(isHover && font)
                 font->SetUnderline(true);
             __super::DrawContent(render, rect);
-            if(isHover)
+            if(isHover && font)
                 font->SetUnderline(false);
         }
 

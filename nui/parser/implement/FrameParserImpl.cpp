@@ -177,7 +177,9 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
         targetFrame->SetFont(tmpString);
     }
 
-    targetFrame->SetFont(ParserUtil::ParseFont(styleNode));
+    nui::Base::NAutoPtr<nui::Ui::NFont> font = ParserUtil::ParseFont(styleNode);
+    if(font)
+        targetFrame->SetFont(font);
 
     FillTextAttr(targetFrame, styleNode);
 }

@@ -14,15 +14,17 @@ public:
     static DelayedReleaser& GetInstance();
 
     void AddPointer(nui::Base::NBaseObj* pointer);
+    void ReleaseAll();
 
 private:
     void OnTimer();
+    void ReleaseObjs();
 
 private:
     typedef std::list<nui::Base::NBaseObj*> PointerList;
     PointerList releaseQueue_;
     PointerList waitReleaseQueue_;
 
-    bool inTimer_;
+    bool inReleasing_;
     nui::Base::NHolder releaseTimer_;
 };
