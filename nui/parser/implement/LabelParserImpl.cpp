@@ -16,6 +16,11 @@ LabelParserImpl::LabelParserImpl()
     creator_ = &NBaseParser::BaseCreator<NLabel>;
 }
 
+bool LabelParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NLabel*>(targetObj) != NULL;
+}
+
 void LabelParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     FrameParserImpl::FillAttr(targetObj, styleNode);

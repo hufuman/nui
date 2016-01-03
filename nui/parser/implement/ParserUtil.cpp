@@ -40,7 +40,7 @@ namespace ParserUtil
         return result;
     }
 
-    NAutoPtr<NBaseObj> LoadObj(NBaseObj* parentObj, Base::NAutoPtr<Data::NDataReader> styleNode)
+    NAutoPtr<NBaseObj> LoadObj(bool newObj, NBaseObj* parentObj, Base::NAutoPtr<Data::NDataReader> styleNode)
     {
         NString objName = styleNode->GetNodeName();
         objName.MakeLower();
@@ -51,7 +51,29 @@ namespace ParserUtil
         if(parser == NULL)
             return NULL;
 
-        Base::NAutoPtr<NBaseObj> targetObj = parser->Alloc();
+        parser->SetNewObj(newObj);
+
+        NString frameId;
+        Base::NAutoPtr<NBaseObj> targetObj;
+        if(!newObj && styleNode->ReadValue(_T("id"), frameId))
+        {
+            nui::Ui::NFrame* frame = dynamic_cast<nui::Ui::NFrame*>(parentObj);
+            nui::Ui::NFrame* targetFrame = frame->GetChildById(frameId, false);
+            if(targetFrame != NULL)
+            {
+                targetObj = targetFrame;
+                bool correctObj = parser->IsCorrectObj(targetFrame);
+                NForceAssertError(correctObj, _T("Wrong Type for FrameId: %s"), frameId.GetData());
+                if(!correctObj)
+                    return NULL;
+            }
+        }
+
+        if(!targetObj)
+        {
+            targetObj = parser->Alloc();
+        }
+
         parser->PreParse(targetObj, styleNode);
         parser->Create(parentObj, targetObj);
         parser->FillAttr(targetObj, styleNode);
@@ -72,6 +94,22 @@ namespace ParserUtil
         NAssertError(parser != NULL, _T("Parser not found, Name: %s"), parserName.GetData());
         if(parser == NULL)
             return NULL;
+
+        parser->SetNewObj(false);
+
+        NString frameId;
+        if(styleNode->ReadValue(_T("id"), frameId))
+        {
+            nui::Ui::NFrame* targetFrame = dynamic_cast<nui::Ui::NFrame*>(targetObj);
+            if(targetFrame != NULL)
+            {
+                targetObj = targetFrame;
+                bool correctObj = parser->IsCorrectObj(targetFrame);
+                NForceAssertError(correctObj, _T("Wrong Type for FrameId: %s"), frameId.GetData());
+                if(!correctObj)
+                    return NULL;
+            }
+        }
 
         parser->PreParse(targetObj, styleNode);
         parser->FillAttr(targetObj, styleNode);

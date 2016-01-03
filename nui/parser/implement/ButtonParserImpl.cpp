@@ -16,6 +16,11 @@ ButtonParserImpl::ButtonParserImpl()
     creator_ = &NBaseParser::BaseCreator<NButton>;
 }
 
+bool ButtonParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NButton*>(targetObj) != NULL;
+}
+
 void ButtonParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     FrameParserImpl::FillAttr(targetObj, styleNode);

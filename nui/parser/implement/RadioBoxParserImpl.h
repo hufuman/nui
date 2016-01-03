@@ -9,5 +9,6 @@ class RadioBoxParserImpl : public CheckBoxParserImpl
 public:
     RadioBoxParserImpl();
 
+    virtual bool IsCorrectObj(nui::Base::NBaseObj* targetObj);
     virtual void PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode);
 };

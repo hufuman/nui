@@ -16,6 +16,11 @@ LinkParserImpl::LinkParserImpl()
     creator_ = &NBaseParser::BaseCreator<NLink>;
 }
 
+bool LinkParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NLink*>(targetObj) != NULL;
+}
+
 void LinkParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     __super::FillAttr(targetObj, styleNode);

@@ -16,6 +16,11 @@ CheckBoxParserImpl::CheckBoxParserImpl()
     creator_ = &NBaseParser::BaseCreator<NCheckBox>;
 }
 
+bool CheckBoxParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NCheckBox*>(targetObj) != NULL;
+}
+
 void CheckBoxParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     ButtonParserImpl::FillAttr(targetObj, styleNode);

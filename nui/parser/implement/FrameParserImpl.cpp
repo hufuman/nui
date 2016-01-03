@@ -15,6 +15,11 @@ FrameParserImpl::FrameParserImpl()
     creator_ = &NBaseParser::BaseCreator<NFrame>;
 }
 
+bool FrameParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NFrame*>(targetObj) != NULL;
+}
+
 void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     bool tmpBool;
@@ -135,7 +140,7 @@ void FrameParserImpl::PostParse(nui::Base::NBaseObj* targetObj, nui::Data::NData
         }
         else
         {
-            result = (ParserUtil::LoadObj(targetObj, childNode) != NULL);
+            result = (ParserUtil::LoadObj(newObj_, targetObj, childNode) != NULL);
             UNREFERENCED_PARAMETER(result);
             NAssertError(result, _T("Failed to LoadObj in FrameParser"));
         }

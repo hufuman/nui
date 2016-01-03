@@ -21,7 +21,7 @@ namespace nui
             lastDrawTick_ = 0;
             drawTimerId_ = 0;
             modalParent_ = NULL;
-            privateData_ = NULL;
+            privateWindowBaseData_ = NULL;
         }
 
         NWindowBase::~NWindowBase()
@@ -63,15 +63,15 @@ namespace nui
                 static_cast<LPVOID>(this));
             NAssertError(window_ != NULL, _T("Failed to create window"));
 
-            if(privateData_)
+            if(privateWindowBaseData_)
             {
-                SetText(privateData_->text);
-                SetRect(privateData_->rect);
-                SetStyle(privateData_->style);
-                if(privateData_->centerWindow)
-                    CenterWindow(privateData_->centerRelativeWindow);
-                SetVisible(privateData_->visible);
-                NEnsureRelease(privateData_);
+                SetText(privateWindowBaseData_->text);
+                SetRect(privateWindowBaseData_->rect);
+                SetStyle(privateWindowBaseData_->style);
+                if(privateWindowBaseData_->centerWindow)
+                    CenterWindow(privateWindowBaseData_->centerRelativeWindow);
+                SetVisible(privateWindowBaseData_->visible);
+                NSafeRelease(privateWindowBaseData_);
             }
 
             if(window_)
@@ -87,8 +87,8 @@ namespace nui
             NAssertError(window_ == NULL, _T("window_ isn't Null in DoModal"));
             modalParent_ = parentWindow;
 
-            if(privateData_)
-                privateData_->AddRef();
+            if(privateWindowBaseData_)
+                privateWindowBaseData_->AddRef();
 
             bool result = Create(modalParent_);
             if(result)
@@ -163,12 +163,22 @@ namespace nui
             if(window_ != NULL)
                 return !!::GetWindowRect(window_, rect);
 
-            if(privateData_)
+            if(privateWindowBaseData_)
             {
-                rect = privateData_->rect;
+                rect = privateWindowBaseData_->rect;
                 return true;
             }
             return false;
+        }
+
+        void NWindowBase::SetPos(int x, int y)
+        {
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetPos"));
+
+            if(window_ == NULL)
+                GetPrivateData()->rect.SetPos(x, y);
+            else
+                ::SetWindowPos(window_, NULL, x, y, 0, 0, SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOSIZE);
         }
 
         void NWindowBase::SetSize(int width, int height)
@@ -455,13 +465,13 @@ namespace nui
             style |= WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
         }
 
-        nui::Base::NAutoPtr<NWindowBase::WindowPrivateData> NWindowBase::GetPrivateData()
+        nui::Base::NAutoPtr<NWindowBase::WindowBasePrivateData> NWindowBase::GetPrivateData()
         {
-            if(privateData_)
-                return privateData_;
-            privateData_ = NNew(WindowPrivateData);
-            privateData_->AddRef();
-            return privateData_;
+            if(privateWindowBaseData_)
+                return privateWindowBaseData_;
+            privateWindowBaseData_ = NNew(WindowBasePrivateData);
+            privateWindowBaseData_->AddRef();
+            return privateWindowBaseData_;
         }
     }
 }

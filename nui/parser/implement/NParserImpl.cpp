@@ -18,7 +18,7 @@ NAutoPtr<NBaseObj> NParserImpl::Parse(Base::NBaseObj* parentObj, LPCTSTR stylePa
         NAutoPtr<NDataReader> styleNode = FindStyleNode(stylePath);
         if(styleNode)
         {
-            result = ParserUtil::LoadObj(parentObj, styleNode);
+            result = ParserUtil::LoadObj(true, parentObj, styleNode);
         }
     }
     NAssertError(result, _T("StyleNotFound: %s"), stylePath);

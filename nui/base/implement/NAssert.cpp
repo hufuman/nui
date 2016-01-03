@@ -22,11 +22,11 @@ namespace
         return 0;
     }
 
-    bool RealAssertImpl(bool exp, LPCTSTR filePath, int line, LPCTSTR format, va_list params)
+    bool RealAssertImpl(bool force, bool exp, LPCTSTR filePath, int line, LPCTSTR format, va_list params)
     {
         if(exp)
             return true;
-        if(!g_AssertEnabled)
+        if(!g_AssertEnabled && !force)
             return exp;
 
         NString strMsg;
@@ -93,18 +93,18 @@ namespace
     }
 }
 
-NUI_API void NAssertImpl(bool exp, LPCTSTR filePath, int line, LPCTSTR format, ...)
+NUI_API void NAssertImpl(bool force, bool exp, LPCTSTR filePath, int line, LPCTSTR format, ...)
 {
     va_list args;
     va_start(args, format);
-    RealAssertImpl(exp, filePath, line, format, args);
+    RealAssertImpl(force, exp, filePath, line, format, args);
 }
 
-NUI_API bool NVerifyImpl(bool exp, LPCTSTR filePath, int line, LPCTSTR format, ...)
+NUI_API bool NVerifyImpl(bool force, bool exp, LPCTSTR filePath, int line, LPCTSTR format, ...)
 {
     va_list args;
     va_start(args, format);
-    return RealAssertImpl(exp, filePath, line, format, args);
+    return RealAssertImpl(force, exp, filePath, line, format, args);
 }
 
 NUI_API bool NAssertEnableImpl(bool enable)

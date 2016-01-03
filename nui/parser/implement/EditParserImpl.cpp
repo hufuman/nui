@@ -16,6 +16,11 @@ EditParserImpl::EditParserImpl()
     creator_ = &NBaseParser::BaseCreator<NEdit>;
 }
 
+bool EditParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NEdit*>(targetObj) != NULL;
+}
+
 void EditParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     FrameParserImpl::FillAttr(targetObj, styleNode);

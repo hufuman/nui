@@ -21,14 +21,23 @@ public:
 
     NBaseParser()
     {
+        newObj_ = false;
         creator_ = NULL;
     }
     virtual ~NBaseParser() {}
 
     virtual nui::Base::NBaseObj* Alloc()
     {
+        newObj_ = true;
         return creator_();
     }
+
+    void SetNewObj(bool newObj)
+    {
+        newObj_ = newObj;
+    }
+
+    virtual bool IsCorrectObj(nui::Base::NBaseObj* targetObj) = 0;
     virtual void Create(nui::Base::NBaseObj* parentObj, nui::Base::NBaseObj* targetObj) = 0;
     virtual void FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode) = 0;
 
@@ -45,5 +54,6 @@ public:
     }
 
 protected:
+    bool newObj_;
     ObjectCreator creator_;
 };

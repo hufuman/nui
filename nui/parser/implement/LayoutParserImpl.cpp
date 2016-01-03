@@ -16,6 +16,11 @@ LayoutParserImpl::LayoutParserImpl()
     creator_ = &NBaseParser::BaseCreator<NLayout>;
 }
 
+bool LayoutParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NLayout*>(targetObj) != NULL;
+}
+
 void LayoutParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     FrameParserImpl::FillAttr(targetObj, styleNode);

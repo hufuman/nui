@@ -28,12 +28,12 @@ namespace nui
         class NUI_CLASS NWindowBase : public nui::Base::Noncopyable
         {
         private:
-            class WindowPrivateData : public nui::Base::NBaseObj
+            class WindowBasePrivateData : public nui::Base::NBaseObj
             {
-                WindowPrivateData(const WindowPrivateData&);
-                WindowPrivateData& operator = (const WindowPrivateData&);
+                WindowBasePrivateData(const WindowBasePrivateData&);
+                WindowBasePrivateData& operator = (const WindowBasePrivateData&);
             public:
-                WindowPrivateData()
+                WindowBasePrivateData()
                 {
                     visible = false;
                     style = WindowStyle::Top | WindowStyle::Sizable;
@@ -65,6 +65,7 @@ namespace nui
 
             bool GetRect(nui::Base::NRect& rect);
             void SetSize(int width, int height);
+            void SetPos(int x, int y);
             void CenterWindow(HWND relativeWindow);
             void SetRect(const Base::NRect& rect);
 
@@ -86,7 +87,7 @@ namespace nui
             bool IsLayered() const;
             void GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const;
 
-            nui::Base::NAutoPtr<WindowPrivateData> GetPrivateData();
+            nui::Base::NAutoPtr<WindowBasePrivateData> GetPrivateData();
 
         protected:
             HWND    window_;
@@ -100,7 +101,7 @@ namespace nui
 
             HWND    modalParent_;
 
-            nui::Base::NAutoPtr<WindowPrivateData> privateData_;
+            nui::Base::NAutoPtr<WindowBasePrivateData> privateWindowBaseData_;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

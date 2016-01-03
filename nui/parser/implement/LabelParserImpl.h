@@ -9,5 +9,6 @@ class LabelParserImpl : public FrameParserImpl
 public:
     LabelParserImpl();
 
+    virtual bool IsCorrectObj(nui::Base::NBaseObj* targetObj);
     virtual void FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode);
 };

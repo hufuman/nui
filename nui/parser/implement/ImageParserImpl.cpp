@@ -16,6 +16,11 @@ ImageParserImpl::ImageParserImpl()
     creator_ = &NBaseParser::BaseCreator<NImage>;
 }
 
+bool ImageParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NImage*>(targetObj) != NULL;
+}
+
 void ImageParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     FrameParserImpl::FillAttr(targetObj, styleNode);

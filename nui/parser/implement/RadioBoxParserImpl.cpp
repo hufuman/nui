@@ -16,6 +16,11 @@ RadioBoxParserImpl::RadioBoxParserImpl()
     creator_ = &NBaseParser::BaseCreator<NRadioBox>;
 }
 
+bool RadioBoxParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
+{
+    return targetObj != NULL && dynamic_cast<NRadioBox*>(targetObj) != NULL;
+}
+
 void RadioBoxParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
     CheckBoxParserImpl::PreParse(targetObj, styleNode);
