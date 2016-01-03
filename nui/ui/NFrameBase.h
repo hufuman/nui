@@ -41,6 +41,7 @@ namespace nui
             {
                 FlagNone        = 0x0000,
                 FlagVisible     = 0x0001,
+                FlagValid       = 0x0002,
                 FlagAutoSize    = 0x0004,
                 FlagCanHover    = 0x0010,
                 FlagLayoutable  = 0x0020,

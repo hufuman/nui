@@ -13,7 +13,7 @@ namespace nui
         {
             Util::Misc::CheckFlag(frameFlags_, NFrame::FlagCanHover, true);
             GetTextAttr(NFrame::StatusNormal, true)->SetColor(MakeArgb(255, 0, 0, 204));
-            GetFont();
+            GetFont(true);
             isUrl_ = false;
         }
 

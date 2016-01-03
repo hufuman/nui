@@ -29,7 +29,7 @@ namespace nui
             parentFrame_ = NULL;
             topMostCount_ = 0;
             bottomMostCount_ = 0;
-            frameFlags_ = FlagVisible | FlagAutoSize | FlagLayoutable;
+            frameFlags_ = FlagVisible | FlagAutoSize | FlagLayoutable | FlagValid;
             frameStatus_ = StatusNormal;
             layout_ = LayoutNone;
             frameData_ = 0;
@@ -37,6 +37,8 @@ namespace nui
 
         NFrameBase::~NFrameBase()
         {
+            NAssertError(Util::Misc::IsFlagChecked(frameFlags_, FlagValid), _T("NFrameBase not valid already"));
+            frameFlags_ = 0;
             parentFrame_ = NULL;
             RemoveAllChilds();
         }

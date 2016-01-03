@@ -73,6 +73,8 @@ namespace nui
                 break;
             case WM_DESTROY:
                 render_ = NULL;
+                if(rootFrame_ != NULL)
+                    rootFrame_->window_ = NULL;
                 rootFrame_ = NULL;
                 DestroyTooltipWnd();
                 break;
