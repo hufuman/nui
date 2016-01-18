@@ -35,6 +35,7 @@ private:
 #define NAssertEnable(enable)           __noop
 #define NAssertError(exp, format, ...)  __noop
 #define NAssertTempDisable()            __noop
+#define NForceAssertError(exp, format, ...)	__noop
 
 #define NVerify(exp, format, ...)  (!!(exp))
 #endif
