@@ -31,7 +31,7 @@ namespace nui
             virtual NTextAttr* SetBgColor(ArgbColor color) = 0;
             virtual ArgbColor GetBgColor() const = 0;
             virtual NTextAttr* SetSingleLine(bool singleLine) = 0;
-            virtual bool GetSingleLine() const = 0;
+            virtual bool IsSingleLine() const = 0;
             virtual NTextAttr* SetAlignFlags(UINT alignFlags) = 0;
             virtual UINT GetAlignFlags() const = 0;
         };

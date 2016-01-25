@@ -66,9 +66,37 @@ namespace nui
         bool NEdit::GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle)
         {
             wndClassName = WC_EDIT;
-            style = WS_TABSTOP | ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_CHILD;
+            style = WS_TABSTOP | ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_CHILD | ES_MULTILINE;
             exStyle = 0;
+
+            NTextAttr* textAttr = GetTextAttr();
+            if(textAttr && !textAttr->IsSingleLine())
+            {
+                style |= ES_WANTRETURN | WS_HSCROLL | WS_VSCROLL;
+            }
+
             return true;
+        }
+
+        void NEdit::OnRealWindowCreated()
+        {
+            __super::OnRealWindowCreated();
+
+            NTextAttr* textAttr = GetTextAttr();
+            if(textAttr && textAttr->IsSingleLine())
+            {
+                Base::NSize textSize;
+                if(!GetText().IsEmpty() && window_->GetRender())
+                {
+                    window_->GetRender()->GetTextSize(GetText(), GetTextAttr(), GetFont(), textSize);
+
+                    Base::NRect rcText;
+                    rcText.SetPos((frameRect_.Width() - textSize.Width) / 2, (frameRect_.Height() - textSize.Height) / 2);
+                    rcText.SetSize(textSize.Width, textSize.Height);
+                    ::SendMessage(realWindow_, EM_SETRECT, 0, reinterpret_cast<LPARAM>((RECT*)rcText));
+                }
+            }
+            // fixme: multiple line edit should use nui's scrollbar
         }
 
         void NEdit::OnCreate()
@@ -79,6 +107,18 @@ namespace nui
             NAssertTempDisable();
             ApplyStyle(_T("@sys_default_style:edit"));
 #endif  // _NO_NUI_PARSER_
+        }
+
+        NCursor* NEdit::GetCursor() const
+        {
+            return GetCursorByType(NCursor::CursorBeam);
+        }
+
+        Base::NSize NEdit::GetAutoSize() const
+        {
+            Base::NSize autoSize = __super::GetAutoSize();
+            autoSize.Height += 8;
+            return autoSize;
         }
 
         bool NEdit::OnParentCommand(WORD notifyCode)

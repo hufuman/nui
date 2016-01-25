@@ -100,6 +100,16 @@ namespace nui
             Release();
         }
 
+        void NFrame::OnFocus()
+        {
+            ;
+        }
+
+        void NFrame::OnLostFocus()
+        {
+            ;
+        }
+
         void NFrame::SetText(const Base::NString& text)
         {
             nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);

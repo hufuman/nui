@@ -105,6 +105,9 @@ namespace nui
 
             virtual void OnClicked(const nui::Base::NPoint& point);
 
+            virtual void OnFocus();
+            virtual void OnLostFocus();
+
             // Draw
             virtual void DrawBkg(NRender* render, const Base::NRect& rect) const;
             virtual void DrawFore(NRender* render, const Base::NRect& rect) const;

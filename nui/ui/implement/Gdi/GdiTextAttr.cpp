@@ -48,7 +48,7 @@ namespace nui
             return this;
         }
 
-        bool GdiTextAttr::GetSingleLine() const
+        bool GdiTextAttr::IsSingleLine() const
         {
             return singleLine_;
         }

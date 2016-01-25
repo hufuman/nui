@@ -222,8 +222,18 @@ namespace nui
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                     NFrame* newFrame = RefreshHoverItem(point);
                     SetHoverItem(newFrame);
+
                     if(hoverFrame_)
+                    {
                         hoverFrame_->OnMouseDown(static_cast<short>(point.X), static_cast<short>(point.Y));
+
+                        if(hoverFrame_ != focusFrame_ && focusFrame_ != NULL)
+                            focusFrame_->OnLostFocus();
+
+                        focusFrame_ = hoverFrame_;
+                        focusFrame_->OnFocus();
+                    }
+
                     if(hoverFrame_ == NULL)
                     {
                         ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);

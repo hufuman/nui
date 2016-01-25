@@ -36,6 +36,8 @@ namespace nui
                 GdiCursor(MAKEINTRESOURCE(IDC_SIZENESW)),
                 // CursorBackSlash
                 GdiCursor(MAKEINTRESOURCE(IDC_SIZENWSE)),
+                // CursorBeam
+                GdiCursor(MAKEINTRESOURCE(IDC_IBEAM)),
             };
         }
 

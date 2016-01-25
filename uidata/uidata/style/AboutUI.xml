@@ -13,6 +13,9 @@
 		<RadioBox text="radioBox1" group="group1" checked="true" />
 		<RadioBox text="radioBox2" group="group2" />
 		<RadioBox text="radioBox3" />
+		<Edit text="11111111d" textSingleLine="true" />
+		<Edit text="2222" textSingleLine="true" />
+		<Edit text="33333333333" textSingleLine="true" />
 		</Layout>
 	</Frame>
 

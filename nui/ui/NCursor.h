@@ -19,6 +19,7 @@ namespace nui
                 CursorCross         = 4,
                 CursorSlash         = 5,
                 CursorBackSlash     = 6,
+                CursorBeam          = 7,
             };
         };
 

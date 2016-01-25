@@ -95,6 +95,7 @@ namespace nui
             Base::NAutoPtr<NRender> render_;
 
             Base::NAutoPtr<NFrame> hoverFrame_;
+            Base::NAutoPtr<NFrame> focusFrame_;
 
             Base::NAutoPtr<NFrame> btnSysMin_;
             Base::NAutoPtr<NCheckBox> btnSysMax_;

@@ -30,12 +30,15 @@ namespace nui
             void SelectAll();
             void ShowTooltip(TooltipIconType iconType, LPCTSTR szTitle, LPCTSTR szText);
 
-        protected:
+            virtual Base::NSize GetAutoSize() const;
 
+        protected:
             virtual void OnCreate();
+            virtual NCursor* GetCursor() const;
 
             virtual bool OnParentCommand(WORD notifyCode);
             virtual bool GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle);
+            virtual void OnRealWindowCreated();
 
         public:
             // Event
