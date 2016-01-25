@@ -59,6 +59,7 @@ namespace UiUtil
         }
     }
 
+    // fixme: since real window is created only when focused, these two functions could be deleted?
     void SyncNativeWindowByVisible(nui::Ui::NFrameBase* frame)
     {
         SyncNativeWindowStatus(frame, SyncVisible);
