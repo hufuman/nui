@@ -34,6 +34,14 @@ namespace nui
             return realWindow_;
         }
 
+        void NNative::Attach(NFrame* parentFrame, HWND hwndNative)
+        {
+            NAssertError(hwndNative && ::IsWindow(hwndNative), _T("Invalid window handle"));
+
+            Create(parentFrame);
+            AttachWnd(hwndNative);
+        }
+
         NNative* NNative::GetNativeUi(HWND hWnd)
         {
             NNative* wndUi = reinterpret_cast<NNative*>(::GetProp(hWnd, _T("NNativeObj")));

@@ -16,6 +16,8 @@ namespace nui
             virtual ~NNative();
 
             virtual HWND GetNative() const;
+            virtual void Attach(NFrame* parentFrame, HWND hwndNative);
+
             static NNative* GetNativeUi(HWND hWnd);
 
         protected:

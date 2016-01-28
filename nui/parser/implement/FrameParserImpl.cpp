@@ -55,7 +55,11 @@ void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
         targetFrame->SetPos(tmpPoint.X, tmpPoint.Y);
 
     if(styleNode->ReadValue(_T("size"), tmpSize))
+    {
+        if(targetFrame->IsAutoSize())
+            targetFrame->SetAutoSize(false);
         targetFrame->SetSize(tmpSize.Width, tmpSize.Height);
+    }
 
     if(styleNode->ReadValue(_T("layout"), tmpString))
     {

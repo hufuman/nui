@@ -73,7 +73,7 @@ bool CEditor::openFile(const NString& filePath)
 bool CEditor::previewUi(const NString& styleName, NString& error)
 {
     NString resourcePath = File::GetParentFolder(styleFilePath_);
-    while(!resourcePath.IsEmpty())
+    while(resourcePath.GetLength() > 3)
     {
         if(File::IsFileExists(File::CombinePath(resourcePath, _T("package.xml"))))
             break;
