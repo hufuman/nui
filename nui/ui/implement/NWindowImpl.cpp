@@ -262,11 +262,41 @@ namespace nui
                     ::ReleaseCapture();
                 }
                 break;
+            case WM_KEYUP:
+                lResult = 0;
+                HandleKeyEvent(static_cast<TCHAR>(wParam), false);
+                return true;
+            case WM_KEYDOWN:
+                lResult = 0;
+                HandleKeyEvent(static_cast<TCHAR>(wParam), true);
+                return true;
             case WM_MOUSELEAVE:
                 SetHoverItem(NULL);
                 break;
             }
             return false;
+        }
+
+        bool NWindow::HandleKeyEvent(TCHAR key, bool isDownEvent)
+        {
+            NFrame* frame = focusFrame_;
+            if(frame == NULL)
+                frame = rootFrame_;
+
+            if(frame == NULL)
+                return true;
+
+            bool result = false;
+            while(!result && frame != NULL)
+            {
+                if(isDownEvent)
+                    result = frame->OnKeyDown(key);
+                else
+                    result = frame->OnKeyUp(key);
+                frame = frame->GetParent();
+            }
+
+            return true;
         }
 
         bool NWindow::OnWndCmd(WPARAM wParam, LPARAM lParam)

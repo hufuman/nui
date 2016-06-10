@@ -34,6 +34,9 @@ namespace nui
 
             bool AddHandler(NEventHandler handler);
             bool RemoveHandler(NEventHandler handler);
+
+            // invoke all handlers untill one handler returns false
+            //   return true only when no handler returns false
             bool Invoke(Base::NBaseObj* obj, NEventData* eventData);
 
             bool operator ()(Base::NBaseObj* obj, NEventData* eventData)

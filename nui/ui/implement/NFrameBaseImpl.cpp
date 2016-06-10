@@ -649,6 +649,20 @@ namespace nui
             Invalidate();
         }
 
+        bool NFrameBase::OnKeyDown(TCHAR key)
+        {
+            KeyEventData eventData;
+            eventData.key = key;
+            return !KeyDownEvent.Invoke(this, &eventData);
+        }
+
+        bool NFrameBase::OnKeyUp(TCHAR key)
+        {
+            KeyEventData eventData;
+            eventData.key = key;
+            return !KeyUpEvent.Invoke(this, &eventData);
+        }
+
         bool NFrameBase::CanHover() const
         {
             return !!(FlagCanHover & frameFlags_);

@@ -69,6 +69,7 @@ namespace nui
             int LastIndexOf(TCHAR arg, int startPos) const;
 
             bool StartWith(LPCTSTR str) const;
+            bool EndWith(LPCTSTR str) const;
 
             LPCTSTR GetData() const;
             int GetLength() const;

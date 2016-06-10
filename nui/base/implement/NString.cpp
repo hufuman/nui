@@ -247,6 +247,9 @@ namespace nui
 
         int NString::IndexOf(LPCTSTR arg) const
         {
+            if(arg == NULL || arg[0] == 0)
+                return -1;
+
             size_t pos = data_.find(arg);
             if(pos == tstring::npos)
                 return -1;
@@ -324,6 +327,18 @@ namespace nui
         bool NString::StartWith(LPCTSTR str) const
         {
             return IndexOf(str) == 0;
+        }
+
+        bool NString::EndWith(LPCTSTR str) const
+        {
+            if(str == NULL || str[0] == 0)
+                return false;
+
+            tstring tmp(str);
+            if(data_.length() < tmp.length())
+                return false;
+
+            return data_.substr(data_.length() - tmp.length()) == tmp;
         }
 
         LPCTSTR NString::GetData() const

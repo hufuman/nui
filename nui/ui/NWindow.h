@@ -47,6 +47,7 @@ namespace nui
         protected:
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
+            virtual bool HandleKeyEvent(TCHAR key, bool isDownEvent);
             virtual bool OnWndCmd(WPARAM wParam, LPARAM lParam);
             virtual void OnCreate();
 

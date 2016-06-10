@@ -145,6 +145,9 @@ namespace nui
             virtual void OnMouseHover();
             virtual void OnMouseLeave();
 
+            virtual bool OnKeyDown(TCHAR key);
+            virtual bool OnKeyUp(TCHAR key);
+
         protected:
             virtual void OnParentChanged();
             virtual void OnWindowChanged(NWindow* window);
@@ -176,6 +179,14 @@ namespace nui
                 int height;
             };
             NEvent SizeEvent;
+
+            class KeyEventData : public NEventData
+            {
+            public:
+                TCHAR key;
+            };
+            NEvent KeyDownEvent;
+            NEvent KeyUpEvent;
 
         protected:
             size_t topMostCount_;
