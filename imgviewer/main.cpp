@@ -7,13 +7,14 @@
 #include "ViewerData.h"
 #include "ProcUtil.h"
 
+
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPTSTR    lpCmdLine,
                      int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(lpCmdLine); 
 
     ImgViewer viewer;
     nui::Data::NModule::GetInst().Init(::GetModuleHandle(NULL));

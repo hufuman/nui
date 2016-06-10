@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NFileFinder.h"
+
 
 class ImgViewer
 {
@@ -16,11 +18,13 @@ public:
 
 private:
     bool MsgCallback(NWindowBase*, UINT, WPARAM, LPARAM, LRESULT&);
-    bool PostDrawCallback(NBaseObj* baseObj, NEventData* eventData);
     void DrawTimerFunc();
-    bool OpenImage(LPCTSTR filePath);
+    bool OpenImage(LPCTSTR filePath, bool reset);
     NString GetFileDlgExts();
     void GetProperSize(NSize& size);
+
+    bool PostDrawCallback(NBaseObj* baseObj, NEventData* eventData);
+    bool OnKeyDown(NBaseObj* baseObj, NEventData* eventData);
 
     // message handler
     void OnCopyData(COPYDATASTRUCT* cds);
@@ -41,6 +45,8 @@ private:
     Base::NAutoPtr<NImageDraw> image_;
 
     int rate_;
+
+    NFileFinder fileFinder_;
 
     NString fileDlgExts_;
     NArrayT<NString> supportedForamts_;

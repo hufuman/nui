@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NFileFinder.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ProcUtil.cpp"
 				>
 			</File>
@@ -219,6 +223,10 @@
 			</File>
 			<File
 				RelativePath=".\MapFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NFileFinder.h"
 				>
 			</File>
 			<File

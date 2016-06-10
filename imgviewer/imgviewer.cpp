@@ -52,7 +52,9 @@ void ImgViewer::Show(LPCTSTR filePath)
     window_->SetMsgFilterCallback(MakeDelegate(this, &ImgViewer::MsgCallback));
     window_->Create(NULL, WindowStyle::Layered | WindowStyle::Sizable);
     window_->SetSize(500, 400);
-    window_->SetText(_T("Test Window"));
+    window_->SetText(_T("Image Viewer"));
+
+    window_->GetRootFrame()->KeyDownEvent.AddHandler(MakeDelegate(this, &ImgViewer::OnKeyDown));
 
     NShapeDraw* shape = NULL;
     NReflectCreate(shape);
@@ -67,7 +69,7 @@ void ImgViewer::Show(LPCTSTR filePath)
 
     if(filePath != NULL && filePath[0] != 0)
     {
-        OpenImage(filePath);
+        OpenImage(filePath, true);
     }
     else
     {
@@ -132,7 +134,7 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
         if(!Shell::BrowseForFile(filePath, window->GetNative(), TRUE, GetFileDlgExts()) || filePath.IsEmpty())
             return false;
 
-        OpenImage(filePath);
+        OpenImage(filePath, true);
     }
     else if(message == WM_MOUSEWHEEL)
     {
@@ -203,6 +205,24 @@ bool ImgViewer::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
     return false;
 }
 
+bool ImgViewer::OnKeyDown(NBaseObj* baseObj, NEventData* eventData)
+{
+    UNREFERENCED_PARAMETER(baseObj);
+
+    NFrame::KeyEventData* data = static_cast<NFrame::KeyEventData*>(eventData);
+    if(data->key != VK_LEFT && data->key != VK_RIGHT)
+        return true;
+
+    NString fileName;
+    bool foundNext = (data->key == VK_LEFT) ? fileFinder_.Prev(fileName) : fileFinder_.Next(fileName);
+    if(foundNext)
+    {
+        OpenImage(fileName, false);
+    }
+
+    return true;
+}
+
 void ImgViewer::DrawTimerFunc()
 {
     frameIndex_ = (frameIndex_ + 1) % frameCount_;
@@ -211,7 +231,7 @@ void ImgViewer::DrawTimerFunc()
     drawTimerHolder_ = timerSrv_->startTimer(image_->NextDelayValue(frameIndex_), MakeDelegate(this, &ImgViewer::DrawTimerFunc));
 }
 
-bool ImgViewer::OpenImage(LPCTSTR filePath)
+bool ImgViewer::OpenImage(LPCTSTR filePath, bool reset)
 {
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
     NAutoPtr<NImageDraw> image = loader->LoadImage(filePath);
@@ -221,6 +241,16 @@ bool ImgViewer::OpenImage(LPCTSTR filePath)
         return false;
     }
 
+    NString folderPath = Util::File::GetParentFolder(filePath);
+    NString fileName = filePath + folderPath.GetLength();
+    fileFinder_.Find(folderPath, fileName, GetFileDlgExts());
+
+    // change title
+    NString title(fileName);
+    title += _T(" - Image Viewer");
+    window_->SetText(title);
+
+    // whether need to start timer
     ViewerDataMgr::Instance().Hold(filePath, window_->GetNative(), TRUE);
     image_ = image;
     frameIndex_ = 0;
@@ -295,7 +325,7 @@ void ImgViewer::OnCopyData(COPYDATASTRUCT* cds)
 
     LPCTSTR filePath = reinterpret_cast<LPCTSTR>(cds->lpData);
     if(filePath != NULL && filePath[0] != 0 && File::IsFileExists(filePath))
-        OpenImage(filePath);
+        OpenImage(filePath, true);
 }
 
 void ImgViewer::OnDropFiles(HDROP hDrop)
@@ -306,7 +336,7 @@ void ImgViewer::OnDropFiles(HDROP hDrop)
         TCHAR buffer[1024];
         if(::DragQueryFile(hDrop, 0, buffer, MAX_PATH) > 0)
         {
-            OpenImage(buffer);
+            OpenImage(buffer, true);
         }
     }
     DragFinish(hDrop);
