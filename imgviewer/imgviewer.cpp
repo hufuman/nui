@@ -8,8 +8,8 @@ namespace
 {
     const int g_MinWidth = 400;
     const int g_MinHeight = 300;
-    const int g_HorzMargin = 100;
-    const int g_VertMargin = 90;
+    const int g_HorzMargin = 20;
+    const int g_VertMargin = 20;
     const DWORD g_MagicNum = 0xF74F2AFB;
 }
 
@@ -128,7 +128,7 @@ bool ImgViewer::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LP
             window_->Destroy();
         }
     }
-    else if(message == WM_LBUTTONDBLCLK)
+    else if(message == WM_LBUTTONDBLCLK || message == WM_NCLBUTTONDBLCLK)
     {
         Base::NString filePath;
         if(!Shell::BrowseForFile(filePath, window->GetNative(), TRUE, GetFileDlgExts()) || filePath.IsEmpty())
