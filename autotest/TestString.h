@@ -253,3 +253,37 @@ TEST_F(TestString, arg)
     s1 = _T("%%1%1");
     EXPECT_EQ(s1.arg(_T("aa")).arg(_T("bb")), _T("%aa%1"));
 }
+
+TEST_F(TestString, StartWith)
+{
+    NString s1, s2, s3;
+
+    s1 = _T("123");
+    s2 = _T("1234");
+    EXPECT_FALSE(s1.StartWith(s2));
+    EXPECT_TRUE(s2.StartWith(s1));
+    EXPECT_FALSE(s1.StartWith(_T("abc")));
+    EXPECT_TRUE(s2.StartWith(_T("12")));
+
+    EXPECT_FALSE(s1.StartWith(s3));
+    EXPECT_FALSE(s1.StartWith(NULL));
+    EXPECT_FALSE(s1.StartWith(_T("abc")));
+}
+
+TEST_F(TestString, EndWith)
+{
+    NString s1, s2, s3;
+
+    s1 = _T("234");
+    s2 = _T("1234");
+    EXPECT_FALSE(s1.EndWith(s2));
+    EXPECT_TRUE(s2.EndWith(s1));
+    EXPECT_FALSE(s1.EndWith(_T("abc")));
+    EXPECT_TRUE(s2.EndWith(_T("34")));
+    EXPECT_TRUE(s2.EndWith(s2));
+    EXPECT_TRUE(s1.EndWith(s1));
+
+    EXPECT_FALSE(s1.EndWith(s3));
+    EXPECT_FALSE(s1.EndWith(NULL));
+    EXPECT_FALSE(s1.EndWith(_T("abca")));
+}
