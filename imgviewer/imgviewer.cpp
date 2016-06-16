@@ -3,6 +3,7 @@
 
 #include "ViewerData.h"
 
+#pragma warning(disable: 4244)
 
 namespace
 {
@@ -269,8 +270,8 @@ bool ImgViewer::OpenImage(LPCTSTR filePath, bool reset)
     }
     else
     {
-        int xRate = size.Width / rcWorkarea.Width() + 2;
-        int yRate = size.Height / rcWorkarea.Height() + 2;
+        double xRate = size.Width / rcWorkarea.Width() + 2;
+        double yRate = size.Height / rcWorkarea.Height() + 2;
         rate_ = xRate < yRate ? - xRate : - yRate;
     }
     GetProperSize(size);
@@ -347,17 +348,20 @@ void ImgViewer::OnMouseWheel(short delta)
     if(image_ == NULL)
         return;
 
-    int rate = delta / WHEEL_DELTA;
+    double rate = delta / WHEEL_DELTA * 0.2;
     if(rate > 0 && rate_ > 10)
         return;
     if(rate < 0 && rate_ < -10)
         return;
-    rate_ += rate;
-    if(rate_ == 0)
+    rate = rate_ + rate;
+
+    if(rate > -0.19 && rate < 0.19)
         return;
+    rate_ = rate;
 
     NSize size = image_->GetPreferSize();
     GetProperSize(size);
+
     window_->SetSize(size.Width, size.Height);
     window_->Invalidate();
 }

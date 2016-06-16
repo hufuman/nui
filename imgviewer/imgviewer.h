@@ -44,7 +44,7 @@ private:
     Base::NAutoPtr<NFont> font_;
     Base::NAutoPtr<NImageDraw> image_;
 
-    int rate_;
+    double rate_;
 
     NFileFinder fileFinder_;
 
