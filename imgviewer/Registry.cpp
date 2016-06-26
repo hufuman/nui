@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Registry.h"
 
+#include <shlwapi.h>
 
 CRegistry::CRegistry()
 {
@@ -88,3 +89,10 @@ BOOL CRegistry::SetRegValue(HKEY hKeyRoot, LPCTSTR szSubPath, LPCTSTR szValueNam
     }
     return FALSE;
 }
+
+BOOL CRegistry::DeleteKey(HKEY hKeyRoot, LPCTSTR szSubPath)
+{
+    return ERROR_SUCCESS == ::SHDeleteKey(hKeyRoot, szSubPath);
+}
+
+

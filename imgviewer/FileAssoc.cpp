@@ -53,6 +53,7 @@ bool FileAssoc::Roll(BOOL needAssoc)
     LPCTSTR szRegName = _T("ImgViewer.Open");
     LPCTSTR szBackupName = _T("ImgViewer.Backup");
 
+    NString tmp;
     if(needAssoc)
     {
         int count = fileExts_.Count();
@@ -65,6 +66,9 @@ bool FileAssoc::Roll(BOOL needAssoc)
                 if(CRegistry::SetRegValue(HKEY_CLASSES_ROOT, fileExts_[i], szBackupName, tmpValue))
                     result = CRegistry::SetRegValue(HKEY_CLASSES_ROOT, fileExts_[i], _T(""), szRegName) && result;
             }
+            // remove UserChoice
+            tmp.Format(_T("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\%s\\UserChoice"), static_cast<LPCTSTR>(fileExts_[i]));
+            CRegistry::DeleteKey(HKEY_CURRENT_USER, tmp);
         }
     }
     else

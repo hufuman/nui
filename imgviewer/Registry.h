@@ -19,6 +19,7 @@ public:
 
     static BOOL GetRegValue(HKEY hKeyRoot, LPCTSTR szSubPath, LPCTSTR szValueName, NString& strValue);
     static BOOL SetRegValue(HKEY hKeyRoot, LPCTSTR szSubPath, LPCTSTR szValueName, const NString& strValue);
+    static BOOL DeleteKey(HKEY hKeyRoot, LPCTSTR szSubPath);
 
 private:
     HKEY    m_hKey;
