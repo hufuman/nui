@@ -202,6 +202,11 @@ bool ImgViewer::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
         {
             data->render->DrawImage(image_, 0, 0, rcWnd, frameIndex_);
         }
+        data->render->GetTextSize(fileName_, textAttr_, font_, size);
+        NRect txtRect;
+        txtRect.SetPos((rcWnd.Width() - size.Width) / 2, rcWnd.Height() - size.Height);
+        txtRect.SetSize(size.Width, size.Height);
+        data->render->DrawText(fileName_, textAttr_, font_, txtRect);
     }
     return false;
 }
@@ -245,6 +250,7 @@ bool ImgViewer::OpenImage(LPCTSTR filePath, bool reset)
     NString folderPath = Util::File::GetParentFolder(filePath);
     NString fileName = filePath + folderPath.GetLength();
     fileFinder_.Find(folderPath, fileName, GetFileDlgExts());
+    fileName_ = fileName;
 
     // change title
     NString title(fileName);

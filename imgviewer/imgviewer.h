@@ -47,6 +47,7 @@ private:
     double rate_;
 
     NFileFinder fileFinder_;
+    NString fileName_;
 
     NString fileDlgExts_;
     NArrayT<NString> supportedForamts_;
