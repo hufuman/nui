@@ -8,7 +8,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories=".;&quot;$(SolutionDir)\thirdparty\json&quot;;&quot;$(SolutionDir)\thirdparty\gtest\include&quot;;&quot;$(SolutionDir)\thirdparty\tinyxml&quot;;&quot;$(SolutionDir)\thirdparty\zip&quot;"
+		AdditionalIncludeDirectories=".;&quot;$(SolutionDir)\thirdparty\jsoncpp\include&quot;;&quot;$(SolutionDir)\thirdparty\gtest\include&quot;;&quot;$(SolutionDir)\thirdparty\tinyxml&quot;;&quot;$(SolutionDir)\thirdparty\zip&quot;"
 		PreprocessorDefinitions="_BIND_TO_CURRENT_VCLIBS_VERSION=1"
 		RuntimeLibrary="2"
 		EnableFunctionLevelLinking="true"

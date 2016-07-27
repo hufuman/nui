@@ -8,7 +8,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories=".;&quot;$(SolutionDir)\..\XSkin&quot;;&quot;$(SolutionDir)\..\XSkin\Skin\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Util\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Logic\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Common\Include&quot;;&quot;$(SolutionDir)\..\XSkin\UIParser\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Animation\Include&quot;;&quot;$(SolutionDir)\..\3rdLib\TinyXML&quot;;&quot;$(SolutionDir)\..\3rdLib\LogClient&quot;;&quot;$(SolutionDir)\..\3rdLib\GTest\Include&quot;;&quot;$(SolutionDir)\..\XCommon&quot;;&quot;$(SolutionDir)\..\3rdLib\wxsqlite3&quot;;&quot;$(SolutionDir)\..\3rdLib\Detours&quot;;&quot;$(SolutionDir)\..\3rdLib\json&quot;"
+		AdditionalIncludeDirectories=".;&quot;$(SolutionDir)\..\XSkin&quot;;&quot;$(SolutionDir)\..\XSkin\Skin\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Util\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Logic\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Common\Include&quot;;&quot;$(SolutionDir)\..\XSkin\UIParser\Include&quot;;&quot;$(SolutionDir)\..\XSkin\Animation\Include&quot;;&quot;$(SolutionDir)\..\3rdLib\TinyXML&quot;;&quot;$(SolutionDir)\..\3rdLib\LogClient&quot;;&quot;$(SolutionDir)\..\3rdLib\GTest\Include&quot;;&quot;$(SolutionDir)\..\XCommon&quot;;&quot;$(SolutionDir)\..\3rdLib\wxsqlite3&quot;;&quot;$(SolutionDir)\..\3rdLib\Detours&quot;;&quot;$(SolutionDir)\..\3rdLib\jsoncpp\include&quot;"
 		PreprocessorDefinitions="_BIND_TO_CURRENT_VCLIBS_VERSION=1"
 		RuntimeLibrary="3"
 	/>
