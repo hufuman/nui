@@ -7,6 +7,8 @@ public:
     virtual void SetUp()
     {
         count_ = 0;
+        if(testMsgId_ == 0)
+            testMsgId_ = ::RegisterWindowMessage(_T("_test_msg_id_"));
     }
 
     void OnIdle(int idleCount)
@@ -21,7 +23,7 @@ public:
         UNREFERENCED_PARAMETER(wParam);
         UNREFERENCED_PARAMETER(lParam);
         UNREFERENCED_PARAMETER(lResult);
-        if(message == WM_NULL)
+        if(message == testMsgId_)
         {
             ::DestroyWindow(window->GetNative());
         }
@@ -30,13 +32,14 @@ public:
 
     static unsigned int WINAPI TestThreadProc(void* param)
     {
+        DWORD testMsgId = ::RegisterWindowMessage(_T("_test_msg_id_"));
         HWND hWnd = reinterpret_cast<HWND>(param);
         BOOL isWindow = ::IsWindow(hWnd);
         DWORD dwThreadId = isWindow ? ::GetWindowThreadProcessId(hWnd, NULL) : reinterpret_cast<DWORD>(param);
         ::Sleep(500);
-        ::PostThreadMessage(dwThreadId, WM_NULL, 0, 0);
+        ::PostThreadMessage(dwThreadId, testMsgId, 0, 0);
         ::Sleep(500);
-        ::PostThreadMessage(dwThreadId, WM_NULL, 0, 0);
+        ::PostThreadMessage(dwThreadId, testMsgId, 0, 0);
         ::Sleep(500);
         if(isWindow)
             ::PostMessage(hWnd, WM_CLOSE, 0, 0);
@@ -47,6 +50,7 @@ public:
 
 protected:
     int count_;
+    DWORD testMsgId_;
 };
 
 TEST_F(TestMsgLoop, NoWindow)

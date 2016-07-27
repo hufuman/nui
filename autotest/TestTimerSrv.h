@@ -42,7 +42,7 @@ TEST_F(TestTimerSrv, Timer)
     timer_ = timerSrv->startTimer(100, MakeDelegate(this, &TestTimerSrv::TimerProc));
     loop_.Loop();
     DWORD dwElapse = ::GetTickCount() - dwTickCount;
-    ASSERT_TRUE(dwElapse > 500) << dwElapse;
+    ASSERT_TRUE(dwElapse >= 500) << dwElapse;
 }
 
 TEST_F(TestTimerSrv, OnceTimer)
