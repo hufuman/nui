@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<Bundle>
+  <string id="btnSysMin" value="最小化" />
+  <string id="btnSysMax" value="最大化" />
+  <string id="btnSysRestore" value="恢复" />
+  <string id="btnSysClose" value="关闭" />
+  <string id="appTitle" value="微信" />
+</Bundle>

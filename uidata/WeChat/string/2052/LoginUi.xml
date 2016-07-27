@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<Bundle>
+  <string id="btnRetry" value="重  试" />
+
+  <string id="queryQrCode" value="正在下载登录二堆码..." />
+  <string id="scanQrCode" value="请使用微信扫一扫以登录" />
+  <string id="checkLogin" value="等待点击确认中..." />
+  <string id="fetchUserAuth" value="获取用户认证中..." />
+  <string id="fetchUserInfo" value="获取用户信息中..." />
+  <string id="fetchContracts" value="获取联系人中..." />
+
+  <string id="errUuid" value="获取用户标示失败" />
+  <string id="errQrCode" value="下载二维码失败" />
+  <string id="errScan" value="等待扫描二维码超时" />
+  <string id="errLogin" value="等待登陆超时" />
+  <string id="errUserAuth" value="获取用户认证失败" />
+  <string id="errUserInfo" value="获取用户信息失败" />
+  <string id="errContracts" value="获取联系人失败" />
+
+</Bundle>

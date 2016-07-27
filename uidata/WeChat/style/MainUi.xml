@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<UI>
+
+	<Frame name="MainUi" size="320,400" autoSize="false" >
+		<Frame id="_nui_sys_button_group_id_">
+			<Frame id="_nui_sys_min_id_" visible="false" />
+			<Frame id="_nui_sys_max_id_" visible="false" />
+		</Frame>
+		<BkgDraw drawType="shape" fillColor="#FFF5F5F5" style="rect" borderWidth="1" borderColor="#FFD1D1D1" />
+		<Label pos="10,10" text="@Common:appTitle" >
+			<Font fontSize="14" />
+		</Label>
+		<Image id="qrcode" imagePath="@skin:Common\\loading.gif" layout="hcenter,vcenter" margin="0,0,0,40" maxSize="192,192" />
+		<Label id="status" layout="hcenter,bottom" margin="0,0,0,64" text="@LoginUi:queryQrCode" textColor="#FF848484">
+			<Font fontSize="14" />
+		</Label>
+    <Button id="btnRetry" text="@LoginUi:btnRetry" layout="hcenter,bottom" margin="0,0,0,20" textColor="#FFFFFFFF" visible="false">
+      <Font fontSize="14" bold="true" />
+    </Button>
+	</Frame>
+</UI>
