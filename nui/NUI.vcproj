@@ -500,26 +500,6 @@
 			Name="ui"
 			>
 			<File
-				RelativePath=".\ui\NEvent.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NMsgLoop.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NResourceLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NTimerSrv.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ui\NUiBus.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ui\UiDef.h"
 				>
 			</File>
@@ -612,6 +592,10 @@
 				</File>
 				<File
 					RelativePath=".\ui\implement\NUiBus.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\implement\NUiProc.cpp"
 					>
 				</File>
 				<File
@@ -904,6 +888,30 @@
 				>
 				<File
 					RelativePath=".\ui\NCursor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NEvent.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NMsgLoop.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NResourceLoader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NTimerSrv.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NUiBus.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui\NUiProc.h"
 					>
 				</File>
 			</Filter>

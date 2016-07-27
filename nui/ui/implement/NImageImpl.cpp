@@ -38,6 +38,7 @@ namespace nui
         void NImage::Start()
         {
             Reset();
+            Stop();
             if(imageDraw_->GetFrameCount() <= 1)
                 return;
             Base::NInstPtr<NTimerSrv> timerSrv(MemToolParam);

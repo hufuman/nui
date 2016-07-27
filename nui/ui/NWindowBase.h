@@ -21,7 +21,7 @@ namespace nui
                 Child       = 0x0002,
                 Transparent = 0x0004,
                 Layered     = 0x0008,
-                Sizable     = 0x0010,
+                Sizable     = 0x0010
             };
         };
 

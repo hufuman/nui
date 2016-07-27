@@ -18,6 +18,7 @@ namespace nui
             bool IsValid() const;
             HICON GetBigIcon();
             HICON GetSmallIcon();
+            DWORD GetMainThreadId() const;
 
         public:
             HMODULE GetNUIModule() const;
@@ -30,6 +31,7 @@ namespace nui
             Base::NString appFullName_;
             HICON   bigIcon_;
             HICON   smallIcon_;
+            DWORD   mainThreadId_;
         };
     }
 }

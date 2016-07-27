@@ -65,10 +65,36 @@ namespace nui
             if(!window_)
                 return;
 
-            NAssertError(realWindow_ == NULL, _T("real window created already"));
-            CreateRealWindow();
-            OnRealWindowCreated();
+            if(realWindow_ == NULL)
+            {
+                CreateRealWindow();
+                OnRealWindowCreated();
+            }
+            NAssertError(::IsWindow(realWindow_), _T("failed to create window"));
             ::SetFocus(realWindow_);
+        }
+
+        void NNative::OnSizeChanged(int width, int height)
+        {
+            __super::OnSizeChanged(width, height);
+
+            if(realWindow_)
+            {
+                Base::NRect rcWnd = GetRootRect();
+                ::SetWindowPos(realWindow_, NULL, rcWnd.Left, rcWnd.Top, rcWnd.Width(), rcWnd.Height(), SWP_NOZORDER | SWP_NOACTIVATE);
+            }
+
+        }
+
+        void NNative::OnPosChanged(int left, int top)
+        {
+            __super::OnPosChanged(left, top);
+
+            if(realWindow_)
+            {
+                Base::NRect rcWnd = GetRootRect();
+                ::SetWindowPos(realWindow_, NULL, rcWnd.Left, rcWnd.Top, rcWnd.Width(), rcWnd.Height(), SWP_NOZORDER | SWP_NOACTIVATE);
+            }
         }
 
         void NNative::OnLostFocus()
@@ -130,19 +156,23 @@ namespace nui
             ::OffsetRect(&rcWnd, -rcWnd.left, -rcWnd.top);
             ::MapWindowRect(realWindow_, ::GetParent(realWindow_), &rcWnd);
 
-            SetPos(rcWnd.left, rcWnd.top);
-            SetSize(rcWnd.right - rcWnd.left, rcWnd.bottom - rcWnd.top);
-
             bool visible = IsVisible();
             bool enabled = IsEnabled();
 
+
+            nui::Base::NPoint point(rcWnd.left, rcWnd.top);
             NFrameBase* parentFrame = parentFrame_;
             while(parentFrame != NULL)
             {
+                const nui::Base::NRect& rect = parentFrame->GetRect();
+                point.X -= rect.Left;
+                point.Y -= rect.Top;
                 visible = visible && parentFrame->IsVisible();
                 enabled = enabled && parentFrame->IsEnabled();
                 parentFrame = parentFrame->GetParent();
             }
+            SetPos(point.X, point.Y);
+            SetSize(rcWnd.right - rcWnd.left, rcWnd.bottom - rcWnd.top);
             ::ShowWindow(realWindow_, visible ? TRUE : FALSE);
             ::EnableWindow(realWindow_, enabled ? TRUE : FALSE);
         }

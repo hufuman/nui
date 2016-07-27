@@ -33,18 +33,6 @@ namespace nui
         }
 #endif  // _NO_NUI_PARSER_
 
-        void NWindow::SetShowSysButtons(bool showSysButtons)
-        {
-            if(window_ == NULL)
-            {
-                GetWindowPrivateData()->showSysButtons = showSysButtons;
-            }
-            else
-            {
-                HideSysButtonGroup();
-            }
-        }
-
         NFrame* NWindow::GetRootFrame()
         {
             if(rootFrame_ == NULL)
@@ -314,8 +302,11 @@ namespace nui
             __super::OnCreate();
 
 #ifndef _NO_NUI_PARSER_
-            NAssertTempDisable();
-            GetRootFrame()->ApplyStyle(_T("@sys_default_style:window"));
+            {
+                NAssertTempDisable();
+                GetRootFrame()->ApplyStyle(_T("@sys_default_style:window"));
+            }
+#endif  // _NO_NUI_PARSER_
 
             if(!styleName_.IsEmpty())
             {
@@ -323,13 +314,6 @@ namespace nui
             }
 
             SyncSysButtonGroup();
-
-            if(privateWindowData_ != NULL && !privateWindowData_->showSysButtons)
-                HideSysButtonGroup();
-#endif  // _NO_NUI_PARSER_
-
-            if(privateWindowData_ != NULL)
-                NSafeRelease(privateWindowData_);
 
             WindowCreatedEvent.Invoke(this, NULL);
         }
@@ -446,7 +430,7 @@ namespace nui
 
         void NWindow::SyncSysButtonGroup()
         {
-            if(rootFrame_ == NULL || (privateWindowData_ != NULL && !privateWindowData_->showSysButtons))
+            if(rootFrame_ == NULL)
                 return;
 
             NFrame* sysButtonGroup = dynamic_cast<NFrame*>(rootFrame_->GetChildById(_NUI_SYS_BUTTON_GROUP_ID_, false));
@@ -473,13 +457,6 @@ namespace nui
             {
                 btnSysClose_->ClickEvent.AddHandler(MakeDelegate(this, &NWindow::OnBtnCloseClickedChanged));
             }
-        }
-
-        void NWindow::HideSysButtonGroup()
-        {
-            NFrame* sysButtonGroup = dynamic_cast<NFrame*>(rootFrame_->GetChildById(_NUI_SYS_BUTTON_GROUP_ID_, false));
-            if(sysButtonGroup != NULL)
-                sysButtonGroup->SetVisible(false);
         }
 
         bool NWindow::OnBtnMinClickedChanged(Base::NBaseObj*, NEventData*)
@@ -599,15 +576,6 @@ namespace nui
             {
                 ::SendMessage(tooltipWnd_, TTM_ACTIVATE, FALSE, 0);
             }
-        }
-
-        NWindow::WindowPrivateData* NWindow::GetWindowPrivateData()
-        {
-            if(privateWindowData_ != NULL)
-                return privateWindowData_;
-            privateWindowData_ = NNew(WindowPrivateData);
-            privateWindowData_->AddRef();
-            return privateWindowData_;
         }
     }
 }

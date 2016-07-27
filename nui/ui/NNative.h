@@ -23,6 +23,9 @@ namespace nui
         protected:
             virtual void OnCreate();
 
+            virtual void OnSizeChanged(int width, int height);
+            virtual void OnPosChanged(int left, int top);
+
             virtual void OnFocus();
             virtual void OnLostFocus();
 

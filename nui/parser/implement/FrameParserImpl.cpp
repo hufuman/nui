@@ -36,8 +36,11 @@ void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
     if(styleNode->ReadValue(_T("autoSize"), tmpBool))
         targetFrame->SetAutoSize(tmpBool);
 
-    if(styleNode->ReadValue(_T("minsize"), tmpSize))
+    if(styleNode->ReadValue(_T("minSize"), tmpSize))
         targetFrame->SetMinSize(tmpSize.Width, tmpSize.Height);
+
+    if(styleNode->ReadValue(_T("maxSize"), tmpSize))
+        targetFrame->SetMaxSize(tmpSize.Width, tmpSize.Height);
 
     if(styleNode->ReadValue(_T("margin"), tmpRect))
         targetFrame->SetMargin(tmpRect.Left, tmpRect.Top, tmpRect.Right, tmpRect.Bottom);

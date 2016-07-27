@@ -55,6 +55,7 @@ namespace ParserUtil
 
         NString frameId;
         Base::NAutoPtr<NBaseObj> targetObj;
+        bool needAllocObj = true;
         if(!newObj && styleNode->ReadValue(_T("id"), frameId))
         {
             nui::Ui::NFrame* frame = dynamic_cast<nui::Ui::NFrame*>(parentObj);
@@ -66,6 +67,7 @@ namespace ParserUtil
                 NForceAssertError(correctObj, _T("Wrong Type for FrameId: %s"), frameId.GetData());
                 if(!correctObj)
                     return NULL;
+                needAllocObj = false;
             }
         }
 
@@ -75,11 +77,13 @@ namespace ParserUtil
         }
 
         parser->PreParse(targetObj, styleNode);
-        parser->Create(parentObj, targetObj);
+        if(needAllocObj)
+            parser->Create(parentObj, targetObj);
         parser->FillAttr(targetObj, styleNode);
         parser->PostParse(targetObj, styleNode);
         NDelayedRelease(parser);
-        targetObj->Release();
+        if(needAllocObj)
+            targetObj->Release();
 
         return targetObj;
     }

@@ -125,6 +125,7 @@ namespace nui
             virtual bool SetPos(int left, int top);
             virtual bool SetSize(int width, int height);
             virtual bool SetMinSize(int minWidth, int minHeight);
+            virtual bool SetMaxSize(int maxWidth, int maxHeight);
 
             virtual void SetAutoSize(bool autosize);
             virtual bool AutoSize();
@@ -205,6 +206,7 @@ namespace nui
             Base::NString frameId_;
             Base::NRect frameRect_;
             Base::NSize minSize_;
+            Base::NSize maxSize_;
             Base::NRect margin_;
             UINT layout_;
             DWORD frameData_;

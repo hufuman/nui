@@ -397,6 +397,25 @@ namespace nui
             return false;
         }
 
+        bool NFrameBase::SetMaxSize(int maxWidth, int maxHeight)
+        {
+            if(maxSize_.Width == maxWidth && maxSize_.Height == maxHeight)
+                return false;
+            maxSize_.Width = maxWidth;
+            maxSize_.Height = maxHeight;
+            if(IsAutoSize())
+            {
+                return AutoSize();
+            }
+            else if(frameRect_.Width() > maxSize_.Width || frameRect_.Height() > maxSize_.Height)
+            {
+                int width = frameRect_.Width() > maxSize_.Width ? maxSize_.Width : frameRect_.Width();
+                int height = frameRect_.Height() > maxSize_.Height ? maxSize_.Height : frameRect_.Height();
+                return SetSizeImpl(width, height, true);
+            }
+            return false;
+        }
+
         bool NFrameBase::AutoSize()
         {
             if(layout_ != LayoutNone)
@@ -498,6 +517,8 @@ namespace nui
             }
             else if(layout_ & LayoutHCenter)
             {
+                size.Width = (minSize_.Width <= 0 || size.Width > minSize_.Width) ? size.Width : minSize_.Width;
+                size.Width = (maxSize_.Width <= 0 || size.Width < maxSize_.Width) ? size.Width : maxSize_.Width;
                 rcNew.Left = (width - margin_.Width() - size.Width) / 2;
                 rcNew.Right = rcNew.Left + size.Width;
             }
@@ -519,6 +540,8 @@ namespace nui
             }
             else if(layout_ & LayoutVCenter)
             {
+                size.Height = (minSize_.Height <= 0 || size.Height > minSize_.Height) ? size.Height : minSize_.Height;
+                size.Height = (maxSize_.Height <= 0 || size.Height < maxSize_.Height) ? size.Height : maxSize_.Height;
                 rcNew.Top = (height - margin_.Height() - size.Height) / 2;
                 rcNew.Bottom = rcNew.Top + size.Height;
             }
@@ -797,6 +820,8 @@ namespace nui
 
             int frameWidth = (minSize_.Width < 0) ? width : (width >= minSize_.Width ? width : minSize_.Width);
             int frameHeight = (minSize_.Height < 0) ? height : (height >= minSize_.Height ? height : minSize_.Height);
+            frameWidth = (maxSize_.Width > 0 && frameWidth > maxSize_.Width) ? maxSize_.Width : frameWidth;
+            frameHeight = (maxSize_.Height > 0 && frameHeight > maxSize_.Height) ? maxSize_.Height : frameHeight;
             if(frameRect_.Width() == frameWidth && frameRect_.Height() == frameHeight)
                 return false;
 

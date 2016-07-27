@@ -16,6 +16,7 @@ namespace nui
             nuiModule_ = ::GetModuleHandle(NULL);
             bigIcon_ = NULL;
             smallIcon_ = NULL;
+            mainThreadId_ = 0;
         }
 
         NModule::~NModule()
@@ -37,6 +38,7 @@ namespace nui
             ::GetModuleFileName(NULL, tempPath, 1024);
             appFullName_ = tempPath;
             appPath_ = Util::File::GetParentFolder(tempPath);
+            mainThreadId_ = ::GetCurrentThreadId();
             return true;
         }
 
@@ -74,6 +76,11 @@ namespace nui
         Base::NString NModule::GetAppFullName() const
         {
             return appFullName_;
+        }
+
+        DWORD NModule::GetMainThreadId() const
+        {
+            return mainThreadId_;
         }
     }
 };

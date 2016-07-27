@@ -36,7 +36,10 @@ namespace nui
 
         bool NWindowBase::Create(HWND parentWindow)
         {
-            return Create(parentWindow, WindowStyle::Top);
+            DWORD styleValue = WindowStyle::Top;
+            if(privateWindowBaseData_)
+                styleValue = privateWindowBaseData_->style;
+            return Create(parentWindow, styleValue);
         }
 
         bool NWindowBase::Create(HWND parentWindow, DWORD styleValue)
@@ -460,7 +463,7 @@ namespace nui
             }
             if((styleValue & WindowStyle::Top) || styleValue == 0)
             {
-                style |= WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_MAXIMIZEBOX | WS_THICKFRAME;
+                style |= WS_CAPTION | WS_SYSMENU | WS_OVERLAPPED | WS_THICKFRAME;
             }
             style |= WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
         }

@@ -19,18 +19,6 @@ namespace nui
         {
             DECLARE_REFLECTION(TEXT("nui"), TEXT("window"))
 
-            class WindowPrivateData : public nui::Base::NBaseObj
-            {
-                WindowPrivateData(const WindowPrivateData&);
-                WindowPrivateData& operator = (const WindowPrivateData&);
-            public:
-                WindowPrivateData()
-                {
-                    showSysButtons = true;
-                }
-                bool showSysButtons;
-            };
-
         public:
             NWindow();
             ~NWindow();
@@ -38,8 +26,6 @@ namespace nui
 #ifndef _NO_NUI_PARSER_
             bool DoModalWithStyle(HWND parentWindow, LPCTSTR styleName);
 #endif  // _NO_NUI_PARSER_
-
-            void SetShowSysButtons(bool showSysButtons);
 
             NFrame* GetRootFrame();
             NRender* GetRender() const;
@@ -62,7 +48,6 @@ namespace nui
             bool OnRootFrameSizeChanged(Base::NBaseObj* baseObj, NEventData* eventData);
 
             void SyncSysButtonGroup();
-            void HideSysButtonGroup();
 
             bool OnBtnMinClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
             bool OnBtnMaxClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
@@ -74,8 +59,6 @@ namespace nui
             void UpdateTooltipText(const Base::NString& tooltip);
             void ShowTooltip(const Base::NString& tooltip);
             void HideTooltip();
-
-            WindowPrivateData* GetWindowPrivateData();
 
         public:
             // Event
@@ -106,8 +89,6 @@ namespace nui
             Base::NRect sizableBorder_;
 
             HWND tooltipWnd_;
-
-            nui::Base::NAutoPtr<WindowPrivateData> privateWindowData_;
 
             END_USE_UNEXPORT_TEMPLATE()
         };
