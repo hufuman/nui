@@ -180,25 +180,30 @@ namespace ParserUtil
         bool underline = false;
         bool strikeOut = false;
 
-        if(!styleNode->ReadValue(_T("fontSize"), fontSize)
-            && !styleNode->ReadValue(_T("bold"), bold)
-            && !styleNode->ReadValue(_T("italic"), italic)
-            && !styleNode->ReadValue(_T("underline"), underline)
-            && !styleNode->ReadValue(_T("strikeOut"), strikeOut)
-            && !styleNode->ReadValue(_T("fontName"), fontName))
+        bool hasFontSize = styleNode->ReadValue(_T("fontSize"), fontSize);
+        bool hasBold = styleNode->ReadValue(_T("bold"), bold);
+        bool hasItalic = styleNode->ReadValue(_T("italic"), italic);
+        bool hasUnderline = styleNode->ReadValue(_T("underline"), underline);
+        bool hasStrikeOut = styleNode->ReadValue(_T("strikeOut"), strikeOut);
+        bool hasFontName = styleNode->ReadValue(_T("fontName"), fontName);
+        if(!hasFontSize && !hasBold && !hasItalic && !hasUnderline && !hasStrikeOut && !hasFontName)
         {
             return NULL;
         }
 
         Base::NAutoPtr<Ui::NFont> font = Ui::NUiBus::Instance().GetResourceLoader()->CreateFont(MemToolParam);
-        if(!fontName.IsEmpty())
+        if(!fontName.IsEmpty() && hasFontName)
             font->SetFontName(fontName);
 
-        font->SetStrikeOut(strikeOut);
-        font->SetUnderline(underline);
-        font->SetItalic(italic);
-        font->SetBold(bold);
-        if(fontSize > 0)
+        if(hasStrikeOut)
+            font->SetStrikeOut(strikeOut);
+        if(hasUnderline)
+            font->SetUnderline(underline);
+        if(hasItalic)
+            font->SetItalic(italic);
+        if(hasBold)
+            font->SetBold(bold);
+        if(fontSize > 0 && hasFontSize)
             font->SetFontSize(fontSize);
 
         return font;
