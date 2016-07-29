@@ -266,7 +266,7 @@ void CControlTest::TestScroll()
     pEdit1->SetAutoSize(false);
     pEdit1->SetSize(100, 18);
     pEdit1->SetText(_T("3"));
-    pEdit1->TextChangeEvent.AddHandler(MakeDelegate(this, &CControlTest::OnEditTextChanged));
+    pEdit1->TextChangedEvent.AddHandler(MakeDelegate(this, &CControlTest::OnEditTextChanged));
     window_->GetRootFrame()->AddChild(pEdit1);
     editPos_ = pEdit1;
 
@@ -276,7 +276,7 @@ void CControlTest::TestScroll()
     pEdit2->SetAutoSize(false);
     pEdit2->SetSize(100, 18);
     pEdit2->SetText(_T("4"));
-    pEdit2->TextChangeEvent.AddHandler(MakeDelegate(this, &CControlTest::OnEditTextChanged));
+    pEdit2->TextChangedEvent.AddHandler(MakeDelegate(this, &CControlTest::OnEditTextChanged));
     window_->GetRootFrame()->AddChild(pEdit2);
     editRange_ = pEdit2;
 
@@ -286,7 +286,7 @@ void CControlTest::TestScroll()
     pEdit3->SetAutoSize(false);
     pEdit3->SetSize(100, 18);
     pEdit3->SetText(_T("1"));
-    pEdit3->TextChangeEvent.AddHandler(MakeDelegate(this, &CControlTest::OnEditTextChanged));
+    pEdit3->TextChangedEvent.AddHandler(MakeDelegate(this, &CControlTest::OnEditTextChanged));
     window_->GetRootFrame()->AddChild(pEdit3);
     editPage_ = pEdit3;
 }

@@ -75,12 +75,12 @@ void CImageEditor::ListenEvents()
     rootFrame->GetChildById(_T("btnPrevVertIndex"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnImageIndexChanged);
     rootFrame->GetChildById(_T("btnNextVertIndex"), true)->ClickEvent.AddHandler(this, &CImageEditor::OnImageIndexChanged);
 
-    rootFrame->GetChildById<NEdit*>(_T("editLeft"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
-    rootFrame->GetChildById<NEdit*>(_T("editTop"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
-    rootFrame->GetChildById<NEdit*>(_T("editRight"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
-    rootFrame->GetChildById<NEdit*>(_T("editBottom"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
-    rootFrame->GetChildById<NEdit*>(_T("editHorzCount"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
-    rootFrame->GetChildById<NEdit*>(_T("editVertCount"))->TextChangeEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editLeft"))->TextChangedEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editTop"))->TextChangedEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editRight"))->TextChangedEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editBottom"))->TextChangedEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editHorzCount"))->TextChangedEvent.AddHandler(this, &CImageEditor::OnParamChanged);
+    rootFrame->GetChildById<NEdit*>(_T("editVertCount"))->TextChangedEvent.AddHandler(this, &CImageEditor::OnParamChanged);
 
     rootFrame->GetChildById<NFrame*>(_T("radioStretch"))->ClickEvent.AddHandler(this, &CImageEditor::OnDrawTypeChanged);
     rootFrame->GetChildById<NFrame*>(_T("radioTile"))->ClickEvent.AddHandler(this, &CImageEditor::OnDrawTypeChanged);
