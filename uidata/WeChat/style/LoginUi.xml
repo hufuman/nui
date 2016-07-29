@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <UI>
 
-	<Frame name="LoginUi" size="320,400" autoSize="false" >
+	<Frame name="LoginUi" size="320,400" autoSize="false" text="@Common:appTitle" >
 		<Frame id="_nui_sys_button_group_id_">
 			<Frame id="_nui_sys_min_id_" visible="false" />
 			<Frame id="_nui_sys_max_id_" visible="false" />
 		</Frame>
-		<BkgDraw drawType="shape" fillColor="#FFF5F5F5" style="rect" borderWidth="1" borderColor="#FFD1D1D1" />
+    <ForeDraw drawType="shape" fillColor="#FFF5F5F5" style="rect" borderWidth="1" borderColor="#FFD1D1D1" />
 		<Label pos="10,10" text="@Common:appTitle" >
 			<Font fontSize="14" />
 		</Label>
