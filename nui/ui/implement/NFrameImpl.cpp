@@ -119,6 +119,7 @@ namespace nui
                 return;
 
             text_ = readText;
+            TextChangedEvent.Invoke(this, NULL);
             AutoSize();
             Invalidate();
         }

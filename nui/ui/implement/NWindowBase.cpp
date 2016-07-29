@@ -188,6 +188,9 @@ namespace nui
         {
             NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetSize"));
 
+            if(::IsZoomed(window_) || ::IsIconic(window_))
+                return;
+
             if(window_ == NULL)
                 GetPrivateData()->rect.SetSize(width, height);
             else

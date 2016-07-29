@@ -126,6 +126,8 @@ namespace nui
 
         public:
             // Event
+            NEvent TextChangedEvent;
+
             class ClickEventData : public NEventData
             {
             public:

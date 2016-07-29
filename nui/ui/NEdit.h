@@ -39,13 +39,6 @@ namespace nui
             virtual bool OnParentCommand(WORD notifyCode);
             virtual bool GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle);
             virtual void OnRealWindowCreated();
-
-        public:
-            // Event
-            class TextChangeEventData : public NEventData
-            {
-            };
-            NEvent TextChangeEvent;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

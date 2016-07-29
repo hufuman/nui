@@ -47,6 +47,7 @@ namespace nui
                 GetRect(rect);
                 rootFrame_->SetSize(rect.Width(), rect.Height());
                 rootFrame_->SizeEvent.AddHandler(MakeDelegate(this, &NWindow::OnRootFrameSizeChanged));
+                rootFrame_->TextChangedEvent.AddHandler(MakeDelegate(this, &NWindow::OnRootFrameTextChanged));
             }
             return rootFrame_;
         }
@@ -425,6 +426,13 @@ namespace nui
         {
             NFrameBase::SizeEventData* data = static_cast<NFrameBase::SizeEventData*>(eventData);
             SetSize(data->width, data->height);
+            return true;
+        }
+
+        bool NWindow::OnRootFrameTextChanged(Base::NBaseObj*, NEventData*)
+        {
+            if(window_)
+                ::SetWindowText(window_, rootFrame_->GetText());
             return true;
         }
 

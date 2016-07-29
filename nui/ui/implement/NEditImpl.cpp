@@ -123,10 +123,7 @@ namespace nui
 
         bool NEdit::OnParentCommand(WORD notifyCode)
         {
-            if(notifyCode != EN_CHANGE)
-                return false;
-            TextChangeEventData eventData;
-            TextChangeEvent.Invoke(this, &eventData);
+            UNREFERENCED_PARAMETER(notifyCode);
             return true;
         }
     }

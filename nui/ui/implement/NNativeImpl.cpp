@@ -110,7 +110,7 @@ namespace nui
                     buffer = NNewArray(TCHAR, textLength);
                 textLength = ::GetWindowText(realWindow_, buffer, textLength);
                 buffer[textLength] = 0;
-                ::SetWindowText(realWindow_, buffer);
+                SetText(buffer);
                 if(buffer != fixedBuffer)
                     NDeleteArray(buffer);
                 ::DestroyWindow(realWindow_);

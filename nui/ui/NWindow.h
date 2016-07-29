@@ -46,6 +46,7 @@ namespace nui
             NFrame* RefreshHoverItem(const Base::NPoint& point);
 
             bool OnRootFrameSizeChanged(Base::NBaseObj* baseObj, NEventData* eventData);
+            bool OnRootFrameTextChanged(Base::NBaseObj* baseObj, NEventData* eventData);
 
             void SyncSysButtonGroup();
 
