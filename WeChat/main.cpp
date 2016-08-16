@@ -19,9 +19,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
     HttpUtil::InitHttpUtil();
 
-    HttpUtil::HttpResult result;
-    HttpUtil::GetString(L"https://www.baidu.com", result, 0);
-
     nui::Data::NModule::GetInst().Init(::GetModuleHandle(NULL));
 
     nui::Base::NString resPath = GetResourcePath();
