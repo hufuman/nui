@@ -133,6 +133,7 @@ unsigned int LoginUi::ThreadProc(void* data)
         }
 
         // contracts
+        result = false;
         pThis->statusLabel_->SetText(_T("@LoginUi:fetchContracts"));
         for(int i=0; !result && i<5; ++ i)
         {
@@ -151,8 +152,8 @@ unsigned int LoginUi::ThreadProc(void* data)
 
     if(result)
     {
-        pThis->window_->Destroy();
         pThis->loginOk_ = result;
+        pThis->window_->Destroy();
     }
     else
     {

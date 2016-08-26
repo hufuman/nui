@@ -33,6 +33,9 @@ public:
 
     bool FetchContracts();
 
+    typedef std::list<UserInfo*> UserInfoList;
+    const UserInfoList& GetUserInfoList() const;
+
 private:
     void ResetSyncKey(Json::Value& value);
 
@@ -55,7 +58,9 @@ private:
     NString syncKey_;
 
     // UserName => UserInfo
-    typedef std::map<NString, UserInfo> UserInfoMap;
+    typedef std::map<NString, UserInfo*> UserInfoMap;
+
+    UserInfoList userInfoList_;
     UserInfoMap userInfoMap_;
 
 };

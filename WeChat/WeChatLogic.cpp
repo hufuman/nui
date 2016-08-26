@@ -5,6 +5,7 @@
 
 #include <wininet.h>
 
+
 #pragma warning(disable: 4996)
 
 
@@ -212,18 +213,25 @@ bool WeChatLogic::FetchContracts()
     if(!reader.parse(t2utf8(httpResult.text), value))
         return false;
 
-    UserInfo userInfo;
     Json::Value memberList = value["MemberList"];
     for(Json::Value::iterator ite = memberList.begin(); ite != memberList.end(); ++ ite)
     {
         const Json::Value& contract = *ite;
-        userInfo.userName = utf82t(contract["UserName"].asString().c_str());
-        userInfo.nickName = utf82t(contract["NickName"].asString().c_str());
-        userInfo.remarkName = utf82t(contract["RemarkName"].asString().c_str());
-        userInfo.headImgUrl = utf82t(contract["HeadImgUrl"].asString().c_str());
-        userInfoMap_.insert(std::make_pair(userInfo.userName, userInfo));
+
+        UserInfo *userInfo = new UserInfo();
+        userInfo->userName = utf82t(contract["UserName"].asString().c_str());
+        userInfo->nickName = utf82t(contract["NickName"].asString().c_str());
+        userInfo->remarkName = utf82t(contract["RemarkName"].asString().c_str());
+        userInfo->headImgUrl = utf82t(contract["HeadImgUrl"].asString().c_str());
+        userInfoList_.push_back(userInfo);
+        userInfoMap_.insert(std::make_pair(userInfo->userName, userInfo));
     }
     return true;
+}
+
+const WeChatLogic::UserInfoList& WeChatLogic::GetUserInfoList() const
+{
+    return userInfoList_;
 }
 
 void WeChatLogic::ResetSyncKey(Json::Value& value)
