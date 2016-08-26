@@ -12,6 +12,7 @@ namespace nui
 
             enum CursorType
             {
+                CursorDefault       = -1,
                 CursorArrow         = 0,
                 CursorHand          = 1,
                 CursorUpDown        = 2,

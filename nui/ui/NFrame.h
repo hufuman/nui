@@ -45,6 +45,8 @@ namespace nui
             virtual Base::NString GetText() const;
             virtual NTextAttr* GetTextAttr() const;
             virtual NTextAttr* GetTextAttr(UINT status, bool create);
+
+            virtual void SetCursor(NCursor::CursorType type);
             virtual NCursor* GetCursor() const;
 
             virtual void SetTooltip(const Base::NString &tooltip);
@@ -96,7 +98,6 @@ namespace nui
 
             virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
             virtual NFrame* GetChildAtIndex(size_t index);
-            virtual NFrame* GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags);
             virtual NFrame* GetParent() const;
 
         protected:
@@ -114,6 +115,7 @@ namespace nui
             virtual void DrawContent(NRender* render, const Base::NRect& rect) const;
 
         private:
+            NCursor::CursorType cursorType_;
             Base::NAutoPtr<NDraw> bkgDraw_;
             Base::NAutoPtr<NDraw> foreDraw_;
 

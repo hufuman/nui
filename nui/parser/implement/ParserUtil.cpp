@@ -40,6 +40,18 @@ namespace ParserUtil
         return result;
     }
 
+    bool FillUiStyile(nui::Base::NBaseObj* targetObj, nui::Base::NAutoPtr<nui::Data::NDataReader> styleNode)
+    {
+        Base::NString styleName;
+        if(!styleNode->ReadValue(_T("UiStyle"), styleName))
+            return false;
+
+        Base::NInstPtr<Parser::NParser> parser(MemToolParam);
+
+        NAutoPtr<NDataReader> node = parser->FindStyleNode(styleName);
+        return ApplyStyle(targetObj, node);
+    }
+
     NAutoPtr<NBaseObj> LoadObj(bool newObj, NBaseObj* parentObj, Base::NAutoPtr<Data::NDataReader> styleNode)
     {
         NString objName = styleNode->GetNodeName();
@@ -79,6 +91,7 @@ namespace ParserUtil
         parser->PreParse(targetObj, styleNode);
         if(needAllocObj)
             parser->Create(parentObj, targetObj);
+        FillUiStyile(targetObj, styleNode);
         parser->FillAttr(targetObj, styleNode);
         parser->PostParse(targetObj, styleNode);
         NDelayedRelease(parser);
@@ -116,6 +129,7 @@ namespace ParserUtil
         }
 
         parser->PreParse(targetObj, styleNode);
+        FillUiStyile(targetObj, styleNode);
         parser->FillAttr(targetObj, styleNode);
         parser->PostParse(targetObj, styleNode);
         parser->Release();

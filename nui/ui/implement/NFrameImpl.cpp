@@ -18,6 +18,7 @@ namespace nui
 
         NFrame::NFrame()
         {
+            cursorType_ = NCursor::CursorDefault;
             bkgDraw_ = NULL;
             Util::Misc::CheckFlag(frameFlags_, NFrame::FlagAutoSize, true);
         }
@@ -160,9 +161,16 @@ namespace nui
             return result;
         }
 
+        void NFrame::SetCursor(NCursor::CursorType type)
+        {
+            cursorType_ = type;
+        }
+
         NCursor* NFrame::GetCursor() const
         {
-            return NULL;
+            if(cursorType_ == NCursor::CursorDefault)
+                return NULL;
+            return GetCursorByType(cursorType_);
         }
 
         void NFrame::SetTooltip(const Base::NString &tooltip)
@@ -254,11 +262,6 @@ namespace nui
             for(size_t i=0; i<index; ++ i)
                 ++ ite;
             return dynamic_cast<NFrame*>(*ite);
-        }
-
-        NFrame* NFrame::GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags)
-        {
-            return dynamic_cast<NFrame*>(__super::GetChildByPointAndFlag(point, flags));
         }
 
         NFrame* NFrame::GetParent() const

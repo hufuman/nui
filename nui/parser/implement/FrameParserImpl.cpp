@@ -189,6 +189,33 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
         targetFrame->SetFont(tmpString);
     }
 
+    if(styleNode->ReadValue(_T("cursor"), tmpString))
+    {
+        struct
+        {
+            LPCTSTR cursorName;
+            NCursor::CursorType cursorType;
+        } cursorDatas[] = 
+        {
+            {   _T("arrow"), NCursor::CursorArrow },
+            {   _T("hand"), NCursor::CursorHand },
+            {   _T("upDown"), NCursor::CursorUpDown },
+            {   _T("leftRight"), NCursor::CursorLeftRight },
+            {   _T("cross"), NCursor::CursorCross },
+            {   _T("slash"), NCursor::CursorSlash },
+            {   _T("backSlash"), NCursor::CursorBackSlash },
+            {   _T("beam"), NCursor::CursorBeam },
+        };
+        for(int i=0; i<_countof(cursorDatas); ++ i)
+        {
+            if(tmpString == cursorDatas[i].cursorName)
+            {
+                targetFrame->SetCursor(cursorDatas[i].cursorType);
+                break;
+            }
+        }
+    }
+
     nui::Base::NAutoPtr<nui::Ui::NFont> font = ParserUtil::ParseFont(styleNode);
     if(font)
         targetFrame->SetFont(font);

@@ -19,13 +19,12 @@ namespace nui
 
         void NEdit::SetHintText(LPCTSTR szHintText)
         {
-            NAssertError(IsWndValid(), _T("call parent->AddChild first"));
+            nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
+            hintText_ = stringBundle->GetString(szHintText);
             if(!IsWndValid())
                 return;
 
-            nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
-            Base::NString hintText = stringBundle->GetString(szHintText);
-            ::SendMessage(realWindow_, EM_SETCUEBANNER, TRUE, (LPARAM)hintText.GetData());
+            ::SendMessage(realWindow_, EM_SETCUEBANNER, TRUE, (LPARAM)hintText_.GetData());
         }
 
         void NEdit::SetReadOnly(bool readOnly)
@@ -96,6 +95,7 @@ namespace nui
                     ::SendMessage(realWindow_, EM_SETRECT, 0, reinterpret_cast<LPARAM>((RECT*)rcText));
                 }
             }
+            ::SendMessage(realWindow_, EM_SETCUEBANNER, TRUE, (LPARAM)hintText_.GetData());
             // fixme: multiple line edit should use nui's scrollbar
         }
 

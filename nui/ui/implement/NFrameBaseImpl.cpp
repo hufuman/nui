@@ -224,12 +224,19 @@ namespace nui
             return NULL;
         }
 
-        NFrameBase* NFrameBase::GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags)
+        NFrameBase* NFrameBase::GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags, bool pointOffsetToParent)
         {
             if(!IsVisible()  || !IsEnabled())
                 return NULL;
 
             Base::NPoint pt(point);
+            if(!pointOffsetToParent && parentFrame_)
+            {
+                const Base::NRect& rootRect = parentFrame_->GetRootRect();
+                pt.X -= rootRect.Left;
+                pt.Y -= rootRect.Top;
+            }
+
             if(!frameRect_.Contains(pt))
                 return NULL;
 
@@ -241,12 +248,10 @@ namespace nui
             while(result == NULL && ite != childs_.rend())
             {
                 NFrameBase* const& child = *ite;
-                result = child->GetChildByPointAndFlag(pt, flags);
+                result = child->GetChildByPointAndFlag(pt, flags, true);
                 ++ ite;
             }
 
-            pt.X += frameRect_.Left;
-            pt.Y += frameRect_.Top;
             if(result == NULL && (frameFlags_ & flags))
                 result = this;
             return result;

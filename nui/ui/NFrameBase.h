@@ -94,7 +94,7 @@ namespace nui
             virtual void SetChildBottommost(NFrameBase* child);
             virtual bool EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const;
             virtual NFrameBase* GetChildById(const Base::NString& id, bool recursive);
-            virtual NFrameBase* GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags);
+            virtual NFrameBase* GetChildByPointAndFlag(const Base::NPoint& point, DWORD flags, bool pointOffsetToParent);
             virtual size_t GetChildCount() const;
 
             virtual NFrameBase* GetParent() const;

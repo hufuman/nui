@@ -49,6 +49,9 @@ namespace nui
 
         NUI_API NCursor* GetCursorByType(NCursor::CursorType type)
         {
+            if(type == NCursor::CursorDefault)
+                return NULL;
+
             int index = static_cast<int>(type);
             if(index >= 0 && index < _countof(Gdi::g_CursorList))
                 return &Gdi::g_CursorList[index];

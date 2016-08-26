@@ -186,6 +186,9 @@ namespace nui
                     }
                     break;
                 }
+            case WM_MOUSELEAVE:
+                SetHoverItem(NULL);
+                break;
             case WM_MOUSEMOVE:
                 {
                     NFrame* frame = NULL;
@@ -259,9 +262,6 @@ namespace nui
                 lResult = 0;
                 HandleKeyEvent(static_cast<TCHAR>(wParam), true);
                 return true;
-            case WM_MOUSELEAVE:
-                SetHoverItem(NULL);
-                break;
             }
             return false;
         }
@@ -413,11 +413,11 @@ namespace nui
             NFrame* newHover = NULL;
             if(hoverFrame_)
             {
-                newHover = dynamic_cast<NFrame*>(hoverFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover));
+                newHover = dynamic_cast<NFrame*>(hoverFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover, false));
             }
             if(!newHover)
             {
-                newHover = dynamic_cast<NFrame*>(rootFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover));
+                newHover = dynamic_cast<NFrame*>(rootFrame_->GetChildByPointAndFlag(point, NFrameBase::FlagCanHover, false));
             }
             return newHover;
         }

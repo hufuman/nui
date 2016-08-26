@@ -39,6 +39,9 @@ namespace nui
             virtual bool OnParentCommand(WORD notifyCode);
             virtual bool GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle);
             virtual void OnRealWindowCreated();
+
+        private:
+            Base::NString hintText_;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }
