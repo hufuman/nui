@@ -41,14 +41,6 @@ bool NParserImpl::ApplyStyle(nui::Base::NBaseObj* targetObj, LPCTSTR stylePath)
 
 nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR stylePathParam)
 {
-    StyleMap::iterator ite = styleMap_.find(stylePathParam);
-    if(ite != styleMap_.end())
-    {
-        StyleData& data = ite->second;
-        data.lastAccessTime = ::GetTickCount();
-        return data.styleReader;
-    }
-
     NString filePath;
     NString styleName;
     NAutoPtr<NDataReader> styleNode;
@@ -96,16 +88,6 @@ nui::Base::NAutoPtr<nui::Data::NDataReader> NParserImpl::FindStyleNode(LPCTSTR s
     }
 
     NAssertError(styleNode, _T("StyleNotFound: %s"), stylePathParam);
-    if(styleNode && !releaseHolder_)
-    {
-        StyleData data;
-        data.lastAccessTime = ::GetTickCount();
-        data.styleReader = styleNode;
-        styleMap_.insert(std::make_pair(stylePath, data));
-
-        nui::Base::NInstPtr<nui::Ui::NTimerSrv> timerSrv(MemToolParam);
-        releaseHolder_ = timerSrv->startTimer(1000, MakeDelegate(this, &NParserImpl::OnReleaseTimer));
-    }
 
     return styleNode;
 }
@@ -140,21 +122,51 @@ bool NParserImpl::GetStyleParam(LPCTSTR stylePath, NString& filePath, NString& s
 
 NAutoPtr<NDataReader> NParserImpl::LoadPackFile(LPCTSTR filePath)
 {
-    // Find Resource
-    NInstPtr<NBuffer> buffer(MemToolParam);
-    NInstPtr<NFileSystem> fs(MemToolParam);
-    if(!fs->LoadFile(filePath, buffer))
+    NString lowerFilePath(filePath);
+    lowerFilePath.ToLower();
+    StyleMap::iterator ite = styleMap_.find(lowerFilePath);
+    if(ite != styleMap_.end())
     {
-        NAssertError(false, _T("failed to load file: %s"), filePath);
-        return NULL;
+        StyleData& data = ite->second;
+        data.lastAccessTime = ::GetTickCount();
+        return data.styleReader;
     }
 
-    // Load Xml
-    NAutoPtr<NDataReader> reader = CreateDataReader(ReaderXml);
-    if(!reader->ParseUtf8(static_cast<const char*>(buffer->GetBuffer()), buffer->GetSize()))
+    NAutoPtr<NDataReader> reader;
+
+    for(;;)
     {
-        NAssertError(false, _T("failed to parse file: %s"), filePath);
-        return NULL;
+        // Find Resource
+        NInstPtr<NBuffer> buffer(MemToolParam);
+        NInstPtr<NFileSystem> fs(MemToolParam);
+        if(!fs->LoadFile(filePath, buffer))
+        {
+            NAssertError(false, _T("failed to load file: %s"), filePath);
+            reader = NULL;
+            break;
+        }
+
+        // Load Xml
+        reader = CreateDataReader(ReaderXml);
+        if(!reader->ParseUtf8(static_cast<const char*>(buffer->GetBuffer()), buffer->GetSize()))
+        {
+            NAssertError(false, _T("failed to parse file: %s"), filePath);
+            reader = NULL;
+            break;
+        }
+
+        break;
+    }
+
+    StyleData data;
+    data.lastAccessTime = ::GetTickCount();
+    data.styleReader = reader;
+    styleMap_.insert(std::make_pair(lowerFilePath, data));
+
+    if(!releaseHolder_)
+    {
+        nui::Base::NInstPtr<nui::Ui::NTimerSrv> timerSrv(MemToolParam);
+        releaseHolder_ = timerSrv->startTimer(1000, MakeDelegate(this, &NParserImpl::OnReleaseTimer));
     }
 
     return reader;
