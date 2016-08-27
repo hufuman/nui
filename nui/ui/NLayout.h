@@ -46,6 +46,7 @@ namespace nui
 
         private:
             void RelayoutChilds();
+            void RelayoutChildsImpl();
             bool OnEnumChild(NFrameBase* child, LPARAM lParam);
             bool OnHorzScrolled(Base::NBaseObj*, NEventData* eventData);
             bool OnVertScrolled(Base::NBaseObj*, NEventData* eventData);
@@ -66,6 +67,8 @@ namespace nui
 
             Base::NAutoPtr<NScroll> horzScroll_;
             Base::NAutoPtr<NScroll> vertScroll_;
+
+            Base::NHolder delayRelayoutChilds_;
         };
         END_USE_UNEXPORT_TEMPLATE()
     }

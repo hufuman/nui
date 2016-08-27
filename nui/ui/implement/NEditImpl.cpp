@@ -97,6 +97,8 @@ namespace nui
             }
             ::SendMessage(realWindow_, EM_SETCUEBANNER, TRUE, (LPARAM)hintText_.GetData());
             // fixme: multiple line edit should use nui's scrollbar
+            ::SetFocus(realWindow_);
+            Edit_SetSel(realWindow_, 0, -1);
         }
 
         void NEdit::OnCreate()

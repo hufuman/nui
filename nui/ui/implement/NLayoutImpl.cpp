@@ -148,12 +148,47 @@ namespace nui
             if(innerFrame_ == NULL)
                 return;
 
+            if(delayRelayoutChilds_)
+                return;
+
+            Base::NInstPtr<NTimerSrv> timer(MemToolParam);
+            delayRelayoutChilds_ = timer->startOnceTimer(10, MakeDelegate(this, &NLayout::RelayoutChildsImpl));
+        }
+
+        void NLayout::RelayoutChildsImpl()
+        {
+            delayRelayoutChilds_.Release();
+
+            int vertScrollWidth = vertScroll_ ? vertScroll_->GetRect().Width() : 0;
+            int horzScrollHeight = horzScroll_ ? horzScroll_->GetRect().Height() : 0;
+
             NLayoutArrangerParam param;
             param.data_ = 0;
             param.frameSize_ = frameRect_.GetSize();
+            param.frameSize_.Width = frameRect_.Width() - vertScrollWidth;
+            param.frameSize_.Height = frameRect_.Height() - horzScrollHeight;
 
             innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&param));
+
+            if(param.maxSize_.Width == 0)
+            {
+                if(param.maxSize_.Height == 0)
+                    param.maxSize_.Height = frameRect_.Height();
+
+                if(param.maxSize_.Width == 0)
+                    param.maxSize_.Width = param.maxSize_.Height > frameRect_.Height() ? frameRect_.Width() - vertScrollWidth : frameRect_.Width();
+            }
+            else if(param.maxSize_.Height == 0)
+            {
+                if(param.maxSize_.Width == 0)
+                    param.maxSize_.Width = frameRect_.Width();
+
+                if(param.maxSize_.Height == 0)
+                    param.maxSize_.Height = param.maxSize_.Width > frameRect_.Width() ? frameRect_.Height() - horzScrollHeight : frameRect_.Height();
+            }
+
             autoSize_.SetSize(param.maxSize_.Width, param.maxSize_.Height);
+            innerFrame_->SetMinSize(param.maxSize_.Width, param.maxSize_.Height);
             innerFrame_->SetSize(param.maxSize_.Width, param.maxSize_.Height);
 
             const Base::NRect &rcLayout = GetRect();
@@ -227,9 +262,9 @@ namespace nui
                 innerFrameTop = - vertScroll_->GetScrollPos();
             }
 
-            innerFrame_->SetMinSize(frameRect_.Width() - (vertScroll_ && vertScroll_->IsVisible() ? vertScroll_->GetRect().Width() : 0),
-                frameRect_.Height() - (horzScroll_ && horzScroll_->IsVisible() ? horzScroll_->GetRect().Height() : 0)
-                );
+            int width = frameRect_.Width() - vertScrollWidth;
+            int height = frameRect_.Height() - (horzScroll_ && horzScroll_->IsVisible() ? horzScroll_->GetRect().Height() : 0);
+            innerFrame_->SetMinSize(width, height);
             innerFrame_->SetPos(innerFrameLeft, innerFrameTop);
         }
 
