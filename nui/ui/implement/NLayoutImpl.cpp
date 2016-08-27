@@ -68,7 +68,8 @@ namespace nui
                 child->SizeEvent.AddHandler(MakeDelegate(this, &NLayout::OnChildSizeChanged));
                 if(result)
                     RelayoutChilds();
-                AutoSize();
+                else
+                    AutoSize();
                 return result;
             }
         }
@@ -85,7 +86,8 @@ namespace nui
                 bool result = innerFrame_->RemoveChild(child);
                 if(result)
                     RelayoutChilds();
-                AutoSize();
+                else
+                    AutoSize();
                 return result;
             }
         }
@@ -94,7 +96,6 @@ namespace nui
         {
             innerFrame_->RemoveAllChilds();
             RelayoutChilds();
-            AutoSize();
         }
 
         void NLayout::SetScrollAllowed(bool allow)
@@ -103,7 +104,6 @@ namespace nui
             {
                 scrollAllowed_ = allow;
                 RelayoutChilds();
-                AutoSize();
             }
         }
 
@@ -136,7 +136,6 @@ namespace nui
             if(!oldValue && layoutable)
             {
                 RelayoutChilds();
-                AutoSize();
             }
         }
 
@@ -165,8 +164,8 @@ namespace nui
             NLayoutArrangerParam param;
             param.data_ = 0;
             param.frameSize_ = frameRect_.GetSize();
-            param.frameSize_.Width = frameRect_.Width() - vertScrollWidth;
-            param.frameSize_.Height = frameRect_.Height() - horzScrollHeight;
+            param.frameSize_.Width = frameRect_.Width();
+            param.frameSize_.Height = frameRect_.Height();
 
             innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&param));
 
@@ -266,6 +265,8 @@ namespace nui
             int height = frameRect_.Height() - (horzScroll_ && horzScroll_->IsVisible() ? horzScroll_->GetRect().Height() : 0);
             innerFrame_->SetMinSize(width, height);
             innerFrame_->SetPos(innerFrameLeft, innerFrameTop);
+
+            AutoSize();
         }
 
         bool NLayout::OnEnumChild(NFrameBase* child, LPARAM lParam)
