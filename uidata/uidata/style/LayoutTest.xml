@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<UI>
+
+	<Frame name="TestUI" size="500,400">
+		<BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
+
+		<Layout pos="150,50" size="310,300" layoutType="horz" id="TestLayout" scrollAllowed="true">
+      <BkgDraw drawType="shape" fillColor="#FFFFFFFF" style="rect" />
+		</Layout>
+
+    <Button text="Click to add" id="btnAdd" pos="10,10" textColor="#FFFFFF00">
+
+    </Button>
+
+    <Button text="Click to remove" id="btnRemove" pos="100,10" textColor="#FFFFFF00">
+
+    </Button>
+	</Frame>
+
+  <Button name="TestChild" textColor="#FFFF00FF" size="100,50" autoSize="false" layout="vfill" text="Test">
+    
+  </Button>
+</UI>

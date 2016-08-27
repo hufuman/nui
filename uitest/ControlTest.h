@@ -14,10 +14,8 @@ private:
     bool OnScrollEvent(NBaseObj* baseObj, NEventData* eventData);
     bool PaintTest(NBaseObj* baseObj, NEventData* eventData);
 
-    bool OnButtonLayoutClicked(NBaseObj* pButton, NEventData* eventData);
     bool OnButtonListClicked(NBaseObj* pButton, NEventData* eventData);
 
-    void TestLayout();
     void TestList();
     void TestScroll();
     void TestImage();

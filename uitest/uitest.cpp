@@ -6,6 +6,7 @@
 
 #include "ControlTest.h"
 #include "TestDrawImage.h"
+#include "LayoutTest.h"
 
 nui::Base::NString GetResourcePath();
 
@@ -30,7 +31,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     controlTest.Test();
     //*/
 
-    //*
+    CLayoutTest layoutTest;
+    layoutTest.Test();
+
+    /*
     {
         NInstPtr<NParser> parser(MemToolParam);
         NAutoPtr<NFrame> frame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(NULL, _T("@AboutUI:MainUI")));
@@ -43,7 +47,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         window->GetRootFrame()->AddChild(frame);
         window->DoModal(NULL);
     }
-    //*/
+    */
 
     core->DestroyCore();
 	return 0;

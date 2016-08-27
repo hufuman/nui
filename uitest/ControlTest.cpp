@@ -47,45 +47,6 @@ void CControlTest::Test()
     window_ = NULL;
 }
 
-bool CControlTest::OnButtonLayoutClicked(NBaseObj* pButton, NEventData* eventData)
-{
-    NButton* pBtnTest = dynamic_cast<NButton*>(pButton);
-    NLayout* pLayout = window_->GetRootFrame()->GetChildById<NLayout*>(_T("TestLayout"), false);
-    if(pBtnTest->GetId() == _T("btnAdd"))
-    {
-#if 0
-        NInstPtr<NButton> pChild(MemToolParam);
-        pChild->GetTextAttr(NFrame::StatusNormal, true)->SetColor(MakeArgb(255, 255, 255, 0));
-        pChild->SetId(_T("child"));
-        pChild->SetAutoSize(false);
-        pChild->SetSize(100, 20);
-        pChild->SetMargin(5, 10, 15, 20);
-        NString msg;
-        msg.Format(_T("Item %d"), count_);
-        pChild->SetText(msg);
-        pLayout->AddChild(pChild);
-#else
-        NButton* pChild = pLayout->GetChildById<NButton*>(_T("child"), true);
-        if(pChild)
-            pChild->SetSize(pChild->GetRect().Width() + 20, pChild->GetRect().Height());
-#endif
-    }
-    else if(pBtnTest->GetId() == _T("btnRemove"))
-    {
-#if 0
-        NButton* pChild = pLayout->GetChildById<NButton*>(_T("child"), true);
-        if(pChild)
-            pLayout->RemoveChild(pChild);
-#else
-        NButton* pChild = pLayout->GetChildById<NButton*>(_T("child"), true);
-        if(pChild)
-            pChild->SetSize(pChild->GetRect().Width() - 20, pChild->GetRect().Height());
-#endif
-    }
-
-    return true;
-}
-
 bool CControlTest::OnButtonListClicked(NBaseObj* pButton, NEventData* eventData)
 {
     NButton* pBtnTest = dynamic_cast<NButton*>(pButton);
@@ -139,52 +100,6 @@ bool CControlTest::OnScrollEvent(NBaseObj* baseObj, NEventData* eventData)
 bool CControlTest::PaintTest(NBaseObj* baseObj, NEventData* eventData)
 {
     return false;
-}
-
-void CControlTest::TestLayout()
-{
-
-    NInstPtr<NLayout> pLayout1(MemToolParam);
-    pLayout1->SetId(_T("TestLayout"));
-    pLayout1->SetPos(150, 50);
-    pLayout1->SetAutoSize(false);
-    pLayout1->SetSize(310, 300);
-    pLayout1->SetLayoutType(NLayout::LayoutVert);
-
-    NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-    NAutoPtr<NShapeDraw> pBkgDraw = loader->CreateShape(MemToolParam);
-    pBkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 0, 255, 255));
-    pLayout1->SetBkgDraw(pBkgDraw);
-
-    NString msg;
-    pLayout1->SetLayoutable(false);
-    for(int i=0; i<4; ++ i)
-    {
-        NInstPtr<NButton> pChild(MemToolParam);
-        pChild->GetTextAttr(NFrame::StatusNormal, true)->SetColor(MakeArgb(255, 255, 255, 0));
-        pChild->SetId(_T("child"));
-        pChild->SetAutoSize(false);
-        pChild->SetSize(100, 20);
-        pChild->SetMargin(5, 10, 15, 20);
-        msg.Format(_T("Item %d"), pLayout1->GetChildById(_NUI_INNER_FRAME_ID_, false)->GetChildCount());
-        pChild->SetText(msg.GetData());
-        if(i == 8)
-            printf("");
-        pLayout1->AddChild(pChild);
-    }
-    pLayout1->SetLayoutable(true);
-    window_->GetRootFrame()->AddChild(pLayout1);
-
-    NInstPtr<NButton> btnAdd(MemToolParam);
-    btnAdd->Create(window_->GetRootFrame(), _T("btnAdd"), NFrame::LayoutLeft | NFrame::LayoutBottom, _T("Click To Add "));
-    btnAdd->GetTextAttr(NFrame::StatusNormal, true)->SetColor(MakeArgb(255, 255, 255, 0));
-    btnAdd->ClickEvent.AddHandler(MakeDelegate(this, &CControlTest::OnButtonLayoutClicked));
-
-    NInstPtr<NButton> btnRemove(MemToolParam);
-    btnRemove->Create(window_->GetRootFrame(), _T("btnRemove"), NFrame::LayoutLeft | NFrame::LayoutBottom, _T("Click To Remove"));
-    btnRemove->ClickEvent.AddHandler(MakeDelegate(this, &CControlTest::OnButtonLayoutClicked));
-    btnRemove->GetTextAttr(NFrame::StatusNormal, true)->SetColor(MakeArgb(255, 255, 255, 0));
-    btnRemove->SetMargin(90, 0, 0,0);
 }
 
 void CControlTest::TestList()

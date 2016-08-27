@@ -167,6 +167,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LayoutTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -202,6 +206,10 @@
 			>
 			<File
 				RelativePath=".\ControlTest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LayoutTest.h"
 				>
 			</File>
 			<File
