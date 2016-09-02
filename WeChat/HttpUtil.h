@@ -34,4 +34,5 @@ namespace HttpUtil
     bool PostString(LPCTSTR url, LPVOID data, DWORD dwDataLength, HttpResult& httpResult);
     bool GetString(LPCTSTR url, HttpResult& httpResult, DWORD dwFlags);
     bool GetFile(LPCTSTR url, LPCTSTR fileName);
+    void StopAllRequest();
 };

@@ -8,6 +8,37 @@
 
 #pragma warning(disable: 4996)
 
+namespace
+{
+    HINTERNET g_InterHandles[1024] = {};
+
+    void AddIntHandle(HINTERNET handle)
+    {
+        if(handle == NULL)
+            return;
+        for(int i=0; i<_countof(g_InterHandles); ++ i)
+        {
+            if(g_InterHandles[i] != NULL)
+                continue;
+            g_InterHandles[i] = handle;
+            break;
+        }
+    }
+
+    void RemoveIntHandle(HINTERNET handle)
+    {
+        if(handle == NULL)
+            return;
+        for(int i=0; i<_countof(g_InterHandles); ++ i)
+        {
+            if(g_InterHandles[i] != handle)
+                continue;
+            g_InterHandles[i] = NULL;
+            break;
+        }
+    }
+}
+
 namespace HttpUtil
 {
     namespace
@@ -57,7 +88,7 @@ namespace HttpUtil
         ::WSAStartup(MAKEWORD(2, 2), &data);
 
         LPCTSTR szAgent = _T("Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; QQDownload 717; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)");
-        g_hIntOpen = ::InternetOpen(szAgent, INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+        g_hIntOpen = ::InternetOpen(szAgent, INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY, NULL, NULL, 0);
     }
 
     void UnInitHttpUtil()
@@ -105,6 +136,7 @@ namespace HttpUtil
             {
                 break;
             }
+            AddIntHandle(hIntCnn);
 
             bool bIsPost = _tcsicmp(method, _T("post")) == 0;
 
@@ -250,9 +282,12 @@ namespace HttpUtil
         if(hIntReq != NULL)
             ::InternetCloseHandle(hIntReq);
 
+        RemoveIntHandle(hIntCnn);
+
         if(result)
         {
             httpResult.buffer = buffer;
+            httpResult.buffer[dwLength] = 0;
             httpResult.bufferLength = dwLength;
         }
         else
@@ -304,6 +339,17 @@ namespace HttpUtil
         ::CloseHandle(file);
         result = httpResult.bufferLength == dwWritten;
         return result;
+    }
+
+    void StopAllRequest()
+    {
+        for(int i=0; i<_countof(g_InterHandles); ++ i)
+        {
+            if(g_InterHandles[i] == NULL)
+                continue;
+            ::InternetCloseHandle(g_InterHandles[i]);
+            g_InterHandles[i] = NULL;
+        }
     }
 };
 

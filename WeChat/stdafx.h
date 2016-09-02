@@ -17,6 +17,9 @@
 #include <memory.h>
 #include <tchar.h>
 
+#include <shlobj.h>
+#include <process.h>
+
 #include <Unknwn.h>
 #include <GdiPlus.h>
 

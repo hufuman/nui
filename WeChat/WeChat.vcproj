@@ -162,6 +162,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Config.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LoginUi.cpp"
 				>
 			</File>
@@ -203,6 +207,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Config.h"
+				>
+			</File>
 			<File
 				RelativePath=".\LoginUi.h"
 				>
@@ -271,6 +279,34 @@
 			</File>
 			<File
 				RelativePath=".\HttpUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ImageLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ImageLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JsonUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\JsonUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Locker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MiscUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MiscUtil.h"
 				>
 			</File>
 		</Filter>

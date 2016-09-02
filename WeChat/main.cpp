@@ -6,6 +6,8 @@
 #include "LoginUi.h"
 #include "MainUi.h"
 #include "HttpUtil.h"
+#include "MiscUtil.h"
+
 
 nui::Base::NString GetResourcePath();
 
@@ -17,6 +19,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+
     HttpUtil::InitHttpUtil();
 
     nui::Data::NModule::GetInst().Init(::GetModuleHandle(NULL));
@@ -25,16 +28,19 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     nui::Base::NInstPtr<nui::Base::NCore> core(MemToolParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);
 
-    bool loginOk = false;
+    for(;;)
     {
-        LoginUi loginUi;
-        loginOk = loginUi.Show();
-    }
+        {
+            LoginUi loginUi;
+            if(!loginUi.Show())
+                break;
+        }
 
-    if(loginOk)
-    {
-        MainUi mainUi;
-        mainUi.Show();
+        {
+            MainUi mainUi;
+            if(mainUi.Show() == 0)
+                break;
+        }
     }
 
     core->DestroyCore();

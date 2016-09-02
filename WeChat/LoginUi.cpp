@@ -2,11 +2,11 @@
 #include "LoginUi.h"
 
 #include "WeChatLogic.h"
-#include <process.h>
 
 
 LoginUi::LoginUi(void) : window_(MemToolParam)
 {
+    stop_ = false;
     loginOk_ = false;
     loginThread_ = NULL;
 }
@@ -21,6 +21,15 @@ bool LoginUi::Show()
     window_->WindowCreatedEvent.AddHandler(this, &LoginUi::OnWindowCreated);
     window_->SetVisible(true);
     window_->DoModalWithStyle(NULL, _T("@LoginUi:LoginUi"));
+
+    if(loginThread_ != NULL)
+    {
+        HttpUtil::StopAllRequest();
+        stop_ = true;
+        ::WaitForSingleObject(loginThread_, INFINITE);
+        ::CloseHandle(loginThread_);
+        loginThread_ = NULL;
+    }
 
     return loginOk_;
 }
@@ -57,15 +66,16 @@ unsigned int LoginUi::ThreadProc(void* data)
 
     bool result = false;
     NString errMsg;
-    for(;;)
+    for(;!pThis->stop_;)
     {
+        pThis->statusLabel_->SetText(_T("@LoginUi:queryQrCode"));
+        pThis->qrcode_->LoadImage(_T("@skin:Common\\loading.gif"));
         if(!WeChatLogic::Get().DownloadUuid())
         {
             errMsg = _T("@LoginUi:errUuid");
             break;
         }
 
-        // redownload qrcode if timeout
         NString qrCodeFilePath = WeChatLogic::Get().DownloadQrCode();
         if(qrCodeFilePath.IsEmpty())
         {
@@ -79,35 +89,53 @@ unsigned int LoginUi::ThreadProc(void* data)
         result = false;
         pThis->statusLabel_->SetText(_T("@LoginUi:scanQrCode"));
         DWORD dwTickCount = ::GetTickCount();
-        for(; !result && ::GetTickCount() - dwTickCount < 30000; )
+        int scanResult = 1;
+        int retryCount = 0;
+        for(; !pThis->stop_ && retryCount < 4; )
         {
-            result = WeChatLogic::Get().CheckScan();
+            scanResult = WeChatLogic::Get().CheckScan();
+            if(scanResult == 2)
+                break;
             ::Sleep(500);
+            if(scanResult == 0)
+            {
+                ++ retryCount;
+                continue;
+            }
+            retryCount = 0;
         }
-        if(!result)
+        if(scanResult != 2)
         {
-            errMsg = _T("@LoginUi:errScan");
-            break;
+            continue;
         }
 
         // check login
         result = false;
         pThis->statusLabel_->SetText(_T("@LoginUi:checkLogin"));
-        for(; !result && ::GetTickCount() - dwTickCount < 15000; )
+        scanResult = 1;
+        retryCount = 0;
+        for(; !pThis->stop_ && retryCount < 4; )
         {
-            result = WeChatLogic::Get().CheckLogin();
+            scanResult = WeChatLogic::Get().CheckLogin();
+            if(scanResult == 2)
+                break;
             ::Sleep(500);
+            if(scanResult == 0)
+            {
+                ++ retryCount;
+                continue;
+            }
+            retryCount = 0;
         }
-        if(!result)
+        if(scanResult != 2)
         {
-            errMsg = _T("@LoginUi:errLogin");
-            break;
+            continue;
         }
 
         // user auth
         result = false;
         pThis->statusLabel_->SetText(_T("@LoginUi:fetchUserAuth"));
-        for(int i=0; !result && i<5; ++ i)
+        for(int i=0; !pThis->stop_ && !result && i<5; ++ i)
         {
             result = WeChatLogic::Get().FetchUserAuth();
             ::Sleep(500);
@@ -121,7 +149,7 @@ unsigned int LoginUi::ThreadProc(void* data)
         // user info
         result = false;
         pThis->statusLabel_->SetText(_T("@LoginUi:fetchUserInfo"));
-        for(int i=0; !result && i<5; ++ i)
+        for(int i=0; !pThis->stop_ && !result && i<5; ++ i)
         {
             result = WeChatLogic::Get().FetchUserInfo();
             ::Sleep(500);
@@ -135,7 +163,7 @@ unsigned int LoginUi::ThreadProc(void* data)
         // contracts
         result = false;
         pThis->statusLabel_->SetText(_T("@LoginUi:fetchContracts"));
-        for(int i=0; !result && i<5; ++ i)
+        for(int i=0; !pThis->stop_ && !result && i<5; ++ i)
         {
             result = WeChatLogic::Get().FetchContracts();
             ::Sleep(500);
@@ -146,9 +174,14 @@ unsigned int LoginUi::ThreadProc(void* data)
             break;
         }
 
+        // msgs
+
         result = true;
         break;
     }
+
+    if(pThis->stop_)
+        return 0;
 
     if(result)
     {
@@ -159,6 +192,7 @@ unsigned int LoginUi::ThreadProc(void* data)
     {
         pThis->statusLabel_->SetText(errMsg);
         pThis->btnRetry_->SetVisible(true);
+        pThis->qrcode_->LoadImage(_T("@skin:Common\\loading.gif"));
     }
 
     return 0;

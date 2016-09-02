@@ -10,12 +10,16 @@ public:
     MainUi(void);
     ~MainUi(void);
 
-    void Show();
+    // whether need to show login
+    bool Show();
 
 private:
     bool OnWindowCreated(Base::NBaseObj* source, NEventData* eventData);
+    void LoadMsgThreadProc(bool& stopping);
 
 private:
+    bool needShowLogin_;
+    NThread loadMsgThread_;
     NInstPtr<NWindow> window_;
 };
 

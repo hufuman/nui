@@ -22,5 +22,6 @@ private:
     NButton* btnRetry_;
 
     bool loginOk_;
+    bool stop_;
     HANDLE loginThread_;
 };
