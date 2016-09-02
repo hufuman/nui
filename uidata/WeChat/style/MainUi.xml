@@ -10,7 +10,7 @@
 			<!-- left tab span -->
 			<Layout layoutType="vert" size="50,0" layout="vfill">
 				<BkgDraw drawType="shape" fillColor="#FF3E3E40" style="rect"/>
-				<Button id="avatar" margin="13,13,0,0" cursor="hand">
+				<Button id="avatar" margin="13,13,0,0" cursor="hand" size="26,26">
 					<BkgDraw drawType="image" imagePath="@mock:avatar.png" />
 				</Button>
 				<RadioBox id="msg" group="tabSpan" margin="13,23,0,0" cursor="hand">
@@ -25,20 +25,6 @@
 			</Layout>
 			<!-- contact list -->
 			<Layout layoutType="vert" size="250,0" layout="vfill" scrollAllowed="true" id="contactList" >
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
-        <RadioBox UiStyle="@MainUi:RbContact" />
 			</Layout>
 		</Layout>
 	</Frame>
@@ -46,7 +32,7 @@
   <RadioBox size="0,64" group="contact" layout="hfill" name="RbContact">
     <BkgDraw drawType="image" imagePath="@main:contactBkg.png" />
     <Image id="avatar" imagePath="@mock:avatar.png" size="40,40" layout="left,vcenter" margin="13,0,0,0" />
-    <Label id="title" text="title_title_title_title_title" layout="top,hfill" margin="64,16,64,0" />
-    <Label id="msg" text="title_title_title_title_title" layout="bottom,hfill" margin="64,0,64,16" textColor="#FF8F8F8F" />
+    <Label id="title" text="" layout="top,hfill" margin="64,16,64,0" />
+    <Label id="msg" text="" layout="bottom,hfill" margin="64,0,64,16" textColor="#FF8F8F8F" />
   </RadioBox>
 </UI>

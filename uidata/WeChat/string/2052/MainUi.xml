@@ -17,4 +17,6 @@
   <string id="errUserInfo" value="获取用户信息失败" />
   <string id="errContracts" value="获取联系人失败" />
 
+  <string id="errAppExited" value="手机微信已退出，是否需要重新登录" />
+  <string id="errLogon" value="你的微信在其他位置登录，是否需要重新登录" />
 </Bundle>
