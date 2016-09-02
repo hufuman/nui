@@ -31,6 +31,8 @@ namespace nui
 
             NUiProc::~NUiProc(void)
             {
+                if(window_.GetNative() != NULL)
+                    window_.Destroy();
             }
 
             HWND NUiProc::GetMsgWnd()

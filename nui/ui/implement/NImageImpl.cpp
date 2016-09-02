@@ -32,6 +32,8 @@ namespace nui
 
             Start();
 
+            Invalidate();
+
             return true;
         }
 

@@ -12,56 +12,50 @@ namespace nui
         NThread::NThread()
         {
             threadHandle_ = 0;
+            stopping_ = false;
         }
 
         NThread::~NThread()
         {
             NAssertError(threadHandle_ == 0, TEXT("thread hasn't ended"));
-            Stop(0, true);
+            StopAndWait();
         }
 
         bool NThread::Start(ThreadImpl impl)
         {
             NAssertError(threadHandle_ == 0, TEXT("thread is started"));
             threadImpl_ = impl;
+            stopping_ = false;
             threadHandle_ = (HANDLE)_beginthreadex(0, 0, &NThread::ThreadFunc, static_cast<void*>(this), 0, 0);
             return (threadHandle_ != 0);
         }
 
-        bool NThread::Stop(DWORD timeout, bool force)
+        bool NThread::StopAndWait()
         {
             if(threadHandle_ == 0)
                 return true;
 
+            stopping_ = true;
             bool result = true;
-            DWORD dwCode = ::WaitForSingleObject((HANDLE)threadHandle_, timeout);
-            if(dwCode == WAIT_TIMEOUT && force)
-            {
-                ::TerminateThread(threadHandle_, 0);
-                ::CloseHandle(threadHandle_);
-                threadHandle_ = 0;
-            }
-            else if(dwCode == WAIT_OBJECT_0)
+            DWORD dwCode = ::WaitForSingleObject((HANDLE)threadHandle_, INFINITE);
+            if(dwCode == WAIT_OBJECT_0)
             {
                 ::CloseHandle(threadHandle_);
                 threadHandle_ = 0;
             }
             else
             {
+                NAssertError(false, _T("failed to wait thread"));
                 result = false;
             }
             return result;
         }
 
-        bool NThread::Wait(DWORD timeout)
-        {
-            return (::WaitForSingleObject(threadHandle_, timeout) == WAIT_OBJECT_0);
-        }
-
         unsigned int NThread::ThreadFunc(void* param)
         {
             NThread* pThis = reinterpret_cast<NThread*>(param);
-            return (pThis->threadImpl_)(param);
+            (pThis->threadImpl_)(pThis->stopping_);
+            return 0;
         }
 
     }

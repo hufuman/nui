@@ -75,6 +75,30 @@ namespace nui
                 result.Replace(_T("/"), _T("\\")).Replace(_T("\\\\"), _T("\\"));
                 return result;
             }
+
+            bool MakeSureFolderExists(LPCTSTR szPath)
+            {
+                Base::NString path(szPath);
+                int position = 0;
+                Base::NString token;
+
+                bool result = true;
+                Base::NString tmpPath;
+                for(;path.Tokenize(position, _T("\\"), false, token);)
+                {
+                    tmpPath += token + _T("\\");
+                    if(IsFolderExists(tmpPath))
+                    {
+                        continue;
+                    }
+                    if(!::CreateDirectory(tmpPath, NULL))
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+                return result;
+            }
         }
     }
 }

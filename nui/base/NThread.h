@@ -6,7 +6,7 @@ namespace nui
     namespace Base
     {
         BEGIN_USE_UNEXPORT_TEMPLATE()
-        typedef FastDelegate1<void*, unsigned int> ThreadImpl;
+        typedef FastDelegate1<bool&, void> ThreadImpl;
 
         class NUI_CLASS NThread : public Noncopyable
         {
@@ -16,13 +16,13 @@ namespace nui
 
         public:
             bool Start(ThreadImpl impl);
-            bool Stop(DWORD timeout, bool force);
-            bool Wait(DWORD timeout);
+            bool StopAndWait();
 
         protected:
             static unsigned int _stdcall ThreadFunc(void*);
 
         private:
+            bool stopping_;
             HANDLE threadHandle_;
             ThreadImpl threadImpl_;
         };
