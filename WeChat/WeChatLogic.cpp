@@ -271,7 +271,7 @@ bool WeChatLogic::QueryMsgExists(int& retcode, int& selector)
     if(selectorPos >= 0)
         selector = _ttoi(httpResult.text.SubString(selectorPos + _countof(selectorTag) - 1));
 
-    return retcode == 0 && selector == 2;
+    return retcode == 0 && selector != 0;
 }
 
 bool WeChatLogic::LoadMsgContent(std::list<WeChatMsg>& msgs)

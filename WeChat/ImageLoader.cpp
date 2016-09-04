@@ -29,10 +29,15 @@ void CImageLoader::Stop()
     stopImageLoading_ = true;
     ::WaitForSingleObject(imageLoadingThread_, INFINITE);
     imageLoadingThread_ = NULL;
+    while (!imageLoadDataQueue_.empty())
+    {
+        imageLoadDataQueue_.pop();
+    }
 }
 
 void CImageLoader::LoadImage(NImage* image, LPCTSTR imgUrl, bool needRemoveAfterLoad)
 {
+    stopImageLoading_ = false;
     ImageLoadData data;
     data.image = image;
     data.imgUrl = imgUrl;

@@ -21,9 +21,9 @@ bool MainUi::Show()
     window_->SetVisible(true);
     window_->DoModalWithStyle(NULL, _T("@MainUi:MainUi"));
 
-    CImageLoader::Get().Stop();
     HttpUtil::StopAllRequest();
     loadMsgThread_.StopAndWait();
+    CImageLoader::Get().Stop();
 
     return needShowLogin_;
 }
@@ -64,8 +64,8 @@ void MainUi::LoadMsgThreadProc(bool& stopping)
             if(retCode == 1100)
             {
                 NInstPtr<NStringBundle> bundle(MemToolParam);
-                NString msg = bundle->GetString(_T("@MainUi::errAppExited"));
-                NString title = bundle->GetString(_T("@Common::appTitle"));
+                NString msg = bundle->GetString(_T("@MainUi:errAppExited"));
+                NString title = bundle->GetString(_T("@Common:appTitle"));
                 if(::MessageBox(window_->GetNative(), msg, title, MB_YESNO | MB_ICONQUESTION) == IDYES)
                     needShowLogin_ = true;
                 break;
@@ -73,13 +73,13 @@ void MainUi::LoadMsgThreadProc(bool& stopping)
             else if(retCode == 1101)
             {
                 NInstPtr<NStringBundle> bundle(MemToolParam);
-                NString msg = bundle->GetString(_T("@MainUi::errLogon"));
-                NString title = bundle->GetString(_T("@Common::appTitle"));
+                NString msg = bundle->GetString(_T("@MainUi:errLogon"));
+                NString title = bundle->GetString(_T("@Common:appTitle"));
                 if(::MessageBox(window_->GetNative(), msg, title, MB_YESNO | MB_ICONQUESTION) == IDYES)
                     needShowLogin_ = true;
                 break;
             }
-            Sleep(2000);
+            Sleep(1000);
             continue;
         }
 

@@ -28,24 +28,29 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     nui::Base::NInstPtr<nui::Base::NCore> core(MemToolParam);
     core->InitCore(resPath.GetData(), _T("2052"), NRenderType::GdiRender);
 
-    for(;;)
+    bool needShowMainUi = false;
     {
-        {
-            LoginUi loginUi;
-            if(!loginUi.Show())
-                break;
-        }
+        LoginUi loginUi;
+        needShowMainUi = loginUi.Show();
+    }
 
-        {
-            MainUi mainUi;
-            if(mainUi.Show() == 0)
-                break;
-        }
+    bool needRestart = false;
+    if(needShowMainUi)
+    {
+        MainUi mainUi;
+        needRestart = mainUi.Show();
     }
 
     core->DestroyCore();
 
     HttpUtil::UnInitHttpUtil();
+
+    if(needRestart)
+    {
+        TCHAR selfPath[1024] = _T("");
+        ::GetModuleFileName(NULL, selfPath, _countof(selfPath));
+        ::ShellExecute(NULL, _T("open"), selfPath, NULL, NULL, SW_SHOW);
+    }
     return 0;
 }
 
