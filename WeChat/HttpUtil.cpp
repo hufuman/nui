@@ -288,6 +288,7 @@ namespace HttpUtil
         {
             httpResult.buffer = buffer;
             httpResult.buffer[dwLength] = 0;
+            httpResult.buffer[dwLength + 1] = 0;
             httpResult.bufferLength = dwLength;
         }
         else
