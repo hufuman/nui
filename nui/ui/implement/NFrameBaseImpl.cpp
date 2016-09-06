@@ -51,10 +51,14 @@ namespace nui
 
             // check if exists
             size_t zorder;
-            UNREFERENCED_PARAMETER(zorder);
             NAssertError(GetChildHelper(child, zorder) == childs_.end(), _T("child already exists"));
 
-            childs_.push_back(child);
+            FrameList::const_iterator ite = GetChildHelper(child, zorder);
+            for(int i=topMostCount_; i>0; --i)
+            {
+                -- ite;
+            }
+            childs_.insert(ite, child);
             SetParentHelper(child, this);
 
             return true;
