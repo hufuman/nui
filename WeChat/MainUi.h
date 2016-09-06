@@ -19,6 +19,7 @@ private:
     bool OnBtnSend(Base::NBaseObj* source, NEventData* eventData);
     bool OnEditFilter(Base::NBaseObj* source, NEventData* eventData);
     bool OnBtnCancelFilter(Base::NBaseObj* source, NEventData* eventData);
+    bool OnAvatarPreDraw(Base::NBaseObj* source, NEventData* eventData);
 
     void AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout);
     void ShowContact(UserInfo* user, NFrame* frame);

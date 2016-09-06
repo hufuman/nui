@@ -612,6 +612,8 @@ namespace nui
             if(clip.IsEmpty())
                 return;
 
+            PreDrawEvent.Invoke(this, NULL);
+
             DrawBkg(render, rect);
             DrawContent(render, rect);
             DrawFore(render, rect);

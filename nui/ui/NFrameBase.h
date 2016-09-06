@@ -189,6 +189,8 @@ namespace nui
             NEvent KeyDownEvent;
             NEvent KeyUpEvent;
 
+            NEvent PreDrawEvent;
+
         protected:
             size_t topMostCount_;
             size_t bottomMostCount_;

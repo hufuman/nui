@@ -54,9 +54,10 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
         title->SetText(user->GetName());
         frame->SetData(reinterpret_cast<DWORD>(user));
         user->data = reinterpret_cast<DWORD>((NFrame*)frame);
+        avatar->SetData(reinterpret_cast<DWORD>(user));
+        avatar->PreDrawEvent.AddHandler(this, &MainUi::OnAvatarPreDraw);
 
         frame->ClickEvent.AddHandler(this, &MainUi::OnContactClicked);
-        CImageLoader::Get().LoadImage(avatar, user->headImgUrl, true);
     }
 
     loadMsgThread_.Start(MakeDelegate(this, &MainUi::LoadMsgThreadProc));
@@ -101,6 +102,19 @@ bool MainUi::OnBtnCancelFilter(Base::NBaseObj* source, NEventData* eventData)
     NEdit* editFilter = rootFrame->GetChildById<NEdit*>(_T("editFilter"));
     editFilter->SetText(_T(""));
     DoFilter();
+    return false;
+}
+
+bool MainUi::OnAvatarPreDraw(Base::NBaseObj* source, NEventData* eventData)
+{
+    NImage* avatar = dynamic_cast<NImage*>(source);
+    if(avatar->GetData() != 1)
+    {
+        avatar->PreDrawEvent.RemoveHandler(MakeDelegate(this, &MainUi::OnAvatarPreDraw));
+        UserInfo* user = reinterpret_cast<UserInfo*>(avatar->GetData());
+        avatar->SetData(1);
+        CImageLoader::Get().LoadImage(avatar, user->headImgUrl, true);
+    }
     return false;
 }
 
