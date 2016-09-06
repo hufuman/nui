@@ -66,13 +66,13 @@ namespace nui
         bool NEdit::GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle)
         {
             wndClassName = WC_EDIT;
-            style = WS_TABSTOP | ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_CHILD | ES_MULTILINE;
+            style = WS_TABSTOP | ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_CHILD;
             exStyle = 0;
 
             NTextAttr* textAttr = GetTextAttr();
             if(textAttr && !textAttr->IsSingleLine())
             {
-                style |= ES_WANTRETURN | WS_HSCROLL | WS_VSCROLL;
+                style |= ES_WANTRETURN | WS_HSCROLL | WS_VSCROLL | ES_MULTILINE;
             }
 
             return true;
@@ -90,10 +90,27 @@ namespace nui
                 {
                     window_->GetRender()->GetTextSize(GetText(), GetTextAttr(), GetFont(), textSize);
 
-                    Base::NRect rcText;
-                    rcText.SetPos((frameRect_.Width() - textSize.Width) / 2, (frameRect_.Height() - textSize.Height) / 2);
-                    rcText.SetSize(textSize.Width, textSize.Height);
-                    ::SendMessage(realWindow_, EM_SETRECT, 0, reinterpret_cast<LPARAM>((RECT*)rcText));
+                    UINT flags = textAttr->GetAlignFlags();
+                    if(flags != 0)
+                    {
+                        int left = 0;
+                        int top = 0;
+
+                        if(flags & NTextAttr::TextAlignRight)
+                            left = frameRect_.Width() - textSize.Width;
+                        else if(flags & NTextAttr::TextAlignHCenter)
+                            left = (frameRect_.Width() - textSize.Width) / 2;
+
+                        if(flags & NTextAttr::TextAlignBottom)
+                            top = frameRect_.Height() - textSize.Height;
+                        else if(flags & NTextAttr::TextAlignHCenter)
+                            top = (frameRect_.Height() - textSize.Height) / 2;
+
+                        Base::NRect rcText;
+                        rcText.SetPos(left, top);
+                        rcText.SetSize(textSize.Width, textSize.Height);
+                        ::SendMessage(realWindow_, EM_SETRECT, 0, reinterpret_cast<LPARAM>((RECT*)rcText));
+                    }
                 }
             }
             ::SendMessage(realWindow_, EM_SETCUEBANNER, TRUE, (LPARAM)hintText_.GetData());
@@ -119,7 +136,10 @@ namespace nui
 
         bool NEdit::OnParentCommand(WORD notifyCode)
         {
-            UNREFERENCED_PARAMETER(notifyCode);
+            if(notifyCode == EN_CHANGE)
+            {
+                TextChangedEvent.Invoke(this, NULL);
+            }
             return true;
         }
     }

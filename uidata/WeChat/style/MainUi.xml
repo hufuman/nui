@@ -1,41 +1,41 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <UI>
 
-	<Frame name="MainUi" size="800,600" autoSize="false" text="@Common:appTitle" >
-		<ForeDraw drawType="shape" fillColor="#FFF5F5F5" style="rect" borderWidth="1" borderColor="#FFD1D1D1" />
-		<Label pos="10,10" text="@Common:appTitle" >
-			<Font fontSize="14" />
-		</Label>
-		<!-- left tab span -->
-		<Layout layoutType="vert" size="50,0" layout="vfill">
-			<BkgDraw drawType="shape" fillColor="#FF3E3E40" style="rect"/>
-			<Button id="avatar" margin="13,13,0,0" cursor="hand" size="26,26">
-				<BkgDraw drawType="image" imagePath="@mock:avatar.png" />
-			</Button>
-			<RadioBox id="msg" group="tabSpan" margin="13,23,0,0" cursor="hand">
-				<BkgDraw drawType="image" imagePath="@main:msg.png" />
-			</RadioBox>
-			<RadioBox id="contact" group="tabSpan" margin="13,23,0,0" cursor="hand">
-				<BkgDraw drawType="image" imagePath="@main:contact.png" />
-			</RadioBox>
-			<Button id="config" margin="13,0,0,13" cursor="hand" layout="left,bottom">
-				<BkgDraw drawType="image" imagePath="@main:config.png" />
-			</Button>
-		</Layout>
-		<!-- contact list -->
-		<Frame layoutType="vert" size="250,0" pos="50,0" layout="vfill">
+  <Frame name="MainUi" size="800,600" autoSize="false" text="@Common:appTitle" >
+    <ForeDraw drawType="shape" fillColor="#FFF5F5F5" style="rect" borderWidth="1" borderColor="#FFD1D1D1" />
+    <Label pos="10,10" text="@Common:appTitle" >
+      <Font fontSize="14" />
+    </Label>
+    <!-- left tab span -->
+    <Layout layoutType="vert" size="50,0" layout="vfill">
+      <BkgDraw drawType="shape" fillColor="#FF3E3E40" style="rect"/>
+      <Button id="avatar" margin="13,13,0,0" cursor="hand" size="26,26">
+        <BkgDraw drawType="image" imagePath="@mock:avatar.png" />
+      </Button>
+      <RadioBox id="msg" group="tabSpan" margin="13,23,0,0" cursor="hand">
+        <BkgDraw drawType="image" imagePath="@main:msg.png" />
+      </RadioBox>
+      <RadioBox id="contact" group="tabSpan" margin="13,23,0,0" cursor="hand">
+        <BkgDraw drawType="image" imagePath="@main:contact.png" />
+      </RadioBox>
+      <Button id="config" margin="13,0,0,13" cursor="hand" layout="left,bottom">
+        <BkgDraw drawType="image" imagePath="@main:config.png" />
+      </Button>
+    </Layout>
+    <!-- contact list -->
+    <Frame layoutType="vert" size="250,0" pos="50,0" layout="vfill">
       <Frame layout="hfill,top" margin="14,18,14,0" size="0,23">
         <BkgDraw drawType="shape" borderColor="#FFDDDDDD" borderWidth="1" fillColor="#FFF5F5F5" style="rect"/>
-        <Edit layout="hfill,vfill" id="editFilter" margin="1,1,25,1" hintText="@MainUi:search" />
+        <Edit layout="hfill,vfill" id="editFilter" margin="1,1,25,1" hintText="@MainUi:search" textSingleLine="true" />
         <Image imagePath="@main:search.png" layout="right,vcenter" margin="0,0,1,0" />
-        <Button cursor="hand" layout="right,vcenter" margin="0,0,1,0" id="btnCancel" visible="false">
+        <Button cursor="hand" layout="right,vcenter" margin="0,0,1,0" id="btnCancelFilter" visible="false">
           <BkgDraw drawType="image" imagePath="@main:cancel.png" />
         </Button>
       </Frame>
       <Layout layoutType="vert" layout="hfill,vfill" scrollAllowed="true" id="MsgContactList" margin="0,50,0,0">
       </Layout>
-      <Layout layoutType="vert" layout="hfill,vfill" scrollAllowed="true" id="contactList" />
-		</Frame>
+      <Layout layoutType="vert" layout="hfill,vfill" scrollAllowed="true" id="contactList" margin="0,50,0,0" />
+    </Frame>
     <!-- Right Part -->
     <Frame layout="hfill,vfill" margin="300,0,0,0">
       <BkgDraw drawType="shape" fillColor="#FFF5F5F5" style="rect" borderWidth="1" borderColor="#FFD1D1D1" />
@@ -44,13 +44,13 @@
       </Frame>
       <Frame layout="hfill,bottom" margin="1,27,1,1" size="0,145">
         <BkgDraw drawType="shape" fillColor="#FFFFFFFF" style="rect" />
-        <Edit layout="hfill,vfill" margin="18,40,18,45" id="MsgContent" textSingleLine="false" />
+        <Edit layout="hfill,vfill" margin="18,1,18,45" id="MsgContent" textSingleLine="false" />
         <Button layout="right,bottom" margin="0,0,9,9" size="68,26" text="@MainUi:send" cursor="hand" id="sendMsg">
           <BkgDraw drawType="image" imagePath="@main:send.png" />
         </Button>
       </Frame>
     </Frame>
-	</Frame>
+  </Frame>
 
   <Layout name="msgLayout" id="msgLayout" layout="hfill,vfill" margin="0,27,0,0" scrollAllowed="true" >
   </Layout>

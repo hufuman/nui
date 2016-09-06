@@ -85,6 +85,15 @@ public:
         return msgList_;
     }
 
+    bool IsMatch(const NString& text) const
+    {
+        return userName.ToLower().IndexOf(text) >= 0
+            || nickName.ToLower().IndexOf(text) >= 0
+            || displayName.ToLower().IndexOf(text) >= 0
+            || remarkName.ToLower().IndexOf(text) >= 0
+            || searchPinyins_.ToLower().IndexOf(text) >= 0;
+    }
+
 private:
     WeChatMsgList msgList_;
     void CopyData(UserInfo& right)

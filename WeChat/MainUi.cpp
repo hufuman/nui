@@ -41,6 +41,8 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
 
     editContent_ = rootFrame->GetChildById<NEdit*>(_T("MsgContent"));
     rootFrame->GetChildById<NFrame*>(_T("sendMsg"))->ClickEvent.AddHandler(this, &MainUi::OnBtnSend);
+    rootFrame->GetChildById<NEdit*>(_T("editFilter"))->TextChangedEvent.AddHandler(this, &MainUi::OnEditFilter);
+    rootFrame->GetChildById<NFrame*>(_T("btnCancelFilter"))->ClickEvent.AddHandler(this, &MainUi::OnBtnCancelFilter);
 
     NInstPtr<NParser> parser(MemToolParam);
     for(; ite != userInfoList.end(); ++ ite)
@@ -81,6 +83,24 @@ bool MainUi::OnBtnSend(Base::NBaseObj* source, NEventData* eventData)
     WeChatMsgList listMsgs;
     listMsgs.push_back(msg);
     OnMsgArrived(&listMsgs);
+    return false;
+}
+
+bool MainUi::OnEditFilter(Base::NBaseObj* source, NEventData* eventData)
+{
+    if(filterTimer_)
+        return false;
+    NInstPtr<NTimerSrv> timer(MemToolParam);
+    filterTimer_ = timer->startOnceTimer(200, MakeDelegate(this, &MainUi::DoFilter));
+    return false;
+}
+
+bool MainUi::OnBtnCancelFilter(Base::NBaseObj* source, NEventData* eventData)
+{
+    NFrame* rootFrame = window_->GetRootFrame();
+    NEdit* editFilter = rootFrame->GetChildById<NEdit*>(_T("editFilter"));
+    editFilter->SetText(_T(""));
+    DoFilter();
     return false;
 }
 
@@ -204,3 +224,33 @@ LRESULT MainUi::OnMsgArrived(void* param)
     return 0;
 }
 
+void MainUi::DoFilter()
+{
+    NFrame* rootFrame = window_->GetRootFrame();
+    NEdit* editFilter = rootFrame->GetChildById<NEdit*>(_T("editFilter"));
+    NLayout* contactList = rootFrame->GetChildById<NLayout*>(_T("contactList"));
+
+    NString text = editFilter->GetText();
+
+    NFrame* btnCancelFilter = rootFrame->GetChildById<NFrame*>(_T("btnCancelFilter"));
+    btnCancelFilter->SetVisible(!text.IsEmpty());
+
+    contactList->SetLayoutable(false);
+    contactList->GetChildById<NFrame*>(_NUI_INNER_FRAME_ID_)->EnumChilds(MakeDelegate(this, &MainUi::DoFilterImpl), reinterpret_cast<LPARAM>(&text));
+    contactList->SetLayoutable(true);
+    filterTimer_.Release();
+}
+
+bool MainUi::DoFilterImpl(NFrameBase* child, LPARAM lParam)
+{
+    NString* text = reinterpret_cast<NString*>(lParam);
+    bool visible = text->IsEmpty();
+    if(!visible)
+    {
+        UserInfo* user = reinterpret_cast<UserInfo*>(child->GetData());
+        if(user->IsMatch(*text))
+            visible = true;
+    }
+    child->SetVisible(visible);
+    return true;
+}

@@ -62,6 +62,22 @@ namespace nui
             return __super::GetAutoSize(size);
         }
 
+        void NNative::SetText(const Base::NString& text)
+        {
+            if(realWindow_ != NULL)
+                ::SetWindowText(realWindow_, text);
+            __super::SetText(text);
+        }
+
+        Base::NString NNative::GetText() const
+        {
+            if(realWindow_ != NULL && ::IsWindowVisible(realWindow_))
+            {
+                return GetNativeText();
+            }
+            return __super::GetText();
+        }
+
         void NNative::OnCreate()
         {
             __super::OnCreate();
@@ -117,16 +133,8 @@ namespace nui
 
             if(IsWndValid())
             {
-                TCHAR fixedBuffer[1024];
-                TCHAR* buffer = fixedBuffer;
-                int textLength = ::GetWindowTextLength(realWindow_) + 1;
-                if(textLength > _countof(fixedBuffer))
-                    buffer = NNewArray(TCHAR, textLength);
-                textLength = ::GetWindowText(realWindow_, buffer, textLength);
-                buffer[textLength] = 0;
-                SetText(buffer);
-                if(buffer != fixedBuffer)
-                    NDeleteArray(buffer);
+                Base::NString text = GetNativeText();
+                __super::SetText(text);
                 ::DestroyWindow(realWindow_);
                 realWindow_ = NULL;
             }
@@ -227,6 +235,22 @@ namespace nui
 
             HFONT hFont = GdiObjMgr::Instance().GetDefaultFont();
             ::SendMessage(hWnd, WM_SETFONT, reinterpret_cast<WPARAM>(hFont), TRUE);
+        }
+
+        Base::NString NNative::GetNativeText() const
+        {
+            Base::NString text;
+            TCHAR fixedBuffer[1024];
+            TCHAR* buffer = fixedBuffer;
+            int textLength = ::GetWindowTextLength(realWindow_) + 1;
+            if(textLength > _countof(fixedBuffer))
+                buffer = NNewArray(TCHAR, textLength);
+            textLength = ::GetWindowText(realWindow_, buffer, textLength);
+            buffer[textLength] = 0;
+            text = buffer;
+            if(buffer != fixedBuffer)
+                NDeleteArray(buffer);
+            return text;
         }
     }
 }

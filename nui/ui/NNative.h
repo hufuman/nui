@@ -21,6 +21,9 @@ namespace nui
             static NNative* GetNativeUi(HWND hWnd);
             virtual Base::NSize GetAutoSize() const;
 
+            virtual void SetText(const Base::NString& text);
+            virtual Base::NString GetText() const;
+
         protected:
             virtual void OnCreate();
 
@@ -38,6 +41,8 @@ namespace nui
             virtual void OnRealWindowCreated();
             void AttachWnd(HWND hWnd);
             void CreateRealWindow();
+
+            Base::NString GetNativeText() const;
 
         protected:
             HWND realWindow_;
