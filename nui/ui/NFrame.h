@@ -77,6 +77,7 @@ namespace nui
 
             // Pos & Size
             virtual Base::NSize GetAutoSize() const;
+            virtual Base::NSize GetAutoSize(const Base::NSize& size) const;
 
             // Childs
             template < typename T >

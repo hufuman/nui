@@ -70,7 +70,7 @@ namespace nui
                 autoSize.Width = std::max(preferSize.Width, autoSize.Width);
                 autoSize.Height = std::max(preferSize.Height, autoSize.Height);
             }
-            return autoSize;
+            return __super::GetAutoSize(autoSize);
         }
 
         void NImage::DrawContent(NRender* render, const Base::NRect& rect) const

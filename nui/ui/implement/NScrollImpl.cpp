@@ -147,8 +147,8 @@ namespace nui
         Base::NSize NScroll::GetAutoSize() const
         {
             if(horzScroll_)
-                return GetHorzAutoSize();
-            return GetVertAutoSize();
+                return __super::GetAutoSize(GetHorzAutoSize());
+            return __super::GetAutoSize(GetVertAutoSize());
         }
 
         Base::NSize NScroll::GetHorzAutoSize() const

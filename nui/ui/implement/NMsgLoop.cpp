@@ -23,6 +23,7 @@ namespace nui
             NAssertError(!useWindow || window != NULL, _T("Wrong parameter in NMsgLoop::Loop"));
             MSG msg = {0};
             BOOL bResult = FALSE;
+            TCHAR className[50];
             for(;looping_;)
             {
                 // Idle Handle
@@ -34,6 +35,20 @@ namespace nui
                 bResult = ::GetMessage(&msg, NULL, 0, 0);
                 if(bResult <= 0)
                     break;
+
+                // for edit: ctrl+A
+                if(msg.message == WM_KEYDOWN && msg.wParam == 'A' && ::GetKeyState(VK_CONTROL) < 0)
+                {
+                    HWND hFocused = ::GetFocus();
+                    if(hFocused != NULL)
+                    {
+                        if(::GetClassName(hFocused, className, _countof(className)) > 0 && _tcsicmp(className, WC_EDIT) == 0)
+                        {
+                            ::SendMessage(hFocused, EM_SETSEL, 0, -1);
+                            continue;
+                        }
+                    }
+                }
 
                 if(msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST
                     || msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST)

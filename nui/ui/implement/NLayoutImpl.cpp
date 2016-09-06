@@ -119,7 +119,7 @@ namespace nui
 
         Base::NSize NLayout::GetAutoSize() const
         {
-            return autoSize_;
+            return __super::GetAutoSize(autoSize_);
         }
 
         void NLayout::OnSizeChanged(int width, int height)
@@ -164,8 +164,6 @@ namespace nui
             NLayoutArrangerParam param;
             param.data_ = 0;
             param.frameSize_ = frameRect_.GetSize();
-            param.frameSize_.Width = frameRect_.Width();
-            param.frameSize_.Height = frameRect_.Height();
 
             innerFrame_->EnumChilds(MakeDelegate(this, &NLayout::OnEnumChild), reinterpret_cast<LPARAM>(&param));
 

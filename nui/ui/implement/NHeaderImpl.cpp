@@ -180,7 +180,7 @@ namespace nui
             Base::NSize drawSize = headerDraw_->GetPreferSize();
             size.Width = std::max(size.Width, totalWidth);
             size.Height = std::max(size.Height, drawSize.Height);
-            return size;
+            return __super::GetAutoSize(size);
         }
 
         void NHeader::OnMouseDown(short x, short y)

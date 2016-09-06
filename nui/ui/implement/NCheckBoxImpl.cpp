@@ -78,7 +78,7 @@ namespace nui
                 autoSize.Width = std::max(autoSize.Width, bkgSize.Width);
                 autoSize.Height = std::max(autoSize.Height, bkgSize.Height);
             }
-            return autoSize;
+            return __super::GetAutoSize(autoSize);
         }
 
         void NCheckBox::DrawFore(NRender* render, const Base::NRect& rect) const

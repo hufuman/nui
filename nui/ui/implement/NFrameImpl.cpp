@@ -225,7 +225,7 @@ namespace nui
 
             if(text_.IsEmpty() && foreDraw_ == NULL && bkgDraw_ == NULL)
             {
-                return autoSize;
+                return GetAutoSize(autoSize);
             }
 
 #undef max
@@ -246,7 +246,23 @@ namespace nui
                 autoSize.Width = std::max(autoSize.Width, bkgSize.Width);
                 autoSize.Height = std::max(autoSize.Height, bkgSize.Height);
             }
-            return autoSize;
+            return GetAutoSize(autoSize);
+        }
+
+        Base::NSize NFrame::GetAutoSize(const Base::NSize& size) const
+        {
+#undef min
+#undef max
+            Base::NSize result(size);
+            if(maxSize_.Width != 0)
+                result.Width = std::min(result.Width, maxSize_.Width);
+            if(maxSize_.Height != 0)
+                result.Height = std::min(result.Height, maxSize_.Height);
+            if(minSize_.Width != 0)
+                result.Width = std::max(result.Width, minSize_.Width);
+            if(minSize_.Height != 0)
+                result.Height = std::max(result.Height, minSize_.Height);
+            return result;
         }
 
         NFrame* NFrame::GetChildById(const Base::NString& id, bool recursive)

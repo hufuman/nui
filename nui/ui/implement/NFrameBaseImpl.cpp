@@ -445,8 +445,7 @@ namespace nui
 
         Base::NSize NFrameBase::GetAutoSize() const
         {
-            Base::NSize autoSize;
-            return autoSize;
+            return minSize_;
         }
 
         bool NFrameBase::IsAutoSize() const

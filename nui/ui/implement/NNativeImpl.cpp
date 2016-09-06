@@ -59,7 +59,7 @@ namespace nui
 
             Base::NSize size;
             render->GetTextSize(_T("fy"), NULL, NULL, size);
-            return size;
+            return __super::GetAutoSize(size);
         }
 
         void NNative::OnCreate()
