@@ -19,4 +19,7 @@
 
   <string id="errAppExited" value="手机微信已退出，是否需要重新登录" />
   <string id="errLogon" value="你的微信在其他位置登录，是否需要重新登录" />
+
+  <string id="search" value="搜索" />
+  <string id="send" value="发送(S)" />
 </Bundle>

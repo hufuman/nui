@@ -55,8 +55,8 @@ bool CImageEditor::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
         NFrame* targetFrame = rootFrame->GetChildById(_T("canvas"), true);
         NRect dstRect = targetFrame->GetRootRect();
 
-        int curHorzIndex = _ttoi(rootFrame->GetChildById(_T("editHorzCount"), true)->GetText());
-        int curVertIndex = _ttoi(rootFrame->GetChildById(_T("editVertCount"), true)->GetText());
+        int curHorzIndex = _ttoi(rootFrame->GetChildById(_T("labelHorzIndex"), true)->GetText());
+        int curVertIndex = _ttoi(rootFrame->GetChildById(_T("labelVertIndex"), true)->GetText());
 
         data->render->DrawImage(image_, curHorzIndex, curVertIndex, dstRect, 0);
     }
