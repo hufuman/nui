@@ -137,7 +137,7 @@ public:
     bool FetchContracts();
 
     // 
-    bool SendTextMsg(LPCTSTR toUserName, LPCTSTR content);
+    WeChatMsg* SendTextMsg(LPCTSTR toUserName, LPCTSTR content);
 
     /**
      *

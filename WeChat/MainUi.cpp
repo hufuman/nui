@@ -76,21 +76,23 @@ bool MainUi::OnBtnSend(Base::NBaseObj* source, NEventData* eventData)
     NString text = editContent_->GetText();
     if(text.IsEmpty())
         return false;
-    WeChatLogic::Get().SendTextMsg(currentUser_->userName, text);
+    WeChatMsg* msg = WeChatLogic::Get().SendTextMsg(currentUser_->userName, text);
     editContent_->SetText(_T(""));
+    WeChatMsgList listMsgs;
+    listMsgs.push_back(msg);
+    OnMsgArrived(&listMsgs);
     return false;
 }
 
-UserInfo* MainUi::AddMsgs(const WeChatMsgList& listMsgs)
+void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
 {
-    if(currentUser_ == NULL)
-        return NULL;
-
     WeChatMsg* lastMsg = NULL;
-    UserInfo* lastUserInfo = NULL;
     NInstPtr<NParser> parser(MemToolParam);
     const UserInfo& selfInfo = WeChatLogic::Get().GetSelfInfo();
     WeChatMsgList::const_iterator ite = listMsgs.begin();
+    NLayout* contactList = window_->GetRootFrame()->GetChildById<NLayout*>(_T("contactList"));
+    if(needRelayout)
+        contactList->SetLayoutable(false);
     for(; ite != listMsgs.end(); ++ ite)
     {
         WeChatMsg* msg = *ite;
@@ -98,29 +100,36 @@ UserInfo* MainUi::AddMsgs(const WeChatMsgList& listMsgs)
         if(msg->MsgType != WeChatMsgText)
             continue;
 
-        UserInfo* userInfo = WeChatLogic::Get().GetUserInfo(msg->FromUserName);
-        lastUserInfo = userInfo->userName == selfInfo.userName ? WeChatLogic::Get().GetUserInfo(msg->ToUserName) : userInfo;
-        if(userInfo == NULL)
+        UserInfo* fromUserInfo = WeChatLogic::Get().GetUserInfo(msg->FromUserName);
+        UserInfo* targetUserInfo = fromUserInfo->userName == selfInfo.userName ? WeChatLogic::Get().GetUserInfo(msg->ToUserName) : fromUserInfo;
+
+        if(targetUserInfo != NULL)
+        {
+            NFrame* frame = reinterpret_cast<NFrame*>(targetUserInfo->data);
+
+            if(needRelayout)
+                contactList->GetChildById<NFrame*>(_NUI_INNER_FRAME_ID_)->SetChildZOrder(frame, 0);
+            frame->GetChildById(_T("msg"))->SetText(msg->Content);
+        }
+
+        if(fromUserInfo == NULL)
+            continue;
+
+        if(currentUser_ == NULL)
             continue;
 
         if(msg->FromUserName != currentUser_->userName && msg->ToUserName != currentUser_->userName)
             continue;
 
-        lastMsg = msg;
-
-        bool isSelf = userInfo->userName == selfInfo.userName;
+        bool isSelf = fromUserInfo->userName == selfInfo.userName;
         NString styleName = isSelf ? _T("@MainUi:SelfMsg") : _T("@MainUi:OtherMsg");
         NFrame* msgFrame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(msgLayout_, styleName));
-        NString text = userInfo->GetName() + _T("\r\n");
+        NString text = fromUserInfo->GetName() + _T("\r\n");
         text += msg->Content;
         msgFrame->SetText(text);
     }
-    if(lastMsg != NULL)
-    {
-        NFrame* frame = reinterpret_cast<NFrame*>(currentUser_->data);
-        frame->GetChildById(_T("msg"))->SetText(lastMsg->Content);
-    }
-    return lastUserInfo;
+    if(needRelayout)
+        contactList->SetLayoutable(true);
 }
 
 void MainUi::ShowContact(UserInfo* user, NFrame* frame)
@@ -140,7 +149,7 @@ void MainUi::ShowContact(UserInfo* user, NFrame* frame)
     const WeChatMsgList& msgList = currentUser_->GetMsgList();
     if(msgList.empty())
         return;
-    AddMsgs(msgList);
+    AddMsgs(msgList, false);
 }
 
 void MainUi::LoadMsgThreadProc(bool& stopping)
@@ -191,14 +200,7 @@ void MainUi::LoadMsgThreadProc(bool& stopping)
 LRESULT MainUi::OnMsgArrived(void* param)
 {
     WeChatMsgList* listMsgs = reinterpret_cast<WeChatMsgList*>(param);
-    UserInfo* lastUserInfo = AddMsgs(*listMsgs);
-    if(lastUserInfo != NULL)
-    {
-        NFrame* frame = reinterpret_cast<NFrame*>(lastUserInfo->data);
-        NLayout* layout = window_->GetRootFrame()->GetChildById<NLayout*>(_T("contactList"));
-        layout->GetChildById<NFrame*>(_NUI_INNER_FRAME_ID_)->SetChildZOrder(frame, 0);
-        layout->RelayoutChilds();
-    }
+    AddMsgs(*listMsgs, true);
     return 0;
 }
 

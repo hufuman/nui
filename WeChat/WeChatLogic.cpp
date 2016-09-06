@@ -238,7 +238,7 @@ bool WeChatLogic::FetchContracts()
     return true;
 }
 
-bool WeChatLogic::SendTextMsg(LPCTSTR toUserName, LPCTSTR content)
+WeChatMsg* WeChatLogic::SendTextMsg(LPCTSTR toUserName, LPCTSTR content)
 {
     NString url = _T("https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxsendmsg?pass_ticket=");
     url += ticket_;
@@ -249,7 +249,21 @@ bool WeChatLogic::SendTextMsg(LPCTSTR toUserName, LPCTSTR content)
     Json::FastWriter writer;
     std::string data = writer.write(value);
     HttpUtil::HttpResult httpResult;
-    return HttpUtil::PostString(url, (LPVOID)data.c_str(), data.length(), httpResult);
+    if(!HttpUtil::PostString(url, (LPVOID)data.c_str(), data.length(), httpResult))
+        return NULL;
+
+    UserInfoMap::iterator ite = userInfoMap_.find(toUserName);
+    if(ite == userInfoMap_.end())
+        return NULL;
+
+    WeChatMsg* msg = new WeChatMsg();
+    msg->Content = content;
+    msg->FromUserName = self_.userName;
+    msg->ToUserName = toUserName;
+    msg->MsgType = WeChatMsgText;
+    msg->MsgId = value["ClientMsgId"].asInt();
+    ite->second->AddMsg(msg);
+    return msg;
 }
 
 bool WeChatLogic::QueryMsgExists(int& retcode, int& selector)

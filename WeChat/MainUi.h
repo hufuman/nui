@@ -18,7 +18,7 @@ private:
     bool OnContactClicked(Base::NBaseObj* source, NEventData* eventData);
     bool OnBtnSend(Base::NBaseObj* source, NEventData* eventData);
 
-    UserInfo* AddMsgs(const WeChatMsgList& listMsgs);
+    void AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout);
     void ShowContact(UserInfo* user, NFrame* frame);
     void LoadMsgThreadProc(bool& stopping);
     LRESULT OnMsgArrived(void*);
