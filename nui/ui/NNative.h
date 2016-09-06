@@ -19,6 +19,7 @@ namespace nui
             virtual void Attach(NFrame* parentFrame, HWND hwndNative);
 
             static NNative* GetNativeUi(HWND hWnd);
+            virtual Base::NSize GetAutoSize() const;
 
         protected:
             virtual void OnCreate();

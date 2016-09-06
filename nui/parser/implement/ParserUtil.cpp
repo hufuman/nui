@@ -49,6 +49,8 @@ namespace ParserUtil
         Base::NInstPtr<Parser::NParser> parser(MemToolParam);
 
         NAutoPtr<NDataReader> node = parser->FindStyleNode(styleName);
+        if(node == NULL)
+            return false;
         return ApplyStyle(targetObj, node);
     }
 

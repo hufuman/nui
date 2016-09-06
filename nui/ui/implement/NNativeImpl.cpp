@@ -48,6 +48,20 @@ namespace nui
             return wndUi;
         }
 
+        Base::NSize NNative::GetAutoSize() const
+        {
+            if(window_ == NULL)
+                return __super::GetAutoSize();
+
+            NRender* render = window_->GetRender();
+            if(render == NULL)
+                return __super::GetAutoSize();
+
+            Base::NSize size;
+            render->GetTextSize(_T("fy"), NULL, NULL, size);
+            return size;
+        }
+
         void NNative::OnCreate()
         {
             __super::OnCreate();

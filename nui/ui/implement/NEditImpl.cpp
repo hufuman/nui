@@ -11,6 +11,7 @@ namespace nui
 
         NEdit::NEdit()
         {
+            GetTextAttr(NFrame::StatusNormal, true)->SetSingleLine(true)->SetAlignFlags(NTextAttr::TextAlignLeft | NTextAttr::TextAlignTop);
         }
 
         NEdit::~NEdit()
@@ -114,13 +115,6 @@ namespace nui
         NCursor* NEdit::GetCursor() const
         {
             return GetCursorByType(NCursor::CursorBeam);
-        }
-
-        Base::NSize NEdit::GetAutoSize() const
-        {
-            Base::NSize autoSize = __super::GetAutoSize();
-            autoSize.Height += 8;
-            return autoSize;
         }
 
         bool NEdit::OnParentCommand(WORD notifyCode)

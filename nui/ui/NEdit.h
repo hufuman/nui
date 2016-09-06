@@ -30,8 +30,6 @@ namespace nui
             void SelectAll();
             void ShowTooltip(TooltipIconType iconType, LPCTSTR szTitle, LPCTSTR szText);
 
-            virtual Base::NSize GetAutoSize() const;
-
         protected:
             virtual void OnCreate();
             virtual NCursor* GetCursor() const;

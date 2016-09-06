@@ -34,6 +34,7 @@ namespace nui
             virtual void RemoveAllChilds();
 
             virtual void SetScrollAllowed(bool allow);
+            virtual void RelayoutChilds();
 
         public:
             virtual void SetLayoutable(bool layoutable);
@@ -45,7 +46,6 @@ namespace nui
             virtual void OnSizeChanged(int width, int height);
 
         private:
-            void RelayoutChilds();
             void RelayoutChildsImpl();
             bool OnEnumChild(NFrameBase* child, LPARAM lParam);
             bool OnHorzScrolled(Base::NBaseObj*, NEventData* eventData);
