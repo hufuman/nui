@@ -245,6 +245,10 @@
 				Name="styles"
 				>
 				<File
+					RelativePath="..\uidata\WeChat\style\ConfigUi.xml"
+					>
+				</File>
+				<File
 					RelativePath="..\uidata\WeChat\style\LoginUi.xml"
 					>
 				</File>

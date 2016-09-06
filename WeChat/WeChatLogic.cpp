@@ -3,6 +3,7 @@
 
 #include "JsonUtil.h"
 #include "./json/reader.h"
+#include "./json/writer.h"
 
 #include <time.h>
 #include <wininet.h>
@@ -14,6 +15,7 @@
 namespace
 {
     NString g_BaseUrl = _T("https://wx.qq.com/cgi-bin/mmwebwx-bin");
+
 }
 
 WeChatLogic::WeChatLogic(void)
@@ -236,6 +238,20 @@ bool WeChatLogic::FetchContracts()
     return true;
 }
 
+bool WeChatLogic::SendTextMsg(LPCTSTR toUserName, LPCTSTR content)
+{
+    NString url = _T("https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxsendmsg?pass_ticket=");
+    url += ticket_;
+    Json::Value value;
+    value["Scene"] = 0; 
+    SetBaseRequest(value);
+    SetMsgContent(value, toUserName, content);
+    Json::FastWriter writer;
+    std::string data = writer.write(value);
+    HttpUtil::HttpResult httpResult;
+    return HttpUtil::PostString(url, (LPVOID)data.c_str(), data.length(), httpResult);
+}
+
 bool WeChatLogic::QueryMsgExists(int& retcode, int& selector)
 {
     NString tmp;
@@ -274,7 +290,7 @@ bool WeChatLogic::QueryMsgExists(int& retcode, int& selector)
     return retcode == 0 && selector != 0;
 }
 
-bool WeChatLogic::LoadMsgContent(std::list<WeChatMsg>& msgs)
+bool WeChatLogic::LoadMsgContent(WeChatMsgList& msgs)
 {
     msgs.clear();
 
@@ -312,30 +328,55 @@ bool WeChatLogic::LoadMsgContent(std::list<WeChatMsg>& msgs)
 
     Json::Value msgList = value["AddMsgList"];
 
-    WeChatMsg msg;
     for(Json::Value::iterator ite = msgList.begin(); ite != msgList.end(); ++ ite)
     {
         const Json::Value& msgObj = *ite;
 
-        msg.Reset();
-        msg.MsgType = (WeChatMsgType)JsonUtil::GetIntValue(msgObj, "MsgType");
-        if(msg.MsgType != WeChatMsgText)
+        WeChatMsgType msgType = (WeChatMsgType)JsonUtil::GetIntValue(msgObj, "MsgType");
+        if(msgType != WeChatMsgText)
             continue;
 
-        msg.Content = JsonUtil::GetValue(msgObj, "Content");
-        msg.FromUserName = JsonUtil::GetValue(msgObj, "FromUserName");
-        msg.ToUserName = JsonUtil::GetValue(msgObj, "ToUserName");
-        msg.MsgId = JsonUtil::GetValue(msgObj, "MsgId");
+        NString fromUserName = JsonUtil::GetValue(msgObj, "FromUserName");
+        NString toUserName = JsonUtil::GetValue(msgObj, "ToUserName");
+        bool isSelf = fromUserName == WeChatLogic::Get().GetSelfInfo().userName;
+
+        UserInfoMap::iterator iteUser = userInfoMap_.find(isSelf ? toUserName : fromUserName);
+        if(iteUser == userInfoMap_.end())
+            continue;
+
+        UserInfo* user = iteUser->second;
+        WeChatMsg *msg = new WeChatMsg();
+
+        msg->MsgType = msgType;
+        msg->Content = JsonUtil::GetValue(msgObj, "Content");
+        msg->FromUserName = fromUserName;
+        msg->ToUserName = toUserName;
+        msg->MsgId = JsonUtil::GetValue(msgObj, "MsgId");
+
+        user->AddMsg(msg);
 
         msgs.push_back(msg);
     }
 
-    return false;
+    return true;
 }
 
 WeChatLogic::UserInfoList& WeChatLogic::GetUserInfoList()
 {
     return userInfoList_;
+}
+
+const UserInfo& WeChatLogic::GetSelfInfo() const
+{
+    return self_;
+}
+
+UserInfo* WeChatLogic::GetUserInfo(NString userName) const
+{
+    UserInfoMap::const_iterator iteUser = userInfoMap_.find(userName);
+    if(iteUser == userInfoMap_.end())
+        return NULL;
+    return iteUser->second;
 }
 
 bool WeChatLogic::ParseUserInfo(const Json::Value& user, UserInfo* userInfo)
@@ -381,4 +422,25 @@ void WeChatLogic::ResetSyncKey(const Json::Value& value)
         flatSyncKey_ += _T("%7C");
     }
     flatSyncKey_ = flatSyncKey_.SubString(0, flatSyncKey_.GetLength() - 3);
+}
+
+void WeChatLogic::SetBaseRequest(Json::Value& value)
+{
+    Json::Value v;
+    v["Sid"] = t2utf8(sid_);
+    v["Skey"] = t2utf8(sKey_);
+    v["Uin"] = _ttoi(uin_);
+    value["BaseRequest"] = v;
+}
+
+void WeChatLogic::SetMsgContent(Json::Value& value, LPCTSTR toUserName, LPCTSTR content)
+{
+    Json::Value v;
+    v["ClientMsgId"] = time(NULL);
+    v["Content"] = t2utf8(content);
+    v["FromUserName"] = t2utf8(self_.userName);
+    v["LocalID"] = time(NULL);
+    v["ToUserName"] = t2utf8(toUserName);
+    v["Type"] = 1;
+    value["Msg"] = v;
 }

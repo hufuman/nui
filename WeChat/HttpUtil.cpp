@@ -89,6 +89,10 @@ namespace HttpUtil
 
         LPCTSTR szAgent = _T("Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; QQDownload 717; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)");
         g_hIntOpen = ::InternetOpen(szAgent, INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY, NULL, NULL, 0);
+        DWORD timeout = 1000 * 15;
+        ::InternetSetOption(g_hIntOpen, INTERNET_OPTION_CONNECT_TIMEOUT, &timeout, sizeof(timeout));
+        ::InternetSetOption(g_hIntOpen, INTERNET_OPTION_SEND_TIMEOUT, &timeout, sizeof(timeout));
+        ::InternetSetOption(g_hIntOpen, INTERNET_OPTION_RECEIVE_TIMEOUT, &timeout, sizeof(timeout));
     }
 
     void UnInitHttpUtil()

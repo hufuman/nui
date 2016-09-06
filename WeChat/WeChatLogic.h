@@ -4,6 +4,23 @@
 
 #include "HttpUtil.h"
 
+enum WeChatMsgType
+{
+    WeChatMsgUnknown,
+    WeChatMsgText
+};
+
+class WeChatMsg
+{
+public:
+    NString FromUserName;
+    NString ToUserName;
+    NString Content;
+    WeChatMsgType MsgType;
+    NString MsgId;
+};
+typedef std::list<WeChatMsg*> WeChatMsgList;
+
 class UserInfo
 {
 public:
@@ -14,15 +31,26 @@ public:
         contactFlag_ = 0;
     }
 
-    UserInfo(const UserInfo& right)
+    UserInfo(UserInfo& right)
     {
         CopyData(right);
     }
 
-    UserInfo& operator = (const UserInfo& right)
+    UserInfo& operator = (UserInfo& right)
     {
         CopyData(right);
         return *this;
+    }
+
+    ~UserInfo()
+    {
+        WeChatMsgList::iterator ite = msgList_.begin();
+        for(; ite != msgList_.end(); ++ ite)
+        {
+            WeChatMsg* msg = *ite;
+            delete msg;
+        }
+        msgList_.clear();
     }
 
     int sex_;
@@ -47,8 +75,19 @@ public:
         return userName;
     }
 
+    void AddMsg(WeChatMsg* msg)
+    {
+        msgList_.push_back(msg);
+    }
+
+    const WeChatMsgList& GetMsgList() const
+    {
+        return msgList_;
+    }
+
 private:
-    void CopyData(const UserInfo& right)
+    WeChatMsgList msgList_;
+    void CopyData(UserInfo& right)
     {
         if(this == &right)
             return;
@@ -62,31 +101,8 @@ private:
         signature_ = right.signature_;
         contactFlag_ = right.contactFlag_;
         sex_ = right.sex_;
-    }
-};
-
-enum WeChatMsgType
-{
-    WeChatMsgUnknown,
-    WeChatMsgText
-};
-
-class WeChatMsg
-{
-public:
-    NString FromUserName;
-    NString ToUserName;
-    NString Content;
-    WeChatMsgType MsgType;
-    NString MsgId;
-
-    void Reset()
-    {
-        FromUserName = _T("");
-        ToUserName = _T("");
-        Content = _T("");
-        MsgType = WeChatMsgUnknown;
-        MsgId = _T("");
+        msgList_ = right.msgList_;
+        right.msgList_.clear();
     }
 };
 
@@ -120,6 +136,9 @@ public:
 
     bool FetchContracts();
 
+    // 
+    bool SendTextMsg(LPCTSTR toUserName, LPCTSTR content);
+
     /**
      *
      *
@@ -132,14 +151,20 @@ public:
      *
      */
     bool QueryMsgExists(int& retcode, int& selector);
-    bool LoadMsgContent(std::list<WeChatMsg>& msgs);
+    bool LoadMsgContent(WeChatMsgList& msgs);
 
     typedef std::list<UserInfo*> UserInfoList;
     UserInfoList& GetUserInfoList();
 
+    const UserInfo& GetSelfInfo() const;
+
+    UserInfo* GetUserInfo(NString userName) const;
+
 private:
     bool ParseUserInfo(const Json::Value& user, UserInfo* userInfo);
     void ResetSyncKey(const Json::Value& value);
+    void SetBaseRequest(Json::Value& value);
+    void SetMsgContent(Json::Value& value, LPCTSTR toUserName, LPCTSTR content);
 
 private:
     NString uuid_;
