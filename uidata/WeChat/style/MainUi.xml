@@ -25,7 +25,7 @@
     <!-- contact list -->
     <Frame layoutType="vert" size="250,0" pos="50,0" layout="vfill">
       <Frame layout="hfill,top" margin="14,18,14,0" size="0,23">
-        <BkgDraw drawType="shape" borderColor="#FFDDDDDD" borderWidth="1" fillColor="#FFF5F5F5" style="rect"/>
+        <BkgDraw drawType="shape" borderColor="#FFDDDDDD" borderWidth="2" fillColor="#FFF5F5F5" style="rect"/>
         <Edit layout="hfill,vfill" id="editFilter" margin="1,1,25,1" hintText="@MainUi:search" textSingleLine="true" />
         <Image imagePath="@main:search.png" layout="right,vcenter" margin="0,0,1,0" />
         <Button cursor="hand" layout="right,vcenter" margin="0,0,1,0" id="btnCancelFilter" visible="false">
@@ -40,9 +40,8 @@
     <Frame layout="hfill,vfill" margin="300,0,0,0">
       <BkgDraw drawType="shape" fillColor="#FFF5F5F5" style="rect" borderWidth="1" borderColor="#FFD1D1D1" />
       <Frame id="msgContainer" layout="hfill,vfill" margin="1,1,1,147" >
-        <BkgDraw drawType="shape" fillColor="#FFFFFFFF" style="rect" />
       </Frame>
-      <Frame layout="hfill,bottom" margin="1,27,1,1" size="0,145">
+      <Frame layout="hfill,bottom" margin="1,0,1,1" size="0,145">
         <BkgDraw drawType="shape" fillColor="#FFFFFFFF" style="rect" />
         <Edit layout="hfill,vfill" margin="18,1,18,45" id="MsgContent" textSingleLine="false" />
         <Button layout="right,bottom" margin="0,0,9,9" size="68,26" text="@MainUi:send" cursor="hand" id="sendMsg">
@@ -52,7 +51,7 @@
     </Frame>
   </Frame>
 
-  <Layout name="msgLayout" id="msgLayout" layout="hfill,vfill" margin="0,27,0,0" scrollAllowed="true" >
+  <Layout name="msgLayout" id="msgLayout" layout="hfill,vfill" margin="0,50,0,0" scrollAllowed="true" >
   </Layout>
 
   <RadioBox size="0,64" group="contact" layout="hfill" name="RbContact">
@@ -62,11 +61,17 @@
     <Label id="msg" text="" layout="bottom,hfill" margin="64,0,64,16" textColor="#FF8F8F8F" textAlign="left" />
   </RadioBox>
 
-  <Label name="SelfMsg" layout="right" margin="0,0,13,13" minSize="100,0" maxSize="360,0" textSingleLine="false" textAlign="left">
-    <BkgDraw drawType="shape" fillColor="#FFFFFF00" style="rect" />
-  </Label>
+  <Layout name="SelfMsg" layout="right" margin="0,0,13,13" layoutType="horz">
+    <Label id="msg" textSingleLine="false" textAlign="left" maxSize="320,0" margin="0,0,10,0"  padding="10,4,10,4" minSize="140,32" layout="vcenter">
+      <BkgDraw drawType="shape" fillColor="#FF00FF00" style="roundRect" borderWidth="1" />
+    </Label>
+    <Image size="32,32" id="avatar" imagePath="@mock:avatar.png" layout="vcenter" />
+  </Layout>
 
-  <Label name="OtherMsg" layout="left" margin="13,0,0,13" minSize="100,0" maxSize="360,0" textSingleLine="false" textAlign="left">
-    <BkgDraw drawType="shape" fillColor="#FF00FFFF" style="rect" />
-  </Label>
+  <Layout name="OtherMsg" layout="left" margin="13,0,0,13" maxSize="360,0" layoutType="horz">
+    <Image size="32,32" id="avatar" imagePath="@mock:avatar.png" margin="0,0,10,0" />
+    <Label id="msg" textSingleLine="false" textAlign="left" maxSize="320,0" margin="0,0,10,0"  padding="10,4,10,4" minSize="140,32" layout="vcenter">
+      <BkgDraw drawType="shape" fillColor="#FFFFFFFF" style="roundRect"  borderWidth="1" />
+    </Label>
+  </Layout>
 </UI>

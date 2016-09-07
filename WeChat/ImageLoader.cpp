@@ -35,13 +35,14 @@ void CImageLoader::Stop()
     }
 }
 
-void CImageLoader::LoadImage(NImage* image, LPCTSTR imgUrl, bool needRemoveAfterLoad)
+NString CImageLoader::LoadImage(NImage* image, LPCTSTR imgUrl, bool needRemoveAfterLoad)
 {
     stopImageLoading_ = false;
     ImageLoadData data;
     data.image = image;
     data.imgUrl = imgUrl;
     data.imgName = GetImageName(imgUrl);
+    data.imgPath = File::CombinePath(Config::Get().GetAppDataPath(_T("avatars")), data.imgName);
     data.needRemoveAfterLoad = needRemoveAfterLoad;
 
     {
@@ -51,6 +52,7 @@ void CImageLoader::LoadImage(NImage* image, LPCTSTR imgUrl, bool needRemoveAfter
 
     if(imageLoadingThread_ == NULL)
         imageLoadingThread_ = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, &CImageLoader::LoadImageThreadProc, reinterpret_cast<void*>(this), 0, 0));
+    return data.imgPath;
 }
 
 UINT CImageLoader::LoadImageThreadProc(void* p)
@@ -85,8 +87,7 @@ UINT CImageLoader::LoadImageThreadProc(void* p)
             continue;
         }
 
-        data.imgPath = File::CombinePath(Config::Get().GetAppDataPath(_T("avatars")), data.imgName);
-        if(!File::IsFileExists(data.imgName))
+        if(!File::IsFileExists(data.imgPath))
         {
             NString imgPath = data.imgPath + _T(".bak");
             if(!HttpUtil::GetFile(data.imgUrl, imgPath))
@@ -102,8 +103,13 @@ UINT CImageLoader::LoadImageThreadProc(void* p)
         {
             ::DeleteFile(data.imgPath);
 
-            CAutoLocker autoLocker(&pThis->locker_);
-            pThis->imageLoadDataQueue_.push(data);
+            const int maxRetryCount = 2;
+            ++ data.retryCount;
+            if(data.retryCount < maxRetryCount)
+            {
+                CAutoLocker autoLocker(&pThis->locker_);
+                pThis->imageLoadDataQueue_.push(data);
+            }
         }
         else if(data.needRemoveAfterLoad)
         {

@@ -60,6 +60,7 @@ public:
     NString displayName;
     NString remarkName;
     NString headImgUrl;
+    NString headImgPath;
     NString signature_;
     NString searchPinyins_;
     DWORD data;

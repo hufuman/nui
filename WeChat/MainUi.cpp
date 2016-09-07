@@ -113,7 +113,8 @@ bool MainUi::OnAvatarPreDraw(Base::NBaseObj* source, NEventData* eventData)
         avatar->PreDrawEvent.RemoveHandler(MakeDelegate(this, &MainUi::OnAvatarPreDraw));
         UserInfo* user = reinterpret_cast<UserInfo*>(avatar->GetData());
         avatar->SetData(1);
-        CImageLoader::Get().LoadImage(avatar, user->headImgUrl, true);
+        NString imgPath = CImageLoader::Get().LoadImage(avatar, user->headImgUrl, true);
+        user->headImgPath = imgPath;
     }
     return false;
 }
@@ -127,6 +128,7 @@ void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
     NLayout* contactList = window_->GetRootFrame()->GetChildById<NLayout*>(_T("contactList"));
     if(needRelayout)
         contactList->SetLayoutable(false);
+    msgLayout_->SetLayoutable(false);
     for(; ite != listMsgs.end(); ++ ite)
     {
         WeChatMsg* msg = *ite;
@@ -158,10 +160,15 @@ void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
         bool isSelf = fromUserInfo->userName == selfInfo.userName;
         NString styleName = isSelf ? _T("@MainUi:SelfMsg") : _T("@MainUi:OtherMsg");
         NFrame* msgFrame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(msgLayout_, styleName));
-        NString text = fromUserInfo->GetName() + _T("\r\n");
-        text += msg->Content;
-        msgFrame->SetText(text);
+        NImage* avatar = msgFrame->GetChildById<NImage*>(_T("avatar"));
+        NLabel* msgLabel = msgFrame->GetChildById<NLabel*>(_T("msg"));
+        if(fromUserInfo->headImgPath.IsEmpty())
+            fromUserInfo->headImgPath = CImageLoader::Get().LoadImage(avatar, fromUserInfo->headImgUrl, true);
+        else
+            avatar->LoadImage(fromUserInfo->headImgPath);
+        msgLabel->SetText(msg->Content);
     }
+    msgLayout_->SetLayoutable(true);
     if(needRelayout)
         contactList->SetLayoutable(true);
 }

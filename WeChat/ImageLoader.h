@@ -15,7 +15,7 @@ public:
     static CImageLoader& Get();
 
 public:
-    void LoadImage(NImage* image, LPCTSTR imgUrl, bool needRemoveAfterLoad);
+    NString LoadImage(NImage* image, LPCTSTR imgUrl, bool needRemoveAfterLoad);
     void Stop();
 
 private:
@@ -33,6 +33,7 @@ private:
         NString imgName;
         NString imgPath;
         bool needRemoveAfterLoad;
+        int retryCount;
     };
 
     typedef std::queue<ImageLoadData> ImageLoadDataQueue;
