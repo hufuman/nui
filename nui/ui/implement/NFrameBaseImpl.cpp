@@ -470,6 +470,24 @@ namespace nui
             ReLayout();
         }
 
+        void NFrameBase::SetPadding(int left, int top, int right, int bottom)
+        {
+            if(left == padding_.Left
+                && right == padding_.Right
+                && top == padding_.Top
+                && bottom == padding_.Bottom)
+            {
+                return;
+            }
+            padding_.SetRect(left, top, right, bottom);
+            AutoSize();
+        }
+
+        const Base::NRect& NFrameBase::GetPadding() const
+        {
+            return padding_;
+        }
+
         const Base::NRect& NFrameBase::GetMargin() const
         {
             return margin_;
@@ -615,6 +633,12 @@ namespace nui
             PreDrawEvent.Invoke(this, NULL);
 
             DrawBkg(render, rect);
+
+            rect.Left += padding_.Left;
+            rect.Top += padding_.Top;
+            rect.Right -= padding_.Right;
+            rect.Bottom -= padding_.Bottom;
+
             DrawContent(render, rect);
             DrawFore(render, rect);
 

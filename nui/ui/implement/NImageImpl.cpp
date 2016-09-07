@@ -76,7 +76,8 @@ namespace nui
         void NImage::DrawContent(NRender* render, const Base::NRect& rect) const
         {
             __super::DrawContent(render, rect);
-            imageDraw_->Draw(render, horzIndex_, vertIndex_, rect);
+            if(imageDraw_ != NULL)
+                imageDraw_->Draw(render, horzIndex_, vertIndex_, rect);
         }
 
         void NImage::OnCreate()

@@ -58,7 +58,7 @@ namespace nui
                 return __super::GetAutoSize();
 
             Base::NSize size;
-            render->GetTextSize(_T("fy"), NULL, NULL, size);
+            render->GetTextSize(_T("fy"), NULL, NULL, size, maxSize_.Width);
             return __super::GetAutoSize(size);
         }
 

@@ -45,6 +45,9 @@ void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
     if(styleNode->ReadValue(_T("margin"), tmpRect))
         targetFrame->SetMargin(tmpRect.Left, tmpRect.Top, tmpRect.Right, tmpRect.Bottom);
 
+    if(styleNode->ReadValue(_T("padding"), tmpRect))
+        targetFrame->SetPadding(tmpRect.Left, tmpRect.Top, tmpRect.Right, tmpRect.Bottom);
+
     if(styleNode->ReadValue(_T("text"), tmpString))
         targetFrame->SetText(tmpString);
 

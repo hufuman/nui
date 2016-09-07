@@ -134,6 +134,8 @@ namespace nui
 
             virtual void SetMargin(int left, int top, int right, int bottom);
             virtual const Base::NRect& GetMargin() const;
+            virtual void SetPadding(int left, int top, int right, int bottom);
+            virtual const Base::NRect& GetPadding() const;
             virtual void SetLayout(UINT layout);
             virtual UINT GetLayout() const;
             virtual void ReLayout();
@@ -210,6 +212,7 @@ namespace nui
             Base::NSize minSize_;
             Base::NSize maxSize_;
             Base::NRect margin_;
+            Base::NRect padding_;
             UINT layout_;
             DWORD frameData_;
         };

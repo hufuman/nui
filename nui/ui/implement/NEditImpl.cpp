@@ -88,7 +88,7 @@ namespace nui
                 Base::NSize textSize;
                 if(!GetText().IsEmpty() && window_->GetRender())
                 {
-                    window_->GetRender()->GetTextSize(GetText(), GetTextAttr(), GetFont(), textSize);
+                    window_->GetRender()->GetTextSize(GetText(), GetTextAttr(), GetFont(), textSize, maxSize_.Width);
 
                     UINT flags = textAttr->GetAlignFlags();
                     if(flags != 0)

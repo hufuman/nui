@@ -231,7 +231,7 @@ namespace nui
 #undef max
 
             if(!text_.IsEmpty())
-                window_->GetRender()->GetTextSize(text_, GetTextAttr(), font_, autoSize);
+                window_->GetRender()->GetTextSize(text_, GetTextAttr(), font_, autoSize, maxSize_.Width);
 
             if(foreDraw_ != NULL)
             {
@@ -262,6 +262,9 @@ namespace nui
                 result.Width = std::max(result.Width, minSize_.Width);
             if(minSize_.Height != 0)
                 result.Height = std::max(result.Height, minSize_.Height);
+
+            result.Width += padding_.Left + padding_.Right;
+            result.Height += padding_.Top + padding_.Bottom;
             return result;
         }
 

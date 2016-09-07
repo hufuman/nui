@@ -238,7 +238,7 @@ namespace nui
 
             Base::NRect textRect(rect);
             Base::NSize size(rect.Width(), rect.Height());
-            GetTextSize(text, textAttr, font, size);
+            GetTextSize(text, textAttr, font, size, rect.Width());
 
             if(gdiTextAttr != NULL && gdiTextAttr->IsVertAlign())
             {
@@ -284,7 +284,7 @@ namespace nui
             }
         }
 
-        void GdiRender::GetTextSize(Base::NString text, NTextAttr *textAttr, NFont* font, nui::Base::NSize &size)
+        void GdiRender::GetTextSize(Base::NString text, NTextAttr *textAttr, NFont* font, nui::Base::NSize &size, int maxWidth)
         {
             NTempDC tmpDc;
             HDC hDc = memDC_;
@@ -332,6 +332,9 @@ namespace nui
             {
                 rcTmp.SetRect(0, 0, size.Width, 1000);
             }
+#undef min
+            if(maxWidth > 0)
+                rcTmp.Right = std::min(rcTmp.Right, maxWidth);
             ::DrawText(hDc, text, text.GetLength(), rcTmp, drawFlags | DT_CALCRECT);
             size.Width = rcTmp.Width();
             size.Height = rcTmp.Height();

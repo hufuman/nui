@@ -27,7 +27,7 @@ namespace nui
             virtual void DrawShape(NShapeDraw* shape, const Base::NRect& rect) = 0;
             virtual void DrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue) = 0;
             virtual void DrawText(Base::NString text, NTextAttr* textAttr, NFont* font, const Base::NRect& rect) = 0;
-            virtual void GetTextSize(Base::NString text, NTextAttr* textAttr, NFont* font, Base::NSize& rect) = 0;
+            virtual void GetTextSize(Base::NString text, NTextAttr* textAttr, NFont* font, Base::NSize& size, int maxWidth) = 0;
 
             virtual Base::NHolder ClipRgn(HRGN clipRgn) = 0;
 

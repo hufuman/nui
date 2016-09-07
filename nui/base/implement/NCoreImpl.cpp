@@ -5,6 +5,7 @@
 #include "../../data/NStringBundle.h"
 #include "../../data/NFileSystem.h"
 #include "../../util/NFileUtil.h"
+#include "../../ui/implement//NUiProcImpl.h"
 #include "DelayedReleaser.h"
 
 IMPLEMENT_REFLECTION_EX(NCoreImpl, nui::Base::NReflect::Singleton);
@@ -71,6 +72,8 @@ bool NCoreImpl::InitCore(LPCTSTR packFilePath, LPCTSTR lang, nui::Ui::NRenderTyp
 
     nui::Ui::NUiBus::Instance().Init(type);
 
+    nui::Ui::Impl::NUiProc::Get().Init();
+
     return true;
 }
 
@@ -91,6 +94,9 @@ void NCoreImpl::DestroyCore()
     }
 
     nui::Base::NReflect::GetInstance().ReleaseData(this);
+
+    nui::Ui::Impl::NUiProc::Get().Destroy();
+
     nui::Base::RemoveMemLog(nui::Base::MemTypeNew, this);
     nui::Base::CheckMemLeak();
     nui::Base::ReleaseMemChecker();

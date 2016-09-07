@@ -59,7 +59,7 @@ namespace nui
             Base::NString text = GetText();
             if(!text.IsEmpty())
             {
-                window_->GetRender()->GetTextSize(text, GetTextAttr(), GetFont(), autoSize);
+                window_->GetRender()->GetTextSize(text, GetTextAttr(), GetFont(), autoSize, maxSize_.Width);
             }
 
             if(GetForeDraw() != NULL)
