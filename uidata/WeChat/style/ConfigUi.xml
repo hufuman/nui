@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<UI>
-
-	<Frame name="ConfigUi" size="300,200" autoSize="false" text="@Common:appTitle" >
-    <Layout layoutType="vert">
-    </Layout>
-	</Frame>
-</UI>

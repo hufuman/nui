@@ -6,7 +6,7 @@
         <root name="style" path="@root:style" />
     </xnc>
     <string>
-        <bundle lang="2052" path="@root:StringBundle\2052" />
-        <bundle lang="1033" path="@root:StringBundle\1033" />
+        <bundle lang="2052" path="@root:string\2052" />
+        <bundle lang="1033" path="@root:string\1033" />
     </string>
 </root>

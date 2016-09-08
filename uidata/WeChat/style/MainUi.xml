@@ -43,7 +43,15 @@
       </Frame>
       <Frame layout="hfill,bottom" margin="1,0,1,1" size="0,145">
         <BkgDraw drawType="shape" fillColor="#FFFFFFFF" style="rect" />
-        <Edit layout="hfill,vfill" margin="18,1,18,45" id="MsgContent" textSingleLine="false" />
+        <Layout layoutType="horz" layout="hfill,top" size="0,30" margin="10,1,0,0">
+          <Button id="btnEmotion" margin="0,0,9,0" layout="vcenter" cursor="hand">
+            <BkgDraw drawType="image" imagePath="@main:emotionTab.png" />
+          </Button>
+          <Button id="btnFile" margin="0,0,9,0" layout="vcenter" cursor="hand">
+            <BkgDraw drawType="image" imagePath="@main:fileTab.png"/>
+          </Button>
+        </Layout>
+        <Edit layout="hfill,vfill" margin="9,30,9,45" id="MsgContent" textSingleLine="false" destroyOnLostFocus="false" />
         <Button layout="right,bottom" margin="0,0,9,9" size="68,26" text="@MainUi:send" cursor="hand" id="sendMsg">
           <BkgDraw drawType="image" imagePath="@main:send.png" />
         </Button>

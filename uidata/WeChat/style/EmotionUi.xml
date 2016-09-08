@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<UI>
+
+  <Frame name="MainUi" size="480,240" autoSize="false" text="@Common:appTitle" >
+    <ForeDraw drawType="shape" fillColor="#FFFFFFFF" style="rect" />
+    <Frame id="_nui_sys_button_group_id_" visible="false" />
+    <Button id="emotion" cursor="hand" layout="hcenter,top" margin="0,9,0,0">
+      <BkgDraw drawType="image" imagePath="@main:emotions.png" />
+    </Button>
+  </Frame>
+
+</UI>

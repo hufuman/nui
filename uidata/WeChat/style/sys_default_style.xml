@@ -3,9 +3,9 @@
 	<Layout name="layout" scrollAllowed="false" />
 	<Frame name="window" layout="hfill;vfill">
 		<Layout id="_nui_sys_button_group_id_" layoutType="horz" layout="right,top" topMost="true">
-			<Button id="_nui_sys_min_id_" bkgDraw="image:@skin:common\sys_min_button.png" />
-			<CheckBox id="_nui_sys_max_id_" foreDraw="image:@skin:common\sys_max_button.png" />
-			<Button id="_nui_sys_close_id_" bkgDraw="image:@skin:common\sys_close_button.png" />
+			<Button id="_nui_sys_min_id_" bkgDraw="image:@skin:common\sys_min_button.png" tooltip="@Common:btnSysMin" />
+			<CheckBox id="_nui_sys_max_id_" foreDraw="image:@skin:common\sys_max_button.png" tooltip="@Common:btnSysMax" />
+			<Button id="_nui_sys_close_id_" bkgDraw="image:@skin:common\sys_close_button.png" tooltip="@Common:btnSysClose" />
 		</Layout>
 	</Frame>
 </UI>
