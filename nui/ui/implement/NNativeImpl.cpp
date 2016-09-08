@@ -18,6 +18,7 @@ namespace nui
             bkgDraw->SetStyle(NShapeDraw::Rect)->SetFillColor(MakeArgb(255, 255, 255, 255))->SetBorderWidth(0);
             SetBkgDraw(bkgDraw);
             realWindow_ = NULL;
+            destroyOnLostFocus_ = true;
         }
 
         NNative::~NNative()
@@ -40,6 +41,11 @@ namespace nui
 
             Create(parentFrame);
             AttachWnd(hwndNative);
+        }
+
+        void NNative::SetDestroyOnLostFocus(bool destroy)
+        {
+            destroyOnLostFocus_ = destroy;
         }
 
         NNative* NNative::GetNativeUi(HWND hWnd)
@@ -131,7 +137,7 @@ namespace nui
         {
             __super::OnLostFocus();
 
-            if(IsWndValid())
+            if(IsWndValid() && destroyOnLostFocus_)
             {
                 Base::NString text = GetNativeText();
                 __super::SetText(text);

@@ -21,7 +21,8 @@ namespace nui
                 Child       = 0x0002,
                 Transparent = 0x0004,
                 Layered     = 0x0008,
-                Sizable     = 0x0010
+                Sizable     = 0x0010,
+                MenuLike    = 0x0020 | Top
             };
         };
 
@@ -36,14 +37,12 @@ namespace nui
                 WindowBasePrivateData()
                 {
                     visible = false;
-                    style = WindowStyle::Top | WindowStyle::Sizable;
                     centerWindow = true;
                     centerRelativeWindow = NULL;
                 }
                 Base::NString text;
                 Base::NRect rect;
                 bool visible;
-                DWORD style;
                 bool centerWindow;
                 HWND centerRelativeWindow;
             };
@@ -85,13 +84,13 @@ namespace nui
             bool IsRegionEmpty(HRGN clipRgn);
             void ResetInvalidRgn();
             bool IsLayered() const;
-            void GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const;
+            void GetStyle(DWORD& style, DWORD& exStyle) const;
 
             nui::Base::NAutoPtr<WindowBasePrivateData> GetPrivateData();
 
         protected:
             HWND    window_;
-            bool    layered_;
+            UINT    windowStyle_;
             bool    mouseTracking_;
             MsgFilterCallback msgFilterCallback_;
 

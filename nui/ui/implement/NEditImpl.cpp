@@ -18,39 +18,42 @@ namespace nui
         {
         }
 
-        void NEdit::SetHintText(LPCTSTR szHintText)
+        NEdit* NEdit::SetHintText(LPCTSTR hintText)
         {
             nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
-            hintText_ = stringBundle->GetString(szHintText);
+            hintText_ = stringBundle->GetString(hintText);
             if(!IsWndValid())
-                return;
+                return this;
 
             ::SendMessage(realWindow_, EM_SETCUEBANNER, TRUE, (LPARAM)hintText_.GetData());
+            return this;
         }
 
-        void NEdit::SetReadOnly(bool readOnly)
+        NEdit* NEdit::SetReadOnly(bool readOnly)
         {
             NAssertError(IsWndValid(), _T("call parent->AddChild first"));
             if(!IsWndValid())
-                return;
+                return this;
 
             ::SendMessage(realWindow_, EM_SETREADONLY, readOnly, 0);
+            return this;
         }
 
-        void NEdit::SelectAll()
+        NEdit* NEdit::SelectAll()
         {
             NAssertError(IsWndValid(), _T("call parent->AddChild first"));
             if(!IsWndValid())
-                return;
+                return this;
 
             ::SendMessage(realWindow_, EM_SETSEL, 0, -1);
+            return this;
         }
 
-        void NEdit::ShowTooltip(TooltipIconType iconType, LPCTSTR szTitle, LPCTSTR szText)
+        NEdit* NEdit::ShowTooltip(TooltipIconType iconType, LPCTSTR szTitle, LPCTSTR szText)
         {
             NAssertError(IsWndValid(), _T("call parent->AddChild first"));
             if(!IsWndValid())
-                return;
+                return this;
 
             nui::Base::NInstPtr<nui::Data::NStringBundle> stringBundle(MemToolParam);
             Base::NString strTitle = stringBundle->GetString(szTitle);
@@ -61,18 +64,40 @@ namespace nui
             tip.pszTitle = strTitle.GetData();
             tip.ttiIcon = iconType;
             ::SendMessage(realWindow_, EM_SHOWBALLOONTIP, 0, (LPARAM)&tip);
+            return this;
+        }
+
+        NEdit* NEdit::PasteText(LPCTSTR text)
+        {
+
+            if(realWindow_ == NULL)
+            {
+                SetText(text);
+            }
+            else
+            {
+                ::SendMessage(realWindow_, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(text));
+            }
+            return this;
         }
 
         bool NEdit::GetWndData(Base::NString& wndClassName, DWORD& style, DWORD& exStyle)
         {
             wndClassName = WC_EDIT;
-            style = WS_TABSTOP | ES_AUTOHSCROLL | ES_AUTOVSCROLL | WS_CHILD;
+            style = WS_TABSTOP | WS_CHILD;
             exStyle = 0;
 
             NTextAttr* textAttr = GetTextAttr();
-            if(textAttr && !textAttr->IsSingleLine())
+            if(textAttr)
             {
-                style |= ES_WANTRETURN | WS_HSCROLL | WS_VSCROLL | ES_MULTILINE;
+                if(textAttr->IsSingleLine())
+                {
+                    style |= ES_AUTOHSCROLL;
+                }
+                else
+                {
+                    style |= ES_WANTRETURN | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL;
+                }
             }
 
             return true;

@@ -17,6 +17,7 @@ namespace nui
 
             virtual HWND GetNative() const;
             virtual void Attach(NFrame* parentFrame, HWND hwndNative);
+            virtual void SetDestroyOnLostFocus(bool destroy);
 
             static NNative* GetNativeUi(HWND hWnd);
             virtual Base::NSize GetAutoSize() const;
@@ -45,6 +46,7 @@ namespace nui
             Base::NString GetNativeText() const;
 
         protected:
+            bool destroyOnLostFocus_;
             HWND realWindow_;
         };
 

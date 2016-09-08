@@ -14,8 +14,8 @@ namespace nui
     {
         NWindowBase::NWindowBase()
         {
+            windowStyle_ = WindowStyle::Top | WindowStyle::Sizable;
             window_ = NULL;
-            layered_ = false;
             mouseTracking_ = false;
             invalidateRgn_ = NULL;
             lastDrawTick_ = 0;
@@ -36,10 +36,7 @@ namespace nui
 
         bool NWindowBase::Create(HWND parentWindow)
         {
-            DWORD styleValue = WindowStyle::Top;
-            if(privateWindowBaseData_)
-                styleValue = privateWindowBaseData_->style;
-            return Create(parentWindow, styleValue);
+            return Create(parentWindow, windowStyle_);
         }
 
         bool NWindowBase::Create(HWND parentWindow, DWORD styleValue)
@@ -51,8 +48,9 @@ namespace nui
             if(!result)
                 return false;
 
+            windowStyle_ = styleValue;
             DWORD style, exStyle;
-            GetStyle(styleValue, style, exStyle);
+            GetStyle(style, exStyle);
 
             window_ = ::CreateWindowEx(exStyle,
                 SKIN_WINDOW_NAME,
@@ -70,7 +68,6 @@ namespace nui
             {
                 SetText(privateWindowBaseData_->text);
                 SetRect(privateWindowBaseData_->rect);
-                SetStyle(privateWindowBaseData_->style);
                 if(privateWindowBaseData_->centerWindow)
                     CenterWindow(privateWindowBaseData_->centerRelativeWindow);
                 SetVisible(privateWindowBaseData_->visible);
@@ -122,16 +119,13 @@ namespace nui
 
         void NWindowBase::SetStyle(DWORD styleValue)
         {
-            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::ShowWindow"));
-            if(window_ == NULL)
-            {
-                GetPrivateData()->style = styleValue;
-            }
-            else
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetStyle"));
+            windowStyle_ = styleValue;
+            if(window_ != NULL)
             {
                 DWORD dwStyle;
                 DWORD dwExStyle;
-                GetStyle(styleValue, dwStyle, dwExStyle);
+                GetStyle(dwStyle, dwExStyle);
                 ::SetWindowLongPtr(window_, GWL_STYLE, dwStyle);
                 ::SetWindowLongPtr(window_, GWL_EXSTYLE, dwExStyle);
             }
@@ -139,7 +133,7 @@ namespace nui
 
         void NWindowBase::SetVisible(bool visible)
         {
-            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::ShowWindow"));
+            NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetVisible"));
             if(window_ == NULL)
             {
                 GetPrivateData()->visible = visible;
@@ -148,7 +142,8 @@ namespace nui
             {
                 if(visible)
                 {
-                    ::ShowWindow(window_, SW_SHOW);
+                    bool noActivate = ((windowStyle_ & WindowStyle::MenuLike) == WindowStyle::MenuLike);
+                    ::ShowWindow(window_, noActivate ? SW_SHOWNOACTIVATE : SW_SHOW);
                     if(::IsIconic(window_) || ::GetForegroundWindow() != window_)
                         ::SwitchToThisWindow(window_, TRUE);
                 }
@@ -350,7 +345,12 @@ namespace nui
                 if(wParam)
                 {
                     Invalidate();
+                    ::SetFocus(window_);
                 }
+            }
+            else if(message == WM_KILLFOCUS && ((windowStyle_ & WindowStyle::MenuLike) == WindowStyle::MenuLike))
+            {
+                SetVisible(false);
             }
             else if(message == WM_MOUSELEAVE)
             {
@@ -404,6 +404,11 @@ namespace nui
 
                 modalParent_ = NULL;
             }
+            else if(message == WM_MOUSEACTIVATE && ((windowStyle_ & WindowStyle::MenuLike) == WindowStyle::MenuLike))
+            {
+                lResult = MA_NOACTIVATE;
+                return true;
+            }
 
             if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
                 return true;
@@ -414,8 +419,6 @@ namespace nui
 
         void NWindowBase::OnCreate()
         {
-            layered_ = ((::GetWindowLongPtr(window_, GWL_EXSTYLE) & WS_EX_LAYERED) == WS_EX_LAYERED);
-
             ResetInvalidRgn();
             Invalidate();
         }
@@ -441,30 +444,34 @@ namespace nui
 
         bool NWindowBase::IsLayered() const
         {
-            return layered_;
+            return ((windowStyle_ & WindowStyle::Layered) == WindowStyle::Layered);
         }
 
-        void NWindowBase::GetStyle(DWORD styleValue, DWORD& style, DWORD& exStyle) const
+        void NWindowBase::GetStyle(DWORD& style, DWORD& exStyle) const
         {
             style = 0;
             exStyle = 0;
-            if(styleValue & WindowStyle::Child)
+            if(windowStyle_ & WindowStyle::Child)
             {
                 style |= WS_CHILD;
             }
-            if(styleValue & WindowStyle::Layered)
+            if(windowStyle_ & WindowStyle::Layered)
             {
                 exStyle |= WS_EX_LAYERED;
             }
-            if(styleValue & WindowStyle::Sizable)
+            if(windowStyle_ & WindowStyle::Sizable)
             {
                 style |= WS_SIZEBOX | WS_OVERLAPPED;
             }
-            if(styleValue & WindowStyle::Transparent)
+            if(windowStyle_ & WindowStyle::Transparent)
             {
                 exStyle |= WS_EX_TRANSPARENT;
             }
-            if((styleValue & WindowStyle::Top) || styleValue == 0)
+            if((windowStyle_ & WindowStyle::MenuLike) == WindowStyle::MenuLike)
+            {
+                exStyle |= WS_EX_TOOLWINDOW | WS_EX_TOPMOST;
+            }
+            if((windowStyle_ & WindowStyle::Top) || windowStyle_ == 0)
             {
                 style |= WS_CAPTION | WS_SYSMENU | WS_OVERLAPPED | WS_THICKFRAME;
             }

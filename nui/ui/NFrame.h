@@ -50,6 +50,7 @@ namespace nui
             virtual NCursor* GetCursor() const;
 
             virtual void SetTooltip(const Base::NString &tooltip);
+            virtual void ShowTooltip();
             virtual Base::NString GetTooltip() const;
 
             virtual NFont* GetFont(bool needCreate);

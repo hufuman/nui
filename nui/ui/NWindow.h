@@ -30,6 +30,8 @@ namespace nui
             NFrame* GetRootFrame();
             NRender* GetRender() const;
 
+            void ShowTooltip(const Base::NString& tooltip);
+
         protected:
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
@@ -58,7 +60,6 @@ namespace nui
             void UpdateTooltipWnd();
             void DestroyTooltipWnd();
             void UpdateTooltipText(const Base::NString& tooltip);
-            void ShowTooltip(const Base::NString& tooltip);
             void HideTooltip();
 
         public:
@@ -90,6 +91,7 @@ namespace nui
             Base::NRect sizableBorder_;
 
             HWND tooltipWnd_;
+            Base::NString tooltip_;
 
             END_USE_UNEXPORT_TEMPLATE()
         };

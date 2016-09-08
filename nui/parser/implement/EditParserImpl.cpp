@@ -23,7 +23,7 @@ bool EditParserImpl::IsCorrectObj(nui::Base::NBaseObj* targetObj)
 
 void EditParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataReader* styleNode)
 {
-    FrameParserImpl::FillAttr(targetObj, styleNode);
+    NativeParserImpl::FillAttr(targetObj, styleNode);
 
     NEdit* targetEdit = dynamic_cast<NEdit*>(targetObj);
 

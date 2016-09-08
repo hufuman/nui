@@ -387,7 +387,6 @@ namespace nui
             if(hoverFrame_ == frame)
                 return;
 
-            HideTooltip();
             if(hoverFrame_ && hoverFrame_ != frame)
             {
                 hoverFrame_->OnMouseLeave();
@@ -397,13 +396,17 @@ namespace nui
             if(frame != NULL && capturedFrame != frame && capturedFrame != NULL)
                 return;
 
+            bool hideTooltip = true;
             hoverFrame_ = frame;
             if(hoverFrame_)
             {
                 hoverFrame_->OnMouseHover();
                 Base::NString tooltip = hoverFrame_->GetTooltip();
+                hideTooltip = tooltip.IsEmpty();
                 ShowTooltip(tooltip);
             }
+            if(hideTooltip)
+                HideTooltip();
         }
 
         NFrame* NWindow::RefreshHoverItem(const Base::NPoint& point)
@@ -525,6 +528,7 @@ namespace nui
             toolInfo.rect = rcClient;
             toolInfo.lpszText = TempText;
             lResult = ::SendMessage(tooltipWnd_, TTM_ADDTOOL, 0, (LPARAM)(&toolInfo));
+            tooltip_ = _T("");
         }
 
         void NWindow::DestroyTooltipWnd()
@@ -533,6 +537,7 @@ namespace nui
             {
                 ::DestroyWindow(tooltipWnd_);
                 tooltipWnd_ = NULL;
+                tooltip_ = _T("");
             }
         }
 
@@ -540,6 +545,10 @@ namespace nui
         {
             if(tooltipWnd_ == NULL)
                 return;
+
+            if(tooltip_ == tooltip)
+                return;
+            tooltip_ = tooltip;
 
             TOOLINFO ToolInfo;
             memset(&ToolInfo,0,sizeof(TOOLINFO));
@@ -553,8 +562,11 @@ namespace nui
 
         void NWindow::ShowTooltip(const Base::NString& tooltip)
         {
-            HWND tooltipWnd_ = GetTooltipWnd();
-            if(tooltipWnd_ == NULL)
+            if(tooltip_ == tooltip)
+                return;
+
+            HWND tooltipWnd = GetTooltipWnd();
+            if(tooltipWnd == NULL)
                 return;
 
             if(!tooltip.IsEmpty())
@@ -562,20 +574,21 @@ namespace nui
                 UpdateTooltipText(tooltip.GetData());
             }
 
-            // SetWindowPos(tooltipWnd_, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-            LRESULT lResult = ::SendMessage(tooltipWnd_, TTM_ACTIVATE, TRUE, 0);
+            // SetWindowPos(tooltipWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+            LRESULT lResult = ::SendMessage(tooltipWnd, TTM_ACTIVATE, TRUE, 0);
             UNREFERENCED_PARAMETER(lResult);
-
+/*
             // sometimes, tooltip only show after moving mouse
             //  so we mock mouse event, to show tooltip
-            POINT Pt;
-            ::GetCursorPos(&Pt);
-            ::ScreenToClient(window_, &Pt);
-            Pt.x -= 1;
-            ::PostMessage(window_, WM_MOUSEMOVE, 0, MAKELPARAM(Pt.x, Pt.y));
-            Pt.x += 1;
-            ::PostMessage(window_, WM_MOUSEMOVE, 0, MAKELPARAM(Pt.x, Pt.y));
-            // ::ShowWindow(tooltipWnd_, SW_SHOWNOACTIVATE);
+            POINT pt;
+            ::GetCursorPos(&pt);
+            ::ScreenToClient(window_, &pt);
+            pt.x -= 1;
+                ::PostMessage(window_, WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
+            pt.x += 1;
+            ::PostMessage(window_, WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
+            // ::ShowWindow(tooltipWnd, SW_SHOWNOACTIVATE);
+            */
         }
 
         void NWindow::HideTooltip()

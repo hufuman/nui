@@ -25,10 +25,11 @@ namespace nui
             NEdit();
             ~NEdit();
 
-            void SetHintText(LPCTSTR szHintText);
-            void SetReadOnly(bool readOnly);
-            void SelectAll();
-            void ShowTooltip(TooltipIconType iconType, LPCTSTR szTitle, LPCTSTR szText);
+            NEdit* SetHintText(LPCTSTR hintText);
+            NEdit* SetReadOnly(bool readOnly);
+            NEdit* SelectAll();
+            NEdit* ShowTooltip(TooltipIconType iconType, LPCTSTR szTitle, LPCTSTR szText);
+            NEdit* PasteText(LPCTSTR text);
 
         protected:
             virtual void OnCreate();

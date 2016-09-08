@@ -999,6 +999,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\parser\implement\NativeParserImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\parser\implement\NativeParserImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\parser\implement\NParserImpl.cpp"
 					>
 				</File>

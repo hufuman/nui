@@ -184,6 +184,12 @@ namespace nui
             tooltip_ = realTooltip;
         }
 
+        void NFrame::ShowTooltip()
+        {
+            if(window_ != NULL)
+                window_->ShowTooltip(tooltip_);
+        }
+
         Base::NString NFrame::GetTooltip() const
         {
             return tooltip_;
