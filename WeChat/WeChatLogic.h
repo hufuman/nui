@@ -116,7 +116,6 @@ private:
     }
 };
 
-typedef fastdelegate::FastDelegate2<Base::NBaseObj*, NEventData*, bool> NEventHandler;
 
 class WeChatLogic
 {

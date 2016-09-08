@@ -25,6 +25,8 @@ bool MainUi::Show()
     window_->SetVisible(true);
     window_->DoModalWithStyle(NULL, _T("@MainUi:MainUi"));
 
+    emotionUi_.Destroy();
+
     HttpUtil::StopAllRequest();
     loadMsgThread_.StopAndWait();
     CImageLoader::Get().Stop();
@@ -42,6 +44,7 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
 
     editContent_ = rootFrame->GetChildById<NEdit*>(_T("MsgContent"));
     rootFrame->GetChildById<NFrame*>(_T("sendMsg"))->ClickEvent.AddHandler(this, &MainUi::OnBtnSend);
+    rootFrame->GetChildById<NFrame*>(_T("btnEmotion"))->ClickEvent.AddHandler(this, &MainUi::OnBtnEmotionClicked);
     rootFrame->GetChildById<NEdit*>(_T("editFilter"))->TextChangedEvent.AddHandler(this, &MainUi::OnEditFilter);
     rootFrame->GetChildById<NFrame*>(_T("btnCancelFilter"))->ClickEvent.AddHandler(this, &MainUi::OnBtnCancelFilter);
 
@@ -62,6 +65,8 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
         user->data = reinterpret_cast<DWORD>((NFrame*)frame);
     }
 
+    emotionUi_.Create(window_);
+    emotionUi_.EmotionSelectedEvent.AddHandler(fastdelegate::MakeDelegate(this, &MainUi::OnEmotionSelected));
     loadMsgThread_.Start(MakeDelegate(this, &MainUi::LoadMsgThreadProc));
     return false;
 }
@@ -116,6 +121,23 @@ bool MainUi::OnAvatarPreDraw(Base::NBaseObj* source, NEventData* eventData)
         NString imgPath = CImageLoader::Get().LoadImage(avatar, user->headImgUrl, true);
         user->headImgPath = imgPath;
     }
+    return false;
+}
+
+bool MainUi::OnBtnEmotionClicked(Base::NBaseObj* source, NEventData* eventData)
+{
+    NFrame* frame = dynamic_cast<NFrame*>(source);
+    emotionUi_.Show(frame->GetParent());
+    return false;
+}
+
+bool MainUi::OnEmotionSelected(Base::NBaseObj* source, NEventData* eventData)
+{
+    EmotionUi::EmotionEventData* data = static_cast<EmotionUi::EmotionEventData*>(eventData);
+    DWORD dwLength = ::GetWindowTextLength(editContent_->GetNative());
+    NString text;
+    text.Format(_T("%[%s%]"), (LPCTSTR)data->emotion);
+    editContent_->PasteText(text);
     return false;
 }
 

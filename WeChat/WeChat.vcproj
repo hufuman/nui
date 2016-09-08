@@ -166,6 +166,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EmotionUi.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LoginUi.cpp"
 				>
 			</File>
@@ -209,6 +213,10 @@
 			>
 			<File
 				RelativePath=".\Config.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EmotionUi.h"
 				>
 			</File>
 			<File
@@ -257,7 +265,7 @@
 				Name="styles"
 				>
 				<File
-					RelativePath="..\uidata\WeChat\style\ConfigUi.xml"
+					RelativePath="..\uidata\WeChat\style\EmotionUi.xml"
 					>
 				</File>
 				<File

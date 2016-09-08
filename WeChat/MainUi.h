@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "EmotionUi.h"
 #include "WeChatLogic.h"
 
 
@@ -20,6 +21,8 @@ private:
     bool OnEditFilter(Base::NBaseObj* source, NEventData* eventData);
     bool OnBtnCancelFilter(Base::NBaseObj* source, NEventData* eventData);
     bool OnAvatarPreDraw(Base::NBaseObj* source, NEventData* eventData);
+    bool OnBtnEmotionClicked(Base::NBaseObj* source, NEventData* eventData);
+    bool OnEmotionSelected(Base::NBaseObj* source, NEventData* eventData);
 
     void AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout);
     void ShowContact(UserInfo* user, NFrame* frame);
@@ -37,5 +40,7 @@ private:
     bool needShowLogin_;
     NThread loadMsgThread_;
     NInstPtr<NWindow> window_;
+
+    EmotionUi emotionUi_;
 };
 
