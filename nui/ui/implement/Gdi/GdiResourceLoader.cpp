@@ -38,8 +38,11 @@ namespace nui
             ImageMap::iterator ite = imageMap_.find(path);
             if(ite != imageMap_.end())
             {
-                GdiImageDraw* image = NNew(GdiImageDraw, this);
                 ImageData& data = ite->second;
+                if(data.vctBitmaps.Count() == 0)
+                    return NULL;
+
+                GdiImageDraw* image = NNew(GdiImageDraw, this);
                 image->SetBitmaps(path, data.vctBitmaps, data.vctDelayTicks);
                 if(data.hasExtInfo)
                 {
@@ -141,6 +144,9 @@ namespace nui
 
             if(pFrameDelay != NULL)
                 NFree(pFrameDelay);
+
+            if(imageData.vctBitmaps.Count() == 0)
+                return NULL;
 
             GdiImageDraw* image = NNew(GdiImageDraw, this);
             image->SetBitmaps(path, imageData.vctBitmaps, imageData.vctDelayTicks);

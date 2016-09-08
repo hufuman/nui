@@ -44,6 +44,7 @@ NString CImageLoader::LoadImage(NImage* image, LPCTSTR imgUrl, bool needRemoveAf
     data.imgName = GetImageName(imgUrl);
     data.imgPath = File::CombinePath(Config::Get().GetAppDataPath(_T("avatars")), data.imgName);
     data.needRemoveAfterLoad = needRemoveAfterLoad;
+    data.retryCount = 0;
 
     {
         CAutoLocker autoLocker(&locker_);

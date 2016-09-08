@@ -128,7 +128,8 @@ void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
     NLayout* contactList = window_->GetRootFrame()->GetChildById<NLayout*>(_T("contactList"));
     if(needRelayout)
         contactList->SetLayoutable(false);
-    msgLayout_->SetLayoutable(false);
+    if(msgLayout_ != NULL)
+        msgLayout_->SetLayoutable(false);
     for(; ite != listMsgs.end(); ++ ite)
     {
         WeChatMsg* msg = *ite;
@@ -157,6 +158,9 @@ void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
         if(msg->FromUserName != currentUser_->userName && msg->ToUserName != currentUser_->userName)
             continue;
 
+        if(msgLayout_ == NULL)
+            continue;
+
         bool isSelf = fromUserInfo->userName == selfInfo.userName;
         NString styleName = isSelf ? _T("@MainUi:SelfMsg") : _T("@MainUi:OtherMsg");
         NFrame* msgFrame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(msgLayout_, styleName));
@@ -168,7 +172,8 @@ void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
             avatar->LoadImage(fromUserInfo->headImgPath);
         msgLabel->SetText(msg->Content);
     }
-    msgLayout_->SetLayoutable(true);
+    if(msgLayout_ != NULL)
+        msgLayout_->SetLayoutable(true);
     if(needRelayout)
         contactList->SetLayoutable(true);
 }

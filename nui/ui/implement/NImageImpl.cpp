@@ -23,11 +23,12 @@ namespace nui
         bool NImage::LoadImage(LPCTSTR filePath)
         {
             NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
-            imageDraw_ = loader->LoadImage(filePath);
-            NAssertError(imageDraw_ != NULL, _T("Load Image Failed: %s"), filePath);
-            if(imageDraw_ == NULL)
+            Base::NAutoPtr<NImageDraw> newDraw = loader->LoadImage(filePath);
+            NAssertError(newDraw != NULL, _T("Load Image Failed: %s"), filePath);
+            if(newDraw == NULL)
                 return false;
 
+            imageDraw_ = newDraw;
             AutoSize();
 
             Start();
