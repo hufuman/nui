@@ -7,7 +7,7 @@
 enum WeChatMsgType
 {
     WeChatMsgUnknown,
-    WeChatMsgText
+    WeChatMsgPlain = 1,
 };
 
 class WeChatMsg

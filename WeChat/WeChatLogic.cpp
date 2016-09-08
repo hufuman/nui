@@ -260,7 +260,7 @@ WeChatMsg* WeChatLogic::SendTextMsg(LPCTSTR toUserName, LPCTSTR content)
     msg->Content = content;
     msg->FromUserName = self_.userName;
     msg->ToUserName = toUserName;
-    msg->MsgType = WeChatMsgText;
+    msg->MsgType = WeChatMsgPlain;
     msg->MsgId = value["ClientMsgId"].asInt();
     ite->second->AddMsg(msg);
     return msg;
@@ -347,7 +347,7 @@ bool WeChatLogic::LoadMsgContent(WeChatMsgList& msgs)
         const Json::Value& msgObj = *ite;
 
         WeChatMsgType msgType = (WeChatMsgType)JsonUtil::GetIntValue(msgObj, "MsgType");
-        if(msgType != WeChatMsgText)
+        if(msgType != WeChatMsgPlain)
             continue;
 
         NString fromUserName = JsonUtil::GetValue(msgObj, "FromUserName");

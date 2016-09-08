@@ -334,9 +334,10 @@ namespace nui
             return frameId_;
         }
 
-        void NFrameBase::SetData(DWORD data)
+        NFrame* NFrameBase::SetData(DWORD data)
         {
             frameData_ = data;
+            return dynamic_cast<NFrame*>(this);
         }
 
         DWORD NFrameBase::GetData() const

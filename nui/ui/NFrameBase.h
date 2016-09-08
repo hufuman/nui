@@ -27,6 +27,7 @@ namespace nui
         BEGIN_USE_UNEXPORT_TEMPLATE()
         class NUI_CLASS NWindow;
         class NUI_CLASS NFrameBase;
+        class NUI_CLASS NFrame;
         typedef FastDelegate2<NFrameBase*, LPARAM, bool> UiContainerEnumCallback;
 
         class NUI_CLASS NFrameBase : public nui::Base::NBaseObj
@@ -114,7 +115,7 @@ namespace nui
             // data
             virtual void SetId(const Base::NString& id);
             virtual const Base::NString& GetId() const;
-            virtual void SetData(DWORD data);
+            virtual NFrame* SetData(DWORD data);
             virtual DWORD GetData() const;
             virtual NWindow* GetWindow();
 

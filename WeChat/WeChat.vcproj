@@ -325,6 +325,14 @@
 				RelativePath=".\MiscUtil.h"
 				>
 			</File>
+			<File
+				RelativePath=".\UiUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UiUtil.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

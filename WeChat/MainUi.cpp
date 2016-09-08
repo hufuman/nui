@@ -4,6 +4,7 @@
 #include "config.h"
 #include "WeChatLogic.h"
 #include "ImageLoader.h"
+#include "UiUtil.h"
 
 MainUi::MainUi(void) : window_(MemToolParam)
 {
@@ -49,15 +50,16 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
     {
         UserInfo* & user = *ite;
         NAutoPtr<NFrame> frame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(layout, _T("@MainUi:RbContact")));
-        NLabel* title = frame->GetChildById<NLabel*>(_T("title"));
-        NImage* avatar = frame->GetChildById<NImage*>(_T("avatar"));
-        title->SetText(user->GetName());
-        frame->SetData(reinterpret_cast<DWORD>(user));
-        user->data = reinterpret_cast<DWORD>((NFrame*)frame);
-        avatar->SetData(reinterpret_cast<DWORD>(user));
-        avatar->PreDrawEvent.AddHandler(this, &MainUi::OnAvatarPreDraw);
 
-        frame->ClickEvent.AddHandler(this, &MainUi::OnContactClicked);
+        UiUtil::SetFrameText(frame, _T("title"), user->GetName())
+            ->SetData(reinterpret_cast<DWORD>(user))
+            ->ClickEvent.AddHandler(this, &MainUi::OnContactClicked);
+
+        frame->GetChildById(_T("avatar"))
+            ->SetData(reinterpret_cast<DWORD>(user))
+            ->PreDrawEvent.AddHandler(this, &MainUi::OnAvatarPreDraw);
+
+        user->data = reinterpret_cast<DWORD>((NFrame*)frame);
     }
 
     loadMsgThread_.Start(MakeDelegate(this, &MainUi::LoadMsgThreadProc));
@@ -98,9 +100,7 @@ bool MainUi::OnEditFilter(Base::NBaseObj* source, NEventData* eventData)
 
 bool MainUi::OnBtnCancelFilter(Base::NBaseObj* source, NEventData* eventData)
 {
-    NFrame* rootFrame = window_->GetRootFrame();
-    NEdit* editFilter = rootFrame->GetChildById<NEdit*>(_T("editFilter"));
-    editFilter->SetText(_T(""));
+    UiUtil::SetFrameText(window_->GetRootFrame(), _T("editFilter"), _T(""));
     DoFilter();
     return false;
 }
@@ -134,7 +134,7 @@ void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
     {
         WeChatMsg* msg = *ite;
 
-        if(msg->MsgType != WeChatMsgText)
+        if(msg->MsgType != WeChatMsgPlain)
             continue;
 
         UserInfo* fromUserInfo = WeChatLogic::Get().GetUserInfo(msg->FromUserName);
@@ -165,12 +165,11 @@ void MainUi::AddMsgs(const WeChatMsgList& listMsgs, bool needRelayout)
         NString styleName = isSelf ? _T("@MainUi:SelfMsg") : _T("@MainUi:OtherMsg");
         NFrame* msgFrame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(msgLayout_, styleName));
         NImage* avatar = msgFrame->GetChildById<NImage*>(_T("avatar"));
-        NLabel* msgLabel = msgFrame->GetChildById<NLabel*>(_T("msg"));
+        msgFrame->GetChildById<NLabel*>(_T("msg"))->SetText(msg->Content);
         if(fromUserInfo->headImgPath.IsEmpty())
             fromUserInfo->headImgPath = CImageLoader::Get().LoadImage(avatar, fromUserInfo->headImgUrl, true);
         else
             avatar->LoadImage(fromUserInfo->headImgPath);
-        msgLabel->SetText(msg->Content);
     }
     if(msgLayout_ != NULL)
         msgLayout_->SetLayoutable(true);
