@@ -53,10 +53,10 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
     {
         UserInfo* & user = *ite;
         NAutoPtr<NFrame> frame = dynamic_cast<NFrame*>((NBaseObj*)parser->Parse(layout, _T("@MainUi:RbContact")));
-
-        UiUtil::SetFrameText(frame, _T("title"), user->GetName())
-            ->SetData(reinterpret_cast<DWORD>(user))
+        frame->SetData(reinterpret_cast<DWORD>(user))
             ->ClickEvent.AddHandler(this, &MainUi::OnContactClicked);
+
+        UiUtil::SetFrameText(frame, _T("title"), user->GetName());
 
         frame->GetChildById(_T("avatar"))
             ->SetData(reinterpret_cast<DWORD>(user))
