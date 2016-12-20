@@ -205,6 +205,8 @@ namespace nui
                 break;
             case ImageDrawType::NineStretch:
                 NineStretchDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, alphaValue);
+            case ImageDrawType::Cover:
+                CoverDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, alphaValue);
                 break;
             default:
                 NAssertError(false, _T("Wrong DrawImageType: %d"), image->GetDrawType());
@@ -278,7 +280,7 @@ namespace nui
                     ::SetTextColor(alphaDc, gdiTextAttr->GetColor() & 0x00FFFFFF);
 
                 DWORD drawFlags = gdiTextAttr == NULL ? GDI_TEXTATTR_DEFAULT_DRAWFLAGS : gdiTextAttr->GetDrawFlags();
-                ::DrawText(alphaDc, text, text.GetLength(), textRect, drawFlags);
+                ::DrawText(alphaDc, text, text.GetLength(), textRect, drawFlags | DT_EXPANDTABS);
 
                 alphaDc.EndDraw(gdiTextAttr == NULL ? 255 : GetAlpha(gdiTextAttr->GetColor()));
             }
@@ -605,6 +607,37 @@ namespace nui
             StretchDrawImage(image, frameIndex,
                 srcX + srcDrawWidth, srcY + srcDrawHeight, srcWidth - rcParam.Left - rcParam.Right, srcHeight - rcParam.Top - rcParam.Bottom,
                 dstX + dstDrawWidth, dstY + dstDrawHeight, dstWidth - rcParam.Left - rcParam.Right, dstHeight - rcParam.Top - rcParam.Bottom,
+                alphaValue);
+        }
+
+        void GdiRender::CoverDrawImage(NImageDraw* image, int frameIndex, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, BYTE alphaValue)
+        {
+            NAssertError(memDC_ != NULL, _T("memDC_ is null in GdiRender::CoverDrawImage"));
+
+            if(srcX < 0 || srcY < 0
+                || srcWidth <= 0 || srcHeight <= 0
+                || dstWidth <= 0 || dstHeight <= 0)
+            {
+                return;
+            }
+
+            int width = 0;
+            int height = 0;
+            if((double)srcWidth / srcHeight > (double)dstWidth / dstHeight)
+            {
+                width = static_cast<int>(static_cast<double>(srcHeight * dstWidth / dstHeight));
+                height = srcHeight;
+            }
+            else
+            {
+                width = srcWidth;
+                height = static_cast<int>(static_cast<double>(srcWidth) * dstHeight / dstWidth);
+            }
+
+            // Center
+            StretchDrawImage(image, frameIndex,
+                srcX, srcY, width, height,
+                dstX, dstY, dstWidth, dstHeight,
                 alphaValue);
         }
     }

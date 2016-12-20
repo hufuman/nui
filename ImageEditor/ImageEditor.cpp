@@ -85,6 +85,7 @@ void CImageEditor::ListenEvents()
     rootFrame->GetChildById<NFrame*>(_T("radioStretch"))->ClickEvent.AddHandler(this, &CImageEditor::OnDrawTypeChanged);
     rootFrame->GetChildById<NFrame*>(_T("radioTile"))->ClickEvent.AddHandler(this, &CImageEditor::OnDrawTypeChanged);
     rootFrame->GetChildById<NFrame*>(_T("radioNineStretch"))->ClickEvent.AddHandler(this, &CImageEditor::OnDrawTypeChanged);
+    rootFrame->GetChildById<NFrame*>(_T("radioCover"))->ClickEvent.AddHandler(this, &CImageEditor::OnDrawTypeChanged);
 }
 
 bool CImageEditor::MsgCallback(NWindowBase* window, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
@@ -133,6 +134,7 @@ void CImageEditor::UpdateDraw(HWND hWnd, BOOL bReload)
         rootFrame->GetChildById<NRadioBox*>(_T("radioStretch"))->SetCheck(drawType == ImageDrawType::Stretch);
         rootFrame->GetChildById<NRadioBox*>(_T("radioTile"))->SetCheck(drawType == ImageDrawType::Tile);
         rootFrame->GetChildById<NRadioBox*>(_T("radioNineStretch"))->SetCheck(drawType == ImageDrawType::NineStretch);
+        rootFrame->GetChildById<NRadioBox*>(_T("radioCover"))->SetCheck(drawType == ImageDrawType::Cover);
 
         NString tmp;
         NRect rcParam = image_->GetStretchParam();
@@ -163,6 +165,8 @@ void CImageEditor::UpdateDraw(HWND hWnd, BOOL bReload)
         drawType = ImageDrawType::Tile;
     else if(rootFrame->GetChildById<NFrame*>(_T("radioNineStretch"))->IsChecked())
         drawType = ImageDrawType::NineStretch;
+    else if(rootFrame->GetChildById<NFrame*>(_T("radioCover"))->IsChecked())
+        drawType = ImageDrawType::Cover;
 
     int left = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editLeft"))->GetText());
     int top = _ttoi(rootFrame->GetChildById<NFrame*>(_T("editTop"))->GetText());
@@ -207,6 +211,8 @@ void CImageEditor::SaveExtInfo(HWND hWnd, NString strPath)
         extInfo.drawType = ImageDrawType::Tile;
     else if(rootFrame->GetChildById<NFrame*>(_T("radioNineStretch"))->IsChecked())
         extInfo.drawType = ImageDrawType::NineStretch;
+    else if(rootFrame->GetChildById<NFrame*>(_T("radioCover"))->IsChecked())
+        extInfo.drawType = ImageDrawType::Cover;
 
     extInfo.horzCount = _ttoi(window_->GetRootFrame()->GetChildById<NFrame*>(_T("editHorzCount"))->GetText());
     extInfo.vertCount = _ttoi(window_->GetRootFrame()->GetChildById<NFrame*>(_T("editVertCount"))->GetText());

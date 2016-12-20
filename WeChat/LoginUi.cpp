@@ -174,8 +174,6 @@ unsigned int LoginUi::ThreadProc(void* data)
             break;
         }
 
-        // msgs
-
         result = true;
         break;
     }

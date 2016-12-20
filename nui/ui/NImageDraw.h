@@ -16,7 +16,8 @@ namespace nui
             {
                 Stretch,
                 Tile,
-                NineStretch
+                NineStretch,
+                Cover
             };
         };
 

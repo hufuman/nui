@@ -171,7 +171,7 @@ bool ImgViewer::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
     if(image_ == NULL)
     {
         NSize size;
-        data->render->GetTextSize(text_, textAttr_, font_, size);
+        data->render->GetTextSize(text_, textAttr_, font_, size, 0);
         NRect txtRect;
         const int margin = 4;
         txtRect.SetPos((rcWnd.Width() - size.Width) / 2 - margin, (rcWnd.Height() - size.Height) / 2 - margin);
@@ -202,7 +202,7 @@ bool ImgViewer::PostDrawCallback(NBaseObj* baseObj, NEventData* eventData)
         {
             data->render->DrawImage(image_, 0, 0, rcWnd, frameIndex_);
         }
-        data->render->GetTextSize(fileName_, textAttr_, font_, size);
+        data->render->GetTextSize(fileName_, textAttr_, font_, size, 0);
         NRect txtRect;
         txtRect.SetPos((rcWnd.Width() - size.Width) / 2, rcWnd.Height() - size.Height);
         txtRect.SetSize(size.Width, size.Height);

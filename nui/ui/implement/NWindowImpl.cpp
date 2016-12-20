@@ -155,16 +155,6 @@ namespace nui
                 }
             case WM_NCCALCSIZE:
                 {
-                    NCCALCSIZE_PARAMS* params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
-                    if(::IsZoomed(window_))
-                    {
-                        params->rgrc[0].right += params->rgrc[0].left;
-                        params->rgrc[0].bottom += params->rgrc[0].top;
-                        params->rgrc[0].left = 0;
-                        params->rgrc[0].top = 0;
-                        lResult = 0;
-                        return true;
-                    }
                     lResult = 0;
                     return true;
                 }
@@ -209,6 +199,7 @@ namespace nui
                 }
                 break;
             case WM_LBUTTONDBLCLK:
+            case WM_NCLBUTTONDBLCLK:
             case WM_LBUTTONDOWN:
                 {
                     Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
@@ -228,13 +219,19 @@ namespace nui
 
                     if(hoverFrame_ == NULL)
                     {
-                        ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+                        if(message == WM_LBUTTONDOWN)
+                            ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+                        else if(::IsZoomed(window_))
+                            ::ShowWindow(window_, SW_RESTORE);
+                        else
+                            ::ShowWindow(window_, SW_MAXIMIZE);
                     }
                     else
                     {
                         ::SetCapture(window_);
                         NUiBus::Instance().SetCaptureFrame(hoverFrame_);
                     }
+                    return true;
                 }
                 break;
             case WM_CAPTURECHANGED:

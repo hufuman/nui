@@ -63,6 +63,7 @@ public:
     NString headImgPath;
     NString signature_;
     NString searchPinyins_;
+    std::list<UserInfo*> MemberList;
     DWORD data;
 
     const NString& GetName() const
@@ -101,6 +102,7 @@ private:
     {
         if(this == &right)
             return;
+        MemberList = right.MemberList;
         userName = right.userName;
         nickName = right.nickName;
         displayName = right.displayName;
@@ -168,6 +170,8 @@ public:
     const UserInfo& GetSelfInfo() const;
 
     UserInfo* GetUserInfo(NString userName) const;
+
+    bool FetchGroupMembers();
 
 private:
     bool ParseUserInfo(const Json::Value& user, UserInfo* userInfo);

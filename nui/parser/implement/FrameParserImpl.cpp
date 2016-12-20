@@ -67,6 +67,11 @@ void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
         targetFrame->SetSize(tmpSize.Width, tmpSize.Height);
     }
 
+    if(styleNode->ReadValue(_T("font"), tmpString))
+    {
+        targetFrame->SetFont(tmpString);
+    }
+
     if(styleNode->ReadValue(_T("layout"), tmpString))
     {
         NString token;
@@ -87,14 +92,21 @@ void FrameParserImpl::PreParse(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
             {   _T("hcenter"), NFrameBase::LayoutHCenter    },
             {   _T("vcenter"), NFrameBase::LayoutVCenter    },
         };
-        for(int position=0; tmpString.Tokenize(position, _T(","), false, token);)
+        if(tmpString == _T("center"))
         {
-            for(int j=0; j<_countof(layoutData); ++ j)
+            layout = NFrameBase::LayoutHCenter | NFrameBase::LayoutVCenter;
+        }
+        else
+        {
+            for(int position=0; tmpString.Tokenize(position, _T(","), false, token);)
             {
-                if(token == layoutData[j].layoutName)
+                for(int j=0; j<_countof(layoutData); ++ j)
                 {
-                    layout |= layoutData[j].layoutValue;
-                    break;
+                    if(token == layoutData[j].layoutName)
+                    {
+                        layout |= layoutData[j].layoutValue;
+                        break;
+                    }
                 }
             }
         }
@@ -185,11 +197,6 @@ void FrameParserImpl::FillAttr(nui::Base::NBaseObj* targetObj, nui::Data::NDataR
     if(styleNode->ReadValue(_T("bkgDraw"), tmpString))
     {
         targetFrame->SetBkgDraw(tmpString);
-    }
-
-    if(styleNode->ReadValue(_T("font"), tmpString))
-    {
-        targetFrame->SetFont(tmpString);
     }
 
     if(styleNode->ReadValue(_T("cursor"), tmpString))

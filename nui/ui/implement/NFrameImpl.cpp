@@ -211,7 +211,12 @@ namespace nui
 
         void NFrame::SetFont(NFont* font)
         {
-            font_ = font;
+            if(font != font_)
+            {
+                font_ = font;
+                AutoSize();
+                Invalidate();
+            }
         }
 
 #ifndef _NO_NUI_PARSER_

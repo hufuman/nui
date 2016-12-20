@@ -227,6 +227,8 @@ bool WeChatLogic::FetchContracts()
         UserInfo* userInfo = new UserInfo();
         if(ParseUserInfo(contract, userInfo))
         {
+            if(userInfo->userName.IndexOf(_T("@@")) == 0)
+                printf("");
             userInfoList_.push_back(userInfo);
             userInfoMap_.insert(std::make_pair(userInfo->userName, userInfo));
         }
@@ -391,6 +393,48 @@ UserInfo* WeChatLogic::GetUserInfo(NString userName) const
     if(iteUser == userInfoMap_.end())
         return NULL;
     return iteUser->second;
+}
+
+bool WeChatLogic::FetchGroupMembers()
+{
+    NString url = _T("https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxsync?sid=${sid}&skey=${skey}&lang=${lang}&pass_ticket=${ticket}");
+    url.Replace(_T("${sid}"), sid_);
+    url.Replace(_T("${skey}"), sKey_);
+    url.Replace(_T("${lang}"), lang_);
+    url.Replace(_T("${ticket}"), ticket_);
+
+    NString temp;
+    NString list;
+    int count = 0;
+    UserInfoList::const_iterator ite = userInfoList_.begin();
+    while(count < 50 && ite != userInfoList_.end())
+    {
+        UserInfo* userInfo = *ite;
+        temp = _T("{\"UserName\":\"${userName}\"},");
+        temp.Replace(_T("${userName}"), userInfo->userName);
+        list += temp;
+    }
+    if(list.IsEmpty())
+        return false;
+
+    list = list.SubString(0, list.GetLength() - 1);
+    HttpUtil::HttpResult httpResult;
+    NString data = _T("{\"BaseRequest\": {\"Uin\": \"{uin}\", \"Sid\": \"{sid}\", \"Skey\": \"{skey}\"}, \"Count\": {count}, \"List\": [{list}]}");
+    data.Replace(_T("{uin}"), uin_);
+    data.Replace(_T("{sid}"), sid_);
+    data.Replace(_T("{skey}"), sKey_);
+    data.Replace(_T("{count}"), syncKey_);
+    data.Replace(_T("{list}"), list);
+    std::string body = t2utf8(data);
+    httpResult.cookie = cookie_;
+    if(!HttpUtil::PostString(url, (LPVOID)(body.c_str()), body.size(), httpResult))
+        return false;
+
+    Json::Reader reader;
+    Json::Value value;
+    if(!reader.parse(t2utf8(httpResult.text), value))
+        return false;
+
 }
 
 bool WeChatLogic::ParseUserInfo(const Json::Value& user, UserInfo* userInfo)
