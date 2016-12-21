@@ -21,6 +21,7 @@ public:
     static Employees& Get();
 
     void Load();
+    void LoadBonus();
     void Destroy();
 
     void Reset();

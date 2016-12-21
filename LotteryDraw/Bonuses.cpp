@@ -68,6 +68,13 @@ void Bonuses::Destroy()
         if(info.descDraw != NULL)
             info.descDraw->Release();
     }
+    bonuses_.Clear();
+}
+
+void Bonuses::Reset()
+{
+    Destroy();
+    Load();
 }
 
 void Bonuses::SetBonusShowResultOnce(int index, bool showResultOnce)

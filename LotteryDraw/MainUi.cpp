@@ -134,7 +134,16 @@ bool MainUi::OnBtnReset(nui::Base::NBaseObj *source, nui::Ui::NEventData *eventD
         return true;
     }
 
+    employeePhoto_->SetVisible(false);
+    labelName_->SetText(_T(""));
+    labelSeq_->SetText(_T(""));
+    bonusList_->SetText(_T(""));
+    bonusList_->SetVisible(false);
+    bonusDesc_->SetVisible(true);
+
+    Bonuses::Get().Reset();
     Employees::Get().Reset();
+
     return true;
 }
 
@@ -204,7 +213,7 @@ void MainUi::StopRoll()
         chkBonus_->SetEnabled(false);
         NInstPtr<NTimerSrv> timer(MemToolParam);
         employeeBonusedCount_ = 0;
-        showResultOnceTimer_ = timer->startTimer(200, MakeDelegate(this, &MainUi::ShowResultOnceProc));
+        showResultOnceTimer_ = timer->startTimer(400, MakeDelegate(this, &MainUi::ShowResultOnceProc));
     }
     else
     {

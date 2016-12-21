@@ -76,6 +76,16 @@ void Employees::Load()
         employees_.AddItem(info);
     }
 
+    LoadBonus();
+    loading_ = false;
+}
+
+void Employees::LoadBonus()
+{
+    loading_ = true;
+    bonusResultMap_.clear();
+
+    NInstPtr<NBuffer> buffer(MemToolParam);
     // load file
     NString filePath = File::CombinePath(NModule::GetInst().GetAppPath(), _T("bonus_result.txt"));
     HANDLE hFile = ::CreateFile(filePath, GENERIC_READ, 0, NULL, OPEN_ALWAYS, 0, NULL);
@@ -86,6 +96,8 @@ void Employees::Load()
     ::CloseHandle(hFile);
 
     // 
+    int lineTokenPos = 0;
+    NString line;
     NString bonusIndexes;
     bonusIndexes.Assign((LPCTSTR)buffer->GetBuffer(), dwFileSize / sizeof(TCHAR));
     bonusIndexes.Replace(_T("\r"), _T(""));
@@ -137,6 +149,7 @@ void Employees::Reset()
             continue;
         ::MoveFile(filePath, path);
     }
+    LoadBonus();
 }
 
 int Employees::Count() const

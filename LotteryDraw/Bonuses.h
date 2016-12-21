@@ -24,6 +24,7 @@ public:
 
     void Load();
     void Destroy();
+    void Reset();
 
     void SetBonusShowResultOnce(int index, bool showResultOnce);
     int Count() const;
