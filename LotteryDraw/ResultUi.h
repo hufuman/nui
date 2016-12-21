@@ -6,7 +6,7 @@ public:
     ResultUi(void);
     ~ResultUi(void);
 
-    void Show(const NString& result);
+    void Show(NWindow* window, const NString& result);
 
 private:
     bool OnWindowCreated(Base::NBaseObj* source, NEventData* eventData);

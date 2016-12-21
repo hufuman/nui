@@ -9,14 +9,14 @@ ResultUi::~ResultUi(void)
 {
 }
 
-void ResultUi::Show(const NString& result)
+void ResultUi::Show(NWindow* window, const NString& result)
 {
     result_ = result;
 
     window_->SetStyle(WindowStyle::Top);
     window_->WindowCreatedEvent.AddHandler(this, &ResultUi::OnWindowCreated);
     window_->SetVisible(true);
-    window_->DoModalWithStyle(NULL, _T("@ResultUi:MainUi"));
+    window_->DoModalWithStyle(window->GetNative(), _T("@ResultUi:MainUi"));
 
     window_ = NULL;
 }

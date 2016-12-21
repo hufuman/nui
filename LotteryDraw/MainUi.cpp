@@ -117,7 +117,7 @@ bool MainUi::OnBtnView(nui::Base::NBaseObj *source, nui::Ui::NEventData *eventDa
         }
     }
     ResultUi ui;
-    ui.Show(result);
+    ui.Show(window_, result);
     return true;
 }
 
