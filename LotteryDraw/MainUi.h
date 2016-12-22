@@ -21,6 +21,8 @@ private:
     bool OnBtnReset(Base::NBaseObj* source, NEventData* eventData);
     bool OnChkBonus(Base::NBaseObj* source, NEventData* eventData);
 
+    bool OnKeyEvent(Base::NBaseObj* source, NEventData* eventData);
+
     void ShowStep(int step);
     void StartRoll();
     void StopRoll();
@@ -32,6 +34,8 @@ private:
     void MarkEmployeeBonus(int employeeIndex);
     static unsigned int __stdcall LoadDataProc(void* param);
 
+    void ToggleBonus();
+
 private:
     NInstPtr<NWindow> window_;
 
@@ -41,6 +45,8 @@ private:
     int step_;
     int bonusCount_;
     int employeeBonusedCount_;
+
+    DWORD rollTickCount_;
 
     int bonusIndex_;
     int employeeIndex_;
@@ -56,6 +62,8 @@ private:
     NLayout* btnGroup_;
     NFrame* employeePhoto_;
     NFrame* bonusList_;
+    NImage* lotteryBkg_;
+    NImage* defaultBkg_;
 
     NHolder rollTimer_;
     NHolder showResultOnceTimer_;

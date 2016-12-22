@@ -33,6 +33,8 @@ void MainUi::Show()
 
 bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
 {
+    window_->KeyEvent.AddHandler(this, &MainUi::OnKeyEvent);
+
     NFrame* rootFrame = window_->GetRootFrame();
 
     btnPrev_ = rootFrame->GetChildById<NLink*>(_T("btnPrev"));
@@ -46,6 +48,8 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
     btnGroup_ = rootFrame->GetChildById<NLayout*>(_T("btnGroup"));
     employeePhoto_ = rootFrame->GetChildById<NFrame*>(_T("employeePhoto"));
     bonusList_ = rootFrame->GetChildById<NFrame*>(_T("resultBkg"));
+    lotteryBkg_ = rootFrame->GetChildById<NImage*>(_T("lotteryBkg"));
+    defaultBkg_ = rootFrame->GetChildById<NImage*>(_T("defaultBkg"));
 
     btnPrev_->ClickEvent.AddHandler(this, &MainUi::OnBtnPrev);
     btnNext_->ClickEvent.AddHandler(this, &MainUi::OnBtnNext);
@@ -98,7 +102,7 @@ bool MainUi::OnBtnView(nui::Base::NBaseObj *source, nui::Ui::NEventData *eventDa
                 const EmployeeInfo& employee = Employees::Get().GetEmployeeInfo(index);
                 result += employee.name;
                 ++ count;
-                if(count % 3 == 0)
+                if(count % 5 == 0)
                     result += _T("\r\n    ");
                 else
                     result += _T("    ");
@@ -143,11 +147,40 @@ bool MainUi::OnBtnReset(nui::Base::NBaseObj *source, nui::Ui::NEventData *eventD
 
 bool MainUi::OnChkBonus(nui::Base::NBaseObj *source, nui::Ui::NEventData *eventData)
 {
+    ToggleBonus();
+    return true;
+}
+
+bool MainUi::OnKeyEvent(nui::Base::NBaseObj *source, nui::Ui::NEventData *eventData)
+{
+    if(!btnGroup_->IsVisible())
+        return false;
+
+    NWindow::KeyEventData* data = static_cast<NWindow::KeyEventData*>(eventData);
+    if(data->isDownEvent)
+        return false;
+    if(data->key == ' ' && step_ > 0)
+    {
+        chkBonus_->SetCheck(!chkBonus_->IsChecked());
+        ToggleBonus();
+    }
+    else if(data->key == VK_LEFT)
+    {
+        ShowStep(step_ - 1);
+    }
+    else if(data->key == VK_RIGHT)
+    {
+        ShowStep(step_ + 1);
+    }
+    return true;
+}
+
+void MainUi::ToggleBonus()
+{
     if(chkBonus_->IsChecked())
         StartRoll();
     else
         StopRoll();
-    return true;
 }
 
 void MainUi::ShowStep(int step)
@@ -179,6 +212,8 @@ void MainUi::ShowStep(int step)
         bonusList_->SetVisible(false);
     }
 
+    defaultBkg_->SetVisible(step == 0);
+    lotteryBkg_->SetVisible(step != 0);
     employeePhoto_->SetVisible(false);
     labelName_->SetText(_T(""));
     labelSeq_->SetText(_T(""));
@@ -186,6 +221,7 @@ void MainUi::ShowStep(int step)
 
 void MainUi::StartRoll()
 {
+    rollTickCount_ = ::GetTickCount();
     NInstPtr<NTimerSrv> timer(MemToolParam);
     rollTimer_ = timer->startTimer(20, MakeDelegate(this, &MainUi::RollProc));
 
@@ -198,16 +234,9 @@ void MainUi::StopRoll()
 
     if(bonus.showResultOnce)
     {
-        if(showResultOnceTimer_)
-        {
-            return;
-        }
-
-        Bonuses::Get().SetBonusShowResultOnce(bonusIndex_, false);
+        rollTickCount_ = ::GetTickCount();
         chkBonus_->SetEnabled(false);
-        NInstPtr<NTimerSrv> timer(MemToolParam);
         employeeBonusedCount_ = 0;
-        showResultOnceTimer_ = timer->startTimer(1000, MakeDelegate(this, &MainUi::ShowResultOnceProc));
     }
     else
     {
@@ -218,27 +247,44 @@ void MainUi::StopRoll()
 
 void MainUi::RollProc()
 {
-    employeeIndex_ = Employees::Get().GetRandomNextIndex();
+    const BonusInfo& bonus = Bonuses::Get().GetBonusInfo(bonusIndex_);
+    if(bonus.showResultOnce && (::GetTickCount() - rollTickCount_) >= 1000 && !chkBonus_->IsEnabled())
+    {
+        rollTimer_.Release();
 
-    const EmployeeInfo& employee = Employees::Get().GetEmployeeInfo(employeeIndex_);
-    employeePhoto_->SetForeDraw(employee.draw);
-    employeePhoto_->SetVisible(true);
+        MarkEmployeeBonus(employeeIndex_);
+        ++ employeeBonusedCount_;
+        const BonusInfo& bonus = Bonuses::Get().GetBonusInfo(bonusIndex_);
+        if(employeeBonusedCount_ >= bonus.count)
+        {
+            chkBonus_->SetEnabled(true);
+            Bonuses::Get().SetBonusShowResultOnce(bonusIndex_, false);
+            return;
+        }
 
-    labelName_->SetText(employee.name);
-    labelSeq_->SetText(employee.seq);
+        NInstPtr<NTimerSrv> timer(MemToolParam);
+        showResultOnceTimer_ = timer->startTimer(700, MakeDelegate(this, &MainUi::ShowResultOnceProc));
+    }
+    else
+    {
+        employeeIndex_ = Employees::Get().GetRandomNextIndex();
+
+        const EmployeeInfo& employee = Employees::Get().GetEmployeeInfo(employeeIndex_);
+        employeePhoto_->SetForeDraw(employee.draw);
+        employeePhoto_->SetVisible(true);
+
+        labelName_->SetText(employee.name);
+        labelSeq_->SetText(employee.seq);
+    }
 }
 
 void MainUi::ShowResultOnceProc()
 {
-    MarkEmployeeBonus(employeeIndex_);
-    ++ employeeBonusedCount_;
-    const BonusInfo& bonus = Bonuses::Get().GetBonusInfo(bonusIndex_);
-    if(employeeBonusedCount_ >= bonus.count)
-    {
-        chkBonus_->SetEnabled(true);
-        rollTimer_.Release();
-        showResultOnceTimer_.Release();
-    }
+    rollTickCount_ = ::GetTickCount();
+    showResultOnceTimer_.Release();
+
+    NInstPtr<NTimerSrv> timer(MemToolParam);
+    rollTimer_ = timer->startTimer(20, MakeDelegate(this, &MainUi::RollProc));
 }
 
 void MainUi::ShowBonusList()
@@ -275,10 +321,11 @@ void MainUi::MarkEmployeeBonus(int employeeIndex)
 
 unsigned int MainUi::LoadDataProc(void* param)
 {
+    MainUi* pThis = (MainUi*)param;
+    pThis->btnGroup_->SetVisible(false);
     Employees::Get().Load();
     Bonuses::Get().Load();
 
-    MainUi* pThis = (MainUi*)param;
     NFrame* rootFrame = pThis->window_->GetRootFrame();
 
     pThis->btnPrev_->SetEnabled(true);
@@ -296,5 +343,6 @@ unsigned int MainUi::LoadDataProc(void* param)
             Bonuses::Get().SetBonusShowResultOnce(i, false);
         }
     }
+    pThis->btnGroup_->SetVisible(true);
     return 0;
 }

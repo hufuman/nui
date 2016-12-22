@@ -10,6 +10,7 @@ public:
 
 private:
     bool OnWindowCreated(Base::NBaseObj* source, NEventData* eventData);
+    bool OnBtnExport(Base::NBaseObj* source, NEventData* eventData);
 
 private:
     NInstPtr<NWindow> window_;

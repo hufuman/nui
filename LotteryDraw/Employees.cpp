@@ -51,16 +51,14 @@ void Employees::Load()
             info.draw = loader->LoadImage(imagePath + _T(".jpg"));
         if(info.draw == NULL)
             info.draw = loader->LoadImage(imagePath + _T(".jpeg"));
+        NAssertError(info.draw != NULL, _T("Failed to load image for %s"), name);
         if(info.draw == NULL)
         {
-            NString msg(_T("Failed to load image for "));
-            msg += name;
-            MessageBox(NULL, msg, _T("Error"), MB_OK | MB_ICONERROR);
+            info.draw = loader->LoadImage(_T("@images:employees\\default.jpg"));
         }
-        else
-        {
-            info.draw->AddRef();
-        }
+
+        info.draw->AddRef();
+
         if(name.GetLength() == 2)
         {
             info.name = name[0];

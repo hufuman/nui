@@ -24,18 +24,20 @@ void Bonuses::Load()
 
     int lineTokenPos = 0;
     NString line;
-    NString name, descImage, titleImage, count, showResultOnce;
+    NString title, titleImage, name, descImage, count, showResultOnce;
     NResourceLoader* loader = NUiBus::Instance().GetResourceLoader();
 
     // first line is column
     result.Tokenize(lineTokenPos, _T("\n"), false, line);
 
+    NString msg;
     while(result.Tokenize(lineTokenPos, _T("\n"), false, line))
     {
         int pos = 0;
-        if(!line.Tokenize(pos, _T("\t"), false, name)
-            || !line.Tokenize(pos, _T("\t"), false, descImage)
+        if(!line.Tokenize(pos, _T("\t"), false, title)
             || !line.Tokenize(pos, _T("\t"), false, titleImage)
+            || !line.Tokenize(pos, _T("\t"), false, name)
+            || !line.Tokenize(pos, _T("\t"), false, descImage)
             || !line.Tokenize(pos, _T("\t"), false, count)
             || !line.Tokenize(pos, _T("\t"), false, showResultOnce))
         {
@@ -43,16 +45,34 @@ void Bonuses::Load()
         }
 
         BonusInfo info;
+        info.title = title;
+
         NString imagePath(_T("@images:Bonuses\\"));
         info.titleDraw = loader->LoadImage(imagePath + titleImage);
         info.descDraw = loader->LoadImage(imagePath + descImage);
+
+        if(info.titleDraw == NULL)
+        {
+            msg = _T("Failed to load image: ");
+            msg += titleImage;
+            ::MessageBox(NULL, msg, _T("Error"), MB_OK);
+            return;
+        }
+
+        if(info.descDraw == NULL)
+        {
+            msg = _T("Failed to load image: ");
+            msg += descImage;
+            ::MessageBox(NULL, msg, _T("Error"), MB_OK);
+            return;
+        }
 
         info.titleDraw->AddRef();
         info.descDraw->AddRef();
 
         info.name = name;
         info.count = _ttoi(count);
-        info.showResultOnce = showResultOnce == _T("true");
+        info.showResultOnce = showResultOnce == _T("ÊÇ");
         bonuses_.AddItem(info);
     }
 }

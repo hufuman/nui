@@ -5,6 +5,7 @@
 class BonusInfo
 {
 public:
+    NString title;
     NString name;
     NImageDraw* titleDraw;
     NImageDraw* descDraw;
