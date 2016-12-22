@@ -30,9 +30,12 @@ private:
 
     void ShowBonusList();
     void MarkEmployeeBonus(int employeeIndex);
+    static unsigned int __stdcall LoadDataProc(void* param);
 
 private:
     NInstPtr<NWindow> window_;
+
+    HANDLE loadDataThread_;
 
     // not started
     int step_;

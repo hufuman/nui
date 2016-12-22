@@ -18,20 +18,6 @@ MainUi::~MainUi(void)
 
 void MainUi::Show()
 {
-    Employees::Get().Load();
-    Bonuses::Get().Load();
-
-    bonusCount_ = Bonuses::Get().Count();
-
-    for(int i=0;i<bonusCount_; ++ i)
-    {
-        const std::list<int>* list = Employees::Get().GetBonusEmployees(i);
-        if(list != NULL && !list->empty())
-        {
-            Bonuses::Get().SetBonusShowResultOnce(i, false);
-        }
-    }
-
     window_->SetStyle(WindowStyle::Top);
     window_->WindowCreatedEvent.AddHandler(this, &MainUi::OnWindowCreated);
     window_->SetVisible(true);
@@ -67,6 +53,14 @@ bool MainUi::OnWindowCreated(Base::NBaseObj* source, NEventData* eventData)
     rootFrame->GetChildById<NFrame*>(_T("btnReset"))->ClickEvent.AddHandler(this, &MainUi::OnBtnReset);
 
     chkBonus_->ClickEvent.AddHandler(this, &MainUi::OnChkBonus);
+
+    // Load Data
+    btnPrev_->SetEnabled(false);
+    btnNext_->SetEnabled(false);
+    rootFrame->GetChildById<NFrame*>(_T("btnView"))->SetEnabled(false);
+    rootFrame->GetChildById<NFrame*>(_T("btnReset"))->SetEnabled(false);
+
+    loadDataThread_ = (HANDLE)::_beginthreadex(0, 0, &MainUi::LoadDataProc, (void*)this, 0, 0);
 
     return false;
 }
@@ -213,7 +207,7 @@ void MainUi::StopRoll()
         chkBonus_->SetEnabled(false);
         NInstPtr<NTimerSrv> timer(MemToolParam);
         employeeBonusedCount_ = 0;
-        showResultOnceTimer_ = timer->startTimer(400, MakeDelegate(this, &MainUi::ShowResultOnceProc));
+        showResultOnceTimer_ = timer->startTimer(1000, MakeDelegate(this, &MainUi::ShowResultOnceProc));
     }
     else
     {
@@ -277,4 +271,30 @@ void MainUi::MarkEmployeeBonus(int employeeIndex)
 {
     Employees::Get().MarkEmployeeBonus(employeeIndex, bonusIndex_);
     ShowBonusList();
+}
+
+unsigned int MainUi::LoadDataProc(void* param)
+{
+    Employees::Get().Load();
+    Bonuses::Get().Load();
+
+    MainUi* pThis = (MainUi*)param;
+    NFrame* rootFrame = pThis->window_->GetRootFrame();
+
+    pThis->btnPrev_->SetEnabled(true);
+    pThis->btnNext_->SetEnabled(true);
+    rootFrame->GetChildById<NFrame*>(_T("btnView"))->SetEnabled(true);
+    rootFrame->GetChildById<NFrame*>(_T("btnReset"))->SetEnabled(true);
+
+    pThis->bonusCount_ = Bonuses::Get().Count();
+
+    for(int i=0;i<pThis->bonusCount_; ++ i)
+    {
+        const std::list<int>* list = Employees::Get().GetBonusEmployees(i);
+        if(list != NULL && !list->empty())
+        {
+            Bonuses::Get().SetBonusShowResultOnce(i, false);
+        }
+    }
+    return 0;
 }
