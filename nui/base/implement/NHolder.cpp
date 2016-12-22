@@ -27,6 +27,7 @@ namespace nui
 
         NHolder& NHolder::operator = (const NHolder& holder)
         {
+            NAssertError(IsEmpty(), _T("not empty holder"));
             if(&holder != this)
             {
                 Release();

@@ -15,15 +15,22 @@ namespace
         ofn.nMaxFile = dwMaxResultLen;
 
         TCHAR tmpFilter[1024];
-        _tcsncpy(tmpFilter, filter, 1024);
-        TCHAR* p = tmpFilter;
-        while(*p)
+        if(filter != NULL)
         {
-            if(*p == _T('|'))
-                *p = 0;
-            ++ p;
+            _tcsncpy(tmpFilter, filter, _countof(tmpFilter));
+            TCHAR* p = tmpFilter;
+            while(*p)
+            {
+                if(*p == _T('|'))
+                    *p = 0;
+                ++ p;
+            }
+            *p = 0;
         }
-        *p = 0;
+        else
+        {
+            _tcsncpy(tmpFilter, _T("All Files\0*.*\0"), _countof(tmpFilter));
+        }
 
         UNREFERENCED_PARAMETER(szTitle);
         UNREFERENCED_PARAMETER(initDir);

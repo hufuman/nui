@@ -73,6 +73,14 @@ namespace nui
             NEvent PreDrawEvent;
             NEvent PostDrawEvent;
 
+            class KeyEventData : public NEventData
+            {
+            public:
+                TCHAR key;
+                bool isDownEvent;
+            };
+            NEvent KeyEvent;
+
             NEvent WindowCreatedEvent;
 
         protected:

@@ -265,6 +265,14 @@ namespace nui
 
         bool NWindow::HandleKeyEvent(TCHAR key, bool isDownEvent)
         {
+            KeyEventData eventData;
+            eventData.key = key;
+            eventData.isDownEvent = isDownEvent;
+            if(!KeyEvent.Invoke(this, &eventData))
+            {
+                return true;
+            }
+
             NFrame* frame = focusFrame_;
             if(frame == NULL)
                 frame = rootFrame_;
