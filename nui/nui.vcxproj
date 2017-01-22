@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugLib|Win32">
+      <Configuration>DebugLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLib|Win32">
+      <Configuration>ReleaseLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5196231A-50E6-4E92-AAEB-0C20725CD387}</ProjectGuid>
+    <RootNamespace>nui</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\vsprops\DLLRelease.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\vsprops\DLLRelease.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\vsprops\DLLDebug.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\vsprops\DLLDebug.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25123.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NUI_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>.;$(ProjectDir)..\thirdparty\jsoncpp\include;$(ProjectDir)..\thirdparty\gtest\include;$(ProjectDir)..\thirdparty\tinyxml;$(ProjectDir)..\thirdparty\zip</AdditionalIncludeDirectories>
+      <WarningVersion>18</WarningVersion>
+    </ClCompile>
+    <Link>
+      <GenerateMapFile>true</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\$(TargetName)$(TargetExt)" "$(SolutionDir)..\bin\$(Configuration)\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NUI_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningVersion>18</WarningVersion>
+      <AdditionalIncludeDirectories>.;$(ProjectDir)..\thirdparty\jsoncpp\include;$(ProjectDir)..\thirdparty\gtest\include;$(ProjectDir)..\thirdparty\tinyxml;$(ProjectDir)..\thirdparty\zip</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateMapFile>true</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\$(TargetName)$(TargetExt)" "$(SolutionDir)..\..\lib\$(Configuration)\"
+python "$(SolutionDir)..\LinkAllSymbols\GenSymbolsHeader.py" "$(SolutionDir)..\..\lib\$(Configuration)\$(TargetName)$(TargetExt)" "$(SolutionDir)nui_LinkAllSymbolsD.h"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NUI_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>.;$(ProjectDir)..\thirdparty\jsoncpp\include;$(ProjectDir)..\thirdparty\gtest\include;$(ProjectDir)..\thirdparty\tinyxml;$(ProjectDir)..\thirdparty\zip</AdditionalIncludeDirectories>
+      <WarningVersion>18</WarningVersion>
+    </ClCompile>
+    <Link>
+      <GenerateMapFile>true</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\$(TargetName)$(TargetExt)" "$(SolutionDir)..\bin\$(Configuration)\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
+    <ClCompile>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;NUI_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>.;$(ProjectDir)..\thirdparty\jsoncpp\include;$(ProjectDir)..\thirdparty\gtest\include;$(ProjectDir)..\thirdparty\tinyxml;$(ProjectDir)..\thirdparty\zip</AdditionalIncludeDirectories>
+      <WarningVersion>18</WarningVersion>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateMapFile>true</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(SolutionDir)..\..\build\$(Configuration)\$(ProjectName)\$(TargetName)$(TargetExt)" "$(SolutionDir)..\..\lib\$(Configuration)\"
+python "$(SolutionDir)..\LinkAllSymbols\GenSymbolsHeader.py" "$(SolutionDir)..\..\lib\$(Configuration)\$(TargetName)$(TargetExt)" "$(SolutionDir)nui_LinkAllSymbols.h"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="base\BaseObj.h" />
+    <ClInclude Include="base\DataTypes.h" />
+    <ClInclude Include="base\FastDelegate.h" />
+    <ClInclude Include="base\implement\DelayedReleaser.h" />
+    <ClInclude Include="base\implement\MemRecorder.h" />
+    <ClInclude Include="base\implement\NCoreImpl.h" />
+    <ClInclude Include="base\NAssert.h" />
+    <ClInclude Include="base\NAutoPtr.h" />
+    <ClInclude Include="base\NCore.h" />
+    <ClInclude Include="base\NHolder.h" />
+    <ClInclude Include="base\NInstPtr.h" />
+    <ClInclude Include="base\NMacro.h" />
+    <ClInclude Include="base\NMemTool.h" />
+    <ClInclude Include="base\noncopyable.h" />
+    <ClInclude Include="base\NReflect.h" />
+    <ClInclude Include="base\NString.h" />
+    <ClInclude Include="base\NThread.h" />
+    <ClInclude Include="data\implement\NBufferImpl.h" />
+    <ClInclude Include="data\implement\NFileMappingImpl.h" />
+    <ClInclude Include="data\implement\NFileSystemImpl.h" />
+    <ClInclude Include="data\implement\NPackageFile.h" />
+    <ClInclude Include="data\implement\NPackFileSystemImpl.h" />
+    <ClInclude Include="data\implement\NRealFileSystemImpl.h" />
+    <ClInclude Include="data\implement\NStringBundleImpl.h" />
+    <ClInclude Include="data\implement\NZipImpl.h" />
+    <ClInclude Include="data\implement\XmlDataReader.h" />
+    <ClInclude Include="data\NArrayT.h" />
+    <ClInclude Include="data\NBuffer.h" />
+    <ClInclude Include="data\NDataReader.h" />
+    <ClInclude Include="data\NFileMapping.h" />
+    <ClInclude Include="data\NFileSystem.h" />
+    <ClInclude Include="data\NIconv.h" />
+    <ClInclude Include="data\NListT.h" />
+    <ClInclude Include="data\NModule.h" />
+    <ClInclude Include="data\NStringBundle.h" />
+    <ClInclude Include="data\NZip.h" />
+    <ClInclude Include="nui.h" />
+    <ClInclude Include="parser\implement\BaseParser.h" />
+    <ClInclude Include="parser\implement\ButtonParserImpl.h" />
+    <ClInclude Include="parser\implement\CheckBoxParserImpl.h" />
+    <ClInclude Include="parser\implement\EditParserImpl.h" />
+    <ClInclude Include="parser\implement\FrameParserImpl.h" />
+    <ClInclude Include="parser\implement\ImageParserImpl.h" />
+    <ClInclude Include="parser\implement\LabelParserImpl.h" />
+    <ClInclude Include="parser\implement\LayoutParserImpl.h" />
+    <ClInclude Include="parser\implement\LinkParserImpl.h" />
+    <ClInclude Include="parser\implement\NativeParserImpl.h" />
+    <ClInclude Include="parser\implement\NParserImpl.h" />
+    <ClInclude Include="parser\implement\ParserUtil.h" />
+    <ClInclude Include="parser\implement\ProgressParserImpl.h" />
+    <ClInclude Include="parser\implement\RadioBoxParserImpl.h" />
+    <ClInclude Include="parser\NParser.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="ui\implement\BaseImageDraw.h" />
+    <ClInclude Include="ui\implement\Gdi\AlphaDC.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiCursor.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiFont.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiImageDraw.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiObjMgr.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiRender.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiResourceLoader.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiShapeDraw.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiTextAttr.h" />
+    <ClInclude Include="ui\implement\Gdi\GdiUtil.h" />
+    <ClInclude Include="ui\implement\Gdi\ImageDC.h" />
+    <ClInclude Include="ui\implement\Gdi\MemDC.h" />
+    <ClInclude Include="ui\implement\Gdi\SSE.h" />
+    <ClInclude Include="ui\implement\Gdi\StreamImpl.h" />
+    <ClInclude Include="ui\implement\Gdi\TempDC.h" />
+    <ClInclude Include="ui\implement\NHorzLayoutArranger.h" />
+    <ClInclude Include="ui\implement\NTileLayoutArranger.h" />
+    <ClInclude Include="ui\implement\NTimerSrvImpl.h" />
+    <ClInclude Include="ui\implement\NUiProcImpl.h" />
+    <ClInclude Include="ui\implement\NVertLayoutArranger.h" />
+    <ClInclude Include="ui\implement\UiUtil.h" />
+    <ClInclude Include="ui\implement\WindowDef.h" />
+    <ClInclude Include="ui\implement\WindowMap.h" />
+    <ClInclude Include="ui\implement\WindowUtil.h" />
+    <ClInclude Include="ui\NButton.h" />
+    <ClInclude Include="ui\NCheckBox.h" />
+    <ClInclude Include="ui\NCursor.h" />
+    <ClInclude Include="ui\NDraw.h" />
+    <ClInclude Include="ui\NEdit.h" />
+    <ClInclude Include="ui\NEvent.h" />
+    <ClInclude Include="ui\NFont.h" />
+    <ClInclude Include="ui\NFrame.h" />
+    <ClInclude Include="ui\NFrameBase.h" />
+    <ClInclude Include="ui\NHeader.h" />
+    <ClInclude Include="ui\NImage.h" />
+    <ClInclude Include="ui\NImageDraw.h" />
+    <ClInclude Include="ui\NLabel.h" />
+    <ClInclude Include="ui\NLayout.h" />
+    <ClInclude Include="ui\NLayoutArranger.h" />
+    <ClInclude Include="ui\NLink.h" />
+    <ClInclude Include="ui\NList.h" />
+    <ClInclude Include="ui\NMsgLoop.h" />
+    <ClInclude Include="ui\NNative.h" />
+    <ClInclude Include="ui\NProgress.h" />
+    <ClInclude Include="ui\NRadioBox.h" />
+    <ClInclude Include="ui\NRender.h" />
+    <ClInclude Include="ui\NRenderClip.h" />
+    <ClInclude Include="ui\NRenderDef.h" />
+    <ClInclude Include="ui\NResourceLoader.h" />
+    <ClInclude Include="ui\NScroll.h" />
+    <ClInclude Include="ui\NShapeDraw.h" />
+    <ClInclude Include="ui\NTextAttr.h" />
+    <ClInclude Include="ui\NTimerSrv.h" />
+    <ClInclude Include="ui\NUiBus.h" />
+    <ClInclude Include="ui\NUiProc.h" />
+    <ClInclude Include="ui\NWindow.h" />
+    <ClInclude Include="ui\NWindowBase.h" />
+    <ClInclude Include="ui\UiDef.h" />
+    <ClInclude Include="util\NDiagnose.h" />
+    <ClInclude Include="util\NFileUtil.h" />
+    <ClInclude Include="util\NMisc.h" />
+    <ClInclude Include="util\NShellUtil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base\implement\BaseObj.cpp" />
+    <ClCompile Include="base\implement\DataTypes.cpp" />
+    <ClCompile Include="base\implement\DelayedReleaser.cpp" />
+    <ClCompile Include="base\implement\MemRecorder.cpp" />
+    <ClCompile Include="base\implement\NAssert.cpp" />
+    <ClCompile Include="base\implement\NCoreImpl.cpp" />
+    <ClCompile Include="base\implement\NHolder.cpp" />
+    <ClCompile Include="base\implement\NReflect.cpp" />
+    <ClCompile Include="base\implement\NString.cpp" />
+    <ClCompile Include="base\implement\NThread.cpp" />
+    <ClCompile Include="data\implement\NBufferImpl.cpp" />
+    <ClCompile Include="data\implement\NDataReader.cpp" />
+    <ClCompile Include="data\implement\NFileMappingImpl.cpp" />
+    <ClCompile Include="data\implement\NFileSystemImpl.cpp" />
+    <ClCompile Include="data\implement\NIconv.cpp" />
+    <ClCompile Include="data\implement\NModule.cpp" />
+    <ClCompile Include="data\implement\NPackageFile.cpp" />
+    <ClCompile Include="data\implement\NPackFileSystemImpl.cpp" />
+    <ClCompile Include="data\implement\NRealFileSystemImpl.cpp" />
+    <ClCompile Include="data\implement\NStringBundleImpl.cpp" />
+    <ClCompile Include="data\implement\NZipImpl.cpp" />
+    <ClCompile Include="data\implement\XmlDataReader.cpp" />
+    <ClCompile Include="dllmain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="parser\implement\ButtonParserImpl.cpp" />
+    <ClCompile Include="parser\implement\CheckBoxParserImpl.cpp" />
+    <ClCompile Include="parser\implement\EditParserImpl.cpp" />
+    <ClCompile Include="parser\implement\FrameParserImpl.cpp" />
+    <ClCompile Include="parser\implement\ImageParserImpl.cpp" />
+    <ClCompile Include="parser\implement\LabelParserImpl.cpp" />
+    <ClCompile Include="parser\implement\LayoutParserImpl.cpp" />
+    <ClCompile Include="parser\implement\LinkParserImpl.cpp" />
+    <ClCompile Include="parser\implement\NativeParserImpl.cpp" />
+    <ClCompile Include="parser\implement\NParserImpl.cpp" />
+    <ClCompile Include="parser\implement\ParserUtil.cpp" />
+    <ClCompile Include="parser\implement\ProgressParserImpl.cpp" />
+    <ClCompile Include="parser\implement\RadioBoxParserImpl.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ui\implement\BaseImageDraw.cpp" />
+    <ClCompile Include="ui\implement\Gdi\AlphaDC.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiCursor.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiFont.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiImageDraw.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiObjMgr.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiRender.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiResourceLoader.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiShapeDraw.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiTextAttr.cpp" />
+    <ClCompile Include="ui\implement\Gdi\GdiUtil.cpp" />
+    <ClCompile Include="ui\implement\Gdi\SSE.cpp" />
+    <ClCompile Include="ui\implement\Gdi\StreamImpl.cpp" />
+    <ClCompile Include="ui\implement\NButtonImpl.cpp" />
+    <ClCompile Include="ui\implement\NCheckBoxImpl.cpp" />
+    <ClCompile Include="ui\implement\NEditImpl.cpp" />
+    <ClCompile Include="ui\implement\NEvent.cpp" />
+    <ClCompile Include="ui\implement\NFrameBaseImpl.cpp" />
+    <ClCompile Include="ui\implement\NFrameImpl.cpp" />
+    <ClCompile Include="ui\implement\NHeaderImpl.cpp" />
+    <ClCompile Include="ui\implement\NHorzLayoutArranger.cpp" />
+    <ClCompile Include="ui\implement\NImageImpl.cpp" />
+    <ClCompile Include="ui\implement\NLabelImpl.cpp" />
+    <ClCompile Include="ui\implement\NLayoutImpl.cpp" />
+    <ClCompile Include="ui\implement\NLinkImpl.cpp" />
+    <ClCompile Include="ui\implement\NListImpl.cpp" />
+    <ClCompile Include="ui\implement\NMsgLoop.cpp" />
+    <ClCompile Include="ui\implement\NNativeImpl.cpp" />
+    <ClCompile Include="ui\implement\NProgressImpl.cpp" />
+    <ClCompile Include="ui\implement\NRadioBoxImpl.cpp" />
+    <ClCompile Include="ui\implement\NScrollImpl.cpp" />
+    <ClCompile Include="ui\implement\NShapeDrawImpl.cpp" />
+    <ClCompile Include="ui\implement\NTileLayoutArranger.cpp" />
+    <ClCompile Include="ui\implement\NTimerSrvImpl.cpp" />
+    <ClCompile Include="ui\implement\NUiBus.cpp" />
+    <ClCompile Include="ui\implement\NUiProcImpl.cpp" />
+    <ClCompile Include="ui\implement\NVertLayoutArranger.cpp" />
+    <ClCompile Include="ui\implement\NWindowBase.cpp" />
+    <ClCompile Include="ui\implement\NWindowImpl.cpp" />
+    <ClCompile Include="ui\implement\UiUtil.cpp" />
+    <ClCompile Include="ui\implement\WindowMap.cpp" />
+    <ClCompile Include="ui\implement\WindowUtil.cpp" />
+    <ClCompile Include="util\implement\NFileUtil.cpp" />
+    <ClCompile Include="util\implement\NShellUtil.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

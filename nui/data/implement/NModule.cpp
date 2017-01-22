@@ -22,7 +22,11 @@ namespace nui
         NModule::~NModule()
         {
             nuiModule_ = NULL;
-        }
+			if(bigIcon_)
+				DestroyIcon(bigIcon_);
+			if(smallIcon_)
+				DestroyIcon(smallIcon_);
+		}
 
         NModule& NModule::GetInst()
         {
@@ -51,7 +55,11 @@ namespace nui
         {
             if(bigIcon_ != NULL)
                 return bigIcon_;
-            ::ExtractIconEx(appFullName_, 0, &bigIcon_, &smallIcon_, 1);
+			HICON hIcon = (HICON)::LoadImage(nuiModule_, appPath_+_T("icon.ico"), IMAGE_ICON, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_LOADFROMFILE);
+			if (hIcon != NULL)
+				bigIcon_ = hIcon;
+			else
+				::ExtractIconEx(appFullName_, 0, &bigIcon_, &smallIcon_, 1);
             return bigIcon_;
         }
 
@@ -59,7 +67,11 @@ namespace nui
         {
             if(smallIcon_ != NULL)
                 return smallIcon_;
-            ::ExtractIconEx(GetAppPath(), 0, &bigIcon_, &smallIcon_, 1);
+			HICON hIcon = (HICON)::LoadImage(nuiModule_, appPath_+_T("icon.ico"), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_LOADFROMFILE);
+			if (hIcon != NULL)
+				smallIcon_ = hIcon;
+			else
+				::ExtractIconEx(GetAppPath(), 0, &bigIcon_, &smallIcon_, 1);
             return smallIcon_;
         }
 

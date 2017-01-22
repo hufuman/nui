@@ -32,6 +32,7 @@ namespace nui
             virtual bool AddChild(NFrameBase* child);
             virtual bool RemoveChild(NFrameBase* child);
             virtual void RemoveAllChilds();
+			virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
 
             virtual void SetScrollAllowed(bool allow);
             virtual void RelayoutChilds();
@@ -56,6 +57,7 @@ namespace nui
             NScroll* GetVertScroll();
 
             bool IsLayoutChild(NFrameBase* child) const;
+			bool IsLayoutChildId(const Base::NString& id) const;
 
         private:
             NLayoutType currentLayoutType_;

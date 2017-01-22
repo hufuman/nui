@@ -24,7 +24,7 @@ public:
         newObj_ = false;
         creator_ = NULL;
     }
-    virtual ~NBaseParser() {}
+	virtual ~NBaseParser() {}
 
     virtual nui::Base::NBaseObj* Alloc()
     {

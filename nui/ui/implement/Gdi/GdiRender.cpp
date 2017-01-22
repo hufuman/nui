@@ -24,8 +24,8 @@ namespace nui
             orgDc_ = NULL;
         }
 
-        GdiRender::~GdiRender()
-        {}
+		GdiRender::~GdiRender()
+		{}
 
         bool GdiRender::Init(HDC hDc, const Base::NRect& rcPaint)
         {
@@ -205,6 +205,7 @@ namespace nui
                 break;
             case ImageDrawType::NineStretch:
                 NineStretchDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, alphaValue);
+				break;
             case ImageDrawType::Cover:
                 CoverDrawImage(image, frameIndex, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight, alphaValue);
                 break;

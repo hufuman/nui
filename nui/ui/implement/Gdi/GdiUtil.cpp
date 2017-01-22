@@ -22,9 +22,9 @@ namespace Gdi
     {
         Hold(obj, needDelete);
     }
-    CGdiHolder::CGdiHolder()
-        : obj_(NULL), needDelete_(false)
-    {}
+	CGdiHolder::CGdiHolder()
+		: obj_(NULL), needDelete_(false)
+	{}
 
     CGdiHolder::~CGdiHolder()
     {
@@ -57,9 +57,9 @@ namespace Gdi
     {
         Select(dc, obj, needDelete);
     }
-    CGdiSelector::CGdiSelector()
-        : dc_(NULL), oldObj_(NULL), needDelete_(false)
-    {}
+	CGdiSelector::CGdiSelector()
+		: dc_(NULL), oldObj_(NULL), needDelete_(false)
+	{}
 
     CGdiSelector::~CGdiSelector()
     {

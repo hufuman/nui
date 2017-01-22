@@ -4,7 +4,6 @@
 #include "../NWindow.h"
 #include "./Gdi/GdiCursor.h"
 
-
 namespace nui
 {
     namespace Ui
@@ -31,6 +30,14 @@ namespace nui
                 styleName_ = _T("");
             return __super::DoModal(parentWindow);
         }
+		bool NWindow::CreateWithStyle(HWND parentWindow, LPCTSTR styleName)
+		{
+			if (styleName && styleName[0] != 0)
+				styleName_ = styleName;
+			else
+				styleName_ = _T("");
+			return __super::Create(parentWindow);
+		}
 #endif  // _NO_NUI_PARSER_
 
         NFrame* NWindow::GetRootFrame()
@@ -66,12 +73,29 @@ namespace nui
             switch(message)
             {
             case WM_COMMAND:
-                if(OnWndCmd(wParam, lParam))
-                {
-                    lResult = 0;
-                    return true;
-                }
+				{
+					WindowCommandEventData eventData;
+					eventData.cmdSource = HIWORD(wParam);
+					eventData.cmdId = LOWORD(wParam);
+					if (WindowCommandEvent.Invoke(this, &eventData))
+						return true;
+
+					if (OnWndCmd(wParam, lParam))
+					{
+						lResult = 0;
+						return true;
+					}
+				}
                 break;
+			case WM_HOTKEY:
+				{
+					WindowHotkeyEventData eventData;
+					eventData.hotKeyId = wParam;
+					eventData.modifiers = (UINT)LOWORD(lParam);
+					eventData.virtKey = (UINT)HIWORD(lParam);
+					return WindowHotkeyEvent.Invoke(this, &eventData);
+				}
+				break;
             case WM_DESTROY:
                 render_ = NULL;
                 if(rootFrame_ != NULL)
@@ -163,10 +187,31 @@ namespace nui
                 {
                     lResult = DoDefault(message, wParam, lParam);
                     OnSize(LOWORD(lParam), HIWORD(lParam));
-                    return true;
+
+					//if (wParam == SIZE_RESTORED)
+					//	Invalidate();
+
+					WindowSizeEventData eventData;
+					eventData.sizeType = wParam;
+					eventData.size.Width = LOWORD(lParam);
+					eventData.size.Height = HIWORD(lParam);
+					if (eventData.size.Width != 0x8300 && eventData.size.Height != 0x8300)
+						WindowSizeEvent.Invoke(this, &eventData);
+					return true;
                 }
                 break;
-            case WM_ACTIVATE:
+			case WM_MOVE:
+				{
+					lResult = DoDefault(message, wParam, lParam);
+
+					WindowMoveEventData eventData;
+					eventData.pos.X = LOWORD(lParam);
+					eventData.pos.Y = HIWORD(lParam);
+					if(eventData.pos.X != 0x8300 && eventData.pos.Y != 0x8300)
+						WindowMoveEvent.Invoke(this, &eventData);
+				}
+				break;
+			case WM_ACTIVATE:
                 {
                     BOOL bActive = (LOWORD(wParam) != WA_INACTIVE);
                     if(!bActive)
@@ -244,8 +289,14 @@ namespace nui
                     {
                         Base::NPoint point(LOWORD(lParam), HIWORD(lParam));
                         Base::NRect rcFrame = hoverFrame_->GetRootRect();
-                        if(rcFrame.Contains(point))
-                            hoverFrame_->OnClicked(point);
+						if (rcFrame.Contains(point))
+						{
+							WindowControlClickedEventData eventData;
+							eventData.control = hoverFrame_;
+							WindowControlClickedEvent.Invoke(this, &eventData);
+
+							hoverFrame_->OnClicked(point);
+						}
                     }
                     NUiBus::Instance().SetCaptureFrame(NULL);
                     ::ReleaseCapture();
@@ -259,6 +310,38 @@ namespace nui
                 lResult = 0;
                 HandleKeyEvent(static_cast<TCHAR>(wParam), true);
                 return true;
+			case WM_GETMINMAXINFO:
+				if (rootFrame_)
+				{
+					RECT rcMax;
+					SystemParametersInfo(SPI_GETWORKAREA, NULL, (PVOID)&rcMax, 0);
+
+					MINMAXINFO* info = reinterpret_cast<MINMAXINFO*>(lParam);
+					info->ptMaxPosition.x = rcMax.left;
+					info->ptMaxPosition.y = rcMax.top;
+					info->ptMaxSize.x = rcMax.right - rcMax.left;
+					info->ptMaxSize.y = rcMax.bottom - rcMax.top;
+					info->ptMaxTrackSize.x = rcMax.right - rcMax.left;
+					info->ptMaxTrackSize.y = rcMax.bottom - rcMax.top;
+
+					info->ptMinTrackSize.x = rootFrame_->minSize_.Width;
+					info->ptMinTrackSize.y = rootFrame_->minSize_.Height;
+				}
+				break;
+			case WM_SHOWWINDOW:
+				{
+					WindowShowEventData eventData;
+					eventData.show = wParam ? true : false;
+					WindowShowEvent.Invoke(this, &eventData);
+				}
+				break;
+			case WM_ENABLE:
+				{
+					WindowEnableEventData eventData;
+					eventData.enable = wParam ? true : false;
+					WindowEnableEvent.Invoke(this, &eventData);
+			}
+				break;
             }
             return false;
         }
@@ -300,6 +383,7 @@ namespace nui
             NNative* wndUi = NNative::GetNativeUi(reinterpret_cast<HWND>(lParam));
             if(wndUi == NULL)
                 return false;
+
             return wndUi->OnParentCommand(HIWORD(wParam));
         }
 
@@ -323,6 +407,12 @@ namespace nui
 
             WindowCreatedEvent.Invoke(this, NULL);
         }
+
+		void NWindow::OnClose()
+		{
+			WindowCloseEventData eventData;
+			WindowCloseEvent.Invoke(this, &eventData);
+		}
 
         void NWindow::OnSize(int width, int height)
         {
@@ -493,7 +583,7 @@ namespace nui
         bool NWindow::OnBtnCloseClickedChanged(Base::NBaseObj*, NEventData*)
         {
             Destroy();
-            return false;
+            return true;
         }
 
         HWND NWindow::GetTooltipWnd()

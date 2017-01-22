@@ -25,7 +25,7 @@ namespace nui
                 const int nDefaultBufferSize = 1024;
                 TCHAR szBuffer[nDefaultBufferSize];
                 _vsntprintf(szBuffer, nDefaultBufferSize - 1, szFormat, args);
-                szBuffer[nDefaultBufferSize - 1] = 0;
+				szBuffer[nDefaultBufferSize - 1] = 0;
                 return szBuffer;
             }
         }

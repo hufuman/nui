@@ -1,51 +1,29 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{47AF0C06-85FE-465B-A744-4259AF476C69}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "autotest", "autotest\AutoTest.vcproj", "{7BA70EEB-C1FF-4172-B719-34C12AE5A289}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nui", "nui\nui.vcproj", "{5196231A-50E6-4E92-AAEB-0C20725CD387}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uitest", "uitest\uitest.vcproj", "{071561F9-1C23-4903-A107-E92E5C7C8113}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{84718F2F-A4BA-453D-A793-BAA54CBF2E1E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImgViewer", "imgviewer\imgviewer.vcproj", "{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "autotest", "autotest\AutoTest.vcxproj", "{7BA70EEB-C1FF-4172-B719-34C12AE5A289}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageEditor", "ImageEditor\ImageEditor.vcproj", "{A5678558-C08C-4939-A790-25FD66E96168}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nui", "nui\nui.vcxproj", "{5196231A-50E6-4E92-AAEB-0C20725CD387}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIEditor", "UIEditor\UIEditor.vcproj", "{48217E77-CC62-4089-BFFC-7B5A7B67F24D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uitest", "uitest\uitest.vcxproj", "{071561F9-1C23-4903-A107-E92E5C7C8113}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIMocker", "UIMocker\UIMocker.vcproj", "{E3E57877-F2A9-45C6-A306-49802213B8EC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImgViewer", "imgviewer\imgviewer.vcxproj", "{ACAEFAB6-99BD-43AF-A12F-1105A17822BB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WeChat", "WeChat\WeChat.vcproj", "{83BD7326-D2E5-43DE-9743-9B66A5C4D79C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageEditor", "ImageEditor\ImageEditor.vcxproj", "{A5678558-C08C-4939-A790-25FD66E96168}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LotteryDraw", "LotteryDraw\LotteryDraw.vcproj", "{AE19E886-64A1-4D69-98FF-28B8ACDA0DA9}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5196231A-50E6-4E92-AAEB-0C20725CD387} = {5196231A-50E6-4E92-AAEB-0C20725CD387}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIEditor", "UIEditor\UIEditor.vcxproj", "{48217E77-CC62-4089-BFFC-7B5A7B67F24D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIMocker", "UIMocker\UIMocker.vcxproj", "{E3E57877-F2A9-45C6-A306-49802213B8EC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WeChat", "WeChat\WeChat.vcxproj", "{83BD7326-D2E5-43DE-9743-9B66A5C4D79C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LotteryDraw", "LotteryDraw\LotteryDraw.vcxproj", "{AE19E886-64A1-4D69-98FF-28B8ACDA0DA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

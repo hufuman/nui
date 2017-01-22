@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="package">
+      <UniqueIdentifier>{e71c3989-5a8b-4b2c-9c84-05e02edc1eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="package\styles">
+      <UniqueIdentifier>{07824b83-abfe-46d3-a23d-f7e87cc67949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="package\strings">
+      <UniqueIdentifier>{3a443ddc-9d29-4da4-a90a-73d66c0cd4bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{b4d5954b-a67e-44aa-acb6-c782c9f01170}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EmotionUi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginUi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainUi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WeChatLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpUtil.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageLoader.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonUtil.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MiscUtil.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="UiUtil.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EmotionUi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginUi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainUi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WeChatLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageLoader.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Locker.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MiscUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="UiUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="main.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WeChat.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\uidata\WeChat\style\EmotionUi.xml">
+      <Filter>package\styles</Filter>
+    </Xml>
+    <Xml Include="..\uidata\WeChat\style\LoginUi.xml">
+      <Filter>package\styles</Filter>
+    </Xml>
+    <Xml Include="..\uidata\WeChat\style\MainUi.xml">
+      <Filter>package\styles</Filter>
+    </Xml>
+    <Xml Include="..\uidata\WeChat\string\2052\Common.xml">
+      <Filter>package\strings</Filter>
+    </Xml>
+    <Xml Include="..\uidata\WeChat\string\2052\LoginUi.xml">
+      <Filter>package\strings</Filter>
+    </Xml>
+    <Xml Include="..\uidata\WeChat\string\2052\MainUi.xml">
+      <Filter>package\strings</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>

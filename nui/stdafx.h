@@ -23,6 +23,7 @@
 
 #pragma comment(lib, "zip.lib")
 #pragma comment(lib, "tinyxml.lib")
+#pragma comment(lib, "jsoncpp.lib")
 
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "GdiPlus.lib")

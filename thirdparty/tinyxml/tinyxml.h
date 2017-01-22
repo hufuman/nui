@@ -128,7 +128,7 @@ struct TiXmlCursor
 class TiXmlVisitor
 {
 public:
-	virtual ~TiXmlVisitor() {}
+	virtual ~TiXmlVisitor(){};
 
 	/// Visit a document.
 	virtual bool VisitEnter( const TiXmlDocument& /*doc*/ )			{ return true; }
@@ -552,7 +552,7 @@ public:
 
 		IterateChildren does the same thing with the syntax:
 		@verbatim
-			child = 0;
+			child{};
 			while( child = parent->IterateChildren( child ) )
 		@endverbatim
 
@@ -712,7 +712,7 @@ public:
 	/** Create an exact duplicate of this node and return it. The memory must be deleted
 		by the caller. 
 	*/
-	virtual TiXmlNode* Clone() const = 0;
+	virtual TiXmlNode* Clone() const { return 0; }
 
 	/** Accept a hierchical visit the nodes in the TinyXML DOM. Every node in the 
 		XML tree will be conditionally visited and the host will be called back
@@ -747,7 +747,7 @@ protected:
 
 	#ifdef TIXML_USE_STL
 	    // The real work of the input operator.
-	virtual void StreamIn( std::istream* in, TIXML_STRING* tag ) = 0;
+	virtual void StreamIn( std::istream* in, TIXML_STRING* tag ){};
 	#endif
 
 	// Figure out what is at *p, and parse it. Returns null if it is not an xml node.
@@ -795,8 +795,8 @@ public:
 	{
 		name = _name;
 		value = _value;
-		document = 0;
-		prev = next = 0;
+		document{};
+		prev = next{};
 	}
 	#endif
 
@@ -1164,7 +1164,7 @@ class TiXmlComment : public TiXmlNode
 {
 public:
 	/// Constructs an empty comment.
-	TiXmlComment() : TiXmlNode( TiXmlNode::TINYXML_COMMENT ) {}
+	TiXmlComment() : TiXmlNode(TiXmlNode::TINYXML_COMMENT) {};
 	/// Construct a comment from text.
 	TiXmlComment( const char* _value ) : TiXmlNode( TiXmlNode::TINYXML_COMMENT ) {
 		SetValue( _value );
@@ -1223,7 +1223,7 @@ public:
 		SetValue( initValue );
 		cdata = false;
 	}
-	virtual ~TiXmlText() {}
+	virtual ~TiXmlText(){};
 
 	#ifdef TIXML_USE_STL
 	/// Constructor.
@@ -1287,7 +1287,7 @@ class TiXmlDeclaration : public TiXmlNode
 {
 public:
 	/// Construct an empty declaration.
-	TiXmlDeclaration()   : TiXmlNode( TiXmlNode::TINYXML_DECLARATION ) {}
+	TiXmlDeclaration() : TiXmlNode(TiXmlNode::TINYXML_DECLARATION) {};
 
 #ifdef TIXML_USE_STL
 	/// Constructor.
@@ -1356,7 +1356,7 @@ class TiXmlUnknown : public TiXmlNode
 {
 public:
 	TiXmlUnknown() : TiXmlNode( TiXmlNode::TINYXML_UNKNOWN )	{}
-	virtual ~TiXmlUnknown() {}
+	virtual ~TiXmlUnknown(){};
 
 	TiXmlUnknown( const TiXmlUnknown& copy ) : TiXmlNode( TiXmlNode::TINYXML_UNKNOWN )		{ copy.CopyTo( this ); }
 	TiXmlUnknown& operator=( const TiXmlUnknown& copy )										{ copy.CopyTo( this ); return *this; }
@@ -1407,7 +1407,7 @@ public:
 	TiXmlDocument( const TiXmlDocument& copy );
 	TiXmlDocument& operator=( const TiXmlDocument& copy );
 
-	virtual ~TiXmlDocument() {}
+	virtual ~TiXmlDocument(){};
 
 	/** Load a file using the current document value.
 		Returns true if successful. Will delete any existing
@@ -1513,7 +1513,7 @@ public:
 												errorId = 0; 
 												errorDesc = ""; 
 												errorLocation.row = errorLocation.col = 0; 
-												//errorLocation.last = 0; 
+												//errorLocation.last{}; 
 											}
 
 	/** Write the document to standard out using formatted printing ("pretty print"). */
@@ -1739,7 +1739,7 @@ class TiXmlPrinter : public TiXmlVisitor
 {
 public:
 	TiXmlPrinter() : depth( 0 ), simpleTextPrint( false ),
-					 buffer(), indent( "    " ), lineBreak( "\n" ) {}
+					 buffer(), indent( "    " ), lineBreak( "\n" ){};
 
 	virtual bool VisitEnter( const TiXmlDocument& doc );
 	virtual bool VisitExit( const TiXmlDocument& doc );

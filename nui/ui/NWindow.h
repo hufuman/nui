@@ -25,6 +25,7 @@ namespace nui
 
 #ifndef _NO_NUI_PARSER_
             bool DoModalWithStyle(HWND parentWindow, LPCTSTR styleName);
+			bool CreateWithStyle(HWND parentWindow, LPCTSTR styleName);
 #endif  // _NO_NUI_PARSER_
 
             NFrame* GetRootFrame();
@@ -38,6 +39,7 @@ namespace nui
             virtual bool HandleKeyEvent(TCHAR key, bool isDownEvent);
             virtual bool OnWndCmd(WPARAM wParam, LPARAM lParam);
             virtual void OnCreate();
+			virtual void OnClose();
 
             virtual void OnSize(int width, int height);
             virtual void OnDraw(NRender* render, HRGN clipRgn);
@@ -83,7 +85,66 @@ namespace nui
 
             NEvent WindowCreatedEvent;
 
-        protected:
+			class WindowMoveEventData : public NEventData
+			{
+			public:
+				Base::NPoint pos;
+			};
+			NEvent WindowMoveEvent;
+
+			class WindowSizeEventData : public NEventData
+			{
+			public:
+				int sizeType;
+				Base::NSize size;
+			};
+			NEvent WindowSizeEvent;
+
+			class WindowShowEventData : public NEventData
+			{
+			public:
+				bool show;
+			};
+			NEvent WindowShowEvent;
+
+			class WindowControlClickedEventData : public NEventData
+			{
+			public:
+				NFrame * control;
+			};
+			NEvent WindowControlClickedEvent;
+
+			class WindowEnableEventData : public NEventData
+			{
+			public:
+				bool enable;
+			};
+			NEvent WindowEnableEvent;
+
+			class WindowCloseEventData : public NEventData
+			{
+			public:
+			};
+			NEvent WindowCloseEvent;
+
+			class WindowCommandEventData : public NEventData
+			{
+			public:
+				int cmdSource;
+				int cmdId;
+			};
+			NEvent WindowCommandEvent;
+
+			class WindowHotkeyEventData : public NEventData
+			{
+			public:
+				int hotKeyId;
+				int modifiers;
+				int virtKey;
+			};
+			NEvent WindowHotkeyEvent;
+
+		protected:
             BEGIN_USE_UNEXPORT_TEMPLATE()
             Base::NAutoPtr<NFrame> rootFrame_;
             Base::NAutoPtr<NRender> render_;

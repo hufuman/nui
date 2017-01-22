@@ -105,8 +105,11 @@ namespace nui
             NEventNode* node = headNode_;
             while(node != NULL)
             {
-                if(node->valid && !node->handler(obj, eventData))
-                    return false;
+				if (node->valid && !node->handler(obj, eventData))
+				{
+					--embededLevel_;
+					return false;
+				}
                 node = node->next;
             }
             -- embededLevel_;

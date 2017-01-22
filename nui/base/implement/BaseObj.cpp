@@ -10,8 +10,8 @@ namespace nui
             refCount_ = 0;
         }
 
-        NBaseObj::~NBaseObj()
-        {}
+		NBaseObj::~NBaseObj()
+		{};
 
         INT NBaseObj::AddRef()
         {

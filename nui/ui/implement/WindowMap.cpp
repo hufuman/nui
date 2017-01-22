@@ -11,8 +11,8 @@ namespace nui
         {
             WindowMap WindowMap::instance_;
 
-            WindowMap::WindowMap()
-            {}
+			WindowMap::WindowMap()
+			{}
 
             WindowMap::~WindowMap()
             {
