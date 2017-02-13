@@ -133,6 +133,7 @@ python "$(SolutionDir)..\LinkAllSymbols\GenSymbolsHeader.py" "$(SolutionDir)..\.
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalIncludeDirectories>.;$(ProjectDir)..\thirdparty\jsoncpp\include;$(ProjectDir)..\thirdparty\gtest\include;$(ProjectDir)..\thirdparty\tinyxml;$(ProjectDir)..\thirdparty\zip</AdditionalIncludeDirectories>
       <WarningVersion>18</WarningVersion>
+      <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
       <GenerateMapFile>true</GenerateMapFile>

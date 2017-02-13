@@ -117,9 +117,11 @@ namespace nui
             {
 				if (::IsWindow(window_))
 				{
-					::SendMessage(window_, WM_CLOSE, 0, 0);
+					if (::SendMessage(window_, WM_CLOSE, 0, 0) == 0)
+					{
+						window_ = NULL;
+					}
 				}
-                window_ = NULL;
                 ::PostThreadMessage(::GetCurrentThreadId(), WM_NULL, 0, 0);
             }
         }
@@ -449,12 +451,17 @@ namespace nui
             }
             else if(message == WM_CLOSE)
             {
-				OnClose();
+				if (OnClose())
+				{
+					if (modalParent_ != NULL && !::IsWindowEnabled(modalParent_))
+						::EnableWindow(modalParent_, TRUE);
 
-                if(modalParent_ != NULL && !::IsWindowEnabled(modalParent_))
-                    ::EnableWindow(modalParent_, TRUE);
-
-                modalParent_ = NULL;
+					modalParent_ = NULL;
+					lResult = 0;
+					return false;
+				}
+				lResult = 1;
+				return true;
             }
             else if(message == WM_MOUSEACTIVATE && ((windowStyle_ & WindowStyle::MenuLike) == WindowStyle::MenuLike))
             {
@@ -480,9 +487,9 @@ namespace nui
             UNREFERENCED_PARAMETER(hDc);
         }
 
-		void NWindowBase::OnClose()
+		bool NWindowBase::OnClose()
 		{
-
+			return true;
 		}
 
         bool NWindowBase::IsRegionEmpty(HRGN clipRgn)

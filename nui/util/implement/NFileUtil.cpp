@@ -73,6 +73,8 @@ namespace nui
                     return pathAfter;
                 Base::NString result = path + _T("\\") + pathAfter;
                 result.Replace(_T("/"), _T("\\")).Replace(_T("\\\\"), _T("\\"));
+				if (result.StartWith(_T("\\")))
+					result = Base::NString(_T("\\")) + result;
                 return result;
             }
 

@@ -14,7 +14,7 @@ namespace nui
             ~NModule();
             static NModule& GetInst();
 
-            bool Init(HMODULE nuiModule);
+            bool Init(HMODULE nuiModule, LPCTSTR iconFile = NULL);
             bool IsValid() const;
             HICON GetBigIcon();
             HICON GetSmallIcon();
@@ -29,6 +29,7 @@ namespace nui
             HMODULE nuiModule_;
             Base::NString appPath_;
             Base::NString appFullName_;
+			Base::NString appIconFile;
             HICON   bigIcon_;
             HICON   smallIcon_;
             DWORD   mainThreadId_;

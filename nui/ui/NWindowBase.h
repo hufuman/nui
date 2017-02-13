@@ -91,7 +91,7 @@ namespace nui
             static LRESULT WINAPI _staticWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
             virtual void OnCreate();
-			virtual void OnClose();
+			virtual bool OnClose();
 			virtual void Draw(HDC hDc);
 
             bool IsRegionEmpty(HRGN clipRgn);

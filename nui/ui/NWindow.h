@@ -39,7 +39,7 @@ namespace nui
             virtual bool HandleKeyEvent(TCHAR key, bool isDownEvent);
             virtual bool OnWndCmd(WPARAM wParam, LPARAM lParam);
             virtual void OnCreate();
-			virtual void OnClose();
+			virtual bool OnClose();
 
             virtual void OnSize(int width, int height);
             virtual void OnDraw(NRender* render, HRGN clipRgn);
@@ -53,6 +53,7 @@ namespace nui
             bool OnRootFrameTextChanged(Base::NBaseObj* baseObj, NEventData* eventData);
 
             void SyncSysButtonGroup();
+			bool HasSysMaxButton();
 
             bool OnBtnMinClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);
             bool OnBtnMaxClickedChanged(Base::NBaseObj* baseObj, NEventData* eventData);

@@ -11,7 +11,7 @@ namespace nui
     {
         NModule NModule::instance_;
 
-        NModule::NModule()
+        NModule::NModule() : appIconFile(_T("icon.ico"))
         {
             nuiModule_ = ::GetModuleHandle(NULL);
             bigIcon_ = NULL;
@@ -33,10 +33,12 @@ namespace nui
             return instance_;
         }
 
-        bool NModule::Init(HMODULE nuiModule)
+        bool NModule::Init(HMODULE nuiModule, LPCTSTR iconFile)
         {
             if(nuiModule != NULL)
                 nuiModule_ = nuiModule;
+			if (iconFile != NULL)
+				appIconFile = iconFile;
 
             TCHAR tempPath[1024];
             ::GetModuleFileName(NULL, tempPath, 1024);
@@ -55,7 +57,7 @@ namespace nui
         {
             if(bigIcon_ != NULL)
                 return bigIcon_;
-			HICON hIcon = (HICON)::LoadImage(nuiModule_, appPath_+_T("icon.ico"), IMAGE_ICON, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_LOADFROMFILE);
+			HICON hIcon = (HICON)::LoadImage(nuiModule_, appPath_ + appIconFile, IMAGE_ICON, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_LOADFROMFILE);
 			if (hIcon != NULL)
 				bigIcon_ = hIcon;
 			else
@@ -67,7 +69,7 @@ namespace nui
         {
             if(smallIcon_ != NULL)
                 return smallIcon_;
-			HICON hIcon = (HICON)::LoadImage(nuiModule_, appPath_+_T("icon.ico"), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_LOADFROMFILE);
+			HICON hIcon = (HICON)::LoadImage(nuiModule_, appPath_ + appIconFile, IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_LOADFROMFILE);
 			if (hIcon != NULL)
 				smallIcon_ = hIcon;
 			else

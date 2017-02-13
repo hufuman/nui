@@ -131,7 +131,8 @@ namespace nui
             case WM_NCHITTEST:
                 {
                     lResult = HTCLIENT;
-                    if((::GetWindowLongPtr(window_, GWL_STYLE) & WS_SIZEBOX) == WS_SIZEBOX)
+					LONG lStyle = ::GetWindowLongPtr(window_, GWL_STYLE);
+					if (lStyle & WS_SIZEBOX)
                     {
                         Base::NRect rcWnd;
                         GetRect(rcWnd);
@@ -264,12 +265,13 @@ namespace nui
 
                     if(hoverFrame_ == NULL)
                     {
-                        if(message == WM_LBUTTONDOWN)
-                            ::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
-                        else if(::IsZoomed(window_))
-                            ::ShowWindow(window_, SW_RESTORE);
-                        else
-                            ::ShowWindow(window_, SW_MAXIMIZE);
+						if (HasSysMaxButton())
+						{
+							if (::IsZoomed(window_))
+								::ShowWindow(window_, SW_RESTORE);
+							else
+								::ShowWindow(window_, SW_MAXIMIZE);
+						}
                     }
                     else
                     {
@@ -279,11 +281,23 @@ namespace nui
                     return true;
                 }
                 break;
+			case WM_NCLBUTTONDOWN:
+				if (wParam == HTCAPTION)
+				{
+					LONG lStyle = ::GetWindowLongPtr(window_, GWL_STYLE);
+					if (!(lStyle & WS_CHILD))
+					{
+						::SendMessage(window_, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, lParam);
+					}
+					return true;
+				}
+				break;
             case WM_CAPTURECHANGED:
                 NUiBus::Instance().SetCaptureFrame(NULL);
                 break;
             case WM_LBUTTONUP:
-                if(::GetCapture() == window_)
+//			case WM_NCLBUTTONUP:
+				if(::GetCapture() == window_)
                 {
                     if(hoverFrame_ != NULL)
                     {
@@ -311,21 +325,37 @@ namespace nui
                 HandleKeyEvent(static_cast<TCHAR>(wParam), true);
                 return true;
 			case WM_GETMINMAXINFO:
-				if (rootFrame_)
 				{
 					RECT rcMax;
-					SystemParametersInfo(SPI_GETWORKAREA, NULL, (PVOID)&rcMax, 0);
+					MONITORINFO oMonitor = {};
+					oMonitor.cbSize = sizeof(oMonitor);
+					::GetMonitorInfo(::MonitorFromWindow(window_, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
+					rcMax = oMonitor.rcWork;
+					OffsetRect(&rcMax, rcMax.left, rcMax.top);
+					//SystemParametersInfo(SPI_GETWORKAREA, NULL, (PVOID)&rcMax, 0);
 
 					MINMAXINFO* info = reinterpret_cast<MINMAXINFO*>(lParam);
+					int maxWidth = rcMax.right - rcMax.left;
+					int maxHeight = rcMax.bottom - rcMax.top;
+					int minWidth = maxWidth;
+					int minHeight = maxHeight;
+					if (rootFrame_)
+					{
+						if(rootFrame_->maxSize_.Width > 0)
+							maxWidth = rootFrame_->maxSize_.Width;
+						if (rootFrame_->maxSize_.Height > 0)
+							maxHeight = rootFrame_->maxSize_.Height;
+						minWidth = rootFrame_->minSize_.Width;
+						minHeight = rootFrame_->minSize_.Height;
+					}
 					info->ptMaxPosition.x = rcMax.left;
 					info->ptMaxPosition.y = rcMax.top;
-					info->ptMaxSize.x = rcMax.right - rcMax.left;
-					info->ptMaxSize.y = rcMax.bottom - rcMax.top;
-					info->ptMaxTrackSize.x = rcMax.right - rcMax.left;
-					info->ptMaxTrackSize.y = rcMax.bottom - rcMax.top;
-
-					info->ptMinTrackSize.x = rootFrame_->minSize_.Width;
-					info->ptMinTrackSize.y = rootFrame_->minSize_.Height;
+					info->ptMaxSize.x = maxWidth;
+					info->ptMaxSize.y = maxHeight;
+					info->ptMaxTrackSize.x = maxWidth;
+					info->ptMaxTrackSize.y = maxHeight;
+					info->ptMinTrackSize.x = minWidth;
+					info->ptMinTrackSize.y = minHeight;
 				}
 				break;
 			case WM_SHOWWINDOW:
@@ -340,7 +370,7 @@ namespace nui
 					WindowEnableEventData eventData;
 					eventData.enable = wParam ? true : false;
 					WindowEnableEvent.Invoke(this, &eventData);
-			}
+				}
 				break;
             }
             return false;
@@ -408,10 +438,13 @@ namespace nui
             WindowCreatedEvent.Invoke(this, NULL);
         }
 
-		void NWindow::OnClose()
+		bool NWindow::OnClose()
 		{
+			if (!__super::OnClose())
+				return false;
+
 			WindowCloseEventData eventData;
-			WindowCloseEvent.Invoke(this, &eventData);
+			return WindowCloseEvent.Invoke(this, &eventData);
 		}
 
         void NWindow::OnSize(int width, int height)
@@ -564,6 +597,18 @@ namespace nui
                 btnSysClose_->ClickEvent.AddHandler(MakeDelegate(this, &NWindow::OnBtnCloseClickedChanged));
             }
         }
+
+		bool NWindow::HasSysMaxButton()
+		{
+			if (rootFrame_ == NULL)
+				return false;
+			if (!btnSysMax_ || !btnSysMax_->IsVisible())
+				return false;
+			NFrame* sysButtonGroup = dynamic_cast<NFrame*>(rootFrame_->GetChildById(_NUI_SYS_BUTTON_GROUP_ID_, false));
+			if (!sysButtonGroup || !sysButtonGroup->IsVisible())
+				return false;
+			return true;
+		}
 
         bool NWindow::OnBtnMinClickedChanged(Base::NBaseObj*, NEventData*)
         {
