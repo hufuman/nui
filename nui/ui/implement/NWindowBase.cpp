@@ -307,8 +307,8 @@ namespace nui
             if(window_ == NULL)
                 return;
 			if (drawTimerId_ == 0)
-				drawTimerId_ = ::timeSetEvent(30, 1, (LPTIMECALLBACK)onTimeFunc, (DWORD_PTR)window_, TIME_PERIODIC);
-                //drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
+				//drawTimerId_ = ::timeSetEvent(30, 1, (LPTIMECALLBACK)onTimeFunc, (DWORD_PTR)window_, TIME_PERIODIC);
+                drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
 
             // when invalidateRgn_ is null, the whole window need to be redrawn
             HRGN tempRgn = ::CreateRectRgn(rect.Left, rect.Top, rect.Right, rect.Bottom);
@@ -402,8 +402,9 @@ namespace nui
             {
                 mouseTracking_ = false;
             }
-            else if(message == WM_EVENT_TIMER)
-            {
+//            else if(message == WM_EVENT_TIMER)
+			else if (message == WM_TIMER)
+			{
                 if(wParam == drawTimerId_ && !IsRegionEmpty(invalidateRgn_))
                 {
                     if(IsLayered())
@@ -444,8 +445,8 @@ namespace nui
             {
                 if(drawTimerId_ != 0)
                 {
-					::timeKillEvent(drawTimerId_);
-                    //::KillTimer(window_, drawTimerId_);
+					//::timeKillEvent(drawTimerId_);
+                    ::KillTimer(window_, drawTimerId_);
                     drawTimerId_ = 0;
                 }
             }

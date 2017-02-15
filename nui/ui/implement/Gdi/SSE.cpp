@@ -2,6 +2,45 @@
 #include ".\sse.h"
 
 int CSSE::m_nSupportSSE = -1;
+CSSE::pfnDoXor CSSE::DoXor;
+CSSE::pfnDoAnd CSSE::DoAnd;
+CSSE::pfnMemSetDWord CSSE::MemSetDWord;
+CSSE::pfnMemCopy CSSE::MemCopy;
+CSSE::pfnDoGray CSSE::DoGray;
+CSSE::pfnOpenAlpha CSSE::OpenAlpha;
+CSSE::pfnSetColorKey CSSE::SetColorKey;
+CSSE::pfnDoOr CSSE::DoOr;
+CSSE::pfnSetHSL CSSE::SetHSL;
+
+CSSE g_initSSE;
+
+CSSE::CSSE()
+{
+	if (IsSupportSSE())
+	{
+		DoXor = DoXorSSE;
+		DoAnd = DoAndSSE;
+		MemSetDWord = MemSetDWordSSE;
+		MemCopy = MemCopySSE;
+		DoGray = DoGraySSE;
+		OpenAlpha = OpenAlphaSSE;
+		SetColorKey = SetColorKeySSE;
+		DoOr = DoOrSSE;
+		SetHSL = SetHSLSSE;
+	}
+	else
+	{
+		DoXor = DoXorNormal;
+		DoAnd = DoAndNormal;
+		MemSetDWord = MemSetDWordNormal;
+		MemCopy = MemCopyNormal;
+		DoGray = DoGrayNormal;
+		OpenAlpha = OpenAlphaNormal;
+		SetColorKey = SetColorKeyNormal;
+		DoOr = DoOrSSE;
+		SetHSL = SetHSLSSE;
+	}
+}
 
 BOOL CSSE::IsSupportSSE()
 {
@@ -76,43 +115,7 @@ BOOL CSSE::DoXorNormal(DWORD dwKey, char * pBuff, int nLen)
 	return TRUE;
 }
 
-BOOL CSSE::DoXor(DWORD dwKey, char * pBuff, int nLen)
-{
-	if(IsSupportSSE())
-	{
-		return DoXorSSE(dwKey, pBuff, nLen);
-	}
-	else
-	{
-		return DoXorNormal(dwKey, pBuff, nLen);
-	}
-}
-
-void CSSE::MemSetDWord(LPVOID pBuff, DWORD dwVal, int nSize)
-{
-	if(IsSupportSSE())
-	{
-		return MemSetDWordSSE(pBuff, dwVal, nSize);
-	}
-	else
-	{
-		return MemSetDWordNormal(pBuff, dwVal, nSize);
-	}
-}
-
-void CSSE::MemCopy(LPVOID pDest, LPVOID pSrc, int nSize)
-{
-	if(IsSupportSSE())
-	{
-		MemCopySSE(pDest, pSrc, nSize);
-	}
-	else
-	{
-		memcpy(pDest, pSrc, nSize);
-	}
-}
-
-void CSSE::MemCopySSE(LPVOID pDest, LPVOID pSrc, int nSize)
+void CSSE::MemCopySSE(PVOID pDest, const PVOID pSrc, int nSize)
 {
 	int nSSESize = nSize >> 4;
 	int nTemp = nSSESize << 4;
@@ -142,9 +145,15 @@ memcpy_process:
 	}
 	if(nSize)
 	{
-		memcpy((BYTE *)pDest + nTemp, (BYTE *)pSrc + nTemp, nSize);
+		MemCopyNormal((BYTE *)pDest + nTemp, (BYTE *)pSrc + nTemp, nSize);
 	}
 }
+
+void CSSE::MemCopyNormal(PVOID pDest, const PVOID pSrc, int nSize)
+{
+	memcpy(pDest, pSrc, nSize);
+}
+
 
 void CSSE::MemSetDWordNormal(LPVOID pBuff, DWORD dwVal, int nSize)
 {
@@ -182,18 +191,6 @@ xor_process:
 		}
 	}
 	MemSetDWordNormal((BYTE *)pBuff + (nSSESize << 4), dwVal, nSize - (nSSESize << 4));
-}
-
-void CSSE::DoGray(LPVOID pBuff, int nSize)
-{
-	if(IsSupportSSE())
-	{
-		DoGraySSE(pBuff, nSize);
-	}
-	else
-	{
-		DoGrayNormal(pBuff, nSize);
-	}
 }
 
 void CSSE::DoGrayNormal(LPVOID pBuff, int nSize)
@@ -264,18 +261,6 @@ gray_process:
 	DoGrayNormal((BYTE *)pBuff + (nSSESize << 4), nSize - (nSSESize << 4));
 }
 
-void CSSE::OpenAlpha(LPVOID pBuff, int nSize)
-{
-	if(IsSupportSSE())
-	{
-		OpenAlphaSSE(pBuff, nSize);
-	}
-	else
-	{
-		OpenAlphaNormal(pBuff, nSize);
-	}
-}
-
 void CSSE::OpenAlphaSSE(LPVOID pBuff, int nSize)
 {
 	int nSizeSSE = nSize >> 4;
@@ -332,21 +317,10 @@ void CSSE::OpenAlphaNormal(LPVOID pBuff, int nSize)
 	}
 }
 
-void CSSE::SetColorKey(LPVOID pBuff, int nSize, DWORD dwColor)
-{
-	dwColor &= 0x00ffffff;
-	if(IsSupportSSE())
-	{
-		CSSE::SetColorKeySSE(pBuff, nSize, dwColor);
-	}
-	else
-	{
-		CSSE::SetColorKeyNormal(pBuff, nSize, dwColor);
-	}
-}
-
 void CSSE::SetColorKeyNormal(LPVOID pBuff, int nSize, DWORD dwColor)
 {
+	dwColor &= 0x00ffffff;
+
 	if(nSize <= 0 || nSize % 4)
 	{
 		return;
@@ -362,6 +336,8 @@ void CSSE::SetColorKeyNormal(LPVOID pBuff, int nSize, DWORD dwColor)
 
 void CSSE::SetColorKeySSE(LPVOID pBuff, int nSize, DWORD dwColor)
 {
+	dwColor &= 0x00ffffff;
+
 	int nSSESize = nSize >> 4;
 	DWORD dwMask = 0xffffff;
 	if(nSSESize)
@@ -392,18 +368,6 @@ color_key:
 		}
 	}
 	SetColorKeyNormal((BYTE *)pBuff + (nSSESize << 4), nSize - (nSSESize << 4), dwColor);
-}
-
-void CSSE::DoOr(DWORD dwKey, LPVOID pBuff, int nLen)
-{
-	if(IsSupportSSE())
-	{
-		CSSE::DoOrSSE(dwKey, pBuff, nLen);
-	}
-	else
-	{
-		CSSE::DoOrNormal(dwKey, pBuff, nLen);
-	}
 }
 
 void CSSE::DoOrSSE(DWORD dwKey, LPVOID pBuff, int nLen)
@@ -555,18 +519,6 @@ DWORD CSSE::RGBToHSL(DWORD dwColor)
 	return (DWORD)MAKEWPARAM(MAKEWORD(l, s), h);
 }
 
-void CSSE::SetHSL(LPVOID pBuff, int nSize, int h, int s, int l)
-{
-	if(IsSupportSSE())
-	{
-		CSSE::SetHSLNormal(pBuff, nSize, h, s, l);
-	}
-	else
-	{
-		CSSE::SetHSLNormal(pBuff, nSize, h, s, l);
-	}
-}
-
 void CSSE::SetHSLSSE(LPVOID pBuff, int nSize, int h, int s, int l)
 {
     SetHSLNormal(pBuff, nSize, h, s, l);
@@ -664,18 +616,6 @@ void CSSE::Stretch(LPVOID pBuff, int nWidth, int nHeight, LPVOID pDest, int cx, 
 		{
 			*p++ = *((DWORD *)pBuff + ((i * nFy) >> 10) * nWidth + ((j * nFx) >> 10));
 		}
-	}
-}
-
-void CSSE::DoAnd(DWORD dwKey, char * pBuff, int nLen)
-{
-	if(IsSupportSSE())
-	{
-		DoAndSSE(dwKey, pBuff, nLen);
-	}
-	else
-	{
-		DoOrNormal(dwKey, pBuff, nLen);
 	}
 }
 

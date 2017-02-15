@@ -7,25 +7,39 @@
 class CSSE
 {
 public:
+	CSSE();
+	typedef BOOL(*pfnDoXor)(DWORD dwKey, char * pBuff, int nLen);
+	typedef void(*pfnDoAnd)(DWORD dwKey, char * pBuff, int nLen);
+	typedef void(*pfnMemSetDWord)(LPVOID pBuff, DWORD dwVal, int nSize);
+	typedef void (*pfnMemCopy)(PVOID pDest, const PVOID pSrc, int nSize);
+	typedef void(*pfnDoGray)(LPVOID pBuff, int nSize);
+	typedef void(*pfnOpenAlpha)(LPVOID pBuff, int nSize);
+	typedef void(*pfnSetColorKey)(LPVOID pBuff, int nSize, DWORD dwColor);
+	typedef void(*pfnDoOr)(DWORD dwKey, LPVOID pBuff, int nLen);
+	typedef void(*pfnSetHSL)(LPVOID pBuff, int nSize, int h, int s, int l);
+
 	static BOOL IsSupportSSE();
-	static BOOL DoXor(DWORD dwKey, char * pBuff, int nLen);
-    static void DoAnd(DWORD dwKey, char * pBuff, int nLen);
-    static void MemSetDWord(LPVOID pBuff, DWORD dwVal, int nSize);
-	static void MemCopy(LPVOID pDest, LPVOID pSrc, int nSize);
-    static void DoGray(LPVOID pBuff, int nSize);
-	static void OpenAlpha(LPVOID pBuff, int nSize);
-	static void SetColorKey(LPVOID pBuff, int nSize, DWORD dwColor);
-	static void DoOr(DWORD dwKey, LPVOID pBuff, int nLen);
 	static DWORD RGBToHSL(DWORD dwColor);
 	static DWORD HSLToRGB(DWORD dwHsl);
-	static void SetHSL(LPVOID pBuff, int nSize, int h, int s, int l);
 
 	static void MirrorX(LPVOID pBuff, int nWidth, int nHeight);
 	static void MirrorY(LPVOID pBuff, int nWidth, int nHeight);
 	static void AdjustAlpha(DWORD &dwColor);
 	static void Stretch(LPVOID pBuff, int nWidth, int nHeight, LPVOID pDest, int cx, int cy);
+
+	static pfnDoXor DoXor;
+    static pfnDoAnd DoAnd;
+    static pfnMemSetDWord MemSetDWord;
+	static pfnMemCopy MemCopy;
+    static pfnDoGray DoGray;
+	static pfnOpenAlpha OpenAlpha;
+	static pfnSetColorKey SetColorKey;
+	static pfnDoOr DoOr;
+	static pfnSetHSL SetHSL;
+
 private:
-	static void MemCopySSE(LPVOID pDest, LPVOID pSrc, int nSize);
+	static void MemCopySSE(PVOID pDest, const PVOID pSrc, int nSize);
+	static void MemCopyNormal(PVOID pDest, const PVOID pSrc, int nSize);
 	static void SetColorKeySSE(LPVOID pBuff, int nSize, DWORD dwColor);
 	static void SetColorKeyNormal(LPVOID pBuff, int nSize, DWORD dwColor);
 	static BOOL DoXorNormal(DWORD dwKey, char * pBuff, int nLen);
