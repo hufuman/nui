@@ -469,6 +469,22 @@ namespace nui
                 lResult = MA_NOACTIVATE;
                 return true;
             }
+			else if (message == WM_SYSKEYDOWN || message == WM_SYSKEYUP)
+			{
+				if (wParam == VK_F10)
+				{
+					lResult = 1;
+					return true;
+				}
+			}
+			else if (message == WM_SYSCOMMAND)
+			{
+				if (wParam == SC_KEYMENU)
+				{
+					lResult = 1;
+					return true;
+				}
+			}
 
             if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
                 return true;
@@ -538,7 +554,7 @@ namespace nui
             }
             if((windowStyle_ & WindowStyle::Top) || windowStyle_ == 0)
             {
-                style |= WS_CAPTION | WS_SYSMENU | WS_OVERLAPPED | WS_THICKFRAME;
+				style |= WS_CAPTION | WS_OVERLAPPED | WS_THICKFRAME;// | WS_SYSMENU;
             }
             style |= WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
         }
