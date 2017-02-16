@@ -5,6 +5,9 @@ namespace nui
 {
     namespace Data
     {
+		NUI_API std::string w2utf8(LPCWSTR arg);
+		NUI_API std::wstring utf82w(LPCSTR arg);
+
         NUI_API nui::Base::NString utf82t(LPCSTR arg, size_t length);
         NUI_API nui::Base::NString utf82t(LPCSTR arg);
 
