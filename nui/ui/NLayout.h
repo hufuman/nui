@@ -37,6 +37,11 @@ namespace nui
 			{
 				return dynamic_cast<T>(GetChildById(id, true));
 			}
+			template < typename T >
+			T GetChildById(const Base::NString& id, bool recursive)
+			{
+				return dynamic_cast<T>(GetChildById(id, recursive));
+			}
 			virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
 
             virtual void SetScrollAllowed(bool allow);

@@ -16,4 +16,5 @@
     <string id="Stretch" value="Stretch" />
     <string id="Tile" value="Tile" />
     <string id="NineStretch" value="NineStretch" />
+    <string id="Cover" value="Cover" />
 </Bundle>

@@ -148,8 +148,6 @@ namespace nui
         {
             __super::OnCreate();
 
-			CreateRealWindow();
-
 #ifndef _NO_NUI_PARSER_
             NAssertTempDisable();
             ApplyStyle(_T("@sys_default_style:edit"));
