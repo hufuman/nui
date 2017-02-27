@@ -78,7 +78,7 @@ namespace nui
         {
             if(IsLayoutChild(child))
             {
-                return __super::AddChild(child);
+                return __super::RemoveChild(child);
             }
             else
             {
@@ -100,6 +100,8 @@ namespace nui
 
 		NFrame* NLayout::GetChildById(const Base::NString& id, bool recursive)
 		{
+			if (frameId_ == id)
+				return this;
 			if(IsLayoutChildId(id))
 				return dynamic_cast<NFrame*>(__super::GetChildById(id, recursive));
 			return innerFrame_->GetChildById(id, recursive);

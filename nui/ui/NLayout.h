@@ -32,6 +32,11 @@ namespace nui
             virtual bool AddChild(NFrameBase* child);
             virtual bool RemoveChild(NFrameBase* child);
             virtual void RemoveAllChilds();
+			template < typename T >
+			T GetChildById(const Base::NString& id)
+			{
+				return dynamic_cast<T>(GetChildById(id, true));
+			}
 			virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
 
             virtual void SetScrollAllowed(bool allow);
