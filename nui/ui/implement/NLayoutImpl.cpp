@@ -107,6 +107,12 @@ namespace nui
 			return innerFrame_->GetChildById(id, recursive);
 		}
 
+		bool NLayout::EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const
+		{
+			return innerFrame_->EnumChilds(callback, lParam);
+		}
+
+
         void NLayout::SetScrollAllowed(bool allow)
         {
             if(scrollAllowed_ != allow)

@@ -43,6 +43,7 @@ namespace nui
 				return dynamic_cast<T>(GetChildById(id, recursive));
 			}
 			virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
+			virtual bool EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const;
 
             virtual void SetScrollAllowed(bool allow);
             virtual void RelayoutChilds();
