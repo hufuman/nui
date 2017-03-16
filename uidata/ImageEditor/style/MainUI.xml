@@ -40,6 +40,7 @@
 			<RadioBox id="radioStretch" group="drawType" text="@Main:Stretch" />
 			<RadioBox id="radioTile" group="drawType" text="@Main:Tile" />
 			<RadioBox id="radioNineStretch" group="drawType" text="@Main:NineStretch" />
+			<RadioBox id="radioCover" group="drawType" text="@Main:Cover" />
 		</Layout>
 
 		<Frame id="canvas" layout="hfill,vfill" margin="10,160,10,10">

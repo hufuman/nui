@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="scintilla">
+      <UniqueIdentifier>{aef7c998-226d-482f-b947-333d55d98e4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="project">
+      <UniqueIdentifier>{f4bf954d-6db3-4e86-8e41-b904af14068a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{640ff818-0475-4743-bd9b-8fb9910a7802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ui">
+      <UniqueIdentifier>{c88245e9-13c9-4f83-a137-7b4888b39b9e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ScintillaWnd.cpp">
+      <Filter>scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>project</Filter>
+    </ClCompile>
+    <ClCompile Include="UIEditor.cpp">
+      <Filter>project</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUtil.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utf8File.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="PromptUI.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ScintillaWnd.h">
+      <Filter>scintilla</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>project</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>project</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>project</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utf8File.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="PromptUI.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="UIEditor.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UIEditor.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

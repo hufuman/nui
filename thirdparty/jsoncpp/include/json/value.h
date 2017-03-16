@@ -208,7 +208,7 @@ namespace Json {
     \code
     Json::Value null_value; // null
     Json::Value arr_value(Json::arrayValue); // []
-    Json::Value obj_value(Json::objectValue); // {}
+    Json::Value obj_value(Json::objectValue); // = 0;
     \endcode
       */
       Value( ValueType type = nullValue );

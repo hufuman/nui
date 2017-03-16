@@ -37,6 +37,8 @@ namespace nui
 
             operator LPCTSTR() const;
 
+			size_t operator () (const NString& arg) const;
+
         public:
             NString& Assign(LPCTSTR arg, int length);
 
@@ -111,4 +113,16 @@ namespace nui
         };
 
     }
+}
+
+namespace std
+{
+	template <>
+	struct hash<nui::Base::NString>
+	{
+		std::size_t operator()(const nui::Base::NString & string) const
+		{
+			return string.operator()(string);
+		}
+	};
 }

@@ -32,6 +32,18 @@ namespace nui
             virtual bool AddChild(NFrameBase* child);
             virtual bool RemoveChild(NFrameBase* child);
             virtual void RemoveAllChilds();
+			template < typename T >
+			T GetChildById(const Base::NString& id)
+			{
+				return dynamic_cast<T>(GetChildById(id, true));
+			}
+			template < typename T >
+			T GetChildById(const Base::NString& id, bool recursive)
+			{
+				return dynamic_cast<T>(GetChildById(id, recursive));
+			}
+			virtual NFrame* GetChildById(const Base::NString& id, bool recursive);
+			virtual bool EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const;
 
             virtual void SetScrollAllowed(bool allow);
             virtual void RelayoutChilds();
@@ -56,6 +68,7 @@ namespace nui
             NScroll* GetVertScroll();
 
             bool IsLayoutChild(NFrameBase* child) const;
+			bool IsLayoutChildId(const Base::NString& id) const;
 
         private:
             NLayoutType currentLayoutType_;

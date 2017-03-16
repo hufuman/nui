@@ -78,7 +78,7 @@ namespace nui
         {
             if(IsLayoutChild(child))
             {
-                return __super::AddChild(child);
+                return __super::RemoveChild(child);
             }
             else
             {
@@ -97,6 +97,21 @@ namespace nui
             innerFrame_->RemoveAllChilds();
             RelayoutChilds();
         }
+
+		NFrame* NLayout::GetChildById(const Base::NString& id, bool recursive)
+		{
+			if (frameId_ == id)
+				return this;
+			if(IsLayoutChildId(id))
+				return dynamic_cast<NFrame*>(__super::GetChildById(id, recursive));
+			return innerFrame_->GetChildById(id, recursive);
+		}
+
+		bool NLayout::EnumChilds(UiContainerEnumCallback callback, LPARAM lParam) const
+		{
+			return innerFrame_->EnumChilds(callback, lParam);
+		}
+
 
         void NLayout::SetScrollAllowed(bool allow)
         {
@@ -331,5 +346,12 @@ namespace nui
                 || child == (NFrameBase*)vertScroll_
                 || child == (NFrameBase*)innerFrame_;
         }
+
+		bool NLayout::IsLayoutChildId(const Base::NString& id) const
+		{
+			return id == ((NFrameBase*)horzScroll_)->GetId()
+				|| id == ((NFrameBase*)vertScroll_)->GetId()
+				|| id == ((NFrameBase*)innerFrame_)->GetId();
+		}
     }
 }

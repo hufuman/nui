@@ -1,8 +1,6 @@
 #pragma once
 
 
-
-
 namespace nui
 {
     namespace Ui
@@ -26,6 +24,8 @@ namespace nui
             };
         };
 
+		class NMsgLoop;
+
         class NUI_CLASS NWindowBase : public nui::Base::Noncopyable
         {
         private:
@@ -39,9 +39,13 @@ namespace nui
                     visible = false;
                     centerWindow = true;
                     centerRelativeWindow = NULL;
+					smallIcon_ = NULL;
+					bigIcon_ = NULL;
                 }
                 Base::NString text;
                 Base::NRect rect;
+				HICON smallIcon_;
+				HICON bigIcon_;
                 bool visible;
                 bool centerWindow;
                 HWND centerRelativeWindow;
@@ -62,11 +66,15 @@ namespace nui
             void SetVisible(bool visible);
             void SetText(LPCTSTR text);
 
+			bool IsVisible();
+
             bool GetRect(nui::Base::NRect& rect);
             void SetSize(int width, int height);
             void SetPos(int x, int y);
             void CenterWindow(HWND relativeWindow);
             void SetRect(const Base::NRect& rect);
+
+			void SetIcon(HICON icon, UINT type);
 
             void Invalidate();
             void InvalidateRect(const Base::NRect& rect);
@@ -75,11 +83,16 @@ namespace nui
 
             LRESULT DoDefault(UINT message, WPARAM wParam, LPARAM lParam);
 
+			nui::Ui::NMsgLoop * GetMessageLoop() {
+				return msgLoop_;
+			}
+
         protected:
             static LRESULT WINAPI _staticWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
             virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
             virtual void OnCreate();
-            virtual void Draw(HDC hDc);
+			virtual bool OnClose();
+			virtual void Draw(HDC hDc);
 
             bool IsRegionEmpty(HRGN clipRgn);
             void ResetInvalidRgn();
@@ -99,6 +112,10 @@ namespace nui
             DWORD   drawTimerId_;
 
             HWND    modalParent_;
+
+			bool	minRestore_;
+
+			nui::Base::NInstPtr<NMsgLoop> msgLoop_;
 
             nui::Base::NAutoPtr<WindowBasePrivateData> privateWindowBaseData_;
         };

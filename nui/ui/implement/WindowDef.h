@@ -2,5 +2,5 @@
 
 
 
-#define SKIN_WINDOW_NAME        _T("nui_window_class")
+#define SKIN_WINDOW_NAME        _T("skin_window_class")
 

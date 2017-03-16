@@ -35,7 +35,7 @@ namespace nui
                 NHeaderItem()
                 {
                     flags_ = HeaderFlagNone;
-                    width_ = 0;
+					width_ = 0;
                     data_ = 0;
                     textAttr_ = NULL;
                 }

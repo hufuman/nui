@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "../NWindowBase.h"
 
+#include <Mmsystem.h>
+#pragma comment(lib, "Winmm.lib")
 
 #include "WindowDef.h"
 #include "WindowUtil.h"
@@ -8,11 +10,13 @@
 
 #include "../NMsgLoop.h"
 
+#define WM_EVENT_TIMER WM_USER+100
+
 namespace nui
 {
     namespace Ui
     {
-        NWindowBase::NWindowBase()
+        NWindowBase::NWindowBase() : msgLoop_(MemToolParam)
         {
             windowStyle_ = WindowStyle::Top | WindowStyle::Sizable;
             window_ = NULL;
@@ -22,6 +26,7 @@ namespace nui
             drawTimerId_ = 0;
             modalParent_ = NULL;
             privateWindowBaseData_ = NULL;
+			minRestore_ = false;
         }
 
         NWindowBase::~NWindowBase()
@@ -87,8 +92,8 @@ namespace nui
             NAssertError(window_ == NULL, _T("window_ isn't Null in DoModal"));
             modalParent_ = parentWindow;
 
-            if(privateWindowBaseData_)
-                privateWindowBaseData_->AddRef();
+            //if(privateWindowBaseData_)
+            //    privateWindowBaseData_->AddRef();
 
             bool result = Create(modalParent_);
             if(result)
@@ -99,10 +104,10 @@ namespace nui
                 if(modalParent_ != NULL)
                     ::EnableWindow(modalParent_, FALSE);
 
-                nui::Ui::NMsgLoop loop;
-                result = loop.Loop(window_);
+                result = msgLoop_->Loop(window_);
             }
-            return result;
+
+			return result;
         }
 
         void NWindowBase::Destroy()
@@ -110,9 +115,13 @@ namespace nui
             NAssertError(window_ != NULL && ::IsWindow(window_), _T("Invalid window in WindowBase::Destroy"));
             if(window_ != NULL)
             {
-                if(::IsWindow(window_))
-                    ::SendMessage(window_, WM_CLOSE, 0, 0);
-                window_ = NULL;
+				if (::IsWindow(window_))
+				{
+					if (::SendMessage(window_, WM_CLOSE, 0, 0) == 0)
+					{
+						window_ = NULL;
+					}
+				}
                 ::PostThreadMessage(::GetCurrentThreadId(), WM_NULL, 0, 0);
             }
         }
@@ -153,6 +162,19 @@ namespace nui
                 }
             }
         }
+
+		bool NWindowBase::IsVisible()
+		{
+			NAssertError(window_ == NULL || ::IsWindow(window_), _T("Invalid window in WindowBase::SetVisible"));
+			if (window_ == NULL)
+			{
+				return GetPrivateData()->visible;
+			}
+			else
+			{
+				return ::IsWindowVisible(window_) ? true : false;
+			}
+		}
 
         bool NWindowBase::GetRect(nui::Base::NRect& rect)
         {
@@ -258,6 +280,15 @@ namespace nui
                 ::SetWindowPos(window_, NULL, rect.Left, rect.Top, rect.Width(), rect.Height(), SWP_NOACTIVATE | SWP_NOZORDER);
         }
 
+		void NWindowBase::SetIcon(HICON icon, UINT type)
+		{
+			if(type == ICON_BIG)
+				GetPrivateData()->bigIcon_ = icon;
+			else 
+				GetPrivateData()->smallIcon_ = icon;
+			SendMessage(window_, WM_SETICON, type, (LPARAM)icon);
+		}
+
         void NWindowBase::Invalidate()
         {
             Base::NRect rcClient;
@@ -265,11 +296,18 @@ namespace nui
             InvalidateRect(rcClient);
         }
 
+		void WINAPI onTimeFunc(UINT wTimerID, UINT /*msg*/, DWORD_PTR dwUser, DWORD_PTR /*dwl*/, DWORD_PTR /*dw2*/)
+		{
+			::PostMessage((HWND)dwUser, WM_EVENT_TIMER, wTimerID, 0);
+			return;
+		}
+
         void NWindowBase::InvalidateRect(const Base::NRect& rect)
         {
             if(window_ == NULL)
                 return;
-            if(drawTimerId_ == 0)
+			if (drawTimerId_ == 0)
+				//drawTimerId_ = ::timeSetEvent(30, 1, (LPTIMECALLBACK)onTimeFunc, (DWORD_PTR)window_, TIME_PERIODIC);
                 drawTimerId_ = ::SetTimer(window_, 1000, 30, NULL);
 
             // when invalidateRgn_ is null, the whole window need to be redrawn
@@ -347,7 +385,15 @@ namespace nui
                     Invalidate();
                     ::SetFocus(window_);
                 }
-            }
+			}
+			else if (message == WM_SYSCOMMAND)
+			{
+				if (wParam == SC_RESTORE)
+				{
+					minRestore_ = true;
+					Invalidate();
+				}
+			}
             else if(message == WM_KILLFOCUS && ((windowStyle_ & WindowStyle::MenuLike) == WindowStyle::MenuLike))
             {
                 SetVisible(false);
@@ -356,8 +402,9 @@ namespace nui
             {
                 mouseTracking_ = false;
             }
-            else if(message == WM_TIMER)
-            {
+//            else if(message == WM_EVENT_TIMER)
+			else if (message == WM_TIMER)
+			{
                 if(wParam == drawTimerId_ && !IsRegionEmpty(invalidateRgn_))
                 {
                     if(IsLayered())
@@ -367,6 +414,11 @@ namespace nui
                     else
                     {
                         ::InvalidateRgn(window_, invalidateRgn_, FALSE);
+						if (minRestore_)
+						{
+							minRestore_ = false;
+							::RedrawWindow(window_, NULL, invalidateRgn_, RDW_UPDATENOW);
+						}
                     }
                     ResetInvalidRgn();
                 }
@@ -393,22 +445,46 @@ namespace nui
             {
                 if(drawTimerId_ != 0)
                 {
+					//::timeKillEvent(drawTimerId_);
                     ::KillTimer(window_, drawTimerId_);
                     drawTimerId_ = 0;
                 }
             }
             else if(message == WM_CLOSE)
             {
-                if(modalParent_ != NULL && !::IsWindowEnabled(modalParent_))
-                    ::EnableWindow(modalParent_, TRUE);
+				if (OnClose())
+				{
+					if (modalParent_ != NULL && !::IsWindowEnabled(modalParent_))
+						::EnableWindow(modalParent_, TRUE);
 
-                modalParent_ = NULL;
+					modalParent_ = NULL;
+					lResult = 0;
+					return false;
+				}
+				lResult = 1;
+				return true;
             }
             else if(message == WM_MOUSEACTIVATE && ((windowStyle_ & WindowStyle::MenuLike) == WindowStyle::MenuLike))
             {
                 lResult = MA_NOACTIVATE;
                 return true;
             }
+			else if (message == WM_SYSKEYDOWN || message == WM_SYSKEYUP)
+			{
+				if (wParam == VK_F10)
+				{
+					lResult = 1;
+					return true;
+				}
+			}
+			else if (message == WM_SYSCOMMAND)
+			{
+				if (wParam == SC_KEYMENU)
+				{
+					lResult = 1;
+					return true;
+				}
+			}
 
             if(msgFilterCallback_ && msgFilterCallback_(this, message, wParam, lParam, lResult))
                 return true;
@@ -427,6 +503,11 @@ namespace nui
         {
             UNREFERENCED_PARAMETER(hDc);
         }
+
+		bool NWindowBase::OnClose()
+		{
+			return true;
+		}
 
         bool NWindowBase::IsRegionEmpty(HRGN clipRgn)
         {
@@ -473,7 +554,7 @@ namespace nui
             }
             if((windowStyle_ & WindowStyle::Top) || windowStyle_ == 0)
             {
-                style |= WS_CAPTION | WS_SYSMENU | WS_OVERLAPPED | WS_THICKFRAME;
+				style |= WS_CAPTION | WS_OVERLAPPED | WS_THICKFRAME;// | WS_SYSMENU;
             }
             style |= WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
         }

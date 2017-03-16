@@ -104,7 +104,6 @@ namespace nui
             if(realWindow_ == NULL)
             {
                 CreateRealWindow();
-                OnRealWindowCreated();
             }
             NAssertError(::IsWindow(realWindow_), _T("failed to create window"));
             ::SetFocus(realWindow_);
@@ -241,6 +240,8 @@ namespace nui
 
             HFONT hFont = GdiObjMgr::Instance().GetDefaultFont();
             ::SendMessage(hWnd, WM_SETFONT, reinterpret_cast<WPARAM>(hFont), TRUE);
+
+			OnRealWindowCreated();
         }
 
         Base::NString NNative::GetNativeText() const

@@ -64,11 +64,19 @@ namespace nui
         {
             return UnicodeToMultiByte(arg, length, CP_UTF8);
         }
+		std::string w2utf8(LPCWSTR arg)
+		{
+			return UnicodeToMultiByte(arg, wcslen(arg), CP_UTF8);
+		}
 
         std::wstring utf82w(LPCSTR arg, size_t length)
         {
             return MultiByteToUnicode(arg, length, CP_UTF8);
         }
+		std::wstring utf82w(LPCSTR arg)
+		{
+			return MultiByteToUnicode(arg, strlen(arg), CP_UTF8);
+		}
 
         std::string w2a(LPCWSTR arg, size_t length)
         {

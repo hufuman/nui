@@ -5,11 +5,6 @@
 
 IMPLEMENT_REFLECTION_EX(NFileSystemImpl, nui::Base::NReflect::Singleton);
 
-namespace
-{
-    LPCTSTR g_szPackFileExt = _T(".xf");
-}
-
 NFileSystemImpl::NFileSystemImpl()
 {
     useRealFS_ = true;
@@ -22,7 +17,6 @@ NFileSystemImpl::~NFileSystemImpl()
 bool NFileSystemImpl::Init(LPCTSTR packFilePath)
 {
     nui::Base::NString packFile(packFilePath);
-    packFile += g_szPackFileExt;
     useRealFS_ = !nui::Util::File::IsFileExists(packFile.GetData());
 
     packFile = useRealFS_ ? packFilePath : packFile;

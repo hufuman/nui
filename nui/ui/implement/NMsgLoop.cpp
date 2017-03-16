@@ -6,7 +6,9 @@ namespace nui
 {
     namespace Ui
     {
-        bool NMsgLoop::Loop()
+		IMPLEMENT_REFLECTION(NMsgLoop);
+		
+		bool NMsgLoop::Loop()
         {
             HWND window = NULL;
             return Loop(window, false);
@@ -50,15 +52,18 @@ namespace nui
                     }
                 }
 
-                if(msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST
-                    || msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST)
-                {
-                    if(::IsDialogMessage(::GetAncestor(msg.hwnd, GA_ROOT), &msg))
-                        continue;
-                }
+                //if(msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST
+                //    || msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST)
+                //{
+                //    if(::IsDialogMessage(::GetAncestor(msg.hwnd, GA_ROOT), &msg))
+                //        continue;
+                //}
 
-                ::TranslateMessage(&msg);
-                ::DispatchMessage(&msg);
+				if (!DoMessageFilter(&msg))
+				{
+					::TranslateMessage(&msg);
+					::DispatchMessage(&msg);
+				}
 
                 if(useWindow && !::IsWindow(window))
                     break;
@@ -98,5 +103,29 @@ namespace nui
             }
             return false;
         }
+
+		bool NMsgLoop::AddMessageFilter(NMessageFilter filter)
+		{
+			return messageFilters_.AddItem(filter);
+		}
+
+		bool NMsgLoop::RemoveMessageFilter(NMessageFilter filter)
+		{
+			int pos = messageFilters_.Find(filter);
+			if (pos < 0)
+				return false;
+			return messageFilters_.RemoveItem(filter);
+		}
+
+		bool NMsgLoop::DoMessageFilter(MSG* msg)
+		{
+			int count = messageFilters_.Count();
+			for (int i = 0; i<count; ++i)
+			{
+				if (messageFilters_[i](msg))
+					return true;
+			}
+			return false;
+		}
     }
 }

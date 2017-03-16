@@ -91,6 +91,7 @@ using namespace fastdelegate;
 #include "./ui/NShapeDraw.h"
 #include "./ui/NTextAttr.h"
 #include "./ui/NScroll.h"
+#include "./ui/NProgress.h"
 #include "./ui/NLayout.h"
 #include "./ui/NList.h"
 #include "./ui/NNative.h"

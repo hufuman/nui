@@ -128,6 +128,12 @@ namespace nui
             return data_.c_str();
         }
 
+		size_t NString::operator () (const NString& arg) const
+		{
+			std::hash<tstring> hash;
+			return hash(arg.GetData());
+		}
+
         NString& NString::Assign(LPCTSTR arg, int length)
         {
             argPos_ = 1;
